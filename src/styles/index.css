@@ -1,7 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
+:root {
   --color-primary: #58A6FF;
   --color-primary-hover: #1f6feb;
   --color-secondary: #238636;
@@ -15,9 +17,7 @@
   --color-github-text-muted: #8B949E;
   --color-github-accent: #58A6FF;
   --color-github-purple: #7C3AED;
-}
 
-:root {
   font-family: var(--font-sans);
   line-height: 1.5;
   font-weight: 400;
@@ -103,4 +103,99 @@ body {
 
 .animate-waddle {
   animation: waddle 1s ease-in-out infinite;
+}
+
+/* Border Beam Effect */
+@keyframes border-beam {
+  100% {
+    offset-distance: 100%;
+  }
+}
+
+.flowing-glow {
+  position: relative;
+  border-radius: 0.75rem;
+  /* rounded-xl */
+  overflow: hidden;
+}
+
+.flowing-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  /* Border width */
+  background: linear-gradient(90deg, transparent 50%, #58A6FF, transparent 50%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.5;
+}
+
+.flowing-glow::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: radial-gradient(400px circle at var(--x) var(--y), rgba(88, 166, 255, 0.4), transparent 40%);
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.flowing-glow:hover::after {
+  opacity: 1;
+}
+
+/* Moving Border Gradient Animation */
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes border-rotate {
+  to {
+    --angle: 360deg;
+  }
+}
+
+.huly-glow {
+  position: relative;
+  padding: 3px;
+  /* The border width */
+  border-radius: 0.75rem;
+  background: conic-gradient(from var(--angle) at 50% 50%,
+      transparent 0%,
+      transparent 10%,
+      #58A6FF 20%,
+      /* Blue Beam */
+      transparent 30%,
+      transparent 60%,
+      #FF5F56 70%,
+      /* Red Beam */
+      transparent 80%,
+      transparent 100%);
+  animation: border-rotate 4s linear infinite;
+}
+
+.huly-glow::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  background: #161B22;
+  /* Match card bg */
+  border-radius: inherit;
+  z-index: 1;
+}
+
+.huly-glow>* {
+  position: relative;
+  z-index: 2;
 }

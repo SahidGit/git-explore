@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Github, Search, Bookmark, Settings, X, Menu } from 'lucide-react';
+import { Github, Search, Bookmark, Settings, X, Menu, ArrowLeft, ChevronDown } from 'lucide-react';
 
-const Header = ({ activeTab, onTabChange, onTokenSave, onNavigate }) => {
+const Header = ({ activeTab, onTabChange, onTokenSave, onNavigate, showBackButton }) => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [showTokenInput, setShowTokenInput] = useState(false);
@@ -36,27 +36,41 @@ const Header = ({ activeTab, onTabChange, onTokenSave, onNavigate }) => {
                             }`}
                     >
                         <div className="flex items-center justify-between">
-                            {/* Logo */}
-                            <div
-                                className="flex items-center gap-3 cursor-pointer group"
-                                onClick={() => onTabChange('explore')}
-                            >
-                                <div className="relative">
-                                    <div className="absolute inset-0 bg-indigo-500 blur-lg opacity-20 group-hover:opacity-40 transition-opacity" />
-                                    <div className="relative bg-gradient-to-br from-indigo-500 to-purple-600 p-2 rounded-lg">
-                                        <Github className="w-5 h-5 text-white" />
+                            {/* Left Section: Logo & Back Button */}
+                            <div className="flex items-center gap-6">
+                                {/* Logo */}
+                                <div
+                                    className="flex items-center gap-3 cursor-pointer group"
+                                    onClick={() => onNavigate && onNavigate('landing')}
+                                >
+                                    <div className="relative">
+                                        <div className="absolute inset-0 bg-indigo-500 blur-lg opacity-20 group-hover:opacity-40 transition-opacity" />
+                                        <div className="relative bg-gradient-to-br from-indigo-500 to-purple-600 p-2 rounded-lg">
+                                            <Github className="w-5 h-5 text-white" />
+                                        </div>
                                     </div>
+                                    <span className="text-lg font-semibold text-white tracking-tight">
+                                        Git<span className="text-indigo-400">Explorer</span>
+                                    </span>
                                 </div>
-                                <span className="text-lg font-bold text-white tracking-tight">
-                                    Git<span className="text-indigo-400">Explorer</span>
-                                </span>
+
+                                {/* Back Button (Desktop) */}
+                                {showBackButton && onNavigate && (
+                                    <button
+                                        onClick={() => onNavigate('landing')}
+                                        className="hidden md:flex items-center gap-2 text-sm text-slate-300 hover:text-white transition-all px-3 lg:px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 backdrop-blur-sm group/back"
+                                    >
+                                        <ArrowLeft className="w-4 h-4 group-hover/back:-translate-x-1 transition-transform" />
+                                        <span className="hidden lg:inline">Back to Home</span>
+                                    </button>
+                                )}
                             </div>
 
                             {/* Desktop Navigation */}
-                            <nav className="hidden md:flex items-center gap-1 bg-white/5 p-1 rounded-full border border-white/5 backdrop-blur-sm">
+                            <nav className="hidden md:flex items-center gap-1 bg-white/5 p-1 rounded-full border border-white/5 backdrop-blur-sm absolute left-1/2 -translate-x-1/2">
                                 <button
                                     onClick={() => onTabChange('explore')}
-                                    className={`flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium transition-all ${activeTab === 'explore'
+                                    className={`flex items-center gap-2 px-5 py-2 rounded-full text-sm transition-all ${activeTab === 'explore'
                                         ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
                                         : 'text-slate-400 hover:text-white hover:bg-white/5'
                                         }`}
@@ -66,13 +80,23 @@ const Header = ({ activeTab, onTabChange, onTokenSave, onNavigate }) => {
                                 </button>
                                 <button
                                     onClick={() => onTabChange('bookmarks')}
-                                    className={`flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium transition-all ${activeTab === 'bookmarks'
+                                    className={`flex items-center gap-2 px-5 py-2 rounded-full text-sm transition-all ${activeTab === 'bookmarks'
                                         ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
                                         : 'text-slate-400 hover:text-white hover:bg-white/5'
                                         }`}
                                 >
                                     <Bookmark className="w-4 h-4" />
                                     Bookmarks
+                                </button>
+                                <button
+                                    onClick={() => onTabChange('profile')}
+                                    className={`flex items-center gap-2 px-5 py-2 rounded-full text-sm transition-all ${activeTab === 'profile'
+                                        ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
+                                        : 'text-slate-400 hover:text-white hover:bg-white/5'
+                                        }`}
+                                >
+                                    {/* <User className="w-4 h-4" /> */}
+                                    Profile
                                 </button>
                             </nav>
 
@@ -110,61 +134,138 @@ const Header = ({ activeTab, onTabChange, onTokenSave, onNavigate }) => {
 
             {/* Mobile Menu Overlay */}
             {isMobileMenuOpen && (
-                <div className="fixed inset-0 z-50 bg-[#0D1117]/95 backdrop-blur-xl md:hidden flex flex-col animate-in fade-in duration-200">
-                    <div className="flex justify-end p-6">
+                <div className="fixed inset-0 z-50 bg-[#0D1117]/98 backdrop-blur-2xl md:hidden flex flex-col animate-in fade-in duration-300">
+                    {/* Subtle Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/5 via-transparent to-blue-500/5 pointer-events-none" />
+
+                    {/* Header */}
+                    <div className="flex justify-between items-center p-6 border-b border-white/5 relative z-10">
+                        <span className="text-xl font-semibold text-white tracking-tight">
+                            Git<span className="text-indigo-400">Explorer</span>
+                        </span>
                         <button
                             onClick={() => setIsMobileMenuOpen(false)}
-                            className="p-2 text-slate-400 hover:text-white transition-colors rounded-full hover:bg-white/10"
+                            className="p-2 text-slate-400 hover:text-white transition-colors rounded-full hover:bg-white/10 group"
                         >
-                            <X className="w-8 h-8" />
+                            <X className="w-6 h-6 group-hover:rotate-90 transition-transform duration-300" />
                         </button>
                     </div>
 
-                    <div className="flex-1 flex flex-col items-center justify-center space-y-8 p-8">
-                        <div className="space-y-6 text-center w-full max-w-sm">
+                    {/* Scrollable Content */}
+                    <div className="flex-1 flex flex-col p-6 overflow-y-auto relative z-10">
+                        {/* Main Navigation Cards */}
+                        <div className="space-y-3 mb-8">
                             <button
                                 onClick={() => {
                                     onTabChange('explore');
                                     setIsMobileMenuOpen(false);
                                 }}
-                                className="w-full py-3 text-2xl font-bold text-white hover:text-indigo-400 transition-colors border-b border-white/5"
+                                className={`w-full p-4 rounded-2xl text-left transition-all duration-300 group relative overflow-hidden border ${activeTab === 'explore'
+                                    ? 'bg-indigo-600/10 border-indigo-500/50 text-white'
+                                    : 'bg-white/5 border-white/5 text-slate-400 hover:bg-white/10 hover:text-white'}`}
                             >
-                                Explore
+                                <div className={`absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${activeTab === 'explore' ? 'opacity-100' : ''}`} />
+                                <div className="relative flex items-center gap-4">
+                                    <div className={`p-2 rounded-xl ${activeTab === 'explore' ? 'bg-indigo-500 text-white' : 'bg-white/5 text-slate-400 group-hover:text-white group-hover:bg-white/10'} transition-colors`}>
+                                        <Search className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <div className="font-medium text-base">Explore</div>
+                                        <div className="text-xs opacity-60 font-normal mt-0.5">Discover trending repos</div>
+                                    </div>
+                                    <ChevronDown className="w-4 h-4 ml-auto -rotate-90 opacity-50" />
+                                </div>
                             </button>
+
                             <button
                                 onClick={() => {
                                     onTabChange('bookmarks');
                                     setIsMobileMenuOpen(false);
                                 }}
-                                className="w-full py-3 text-2xl font-bold text-white hover:text-indigo-400 transition-colors border-b border-white/5"
+                                className={`w-full p-4 rounded-2xl text-left transition-all duration-300 group relative overflow-hidden border ${activeTab === 'bookmarks'
+                                    ? 'bg-indigo-600/10 border-indigo-500/50 text-white'
+                                    : 'bg-white/5 border-white/5 text-slate-400 hover:bg-white/10 hover:text-white'}`}
                             >
-                                Bookmarks
+                                <div className={`absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${activeTab === 'bookmarks' ? 'opacity-100' : ''}`} />
+                                <div className="relative flex items-center gap-4">
+                                    <div className={`p-2 rounded-xl ${activeTab === 'bookmarks' ? 'bg-indigo-500 text-white' : 'bg-white/5 text-slate-400 group-hover:text-white group-hover:bg-white/10'} transition-colors`}>
+                                        <Bookmark className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <div className="font-medium text-base">Bookmarks</div>
+                                        <div className="text-xs opacity-60 font-normal mt-0.5">Your saved collections</div>
+                                    </div>
+                                    <ChevronDown className="w-4 h-4 ml-auto -rotate-90 opacity-50" />
+                                </div>
                             </button>
 
-                            <div className="grid grid-cols-2 gap-4 pt-4">
-                                <button onClick={() => { onNavigate('features'); setIsMobileMenuOpen(false); }} className="p-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-all">
-                                    Features
-                                </button>
-                                <button onClick={() => { onNavigate('dashboard'); setIsMobileMenuOpen(false); }} className="p-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-all">
-                                    Trending
-                                </button>
-                                <button onClick={() => { onNavigate('blog'); setIsMobileMenuOpen(false); }} className="p-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-all">
-                                    Blog
-                                </button>
-                                <button onClick={() => { onNavigate('community'); setIsMobileMenuOpen(false); }} className="p-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-all">
-                                    Community
-                                </button>
-                            </div>
+                            <button
+                                onClick={() => {
+                                    onTabChange('profile');
+                                    setIsMobileMenuOpen(false);
+                                }}
+                                className={`w-full p-4 rounded-2xl text-left transition-all duration-300 group relative overflow-hidden border ${activeTab === 'profile'
+                                    ? 'bg-indigo-600/10 border-indigo-500/50 text-white'
+                                    : 'bg-white/5 border-white/5 text-slate-400 hover:bg-white/10 hover:text-white'}`}
+                            >
+                                <div className={`absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${activeTab === 'profile' ? 'opacity-100' : ''}`} />
+                                <div className="relative flex items-center gap-4">
+                                    <div className={`p-2 rounded-xl ${activeTab === 'profile' ? 'bg-indigo-500 text-white' : 'bg-white/5 text-slate-400 group-hover:text-white group-hover:bg-white/10'} transition-colors`}>
+                                        {/* <User className="w-5 h-5" /> */}
+                                        <div className="w-5 h-5 rounded-full border-2 border-current opacity-80" />
+                                    </div>
+                                    <div>
+                                        <div className="font-medium text-base">Profile</div>
+                                        <div className="text-xs opacity-60 font-normal mt-0.5">View your stats</div>
+                                    </div>
+                                    <ChevronDown className="w-4 h-4 ml-auto -rotate-90 opacity-50" />
+                                </div>
+                            </button>
+                        </div>
 
+                        {/* Secondary Navigation Grid */}
+                        <div className="grid grid-cols-2 gap-3 mb-8">
+                            {[
+                                { label: 'Features', action: 'features' },
+                                { label: 'Trending', action: 'dashboard' },
+                                { label: 'Blog', action: 'blog' },
+                                { label: 'Community', action: 'community' }
+                            ].map((item) => (
+                                <button
+                                    key={item.label}
+                                    onClick={() => { onNavigate && onNavigate(item.action); setIsMobileMenuOpen(false); }}
+                                    className="p-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all text-sm font-normal border border-white/5 hover:border-white/10 text-center"
+                                >
+                                    {item.label}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Footer Actions */}
+                        <div className="mt-auto space-y-3">
                             <button
                                 onClick={() => {
                                     setShowTokenInput(true);
                                     setIsMobileMenuOpen(false);
                                 }}
-                                className="w-full mt-8 py-3 px-6 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition-colors shadow-lg shadow-indigo-500/20"
+                                className="w-full py-3 px-6 rounded-xl bg-transparent hover:bg-white/5 text-slate-300 hover:text-white font-normal transition-colors border border-white/10 hover:border-white/20 flex items-center justify-center gap-2"
                             >
+                                <Settings className="w-4 h-4" />
                                 API Settings
                             </button>
+
+                            {onNavigate && (
+                                <button
+                                    onClick={() => {
+                                        onNavigate('landing');
+                                        setIsMobileMenuOpen(false);
+                                    }}
+                                    className="w-full py-3 px-6 rounded-xl bg-white/5 hover:bg-white/10 text-white font-normal transition-colors border border-white/10 hover:border-white/20 flex items-center justify-center gap-2 group"
+                                >
+                                    <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                                    Back to Home
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>

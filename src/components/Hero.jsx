@@ -1,7 +1,12 @@
 import React from 'react';
 import { MdArrowForward, MdStar, MdTrendingUp, MdDescription, MdSync, MdExplore, MdSpaceDashboard } from 'react-icons/md';
 import { FaGithub } from 'react-icons/fa';
-import heroVideo from '../assets/git-explorer-hero-showcase-v1.webm';
+import iconDiamonds from '../assets/icon-diamonds.png';
+import iconCompass from '../assets/icon-compass.png';
+import iconGrid from '../assets/icon-grid.png';
+import iconLayers from '../assets/icon-layers.png';
+import iconSync from '../assets/icon-sync.png';
+import iconSShape from '../assets/icon-s-shape.png';
 
 const Hero = ({ onExplore }) => {
     return (
@@ -9,11 +14,7 @@ const Hero = ({ onExplore }) => {
             {/* Video Background */}
             <div className="absolute top-0 left-0 w-full h-full z-0">
                 <div className="absolute inset-0 bg-[#0D1117]/60 z-10" /> {/* Darker overlay for better text contrast */}
-                <img
-                    src="/favicon.png"
-                    alt="Background"
-                    className="absolute inset-0 w-full h-full object-cover"
-                />
+
                 <video
                     autoPlay
                     loop
@@ -21,8 +22,9 @@ const Hero = ({ onExplore }) => {
                     playsInline
                     className="absolute inset-0 w-full h-full object-cover"
                     style={{ objectFit: 'cover' }}
+                    onError={(e) => console.error("Video load error:", e)}
                 >
-                    <source src={heroVideo} type="video/webm" />
+                    <source src="/hero-background.webm" type="video/webm" />
                 </video>
             </div>
 
@@ -38,7 +40,7 @@ const Hero = ({ onExplore }) => {
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                             </span>
-                            Trusted by 1.5M+ Developers Worldwide
+                            The Modern Way to Explore GitHub
                         </div>
                     </div>
                 </div>
@@ -53,7 +55,7 @@ const Hero = ({ onExplore }) => {
                 </h1>
 
                 <p className="text-xl md:text-2xl text-[#8B949E] max-w-3xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200 font-light">
-                    Discover <span className="text-[#F0F6FC] font-medium">trending repositories</span> and <span className="text-[#F0F6FC] font-medium">analyze contributions</span> with a powerful, modern dashboard.
+                    Uncover <span className="text-[#F0F6FC] font-medium">trending repositories</span> and gain <span className="text-[#F0F6FC] font-medium">deep insights</span> into the open-source ecosystem.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
@@ -62,7 +64,7 @@ const Hero = ({ onExplore }) => {
                         className="group relative px-8 py-4 rounded-full bg-gradient-to-r from-[#238636] to-[#2ea043] text-white font-semibold text-lg transition-all hover:scale-105 hover:shadow-[0_0_30px_-5px_rgba(46,160,67,0.4)] border border-[#3fb950] flex items-center gap-2"
                     >
                         <MdSpaceDashboard className="w-5 h-5" />
-                        Launch Dashboard
+                        Start Exploring
                     </button>
 
                     <a
@@ -72,18 +74,18 @@ const Hero = ({ onExplore }) => {
                         className="px-8 py-4 rounded-full bg-[#161B22] text-[#F0F6FC] border border-[#30363D] hover:bg-[#1C2128] transition-all hover:border-[#8B949E] font-medium text-lg flex items-center gap-2"
                     >
                         <FaGithub className="w-5 h-5" />
-                        View on GitHub
+                        Star on GitHub
                     </a>
                 </div>
             </div>
 
             {/* Seamless Marquee */}
-            <div className="absolute bottom-0 left-0 w-full overflow-hidden py-6 bg-[#0D1117]/80 backdrop-blur-sm border-t border-[#30363D]">
+            <div className="absolute bottom-0 left-0 w-full overflow-hidden py-8 bg-[#0D1117]/90 backdrop-blur-md border-t border-white/5 z-30 group/marquee">
                 <div className="flex w-full">
-                    <div className="flex animate-marquee min-w-full shrink-0 justify-around items-center gap-12 px-6">
+                    <div className="flex animate-marquee min-w-full shrink-0 justify-around items-center gap-12 px-6 group-hover/marquee:[animation-play-state:paused]">
                         <MarqueeContent />
                     </div>
-                    <div className="flex animate-marquee min-w-full shrink-0 justify-around items-center gap-12 px-6" aria-hidden="true">
+                    <div className="flex animate-marquee min-w-full shrink-0 justify-around items-center gap-12 px-6 group-hover/marquee:[animation-play-state:paused]" aria-hidden="true">
                         <MarqueeContent />
                     </div>
                 </div>
@@ -104,21 +106,58 @@ const Hero = ({ onExplore }) => {
 
 const MarqueeContent = () => (
     <>
-        <span className="flex items-center gap-3 text-[#8B949E] text-lg font-medium whitespace-nowrap">
-            <MdStar className="w-6 h-6 text-[#E3B341]" /> Discover
-        </span>
-        <span className="flex items-center gap-3 text-[#8B949E] text-lg font-medium whitespace-nowrap">
-            <MdTrendingUp className="w-6 h-6 text-[#58A6FF]" /> Analyze
-        </span>
-        <span className="flex items-center gap-3 text-[#8B949E] text-lg font-medium whitespace-nowrap">
-            <MdStar className="w-6 h-6 text-[#E3B341]" /> Star
-        </span>
-        <span className="flex items-center gap-3 text-[#8B949E] text-lg font-medium whitespace-nowrap">
-            <MdDescription className="w-6 h-6 text-[#F0F6FC]" /> Sync
-        </span>
-        <span className="flex items-center gap-3 text-[#8B949E] text-lg font-medium whitespace-nowrap">
-            <MdExplore className="w-6 h-6 text-[#7C3AED]" /> Explore
-        </span>
+        <div className="flex items-center gap-4 group/item cursor-default transition-opacity hover:opacity-100 opacity-70">
+            <div className="p-2 rounded-xl bg-amber-500/10 border border-amber-500/20 group-hover/item:border-amber-500/40 transition-colors">
+                <img src={iconDiamonds} alt="Discover" className="w-6 h-6 object-contain opacity-80 group-hover/item:opacity-100 transition-opacity" />
+            </div>
+            <span className="text-2xl font-bold text-slate-300 tracking-tight group-hover/item:text-white transition-colors">
+                Trend Analysis
+            </span>
+        </div>
+
+        <div className="w-px h-12 bg-gradient-to-b from-transparent via-slate-700 to-transparent mx-8" />
+
+        <div className="flex items-center gap-4 group/item cursor-default transition-opacity hover:opacity-100 opacity-70">
+            <div className="p-2 rounded-xl bg-blue-500/10 border border-blue-500/20 group-hover/item:border-blue-500/40 transition-colors">
+                <img src={iconGrid} alt="Analyze" className="w-6 h-6 object-contain opacity-80 group-hover/item:opacity-100 transition-opacity" />
+            </div>
+            <span className="text-2xl font-bold text-slate-300 tracking-tight group-hover/item:text-white transition-colors">
+                Growth Metrics
+            </span>
+        </div>
+
+        <div className="w-px h-12 bg-gradient-to-b from-transparent via-slate-700 to-transparent mx-8" />
+
+        <div className="flex items-center gap-4 group/item cursor-default transition-opacity hover:opacity-100 opacity-70">
+            <div className="p-2 rounded-xl bg-purple-500/10 border border-purple-500/20 group-hover/item:border-purple-500/40 transition-colors">
+                <img src={iconLayers} alt="Explore" className="w-6 h-6 object-contain opacity-80 group-hover/item:opacity-100 transition-opacity" />
+            </div>
+            <span className="text-2xl font-bold text-slate-300 tracking-tight group-hover/item:text-white transition-colors">
+                Ecosystem Mapping
+            </span>
+        </div>
+
+        <div className="w-px h-12 bg-gradient-to-b from-transparent via-slate-700 to-transparent mx-8" />
+
+        <div className="flex items-center gap-4 group/item cursor-default transition-opacity hover:opacity-100 opacity-70">
+            <div className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 group-hover/item:border-emerald-500/40 transition-colors">
+                <img src={iconSync} alt="Sync" className="w-6 h-6 object-contain opacity-80 group-hover/item:opacity-100 transition-opacity" />
+            </div>
+            <span className="text-2xl font-bold text-slate-300 tracking-tight group-hover/item:text-white transition-colors">
+                Real-time Sync
+            </span>
+        </div>
+
+        <div className="w-px h-12 bg-gradient-to-b from-transparent via-slate-700 to-transparent mx-8" />
+
+        <div className="flex items-center gap-4 group/item cursor-default transition-opacity hover:opacity-100 opacity-70">
+            <div className="p-2 rounded-xl bg-pink-500/10 border border-pink-500/20 group-hover/item:border-pink-500/40 transition-colors">
+                <img src={iconSShape} alt="Docs" className="w-6 h-6 object-contain opacity-80 group-hover/item:opacity-100 transition-opacity" />
+            </div>
+            <span className="text-2xl font-bold text-slate-300 tracking-tight group-hover/item:text-white transition-colors">
+                Technical Guides
+            </span>
+        </div>
     </>
 );
 

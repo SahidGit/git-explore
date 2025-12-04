@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaGithub, FaTwitter, FaLinkedin } from 'react-icons/fa';
-import { MdEmail, MdFavorite } from 'react-icons/md';
+import { MdEmail } from 'react-icons/md';
+import heartIcon from '../assets/heart.png';
 
 const Footer = ({ onNavigate }) => {
     return (
@@ -44,7 +45,7 @@ const Footer = ({ onNavigate }) => {
                                 <button onClick={() => onNavigate('dashboard')} className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm text-left">Trending</button>
                             </li>
                             <li>
-                                <button onClick={() => onNavigate('dashboard')} className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm text-left">Bookmarks</button>
+                                <button onClick={() => onNavigate('bookmarks')} className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm text-left">Bookmarks</button>
                             </li>
                             <li>
                                 <button onClick={() => onNavigate('changelog')} className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm text-left">Changelog</button>
@@ -104,7 +105,7 @@ const Footer = ({ onNavigate }) => {
                     </p>
                     <div className="flex items-center gap-1 text-[#8B949E] text-sm">
                         <span>Made with</span>
-                        <MdFavorite className="w-4 h-4 text-[#F0F6FC] fill-[#F0F6FC]/20" />
+                        <img src={heartIcon} alt="Heart" className="w-12 h-12" />
                         <span>for developers</span>
                     </div>
                 </div>

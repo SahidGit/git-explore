@@ -11,8 +11,7 @@ export const storageService = {
         try {
             const stored = localStorage.getItem(STORAGE_KEYS.BOOKMARKS);
             return stored ? JSON.parse(stored) : [];
-        } catch (e) {
-            console.error('Error reading bookmarks:', e);
+        } catch {
             return [];
         }
     },
@@ -42,31 +41,21 @@ export const storageService = {
         try {
             const notes = JSON.parse(localStorage.getItem(STORAGE_KEYS.NOTES) || '{}');
             return notes[repoId] || '';
-        } catch (e) {
+        } catch {
             return '';
-        }
-    },
-
-    saveNote: (repoId, content) => {
-        try {
-            const notes = JSON.parse(localStorage.getItem(STORAGE_KEYS.NOTES) || '{}');
-            notes[repoId] = content;
-            localStorage.setItem(STORAGE_KEYS.NOTES, JSON.stringify(notes));
-        } catch (e) {
-            console.error('Error saving note:', e);
         }
     },
 
     // Token
     getToken: () => {
-        return localStorage.getItem(STORAGE_KEYS.TOKEN);
+        return sessionStorage.getItem(STORAGE_KEYS.TOKEN);
     },
 
     saveToken: (token) => {
         if (token) {
-            localStorage.setItem(STORAGE_KEYS.TOKEN, token);
+            sessionStorage.setItem(STORAGE_KEYS.TOKEN, token);
         } else {
-            localStorage.removeItem(STORAGE_KEYS.TOKEN);
+            sessionStorage.removeItem(STORAGE_KEYS.TOKEN);
         }
     },
 };
