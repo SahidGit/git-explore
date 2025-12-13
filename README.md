@@ -1,11 +1,13 @@
-# GitExplorer v2.0 🚀
+# GitExplorer v2 — Explore GitHub with a Modern Dashboard 🚀
 
-**Explore GitHub Repositories & Bookmarks with a Modern Dashboard**
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Built with React](https://img.shields.io/badge/React-18.2.0-61DAFB?logo=react&logoColor=white)](https://reactjs.org/)
+[![Vite](https://img.shields.io/badge/Vite-4.x-yellow?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-%2338B2AC.svg?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Stars](https://img.shields.io/github/stars/SahidGit/git-explorer?style=social)](https://github.com/SahidGit/git-explorer/stargazers)
 
-GitExplorer is a powerful, developer-centric dashboard designed to help you discover trending repositories, analyze contributions, and manage your GitHub bookmarks efficiently. Built with React, Vite, and Tailwind CSS, it offers a seamless and visually stunning experience.
-
-![GitExplorer Hero](https://gitexplorer.com/og-image.png)
-
+Live demo: https://git-explore-one.vercel.app/  
+Repository: https://github.com/SahidGit/git-explorer
 ## Features ✨
 
 - **⚡ Lightning Fast**: Instant repository search and filtering.
