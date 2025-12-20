@@ -1,44 +1,44 @@
 import React from 'react';
 import { FaSync, FaLock, FaLayerGroup, FaCompass, FaChartLine, FaFilter, FaGithub } from 'react-icons/fa';
 
-import iconSShape from '../assets/icon-s-shape.png';
-import iconGrid from '../assets/icon-grid.png';
-import iconLayers from '../assets/icon-layers.png';
-import iconCompass from '../assets/icon-compass.png';
-import iconDiamonds from '../assets/icon-diamonds.png';
-import iconSync from '../assets/icon-sync.png';
+import iconSShape from '../../assets/icon-s-shape.png';
+import iconGrid from '../../assets/icon-grid.png';
+import iconLayers from '../../assets/icon-layers.png';
+import iconCompass from '../../assets/icon-compass.png';
+import iconDiamonds from '../../assets/icon-diamonds.png';
+import iconSync from '../../assets/icon-sync.png';
 
 const GithubSyncSection = () => {
     const features = [
         {
-            icon: <img src={iconSShape} alt="Two-way synchronization" className="w-8 h-8 object-contain" />,
-            title: "Two-way synchronization",
-            description: "Integrate your task tracker with GitHub to sync changes instantly."
+            icon: <img src={iconSShape} alt="Trending Discovery" className="w-8 h-8 object-contain" />,
+            title: "Trending Discovery",
+            description: "Stay ahead of the curve with real-time access to GitHub's trending repositories."
         },
         {
-            icon: <img src={iconGrid} alt="Private tasks" className="w-8 h-8 object-contain" />,
-            title: "Private tasks",
-            description: "Integration and management of multiple data repositories effectively."
+            icon: <img src={iconGrid} alt="Developer Insights" className="w-8 h-8 object-contain" />,
+            title: "Developer Insights",
+            description: "Deep dive into the contribution history of open source pioneers and rising stars."
         },
         {
-            icon: <img src={iconLayers} alt="Multiple repositories" className="w-8 h-8 object-contain" />,
-            title: "Multiple repositories",
-            description: "Organize multiple projects for more effective planning and collaboration."
+            icon: <img src={iconLayers} alt="Technology Stacks" className="w-8 h-8 object-contain" />,
+            title: "Technology Stacks",
+            description: "Visual breakdown of languages and frameworks powering every project."
         },
         {
-            icon: <img src={iconCompass} alt="Milestone migration" className="w-8 h-8 object-contain" />,
-            title: "Milestone migration",
-            description: "Seamless migration of key project milestones between repositories."
+            icon: <img src={iconCompass} alt="Smart Bookmarking" className="w-8 h-8 object-contain" />,
+            title: "Smart Bookmarking",
+            description: "Save and organize your favorite repositories for quick access anytime."
         },
         {
-            icon: <img src={iconDiamonds} alt="Track progress" className="w-8 h-8 object-contain" />,
-            title: "Track progress",
-            description: "Keep track of GitHub contributions and changes within your workspace."
+            icon: <img src={iconDiamonds} alt="Visual Analytics" className="w-8 h-8 object-contain" />,
+            title: "Visual Analytics",
+            description: "Beautiful charts and heatmaps to understand code contributions instantly."
         },
         {
-            icon: <img src={iconSync} alt="Advanced filtering" className="w-8 h-8 object-contain" />,
-            title: "Advanced filtering",
-            description: "Precise project data search with advanced filtering capabilities."
+            icon: <img src={iconSync} alt="Seamless Navigation" className="w-8 h-8 object-contain" />,
+            title: "Seamless Navigation",
+            description: "Direct access to repository details and code without leaving the interface."
         }
     ];
 
@@ -52,11 +52,11 @@ const GithubSyncSection = () => {
                 {/* Header */}
                 <div className="text-center mb-16 max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-100">
                     <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
-                        Seamless GitHub Integration. <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">Bidirectional Sync.</span>
+                        Explore Open Source. <br />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">Uncover Hidden Gems.</span>
                     </h2>
                     <p className="text-lg text-[#8B949E] leading-relaxed">
-                        Experience a unified workflow. GitExplorer acts as a high-performance frontend for your GitHub data, ensuring your tasks and projects are always in perfect synchronization.
+                        Experience a unified workflow. GitExplorer acts as a high-performance interface for GitHub data, ensuring you discover, analyze, and bookmark projects seamlessly.
                     </p>
                 </div>
 

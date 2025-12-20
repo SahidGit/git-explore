@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { getUserContributions, getUser } from '../services/githubService';
-import { SkeletonProfile, SkeletonHeatmap } from './SkeletonLoader';
+import { getUserContributions, getUser } from '../../../services/githubService';
+import { SkeletonProfile, SkeletonHeatmap } from '../../ui/SkeletonLoader';
 import { Calendar, MapPin, Link as LinkIcon, Users } from 'lucide-react';
 
 const ContributionHeatmap = ({ username }) => {

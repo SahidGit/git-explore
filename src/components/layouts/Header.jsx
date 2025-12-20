@@ -227,9 +227,7 @@ const Header = ({ activeTab, onTabChange, onTokenSave, onNavigate, showBackButto
                         <div className="grid grid-cols-2 gap-3 mb-8">
                             {[
                                 { label: 'Features', action: 'features' },
-                                { label: 'Trending', action: 'dashboard' },
-                                { label: 'Blog', action: 'blog' },
-                                { label: 'Community', action: 'community' }
+                                { label: 'Trending', action: 'dashboard' }
                             ].map((item) => (
                                 <button
                                     key={item.label}

@@ -1,12 +1,12 @@
 import React from 'react';
 import { MdArrowForward, MdStar, MdTrendingUp, MdDescription, MdSync, MdExplore, MdSpaceDashboard } from 'react-icons/md';
 import { FaGithub } from 'react-icons/fa';
-import iconDiamonds from '../assets/icon-diamonds.png';
-import iconCompass from '../assets/icon-compass.png';
-import iconGrid from '../assets/icon-grid.png';
-import iconLayers from '../assets/icon-layers.png';
-import iconSync from '../assets/icon-sync.png';
-import iconSShape from '../assets/icon-s-shape.png';
+import iconDiamonds from '../../assets/icon-diamonds.png';
+import iconCompass from '../../assets/icon-compass.png';
+import iconGrid from '../../assets/icon-grid.png';
+import iconLayers from '../../assets/icon-layers.png';
+import iconSync from '../../assets/icon-sync.png';
+import iconSShape from '../../assets/icon-s-shape.png';
 
 const Hero = ({ onExplore }) => {
     return (
@@ -68,7 +68,7 @@ const Hero = ({ onExplore }) => {
                     </button>
 
                     <a
-                        href="https://github.com"
+                        href="https://github.com/SahidGit/git-explorer"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="px-8 py-4 rounded-full bg-[#161B22] text-[#F0F6FC] border border-[#30363D] hover:bg-[#1C2128] transition-all hover:border-[#8B949E] font-medium text-lg flex items-center gap-2"
@@ -76,6 +76,7 @@ const Hero = ({ onExplore }) => {
                         <FaGithub className="w-5 h-5" />
                         Star on GitHub
                     </a>
+
                 </div>
             </div>
 

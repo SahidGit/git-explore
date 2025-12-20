@@ -1,21 +1,14 @@
 import React from 'react';
-import { ArrowLeft } from 'lucide-react';
+import Header from '../components/layouts/Header';
 
 const InfoPage = ({ title, subtitle, content, onBack }) => {
+    React.useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     return (
         <div className="min-h-screen bg-[#0D1117] text-[#F0F6FC] font-sans">
-            {/* Header */}
-            <header className="fixed top-0 left-0 right-0 z-50 bg-[#0D1117]/80 backdrop-blur-md border-b border-[#30363D]">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center">
-                    <button
-                        onClick={onBack}
-                        className="flex items-center gap-2 text-[#8B949E] hover:text-[#58A6FF] transition-colors"
-                    >
-                        <ArrowLeft className="w-5 h-5" />
-                        Back
-                    </button>
-                </div>
-            </header>
+            <Header showBackButton={true} onNavigate={onBack} activeTab="" onTabChange={() => { }} />
 
             {/* Content */}
             <main className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -31,12 +24,37 @@ const InfoPage = ({ title, subtitle, content, onBack }) => {
                 </div>
 
                 <div
-                    className="prose prose-invert prose-lg max-w-none prose-headings:text-white prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline prose-strong:text-white prose-code:text-blue-300 prose-code:bg-blue-900/20 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-ul:text-slate-400 prose-li:marker:text-slate-600"
+                    className="prose prose-invert prose-lg max-w-none prose-headings:text-white prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline prose-strong:text-white prose-code:text-blue-300 prose-code:bg-blue-900/20 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-ul:text-slate-400 prose-li:marker:text-slate-600 mb-12"
                     dangerouslySetInnerHTML={{ __html: content }}
                 />
+
+                {title === 'API Integration' && (
+                    <div className="bg-[#161B22] border border-[#30363D] rounded-xl p-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
+                        <h3 className="text-lg font-semibold text-white mb-4">Enter Access Token</h3>
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <input
+                                type="password"
+                                placeholder="ghp_..."
+                                className="flex-1 bg-[#0D1117] border border-[#30363D] rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#58A6FF] focus:ring-1 focus:ring-[#58A6FF] transition-all"
+                                onChange={(e) => {
+                                    if (e.target.value.startsWith('ghp_') || e.target.value.startsWith('github_pat_')) {
+                                        storageService.saveToken(e.target.value);
+                                        // Visual feedback could be added here
+                                    }
+                                }}
+                            />
+                            <div className="text-xs text-slate-500 mt-2 sm:mt-0 sm:self-center">
+                                *Token is autosaved to your browser's local storage.
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+
             </main>
         </div>
     );
 };
 
+import { storageService } from '../services/storageService';
 export default InfoPage;

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Star, GitFork, Bookmark, ExternalLink, Search, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { formatNumber, getRelativeTime } from '../utils/formatters';
-import { SkeletonCard } from './SkeletonLoader';
-import ErrorMessage from './ErrorMessage';
+import { formatNumber, getRelativeTime } from '../../../utils/formatters';
+import { SkeletonCard } from '../../ui/SkeletonLoader';
+import ErrorMessage from '../../ui/ErrorMessage';
 
 const RepositoryList = ({
     repositories,
@@ -77,8 +77,8 @@ const RepositoryList = ({
                                         onBookmarkToggle(repo);
                                     }}
                                     className={`p-2 rounded-lg transition-all duration-200 ${isBookmarked(repo.id)
-                                            ? 'bg-blue-500/20 text-blue-400'
-                                            : 'bg-slate-700/30 text-slate-400 hover:bg-slate-700/50 hover:text-white'
+                                        ? 'bg-blue-500/20 text-blue-400'
+                                        : 'bg-slate-700/30 text-slate-400 hover:bg-slate-700/50 hover:text-white'
                                         }`}
                                 >
                                     <Bookmark className={`w-4 h-4 ${isBookmarked(repo.id) ? 'fill-current' : ''}`} />

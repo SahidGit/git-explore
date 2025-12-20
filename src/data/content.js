@@ -210,30 +210,46 @@ export const PAGES_CONTENT = {
     title: 'API Integration',
     subtitle: 'Direct access to the GitHub REST API ecosystem.',
     content: `
-      <div class="space-y-6">
-        <p class="text-slate-400">
-          GitExplorer is architected as a client-side interface for the GitHub REST API. While we do not maintain a proprietary backend API, 
-          you can interact with the same endpoints that power our platform to build your own integrations.
-        </p>
-        <div class="space-y-4">
+      <div class="space-y-8">
+        <section>
           <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="px-2 py-1 rounded bg-green-500/20 text-green-400 text-xs font-bold">GET</span>
-              <code class="text-white font-mono">https://api.github.com/search/repositories</code>
-            </div>
-            <p class="text-sm text-slate-400">Query the repository registry with advanced filtering parameters.</p>
+            <h3 class="text-xl font-bold text-white mb-2">🚀 Supercharge your experience</h3>
+            <p class="text-slate-400 mb-4">
+              By default, unauthenticated requests are limited to <strong>60 per hour</strong>. 
+              Add a Personal Access Token to increase this limit to <strong>5,000 per hour</strong>.
+            </p>
           </div>
-          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="px-2 py-1 rounded bg-green-500/20 text-green-400 text-xs font-bold">GET</span>
-              <code class="text-white font-mono">https://api.github.com/users/{username}</code>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-bold text-white mb-4">Setup Guide</h2>
+          <div class="space-y-4">
+            <div class="flex gap-4">
+              <div class="flex-none w-8 h-8 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-bold">1</div>
+              <div>
+                <p class="text-slate-300 font-medium">Generate Token</p>
+                <p class="text-sm text-slate-400">Go to GitHub Settings → Developer settings → Personal access tokens → Tokens (classic).</p>
+                <a href="https://github.com/settings/tokens/new" target="_blank" class="inline-block mt-2 text-blue-400 hover:text-blue-300 text-sm">Open Token Settings →</a>
+              </div>
             </div>
-            <p class="text-sm text-slate-400">Retrieve public profile data and metric summaries.</p>
+            
+            <div class="flex gap-4">
+              <div class="flex-none w-8 h-8 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-bold">2</div>
+              <div>
+                <p class="text-slate-300 font-medium">Configure Scopes</p>
+                <p class="text-sm text-slate-400">Select "public_repo" scope. If you want to see your private repos, select "repo" scope.</p>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <div class="flex-none w-8 h-8 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-bold">3</div>
+              <div>
+                <p class="text-slate-300 font-medium">Save Token</p>
+                <p class="text-sm text-slate-400">Copy the generated token (starts with ghp_...) and paste it below.</p>
+              </div>
+            </div>
           </div>
-        </div>
-        <p class="text-slate-400 mt-4">
-          For comprehensive endpoint documentation, consult the <a href="https://docs.github.com/en/rest" target="_blank" class="text-blue-400 hover:underline">official GitHub REST API Reference</a>.
-        </p>
+        </section>
       </div>
     `
   },
@@ -241,25 +257,69 @@ export const PAGES_CONTENT = {
     title: 'Developer Resources',
     subtitle: 'Curated references for modern software engineering.',
     content: `
-      <div class="grid md:grid-cols-3 gap-6">
-        <a href="https://git-scm.com/doc" target="_blank" class="group p-6 rounded-2xl bg-slate-800/50 border border-slate-700 hover:bg-slate-800 hover:border-orange-500/50 transition-all duration-300">
-          <div class="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center mb-4 text-xl">📚</div>
-          <h3 class="font-bold text-white mb-2 group-hover:text-orange-400 transition-colors">Git Documentation</h3>
-          <p class="text-sm text-slate-400">The authoritative reference for Git commands, workflows, and version control best practices.</p>
-        </a>
-        
-        <a href="https://opensource.guide/" target="_blank" class="group p-6 rounded-2xl bg-slate-800/50 border border-slate-700 hover:bg-slate-800 hover:border-blue-500/50 transition-all duration-300">
-          <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center mb-4 text-xl">🚀</div>
-          <h3 class="font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">Open Source Guide</h3>
-          <p class="text-sm text-slate-400">A definitive playbook for launching, maintaining, and contributing to open source software.</p>
-        </a>
-        
-        <a href="https://choosealicense.com/" target="_blank" class="group p-6 rounded-2xl bg-slate-800/50 border border-slate-700 hover:bg-slate-800 hover:border-green-500/50 transition-all duration-300">
-          <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center mb-4 text-xl">⚖️</div>
-          <h3 class="font-bold text-white mb-2 group-hover:text-green-400 transition-colors">Choose a License</h3>
-          <p class="text-sm text-slate-400">Navigate the complexities of open source licensing to protect your work correctly.</p>
-        </a>
-      </div>
-    `
+        <div class="grid md:grid-cols-3 gap-6">
+          <a href="https://git-scm.com/doc" target="_blank" class="group p-6 rounded-2xl bg-slate-800/50 border border-slate-700 hover:bg-slate-800 hover:border-orange-500/50 transition-all duration-300">
+            <div class="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center mb-4 text-xl">📚</div>
+            <h3 class="font-bold text-white mb-2 group-hover:text-orange-400 transition-colors">Git Documentation</h3>
+            <p class="text-sm text-slate-400">The authoritative reference for Git commands, workflows, and version control best practices.</p>
+          </a>
+          
+          <a href="https://opensource.guide/" target="_blank" class="group p-6 rounded-2xl bg-slate-800/50 border border-slate-700 hover:bg-slate-800 hover:border-blue-500/50 transition-all duration-300">
+            <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center mb-4 text-xl">🚀</div>
+            <h3 class="font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">Open Source Guide</h3>
+            <p class="text-sm text-slate-400">A definitive playbook for launching, maintaining, and contributing to open source software.</p>
+          </a>
+          
+          <a href="https://choosealicense.com/" target="_blank" class="group p-6 rounded-2xl bg-slate-800/50 border border-slate-700 hover:bg-slate-800 hover:border-green-500/50 transition-all duration-300">
+            <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center mb-4 text-xl">⚖️</div>
+            <h3 class="font-bold text-white mb-2 group-hover:text-green-400 transition-colors">Choose a License</h3>
+            <p class="text-sm text-slate-400">Navigate the complexities of open source licensing to protect your work correctly.</p>
+          </a>
+        </div>
+      `
+  },
+  roadmap: {
+    title: 'Product Roadmap',
+    subtitle: 'Our vision for the future of GitExplorer.',
+    content: `
+          <div class="space-y-12">
+              <div class="relative border-l border-slate-800 ml-4 pl-8 space-y-12">
+                  <!-- Q1 2026 -->
+                  <div class="relative">
+                      <span class="absolute -left-[41px] top-1 w-5 h-5 rounded-full bg-blue-500 border-4 border-[#0D1117] shadow-[0_0_10px_rgba(59,130,246,0.5)]"></span>
+                      <div class="flex items-center justify-between mb-2">
+                          <h3 class="text-xl font-bold text-white">Q1 2026: Mobile Companion App</h3>
+                          <span class="px-2 py-1 rounded bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold">PLANNED</span>
+                      </div>
+                      <p class="text-slate-400 mb-4">Native iOS and Android applications to manage your collections and receive real-time notifications on the go.</p>
+                      <ul class="list-disc list-inside text-slate-500 space-y-1 text-sm">
+                          <li>Push notifications for starred repo releases</li>
+                          <li>Offline access to saved bookmarks</li>
+                          <li>Biometric authentication</li>
+                      </ul>
+                  </div>
+  
+                  <!-- Q2 2026 -->
+                  <div class="relative">
+                      <span class="absolute -left-[41px] top-1 w-5 h-5 rounded-full bg-purple-500 border-4 border-[#0D1117] shadow-[0_0_10px_rgba(168,85,247,0.5)]"></span>
+                      <div class="flex items-center justify-between mb-2">
+                          <h3 class="text-xl font-bold text-white">Q2 2026: AI-Powered Code Review</h3>
+                          <span class="px-2 py-1 rounded bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-semibold">RESEARCH</span>
+                      </div>
+                      <p class="text-slate-400 mb-4">Integrated LLM agents to provide automated code quality assessments and security vulnerability scanning for explored repositories.</p>
+                  </div>
+  
+                   <!-- Q3 2026 -->
+                   <div class="relative">
+                      <span class="absolute -left-[41px] top-1 w-5 h-5 rounded-full bg-emerald-500 border-4 border-[#0D1117] shadow-[0_0_10px_rgba(16,185,129,0.5)]"></span>
+                      <div class="flex items-center justify-between mb-2">
+                          <h3 class="text-xl font-bold text-white">Q3 2026: Team Workspaces</h3>
+                          <span class="px-2 py-1 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">CONCEPT</span>
+                      </div>
+                      <p class="text-slate-400 mb-4">Collaborative collections allowing engineering teams to share discovered tools and maintain a unified stack registry.</p>
+                  </div>
+              </div>
+          </div>
+        `
   }
 };

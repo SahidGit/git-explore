@@ -1,9 +1,36 @@
 import React from 'react';
 import { FaGithub, FaTwitter, FaLinkedin } from 'react-icons/fa';
 import { MdEmail } from 'react-icons/md';
-import heartIcon from '../assets/heart.png';
+import heartIcon from '../../assets/heart.png';
 
 const Footer = ({ onNavigate }) => {
+    const [email, setEmail] = React.useState('');
+    const [status, setStatus] = React.useState('idle'); // idle, loading, success, error
+    const [message, setMessage] = React.useState('');
+
+    const handleSubscribe = (e) => {
+        e.preventDefault();
+        setMessage('');
+
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            setStatus('error');
+            setMessage('Please enter a valid email address.');
+            return;
+        }
+
+        setStatus('loading');
+        // Simulate API call
+        setTimeout(() => {
+            setStatus('success');
+            setMessage("You're in! Check your inbox.");
+            setEmail('');
+            setTimeout(() => {
+                setStatus('idle');
+                setMessage('');
+            }, 5000);
+        }, 1500);
+    };
+
     return (
         <footer className="bg-[#0D1117] border-t border-[#30363D] pt-16 pb-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -22,13 +49,13 @@ const Footer = ({ onNavigate }) => {
                             Discover, analyze, and manage open source projects with a powerful, modern dashboard designed for developers.
                         </p>
                         <div className="flex gap-4">
-                            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-[#8B949E] hover:text-[#F0F6FC] transition-colors">
+                            <a href="https://github.com/SahidGit/git-explorer" target="_blank" rel="noopener noreferrer" className="text-[#8B949E] hover:text-[#F0F6FC] transition-colors">
                                 <FaGithub className="w-5 h-5" />
                             </a>
                             <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-[#8B949E] hover:text-[#58A6FF] transition-colors">
                                 <FaTwitter className="w-5 h-5" />
                             </a>
-                            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-[#8B949E] hover:text-[#58A6FF] transition-colors">
+                            <a href="https://www.linkedin.com/in/sahid-sarfaraz" target="_blank" rel="noopener noreferrer" className="text-[#8B949E] hover:text-[#58A6FF] transition-colors">
                                 <FaLinkedin className="w-5 h-5" />
                             </a>
                         </div>
@@ -64,10 +91,7 @@ const Footer = ({ onNavigate }) => {
                                 <button onClick={() => onNavigate('api')} className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm text-left">API Reference</button>
                             </li>
                             <li>
-                                <button onClick={() => onNavigate('community')} className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm text-left">Community</button>
-                            </li>
-                            <li>
-                                <button onClick={() => onNavigate('blog')} className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm text-left">Blog</button>
+                                <button onClick={() => onNavigate('roadmap')} className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm text-left">Roadmap</button>
                             </li>
                         </ul>
                     </div>
@@ -78,22 +102,32 @@ const Footer = ({ onNavigate }) => {
                         <p className="text-[#8B949E] text-sm mb-4">
                             Subscribe to our newsletter for the latest updates and features.
                         </p>
-                        <form className="space-y-3" onSubmit={(e) => {
-                            e.preventDefault();
-                            // TODO: Trigger n8n webhook here
-                            // fetch('https://your-n8n-instance.com/webhook/newsletter', { method: 'POST', body: JSON.stringify({ email }) })
-                            console.log('Newsletter subscription submitted');
-                        }}>
+                        <form className="space-y-3" onSubmit={handleSubscribe}>
                             <div className="relative">
                                 <MdEmail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8B949E]" />
                                 <input
                                     type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     placeholder="Enter your email"
-                                    className="w-full bg-[#161B22] border border-[#30363D] rounded-lg py-2.5 pl-10 pr-4 text-sm text-[#F0F6FC] placeholder:text-[#8B949E] focus:outline-none focus:border-[#58A6FF] focus:ring-1 focus:ring-[#58A6FF] transition-all"
+                                    disabled={status === 'loading' || status === 'success'}
+                                    className={`w-full bg-[#161B22] border rounded-lg py-2.5 pl-10 pr-4 text-sm text-[#F0F6FC] placeholder:text-[#8B949E] focus:outline-none focus:ring-1 transition-all
+                                        ${status === 'error' ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-[#30363D] focus:border-[#58A6FF] focus:ring-[#58A6FF]'}`}
                                 />
                             </div>
-                            <button className="w-full py-2.5 rounded-lg bg-[#238636] hover:bg-[#2ea043] text-white text-sm font-medium transition-colors border border-[#3fb950]">
-                                Subscribe
+                            {message && (
+                                <p className={`text-xs ${status === 'error' ? 'text-red-400' : 'text-green-400'} animate-in fade-in slide-in-from-top-1`}>
+                                    {message}
+                                </p>
+                            )}
+                            <button
+                                disabled={status === 'loading' || status === 'success'}
+                                className={`w-full py-2.5 rounded-lg text-white text-sm font-medium transition-all border
+                                ${status === 'success'
+                                        ? 'bg-green-600 border-green-500 cursor-default'
+                                        : 'bg-[#238636] hover:bg-[#2ea043] border-[#3fb950]'}`}
+                            >
+                                {status === 'loading' ? 'Subscribing...' : status === 'success' ? 'Subscribed!' : 'Subscribe'}
                             </button>
                         </form>
                     </div>

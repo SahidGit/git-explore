@@ -125,7 +125,7 @@ const ActivityChart = ({ data }) => {
     };
 
     return (
-        <div className="h-64 w-full">
+        <div className="h-full w-full">
             {chartData && <Line ref={chartRef} data={chartData} options={options} />}
         </div>
     );

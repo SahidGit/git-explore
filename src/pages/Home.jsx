@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 // import { motion } from 'framer-motion';
-import Header from '../components/Header';
-import Hero from '../components/Hero';
-import GithubSyncSection from '../components/GithubSyncSection';
-import FAQ from '../components/FAQ';
-import Footer from '../components/Footer';
-import ErrorMessage from '../components/ErrorMessage';
+import Header from '../components/layouts/Header';
+import Hero from '../components/layouts/Hero';
+import GithubSyncSection from '../components/features/GithubSyncSection';
+import FAQ from '../components/ui/FAQ';
+import Footer from '../components/layouts/Footer';
+import ErrorMessage from '../components/ui/ErrorMessage';
+import RepoCTA from '../components/features/RepoCard/RepoCTA';
 
 import { storageService } from '../services/storageService';
 
@@ -67,6 +68,7 @@ const Home = ({ onExplore, error, onNavigate, onTabChange }) => {
             <FAQ />
             {/* </motion.div> */}
 
+            <RepoCTA onNavigate={onNavigate} />
             <Footer onNavigate={onNavigate} />
         </div>
     );

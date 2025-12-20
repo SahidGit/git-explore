@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Trash2, ExternalLink, FileText } from 'lucide-react';
-import { storageService } from '../services/storageService';
-import { formatNumber } from '../utils/formatters';
+import { storageService } from '../../services/storageService';
+import { formatNumber } from '../../utils/formatters';
 
 const BookmarksPanel = ({ onRepoClick, onBookmarkToggle }) => {
     const [bookmarks, setBookmarks] = useState([]);

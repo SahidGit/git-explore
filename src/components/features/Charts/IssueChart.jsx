@@ -70,7 +70,7 @@ const IssueChart = ({ open, closed }) => {
     }
 
     return (
-        <div className="h-48 w-full relative">
+        <div className="h-full w-full relative">
             <Doughnut data={data} options={options} />
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <div className="text-center">

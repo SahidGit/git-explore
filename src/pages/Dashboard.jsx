@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import Header from '../components/Header';
-import FilterPanel from '../components/FilterPanel';
-import RepositoryList from '../components/RepositoryList';
-import BookmarksPanel from '../components/BookmarksPanel';
-import RepositoryDetail from '../components/RepositoryDetail';
+import Header from '../components/layouts/Header';
+import FilterPanel from '../components/features/FilterPanel';
+import RepositoryList from '../components/features/RepoCard/RepositoryList';
+import BookmarksPanel from '../components/features/BookmarksPanel';
+import RepositoryDetail from '../components/features/RepoCard/RepositoryDetail';
 import * as githubService from '../services/githubService';
 import { storageService } from '../services/storageService';
-import ContributionHeatmap from '../components/ContributionHeatmap';
-import ErrorBoundary from '../components/ErrorBoundary';
+import ContributionHeatmap from '../components/features/Charts/ContributionHeatmap';
+import ErrorBoundary from '../components/ui/ErrorBoundary';
 
 const Dashboard = ({ onBack, initialTab = 'explore', onNavigate }) => {
     const [activeTab, setActiveTab] = useState(initialTab);
@@ -161,12 +161,61 @@ const Dashboard = ({ onBack, initialTab = 'explore', onNavigate }) => {
                         )}
 
                         {!filters.username && (
-                            <div className="text-center py-20 text-slate-500">
-                                <p>Enter a username to view contributions.</p>
+                            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150">
+                                <h3 className="text-lg font-semibold text-white mb-4">Legends of Open Source</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {[
+                                        { name: 'SahidGit', username: 'SahidGit', role: 'Project Owner', avatar: 'https://avatars.githubusercontent.com/u/106660867?v=4', isOwner: true },
+                                        { name: 'Linus Torvalds', username: 'torvalds', role: 'Creator of Linux & Git', avatar: 'https://avatars.githubusercontent.com/u/1024025?v=4' },
+                                        { name: 'Evan You', username: 'yyx990803', role: 'Creator of Vue.js', avatar: 'https://avatars.githubusercontent.com/u/499550?v=4' },
+                                        { name: 'Dan Abramov', username: 'gaearon', role: 'React Core Team', avatar: 'https://avatars.githubusercontent.com/u/810438?v=4' }
+                                    ].map((profile) => (
+                                        <button
+                                            key={profile.username}
+                                            onClick={() => setFilters(prev => ({ ...prev, username: profile.username }))}
+                                            className={`flex items-center gap-4 p-4 rounded-xl border transition-all group text-left ${profile.isOwner
+                                                ? 'bg-blue-500/10 border-blue-500/50 hover:bg-blue-500/20'
+                                                : 'bg-[#161B22] border-[#30363D] hover:border-indigo-500/50 hover:bg-[#1C2128]'
+                                                }`}
+                                        >
+                                            <div className="relative">
+                                                <img
+                                                    src={profile.avatar}
+                                                    alt={profile.name}
+                                                    className={`w-12 h-12 rounded-full border transition-colors ${profile.isOwner ? 'border-blue-400' : 'border-slate-700 group-hover:border-indigo-500/50'
+                                                        }`}
+                                                />
+                                                {profile.isOwner && (
+                                                    <div className="absolute -bottom-1 -right-1 bg-blue-500 text-white p-0.5 rounded-full border border-[#0D1117]" title="Verified Owner">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
+                                                            <path fillRule="evenodd" d="M16.403 12.652a3 3 0 000-5.304 3 3 0 00-3.75-3.751 3 3 0 00-5.305 0 3 3 0 00-3.751 3.75 3 3 0 000 5.305 3 3 0 003.75 3.751 3 3 0 005.305 0 3 3 0 003.751-3.751zM11 8a1 1 0 01-1 1H9v2a1 1 0 012 0V9a1 1 0 011-1z" clipRule="evenodd" />
+                                                            <path d="M10 8a1 1 0 100-2 1 1 0 000 2z" />
+                                                        </svg>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div>
+                                                <div className="flex items-center gap-2">
+                                                    <div className={`font-medium transition-colors ${profile.isOwner ? 'text-blue-400' : 'text-white group-hover:text-indigo-400'}`}>
+                                                        {profile.name}
+                                                    </div>
+                                                    {profile.isOwner && (
+                                                        <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                                                            OWNER
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <div className="text-xs text-slate-500">@{profile.username} • {profile.role}</div>
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         )}
                     </div>
                 )}
+
+
             </main>
 
             {selectedRepo && (
