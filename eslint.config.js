@@ -4,35 +4,35 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import { globalIgnores } from 'eslint/config'
 
-// Resolve plugin configs safely for ESLint v9 Flat Config
-const reactHooksConfig =
-  reactHooks?.configs?.flat?.recommended ?? reactHooks?.configs?.recommended ?? null
-
-const reactRefreshConfig =
-  reactRefresh?.configs?.vite ?? reactRefresh?.configs?.recommended ?? null
-
 export default [
   // Ignore build output
   globalIgnores(['dist']),
 
-  // Base JavaScript recommended rules
+  // Base JS rules
   js.configs.recommended,
 
-  // React Hooks rules (flat if available)
-  ...(reactHooksConfig ? [reactHooksConfig] : []),
+  // React Hooks (native flat config – safe)
+  reactHooks.configs.flat.recommended,
 
-  // React Refresh (Vite) rules
-  ...(reactRefreshConfig ? [reactRefreshConfig] : []),
-
-  // Project-specific rules
+  // Project rules
   {
     files: ['**/*.{js,jsx}'],
+    plugins: {
+      'react-refresh': reactRefresh,
+    },
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
       globals: globals.browser,
     },
     rules: {
+      // React Refresh rule (what vite config actually enables)
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true },
+      ],
+
+      // Your existing rule
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
   },
