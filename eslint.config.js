@@ -8,16 +8,14 @@ export default [
   // Ignore build output
   globalIgnores(['dist']),
 
-  // Base JS rules
+  // Base JavaScript rules
   js.configs.recommended,
 
-  // React Hooks (native flat config – safe)
-  reactHooks.configs.flat.recommended,
-
-  // Project rules
+  // Project-specific rules
   {
     files: ['**/*.{js,jsx}'],
     plugins: {
+      'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
     },
     languageOptions: {
@@ -26,7 +24,11 @@ export default [
       globals: globals.browser,
     },
     rules: {
-      // React Refresh rule (what vite config actually enables)
+      // React Hooks rules (manually enabled)
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+
+      // React Refresh rule (what vite config provides)
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
