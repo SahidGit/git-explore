@@ -9,7 +9,7 @@ import { storageService } from '../services/storageService';
 import ContributionHeatmap from '../components/features/Charts/ContributionHeatmap';
 import ErrorBoundary from '../components/ui/ErrorBoundary';
 
-const Dashboard = ({ onBack, initialTab = 'explore', onNavigate }) => {
+const Dashboard = ({ initialTab = 'explore', onNavigate }) => {
     const [activeTab, setActiveTab] = useState(initialTab);
     const [repositories, setRepositories] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -31,9 +31,9 @@ const Dashboard = ({ onBack, initialTab = 'explore', onNavigate }) => {
             setPage(1); // Reset page on filter change
             fetchRepositories(1);
         }
-    }, [filters, activeTab]);
+    }, [filters, activeTab, fetchRepositories]);
 
-    const fetchRepositories = async (pageNum = 1) => {
+    const fetchRepositories = useCallback(async (pageNum = 1) => {
         setLoading(true);
         setError(null);
         try {
@@ -59,7 +59,7 @@ const Dashboard = ({ onBack, initialTab = 'explore', onNavigate }) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [filters]);
 
     const handleLoadMore = () => {
         const nextPage = page + 1;

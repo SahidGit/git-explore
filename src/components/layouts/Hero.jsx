@@ -2,7 +2,7 @@ import React from 'react';
 import { MdArrowForward, MdStar, MdTrendingUp, MdDescription, MdSync, MdExplore, MdSpaceDashboard } from 'react-icons/md';
 import { FaGithub } from 'react-icons/fa';
 import iconDiamonds from '../../assets/icon-diamonds.png';
-import iconCompass from '../../assets/icon-compass.png';
+
 import iconGrid from '../../assets/icon-grid.png';
 import iconLayers from '../../assets/icon-layers.png';
 import iconSync from '../../assets/icon-sync.png';

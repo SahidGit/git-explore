@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Star, GitFork, Eye, ExternalLink, Calendar, Save, MessageSquare } from 'lucide-react';
 import { getRepositoryDetails, getRepositoryActivity, getIssueStats } from '../../../services/githubService';
 import { storageService } from '../../../services/storageService';
-import { formatNumber, formatDate } from '../../../utils/formatters';
+import { formatNumber } from '../../../utils/formatters';
 import ActivityChart from '../Charts/ActivityChart';
 import IssueChart from '../Charts/IssueChart';
 import LoadingSpinner from '../../ui/LoadingSpinner';

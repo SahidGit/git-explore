@@ -1,6 +1,6 @@
 import React from 'react';
 import { Star, GitFork, Bookmark, ExternalLink, Search, ChevronDown } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion'; // eslint-disable-line no-unused-vars
 import { formatNumber, getRelativeTime } from '../../../utils/formatters';
 import { SkeletonCard } from '../../ui/SkeletonLoader';
 import ErrorMessage from '../../ui/ErrorMessage';
