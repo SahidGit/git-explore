@@ -1,11 +1,12 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import iconGrid from '../../../assets/icon-grid.png';
 
-const RepoCTA = ({ onNavigate }) => {
+const RepoCTA = () => {
     return (
         <div className="w-full flex justify-center py-8 z-10 relative">
-            <button
-                onClick={() => onNavigate('dashboard')}
+            <Link
+                to="/dashboard"
                 className="group flex items-center justify-center gap-2 rounded-full
                     bg-gradient-to-r from-[#238636] to-[#2ea043] text-white font-bold 
                     px-8 py-3 text-lg
@@ -30,7 +31,7 @@ const RepoCTA = ({ onNavigate }) => {
                     />
                     <span className="leading-none tracking-wide text-shadow-sm">Explore Repo</span>
                 </div>
-            </button>
+            </Link>
         </div>
     );
 };

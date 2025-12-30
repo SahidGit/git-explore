@@ -1,27 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-    Filler,
-} from 'chart.js';
 import { Line } from 'react-chartjs-2';
-
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-    Filler
-);
 
 const ActivityChart = ({ data }) => {
     const chartRef = useRef(null);
@@ -66,7 +44,13 @@ const ActivityChart = ({ data }) => {
         });
     }, [data]);
 
-    if (!data || data.length === 0) return null;
+    if (!data || data.length === 0) {
+        return (
+            <div className="h-full flex items-center justify-center text-slate-500 text-sm">
+                No activity data available
+            </div>
+        );
+    }
 
     const options = {
         responsive: true,

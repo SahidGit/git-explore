@@ -11,10 +11,10 @@ const RepositoryList = ({
     error,
     onRetry,
     onRepoClick,
-    onBookmarkToggle,
-    isBookmarked,
     onLoadMore,
-    hasMore
+    hasMore,
+    bookmarkedIds,
+    onBookmarkToggle
 }) => {
     if (loading && (!repositories || repositories.length === 0)) {
         return (
@@ -42,11 +42,11 @@ const RepositoryList = ({
 
     return (
         <>
+            {console.log('RepoList Render. Bookmarked IDs:', [...bookmarkedIds], 'First ID Type:', bookmarkedIds.size > 0 ? typeof [...bookmarkedIds][0] : 'N/A')}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 <AnimatePresence mode="popLayout">
                     {repositories.map((repo, index) => (
                         <motion.div
-                            layout
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.9 }}
@@ -73,15 +73,17 @@ const RepositoryList = ({
                                 </div>
                                 <button
                                     onClick={(e) => {
+                                        e.preventDefault();
                                         e.stopPropagation();
+                                        console.log('Bookmark clicked for:', repo.name, 'ID:', repo.id, 'Type:', typeof repo.id);
                                         onBookmarkToggle(repo);
                                     }}
-                                    className={`p-2 rounded-lg transition-all duration-200 ${isBookmarked(repo.id)
-                                        ? 'bg-blue-500/20 text-blue-400'
+                                    className={`relative z-50 cursor-pointer p-2 rounded-lg transition-all duration-200 ${bookmarkedIds.has(repo.id)
+                                        ? 'bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500/20'
                                         : 'bg-slate-700/30 text-slate-400 hover:bg-slate-700/50 hover:text-white'
                                         }`}
                                 >
-                                    <Bookmark className={`w-4 h-4 ${isBookmarked(repo.id) ? 'fill-current' : ''}`} />
+                                    <Bookmark className={`w-4 h-4 ${bookmarkedIds.has(repo.id) ? 'fill-current' : ''}`} />
                                 </button>
                             </div>
 

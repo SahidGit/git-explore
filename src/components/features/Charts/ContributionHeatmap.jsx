@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getUserContributions, getUser } from '../../../services/githubService';
 import { SkeletonProfile, SkeletonHeatmap } from '../../ui/SkeletonLoader';
-import { Calendar, MapPin, Link as LinkIcon, Users } from 'lucide-react';
+import { Calendar, MapPin, Link as LinkIcon, Users, ExternalLink } from 'lucide-react';
 
 const ContributionHeatmap = ({ username }) => {
     const [data, setData] = useState(null);
@@ -146,6 +146,18 @@ const ContributionHeatmap = ({ username }) => {
                                 <span className="mx-1">·</span>
                                 <span><strong className="text-white">{user.following}</strong> following</span>
                             </div>
+                        </div>
+
+                        <div className="mt-6 flex justify-center md:justify-start">
+                            <a
+                                href={user.html_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 px-4 py-2 bg-[#238636] hover:bg-[#2ea043] text-white rounded-lg transition-colors text-sm font-medium border border-[rgba(255,255,255,0.1)] shadow-sm"
+                            >
+                                <ExternalLink className="w-4 h-4" />
+                                View GitHub Profile
+                            </a>
                         </div>
                     </div>
                 </div>

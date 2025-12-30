@@ -1,18 +1,36 @@
 import React from 'react';
 import Header from '../components/layouts/Header';
+import SEO from '../components/ui/SEO';
+import { PAGES_CONTENT } from '../data/content';
+import { storageService } from '../services/storageService';
 
-const InfoPage = ({ title, subtitle, content, onBack }) => {
+const InfoPage = ({ contentKey }) => {
+// const navigate = useNavigate();
+
     React.useEffect(() => {
         window.scrollTo(0, 0);
-    }, []);
+    }, [contentKey]);
+
+    const pageData = PAGES_CONTENT[contentKey];
+
+    if (!pageData) {
+        return <div>Page not found</div>;
+    }
+
+    const { title, subtitle, content } = pageData;
 
     return (
         <div className="min-h-screen bg-[#0D1117] text-[#F0F6FC] font-sans">
-            <Header showBackButton={true} onNavigate={onBack} activeTab="" onTabChange={() => { }} />
+            <SEO
+                title={`${title} | GitExplorer`}
+                description={subtitle}
+                canonical={`https://gitexplorer.com/${contentKey}`}
+            />
+            <Header showBackButton={true} activeTab="" />
 
             {/* Content */}
             <main className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
-                <div className="mb-12">
+                <article className="mb-12">
                     <h1 className="text-4xl md:text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[#58A6FF] to-[#BC8CFF]">
                         {title}
                     </h1>
@@ -21,7 +39,7 @@ const InfoPage = ({ title, subtitle, content, onBack }) => {
                             {subtitle}
                         </p>
                     )}
-                </div>
+                </article>
 
                 <div
                     className="prose prose-invert prose-lg max-w-none prose-headings:text-white prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline prose-strong:text-white prose-code:text-blue-300 prose-code:bg-blue-900/20 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-ul:text-slate-400 prose-li:marker:text-slate-600 mb-12"
@@ -49,12 +67,9 @@ const InfoPage = ({ title, subtitle, content, onBack }) => {
                         </div>
                     </div>
                 )}
-
-
             </main>
         </div>
     );
 };
 
-import { storageService } from '../services/storageService';
 export default InfoPage;

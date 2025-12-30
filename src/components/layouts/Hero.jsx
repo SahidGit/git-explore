@@ -101,7 +101,7 @@ const Hero = ({ onExplore }) => {
                     animation: marquee 40s linear infinite;
                 }
             `}</style>
-        </div>
+        </div >
     );
 };
 

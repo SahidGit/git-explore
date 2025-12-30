@@ -1,15 +1,17 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { FaGithub, FaTwitter, FaLinkedin } from 'react-icons/fa';
 import { MdEmail } from 'react-icons/md';
 import heartIcon from '../../assets/heart.png';
 
-const Footer = ({ onNavigate }) => {
+const Footer = () => {
     const [email, setEmail] = React.useState('');
     const [status, setStatus] = React.useState('idle'); // idle, loading, success, error
     const [message, setMessage] = React.useState('');
 
     const handleSubscribe = (e) => {
         e.preventDefault();
+        // ... (existing subscribe logic)
         setMessage('');
 
         if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -19,7 +21,6 @@ const Footer = ({ onNavigate }) => {
         }
 
         setStatus('loading');
-        // Simulate API call
         setTimeout(() => {
             setStatus('success');
             setMessage("You're in! Check your inbox.");
@@ -66,16 +67,16 @@ const Footer = ({ onNavigate }) => {
                         <h3 className="text-[#F0F6FC] font-semibold mb-6 font-sans">Product</h3>
                         <ul className="space-y-3">
                             <li>
-                                <button onClick={() => onNavigate('features')} className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm text-left">Features</button>
+                                <Link to="/features" className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm">Features</Link>
                             </li>
                             <li>
-                                <button onClick={() => onNavigate('dashboard')} className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm text-left">Trending</button>
+                                <Link to="/dashboard" className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm">Trending</Link>
                             </li>
                             <li>
-                                <button onClick={() => onNavigate('bookmarks')} className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm text-left">Bookmarks</button>
+                                <Link to="/bookmarks" className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm">Bookmarks</Link>
                             </li>
                             <li>
-                                <button onClick={() => onNavigate('changelog')} className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm text-left">Changelog</button>
+                                <Link to="/changelog" className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm">Changelog</Link>
                             </li>
                         </ul>
                     </div>
@@ -85,13 +86,13 @@ const Footer = ({ onNavigate }) => {
                         <h3 className="text-[#F0F6FC] font-semibold mb-6 font-sans">Resources</h3>
                         <ul className="space-y-3">
                             <li>
-                                <button onClick={() => onNavigate('docs')} className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm text-left">Documentation</button>
+                                <Link to="/docs" className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm">Documentation</Link>
                             </li>
                             <li>
-                                <button onClick={() => onNavigate('api')} className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm text-left">API Reference</button>
+                                <Link to="/api" className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm">API Reference</Link>
                             </li>
                             <li>
-                                <button onClick={() => onNavigate('roadmap')} className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm text-left">Roadmap</button>
+                                <Link to="/roadmap" className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm">Roadmap</Link>
                             </li>
                         </ul>
                     </div>

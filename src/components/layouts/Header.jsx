@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Github, Search, Bookmark, Settings, X, Menu, ArrowLeft, ChevronDown } from 'lucide-react';
 
-const Header = ({ activeTab, onTabChange, onTokenSave, onNavigate, showBackButton }) => {
+const Header = ({ activeTab, onTokenSave, showBackButton }) => {
+// const navigate = useNavigate();
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [showTokenInput, setShowTokenInput] = useState(false);
@@ -39,9 +41,9 @@ const Header = ({ activeTab, onTabChange, onTokenSave, onNavigate, showBackButto
                             {/* Left Section: Logo & Back Button */}
                             <div className="flex items-center gap-6">
                                 {/* Logo */}
-                                <div
+                                <Link
+                                    to="/"
                                     className="flex items-center gap-3 cursor-pointer group"
-                                    onClick={() => onNavigate && onNavigate('landing')}
                                 >
                                     <div className="relative">
                                         <div className="absolute inset-0 bg-indigo-500 blur-lg opacity-20 group-hover:opacity-40 transition-opacity" />
@@ -52,24 +54,24 @@ const Header = ({ activeTab, onTabChange, onTokenSave, onNavigate, showBackButto
                                     <span className="text-lg font-semibold text-white tracking-tight">
                                         Git<span className="text-indigo-400">Explorer</span>
                                     </span>
-                                </div>
+                                </Link>
 
                                 {/* Back Button (Desktop) */}
-                                {showBackButton && onNavigate && (
-                                    <button
-                                        onClick={() => onNavigate('landing')}
+                                {showBackButton && (
+                                    <Link
+                                        to="/"
                                         className="hidden md:flex items-center gap-2 text-sm text-slate-300 hover:text-white transition-all px-3 lg:px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 backdrop-blur-sm group/back"
                                     >
                                         <ArrowLeft className="w-4 h-4 group-hover/back:-translate-x-1 transition-transform" />
                                         <span className="hidden lg:inline">Back to Home</span>
-                                    </button>
+                                    </Link>
                                 )}
                             </div>
 
                             {/* Desktop Navigation */}
                             <nav className="hidden md:flex items-center gap-1 bg-white/5 p-1 rounded-full border border-white/5 backdrop-blur-sm absolute left-1/2 -translate-x-1/2">
-                                <button
-                                    onClick={() => onTabChange('explore')}
+                                <Link
+                                    to="/dashboard"
                                     className={`flex items-center gap-2 px-5 py-2 rounded-full text-sm transition-all ${activeTab === 'explore'
                                         ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
                                         : 'text-slate-400 hover:text-white hover:bg-white/5'
@@ -77,9 +79,9 @@ const Header = ({ activeTab, onTabChange, onTokenSave, onNavigate, showBackButto
                                 >
                                     <Search className="w-4 h-4" />
                                     Explore
-                                </button>
-                                <button
-                                    onClick={() => onTabChange('bookmarks')}
+                                </Link>
+                                <Link
+                                    to="/bookmarks"
                                     className={`flex items-center gap-2 px-5 py-2 rounded-full text-sm transition-all ${activeTab === 'bookmarks'
                                         ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
                                         : 'text-slate-400 hover:text-white hover:bg-white/5'
@@ -87,9 +89,9 @@ const Header = ({ activeTab, onTabChange, onTokenSave, onNavigate, showBackButto
                                 >
                                     <Bookmark className="w-4 h-4" />
                                     Bookmarks
-                                </button>
-                                <button
-                                    onClick={() => onTabChange('profile')}
+                                </Link>
+                                <Link
+                                    to="/profile"
                                     className={`flex items-center gap-2 px-5 py-2 rounded-full text-sm transition-all ${activeTab === 'profile'
                                         ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
                                         : 'text-slate-400 hover:text-white hover:bg-white/5'
@@ -97,7 +99,7 @@ const Header = ({ activeTab, onTabChange, onTokenSave, onNavigate, showBackButto
                                 >
                                     {/* <User className="w-4 h-4" /> */}
                                     Profile
-                                </button>
+                                </Link>
                             </nav>
 
                             {/* Actions */}
@@ -155,12 +157,10 @@ const Header = ({ activeTab, onTabChange, onTokenSave, onNavigate, showBackButto
                     <div className="flex-1 flex flex-col p-6 overflow-y-auto relative z-10">
                         {/* Main Navigation Cards */}
                         <div className="space-y-3 mb-8">
-                            <button
-                                onClick={() => {
-                                    onTabChange('explore');
-                                    setIsMobileMenuOpen(false);
-                                }}
-                                className={`w-full p-4 rounded-2xl text-left transition-all duration-300 group relative overflow-hidden border ${activeTab === 'explore'
+                            <Link
+                                to="/dashboard"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className={`w-full p-4 rounded-2xl text-left transition-all duration-300 group relative overflow-hidden border block ${activeTab === 'explore'
                                     ? 'bg-indigo-600/10 border-indigo-500/50 text-white'
                                     : 'bg-white/5 border-white/5 text-slate-400 hover:bg-white/10 hover:text-white'}`}
                             >
@@ -175,14 +175,12 @@ const Header = ({ activeTab, onTabChange, onTokenSave, onNavigate, showBackButto
                                     </div>
                                     <ChevronDown className="w-4 h-4 ml-auto -rotate-90 opacity-50" />
                                 </div>
-                            </button>
+                            </Link>
 
-                            <button
-                                onClick={() => {
-                                    onTabChange('bookmarks');
-                                    setIsMobileMenuOpen(false);
-                                }}
-                                className={`w-full p-4 rounded-2xl text-left transition-all duration-300 group relative overflow-hidden border ${activeTab === 'bookmarks'
+                            <Link
+                                to="/bookmarks"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className={`w-full p-4 rounded-2xl text-left transition-all duration-300 group relative overflow-hidden border block ${activeTab === 'bookmarks'
                                     ? 'bg-indigo-600/10 border-indigo-500/50 text-white'
                                     : 'bg-white/5 border-white/5 text-slate-400 hover:bg-white/10 hover:text-white'}`}
                             >
@@ -197,14 +195,12 @@ const Header = ({ activeTab, onTabChange, onTokenSave, onNavigate, showBackButto
                                     </div>
                                     <ChevronDown className="w-4 h-4 ml-auto -rotate-90 opacity-50" />
                                 </div>
-                            </button>
+                            </Link>
 
-                            <button
-                                onClick={() => {
-                                    onTabChange('profile');
-                                    setIsMobileMenuOpen(false);
-                                }}
-                                className={`w-full p-4 rounded-2xl text-left transition-all duration-300 group relative overflow-hidden border ${activeTab === 'profile'
+                            <Link
+                                to="/profile"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className={`w-full p-4 rounded-2xl text-left transition-all duration-300 group relative overflow-hidden border block ${activeTab === 'profile'
                                     ? 'bg-indigo-600/10 border-indigo-500/50 text-white'
                                     : 'bg-white/5 border-white/5 text-slate-400 hover:bg-white/10 hover:text-white'}`}
                             >
@@ -220,22 +216,23 @@ const Header = ({ activeTab, onTabChange, onTokenSave, onNavigate, showBackButto
                                     </div>
                                     <ChevronDown className="w-4 h-4 ml-auto -rotate-90 opacity-50" />
                                 </div>
-                            </button>
+                            </Link>
                         </div>
 
                         {/* Secondary Navigation Grid */}
                         <div className="grid grid-cols-2 gap-3 mb-8">
                             {[
-                                { label: 'Features', action: 'features' },
-                                { label: 'Trending', action: 'dashboard' }
+                                { label: 'Features', action: '/features' },
+                                { label: 'Trending', action: '/dashboard' }
                             ].map((item) => (
-                                <button
+                                <Link
                                     key={item.label}
-                                    onClick={() => { onNavigate && onNavigate(item.action); setIsMobileMenuOpen(false); }}
-                                    className="p-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all text-sm font-normal border border-white/5 hover:border-white/10 text-center"
+                                    to={item.action}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="p-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all text-sm font-normal border border-white/5 hover:border-white/10 text-center block"
                                 >
                                     {item.label}
-                                </button>
+                                </Link>
                             ))}
                         </div>
 
@@ -252,18 +249,16 @@ const Header = ({ activeTab, onTabChange, onTokenSave, onNavigate, showBackButto
                                 API Settings
                             </button>
 
-                            {onNavigate && (
-                                <button
-                                    onClick={() => {
-                                        onNavigate('landing');
-                                        setIsMobileMenuOpen(false);
-                                    }}
-                                    className="w-full py-3 px-6 rounded-xl bg-white/5 hover:bg-white/10 text-white font-normal transition-colors border border-white/10 hover:border-white/20 flex items-center justify-center gap-2 group"
-                                >
+                            <Link
+                                to="/"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className="w-full py-3 px-6 rounded-xl bg-white/5 hover:bg-white/10 text-white font-normal transition-colors border border-white/10 hover:border-white/20 flex items-center justify-center gap-2 group block text-center"
+                            >
+                                <div className="flex items-center gap-2 justify-center">
                                     <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
                                     Back to Home
-                                </button>
-                            )}
+                                </div>
+                            </Link>
                         </div>
                     </div>
                 </div>

@@ -46,6 +46,12 @@ export const storageService = {
         }
     },
 
+    saveNote: (repoId, note) => {
+        const notes = JSON.parse(localStorage.getItem(STORAGE_KEYS.NOTES) || '{}');
+        notes[repoId] = note;
+        localStorage.setItem(STORAGE_KEYS.NOTES, JSON.stringify(notes));
+    },
+
     // Token
     getToken: () => {
         return sessionStorage.getItem(STORAGE_KEYS.TOKEN);

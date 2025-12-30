@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Star, GitFork, Eye, ExternalLink, Calendar, Save, MessageSquare } from 'lucide-react';
+import { X, Star, GitFork, Eye, ExternalLink, Calendar, Save, MessageSquare, Bookmark } from 'lucide-react';
 import { getRepositoryDetails, getRepositoryActivity, getIssueStats } from '../../../services/githubService';
 import { storageService } from '../../../services/storageService';
 import { formatNumber } from '../../../utils/formatters';
@@ -7,7 +7,7 @@ import ActivityChart from '../Charts/ActivityChart';
 import IssueChart from '../Charts/IssueChart';
 import LoadingSpinner from '../../ui/LoadingSpinner';
 
-const RepositoryDetail = ({ repo, onClose }) => {
+const RepositoryDetail = ({ repo, onClose, isBookmarked, onBookmarkToggle }) => {
     const [details, setDetails] = useState(null);
     const [activity, setActivity] = useState(null);
     const [issueStats, setIssueStats] = useState(null);
@@ -60,13 +60,26 @@ const RepositoryDetail = ({ repo, onClose }) => {
                         <span className="w-1.5 h-4 bg-blue-500 rounded-full"></span>
                         {repo.full_name}
                     </h2>
-                    <button
-                        onClick={onClose}
-                        className="p-1.5 hover:bg-slate-800 rounded-full transition-colors group"
-                        title="Close (Esc)"
-                    >
-                        <X className="w-5 h-5 text-slate-400 group-hover:text-white" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => onBookmarkToggle(repo)}
+                            className={`p-1.5 rounded-full transition-all ${
+                                isBookmarked 
+                                    ? 'bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500/20' 
+                                    : 'bg-slate-800/50 text-slate-400 hover:bg-slate-800 hover:text-slate-200'
+                            }`}
+                            title={isBookmarked ? "Remove from bookmarks" : "Add to bookmarks"}
+                        >
+                            <Bookmark className={`w-5 h-5 ${isBookmarked ? 'fill-current' : ''}`} />
+                        </button>
+                        <button
+                            onClick={onClose}
+                            className="p-1.5 hover:bg-slate-800 rounded-full transition-colors group"
+                            title="Close (Esc)"
+                        >
+                            <X className="w-5 h-5 text-slate-400 group-hover:text-white" />
+                        </button>
+                    </div>
                 </div>
 
                 <div className="overflow-y-auto custom-scrollbar flex-1">
@@ -100,7 +113,7 @@ const RepositoryDetail = ({ repo, onClose }) => {
                             </div>
 
                             {/* Tech Stack Chips (Compact) */}
-                            {details?.languages && Object.keys(details.languages).length > 0 && (
+                            {details?.languages && Object.keys(details.languages).length > 0 ? (
                                 <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide mask-linear-fade">
                                     {Object.keys(details.languages).map((lang) => (
                                         <span key={lang} className="flex-none px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-medium whitespace-nowrap">
@@ -108,6 +121,8 @@ const RepositoryDetail = ({ repo, onClose }) => {
                                         </span>
                                     ))}
                                 </div>
+                            ) : (
+                                <div className="text-xs text-slate-500 italic">No language details available</div>
                             )}
 
                             {/* Stats Grid */}
