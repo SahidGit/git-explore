@@ -1,8 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../components/layouts/Header';
 import SEO from '../components/ui/SEO';
 import { PAGES_CONTENT } from '../data/content';
 import { storageService } from '../services/storageService';
+import { Home, ArrowLeft } from 'lucide-react';
 
 const InfoPage = ({ contentKey }) => {
 // const navigate = useNavigate();
@@ -14,7 +16,50 @@ const InfoPage = ({ contentKey }) => {
     const pageData = PAGES_CONTENT[contentKey];
 
     if (!pageData) {
-        return <div>Page not found</div>;
+        return (
+            <div className="min-h-screen bg-[#0D1117] text-[#F0F6FC] font-sans">
+                <SEO
+                    title="404 - Page Not Found | GitExplorer"
+                    description="The page you're looking for doesn't exist."
+                    canonical={`https://git-explore-one.vercel.app/${contentKey}`}
+                />
+                <Header showBackButton={true} activeTab="" />
+
+                <main className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+                    <div className="max-w-4xl mx-auto text-center animate-in fade-in slide-in-from-bottom-4 duration-700">
+                        <div className="mb-8">
+                            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-red-500/20 to-orange-500/20 border border-red-500/30 mb-6">
+                                <span className="text-4xl">⚠️</span>
+                            </div>
+                        </div>
+
+                        <h1 className="text-4xl md:text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[#58A6FF] to-[#BC8CFF]">
+                            Page Not Found
+                        </h1>
+                        <p className="text-xl text-slate-400 font-light mb-8 max-w-2xl mx-auto">
+                            The page "{contentKey}" doesn't exist or has been removed.
+                        </p>
+
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                            <Link
+                                to="/"
+                                className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl transition-colors shadow-lg shadow-indigo-500/20"
+                            >
+                                <Home className="w-5 h-5" />
+                                Back to Home
+                            </Link>
+                            <Link
+                                to="/dashboard"
+                                className="flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white font-medium rounded-xl transition-colors border border-white/10"
+                            >
+                                <ArrowLeft className="w-5 h-5" />
+                                Go to Dashboard
+                            </Link>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        );
     }
 
     const { title, subtitle, content } = pageData;
@@ -24,7 +69,7 @@ const InfoPage = ({ contentKey }) => {
             <SEO
                 title={`${title} | GitExplorer`}
                 description={subtitle}
-                canonical={`https://gitexplorer.com/${contentKey}`}
+                canonical={`https://git-explore-one.vercel.app/${contentKey}`}
             />
             <Header showBackButton={true} activeTab="" />
 
