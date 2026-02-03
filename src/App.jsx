@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Home from './pages/Home';
@@ -7,10 +7,21 @@ import InfoPage from './pages/InfoPage';
 import NotFound from './pages/NotFound';
 import PageTransition from './components/ui/PageTransition';
 import './styles/App.css';
-import { PAGES_CONTENT } from './data/content';
+import { getAvailableContentKeys } from './data/contentLoader';
 
 function App() {
   const location = useLocation();
+
+  // Memoize dynamic routes to avoid regeneration on every render
+  // getAvailableContentKeys() returns the list of content keys: features, changelog, docs, api, resources, roadmap
+  const dynamicRoutes = useMemo(
+    () => getAvailableContentKeys().map(key => ({
+      key,
+      path: `/${key}`,
+      contentKey: key
+    })),
+    []
+  );
 
   return (
     <AnimatePresence mode="wait" initial={false}>
@@ -36,10 +47,10 @@ function App() {
           </PageTransition>
         } />
 
-        {Object.keys(PAGES_CONTENT).map(key => (
-          <Route key={key} path={`/${key}`} element={
-            <PageTransition key={`info-${key}`}>
-              <InfoPage contentKey={key} />
+        {dynamicRoutes.map(route => (
+          <Route key={route.key} path={route.path} element={
+            <PageTransition key={`info-${route.key}`}>
+              <InfoPage contentKey={route.contentKey} />
             </PageTransition>
           } />
         ))}

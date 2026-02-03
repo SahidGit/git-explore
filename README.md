@@ -1,76 +1,106 @@
-# GitExplorer v2 — Explore GitHub with a Modern Dashboard 🚀
+# GitExplorer v2.0 — Explore GitHub Repos & Bookmarks 🚀
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Built with React](https://img.shields.io/badge/React-18.2.0-61DAFB?logo=react&logoColor=white)](https://reactjs.org/)
-[![Vite](https://img.shields.io/badge/Vite-4.x-yellow?logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-%2338B2AC.svg?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![Stars](https://img.shields.io/github/stars/SahidGit/git-explorer?style=social)](https://github.com/SahidGit/git-explorer/stargazers)
+[![Built with React](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react&logoColor=white)](https://reactjs.org/)
+[![Vite](https://img.shields.io/badge/Vite-5.4.21-yellow?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3.4.19-%2338B2AC.svg?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-Live demo: https://git-explore-one.vercel.app/  
-Repository: https://github.com/SahidGit/git-explorer
+**Live Demo:** [https://git-explore-one.vercel.app](https://git-explore-one.vercel.app)  
+**Repository:** [https://github.com/SahidGit/git-explorer](https://github.com/SahidGit/git-explorer)
+
+---
+
+## Overview
+
+A modern web application for discovering, analyzing, and bookmarking open-source projects on GitHub. Features advanced filtering, analytics, and a privacy-first design with all data stored locally.
+
 ## Features ✨
 
-- **⚡ Lightning Fast**: Instant repository search and filtering.
-- **⭐ Smart Bookmarks**: Organize and manage your favorite projects.
-- **📈 Trending Analysis**: Discover what's hot on GitHub right now.
-- **🎨 Modern UI**: A clean, dark-mode interface inspired by GitHub's design language.
-- **📱 Mobile First**: Fully responsive design for all devices.
+- **🔍 Intelligent Discovery** - Filter by language, stars, and activity metrics
+- **📊 Project Analytics** - Contribution heatmaps and velocity charts
+- **⭐ Private Collections** - Bookmark projects locally with zero data collection
+- **🎯 Dashboard** - Explore, bookmarks, and profile pages
+- **📱 Fully Responsive** - Seamless experience across all devices
+- **🌙 Dark Mode** - GitHub-inspired interface
 
 ## Tech Stack 🛠️
 
-- **Frontend**: React, Vite
-- **Styling**: Tailwind CSS, CSS Modules
-- **Icons**: React Icons (Material Design, FontAwesome)
-- **Animations**: Lottie Files, CSS Keyframes
-- **Deployment**: GitHub Pages
+- **Frontend:** React 18.3.1, React Router 7.13.0
+- **Build Tool:** Vite 5.4.21
+- **Styling:** Tailwind CSS 3.4.19, PostCSS
+- **Data & Charts:** Chart.js, React-ChartJS-2, Axios 1.8.2
+- **Animations:** Framer Motion
+- **Icons:** Lucide React, React Icons
+- **Security:** DOMPurify (XSS protection)
 
 ## Getting Started 🚀
 
 ### Prerequisites
-
-- Node.js (v18 or higher)
-- npm or yarn
+- Node.js v18+
+- npm v9+
 
 ### Installation
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/SahidGit/git-explorer.git
-   ```
+```bash
+# Clone the repository
+git clone https://github.com/SahidGit/git-explore.git
+cd git-explore (if not inside dir)
 
-2. Navigate to the project directory:
-   ```bash
-   cd git-explorer
-   ```
+# Install dependencies
+npm install
 
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
+# Start development server
+npm run dev
+```
 
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
+### Available Scripts
+
+```bash
+npm run dev       # Start dev server (http://localhost:5174)
+npm run build     # Build for production
+npm run preview   # Preview production build
+```
+
+## Project Structure
+
+```
+src/
+├── components/        # UI components
+├── pages/            # Page components
+├── data/             # Content & utilities
+├── services/         # API services
+├── styles/           # Global styles
+├── hooks/            # Custom hooks
+├── utils/            # Helper functions
+└── App.jsx           # Root component
+```
+
+## GitHub API Integration
+
+- **Public Access:** 60 requests/hour (no authentication required)
+- **Authenticated:** 5,000 requests/hour (Personal Access Token)
+
+Generate a token at GitHub Settings → Developer settings → Personal access tokens (classic) and add it in the app settings.
+
 
 ## Deployment 🌍
 
-This project is configured for automated deployment to GitHub Pages via GitHub Actions.
+Configured for Vercel with automatic deployments on push to main branch.
 
-1. Push changes to the `main` branch.
-2. The `Deploy to GitHub Pages` workflow will automatically build and deploy the site.
+```bash
+npm run build
+```
+
+The production build is optimized with SPA routing support for all direct URL access.
 
 ## Contributing 🤝
 
-Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) for details.
+Contributions are welcome! Please fork the repository and submit pull requests.
 
 ## License 📄
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## React Compiler
+---
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+**Made with ❤️ for the open-source community**

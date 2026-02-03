@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 import Header from '../components/layouts/Header';
 import SEO from '../components/ui/SEO';
 import { Home } from 'lucide-react';
@@ -71,7 +71,7 @@ const NotFound = () => {
             <Header showBackButton={true} activeTab="" />
 
             <main className="relative z-10 pt-16 sm:pt-24 pb-16 px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-80px)] flex items-center justify-center">
-                <motion.div
+                <Motion.div
                     className="max-w-4xl mx-auto w-full"
                     variants={containerVariants}
                     initial="hidden"
@@ -79,7 +79,7 @@ const NotFound = () => {
                 >
                     <div className="flex flex-col items-center justify-center text-center space-y-8 sm:space-y-12">
                         {/* Animated SVG Illustration */}
-                        <motion.div
+                        <Motion.div
                             className="w-full max-w-[600px] sm:max-w-[800px] mb-4 sm:mb-8"
                             variants={itemVariants}
                         >
@@ -101,7 +101,7 @@ const NotFound = () => {
                                 </defs>
 
                                 {/* Animated paths - abstract lost/exploration theme */}
-                                <motion.path
+                                <Motion.path
                                     d="M100 200 Q200 100 300 200 T500 200"
                                     stroke="url(#gradient1)"
                                     strokeWidth="3"
@@ -118,7 +118,7 @@ const NotFound = () => {
                                         ease: "easeInOut",
                                     }}
                                 />
-                                <motion.path
+                                <Motion.path
                                     d="M150 250 Q250 150 350 250 T550 250"
                                     stroke="url(#gradient2)"
                                     strokeWidth="2"
@@ -138,7 +138,7 @@ const NotFound = () => {
                                 />
 
                                 {/* Floating circles */}
-                                <motion.circle
+                                <Motion.circle
                                     cx="150"
                                     cy="150"
                                     r="8"
@@ -154,7 +154,7 @@ const NotFound = () => {
                                         ease: "easeInOut",
                                     }}
                                 />
-                                <motion.circle
+                                <Motion.circle
                                     cx="450"
                                     cy="180"
                                     r="6"
@@ -171,7 +171,7 @@ const NotFound = () => {
                                         delay: 0.3,
                                     }}
                                 />
-                                <motion.circle
+                                <Motion.circle
                                     cx="300"
                                     cy="100"
                                     r="10"
@@ -188,7 +188,7 @@ const NotFound = () => {
                                         delay: 0.6,
                                     }}
                                 />
-                                <motion.circle
+                                <Motion.circle
                                     cx="500"
                                     cy="300"
                                     r="7"
@@ -207,7 +207,7 @@ const NotFound = () => {
                                 />
 
                                 {/* Central compass/exploration icon */}
-                                <motion.g
+                                <Motion.g
                                     initial={{ opacity: 0, scale: 0.8 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     transition={{ delay: 0.8, duration: 0.6 }}
@@ -221,7 +221,7 @@ const NotFound = () => {
                                         strokeWidth="2"
                                         opacity="0.4"
                                     />
-                                    <motion.path
+                                    <Motion.path
                                         d="M300 180 L310 200 L300 220 L290 200 Z"
                                         fill="#58A6FF"
                                         animate={{ rotate: [0, 360] }}
@@ -232,36 +232,36 @@ const NotFound = () => {
                                         }}
                                         style={{ transformOrigin: "300px 200px" }}
                                     />
-                                </motion.g>
+                                </Motion.g>
                             </svg>
-                        </motion.div>
+                        </Motion.div>
 
                         {/* Error Message - Matching Framer text */}
-                        <motion.div variants={itemVariants} className="space-y-4 sm:space-y-6">
-                            <motion.h1
+                        <Motion.div variants={itemVariants} className="space-y-4 sm:space-y-6">
+                            <Motion.h1
                                 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-[#F0F6FC]"
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3, duration: 0.6 }}
                             >
                                 Oops, I think we're lost...
-                            </motion.h1>
-                            <motion.p
+                            </Motion.h1>
+                            <Motion.p
                                 className="text-lg sm:text-xl md:text-2xl text-slate-400 font-light max-w-2xl mx-auto"
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.5, duration: 0.6 }}
                             >
                                 Let's get you back to somewhere familiar.
-                            </motion.p>
-                        </motion.div>
+                            </Motion.p>
+                        </Motion.div>
 
                         {/* Back Home Button */}
-                        <motion.div
+                        <Motion.div
                             variants={itemVariants}
                             className="pt-4 sm:pt-6"
                         >
-                            <motion.div
+                            <Motion.div
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                             >
@@ -272,10 +272,10 @@ const NotFound = () => {
                                     <Home className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform" />
                                     <span>Back Home</span>
                                 </Link>
-                            </motion.div>
-                        </motion.div>
+                            </Motion.div>
+                        </Motion.div>
                     </div>
-                </motion.div>
+                </Motion.div>
             </main>
         </div>
     );

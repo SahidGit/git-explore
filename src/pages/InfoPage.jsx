@@ -1,21 +1,67 @@
-import React from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import DOMPurify from 'dompurify';
 import Header from '../components/layouts/Header';
 import SEO from '../components/ui/SEO';
-import { PAGES_CONTENT } from '../data/content';
+import { getContentByKey } from '../data/contentLoader';
 import { storageService } from '../services/storageService';
 import { Home, ArrowLeft } from 'lucide-react';
 
 const InfoPage = ({ contentKey }) => {
-// const navigate = useNavigate();
+  const [pageData, setPageData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    React.useEffect(() => {
-        window.scrollTo(0, 0);
-    }, [contentKey]);
+  // Always run scroll and hooks safely (guard window.scrollTo for test environments)
+  useEffect(() => {
+    // In some test environments (jsdom) window.scrollTo is not implemented and throws.
+    // Wrap in try/catch so tests won't fail when calling it.
+    try {
+      window.scrollTo(0, 0);
+    } catch {
+      // ignore in non-DOM environments
+    }
+  }, [contentKey]);
 
-    const pageData = PAGES_CONTENT[contentKey];
+  // Memoize sanitized content to avoid re-sanitization on every render
+  // Declare content-derived value up-front so hooks are called in the same order on every render
+  const content = pageData?.content || '';
+  const sanitizedContent = useMemo(() => DOMPurify.sanitize(content), [content]);
 
-    if (!pageData) {
+  // Lazy load content when contentKey changes
+  useEffect(() => {
+    setIsLoading(true);
+    setError(null);
+    
+    getContentByKey(contentKey).then(content => {
+      setPageData(content);
+      setIsLoading(false);
+    }).catch(err => {
+      console.error('Error loading content:', err);
+      setError(err);
+      setIsLoading(false);
+    });
+  }, [contentKey]);
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#0D1117] text-[#F0F6FC] font-sans">
+        <Header showBackButton={true} activeTab="" />
+        <main className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-block">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+            </div>
+            <p className="mt-4 text-slate-400">Loading content...</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error || !pageData) {
         return (
             <div className="min-h-screen bg-[#0D1117] text-[#F0F6FC] font-sans">
                 <SEO
@@ -57,12 +103,13 @@ const InfoPage = ({ contentKey }) => {
                             </Link>
                         </div>
                     </div>
-                </main>
+        </main>
             </div>
         );
     }
 
-    const { title, subtitle, content } = pageData;
+    const title = pageData?.title || '';
+    const subtitle = pageData?.subtitle || '';
 
     return (
         <div className="min-h-screen bg-[#0D1117] text-[#F0F6FC] font-sans">
@@ -88,7 +135,7 @@ const InfoPage = ({ contentKey }) => {
 
                 <div
                     className="prose prose-invert prose-lg max-w-none prose-headings:text-white prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline prose-strong:text-white prose-code:text-blue-300 prose-code:bg-blue-900/20 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-ul:text-slate-400 prose-li:marker:text-slate-600 mb-12"
-                    dangerouslySetInnerHTML={{ __html: content }}
+                    dangerouslySetInnerHTML={{ __html: sanitizedContent }}
                 />
 
                 {title === 'API Integration' && (

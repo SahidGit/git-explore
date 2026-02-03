@@ -42,7 +42,7 @@ const RepositoryList = ({
 
     return (
         <>
-            {console.log('RepoList Render. Bookmarked IDs:', [...bookmarkedIds], 'First ID Type:', bookmarkedIds.size > 0 ? typeof [...bookmarkedIds][0] : 'N/A')}
+            {process.env.NODE_ENV === 'development' && typeof console !== 'undefined' && console.debug && console.debug('RepoList Render. Bookmarked IDs:', [...bookmarkedIds], 'First ID Type:', bookmarkedIds.size > 0 ? typeof [...bookmarkedIds][0] : 'N/A')}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 <AnimatePresence mode="popLayout">
                     {repositories.map((repo, index) => (
@@ -75,7 +75,9 @@ const RepositoryList = ({
                                     onClick={(e) => {
                                         e.preventDefault();
                                         e.stopPropagation();
-                                        console.log('Bookmark clicked for:', repo.name, 'ID:', repo.id, 'Type:', typeof repo.id);
+                                        if (process.env.NODE_ENV === 'development' && typeof console !== 'undefined' && console.debug) {
+                                            console.debug('Bookmark clicked for:', repo.name, 'ID:', repo.id, 'Type:', typeof repo.id);
+                                        }
                                         onBookmarkToggle(repo);
                                     }}
                                     className={`relative z-50 cursor-pointer p-2 rounded-lg transition-all duration-200 ${bookmarkedIds.has(repo.id)

@@ -1,30 +1,16 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import Sitemap from 'vite-plugin-sitemap'
 
 // https://vitejs.dev/config/
-// Note: The sitemap plugin generates sitemap during build, but public/sitemap.xml is manually maintained.
-// Ensure dynamicRoutes here matches all routes in App.jsx:
+// Note: public/sitemap.xml is manually maintained.
+// Keep it synchronized with all routes in App.jsx:
 // - Static routes: /, /dashboard, /bookmarks, /profile
-// - Dynamic routes from PAGES_CONTENT: /features, /changelog, /docs, /api, /resources, /roadmap
+// - Dynamic routes from contentLoader: /features, /changelog, /docs, /api, /resources, /roadmap
 export default defineConfig({
-  plugins: [
-    react(),
-    Sitemap({
-      hostname: 'https://git-explore-one.vercel.app',
-      dynamicRoutes: [
-        '/dashboard',
-        '/bookmarks',
-        '/profile',
-        '/features',
-        '/changelog',
-        '/docs',
-        '/api',
-        '/roadmap',
-        '/resources'
-      ]
-    })
-  ],
+  plugins: [react()],
+  server: {
+    historyApiFallback: true
+  },
   build: {
     rollupOptions: {
       output: {
@@ -36,8 +22,5 @@ export default defineConfig({
         }
       }
     }
-  },
-  test: {
-    environment: 'jsdom'
   }
 })
