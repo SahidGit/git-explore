@@ -38,9 +38,9 @@ Repository: https://github.com/SahidGit/git-explorer
    git clone https://github.com/SahidGit/git-explorer.git
    ```
 
-2. Navigate to the project directory:
+2. Navigate to the project directory (if not inside the directory):
    ```bash
-   cd git-explorer
+   cd git-explore
    ```
 
 3. Install dependencies:
