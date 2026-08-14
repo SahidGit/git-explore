@@ -1,167 +1,207 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import Header from '../components/layouts/Header';
+import Footer from '../components/layouts/Footer';
+import BackToTop from '../components/ui/BackToTop';
 import SEO from '../components/ui/SEO';
-import { getContentByKey } from '../data/contentLoader';
+import FeatureProjectGrid from '../components/features/FeatureProjectGrid';
+import { getContentByKey, getAvailableContentKeys } from '../data/contentLoader';
 import { storageService } from '../services/storageService';
-import { Home, ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Key, Check, Terminal, ExternalLink } from 'lucide-react';
+
+const TAB_LABELS = {
+  features: 'Features',
+  docs: 'Documentation',
+  api: 'API Reference',
+  roadmap: 'Roadmap',
+  changelog: 'Changelog',
+  resources: 'Resources',
+};
 
 const InfoPage = ({ contentKey }) => {
+  const location = useLocation();
   const [pageData, setPageData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [tokenInput, setTokenInput] = useState('');
+  const [savedSuccess, setSavedSuccess] = useState(false);
 
-  // Always run scroll and hooks safely (guard window.scrollTo for test environments)
   useEffect(() => {
-    // In some test environments (jsdom) window.scrollTo is not implemented and throws.
-    // Wrap in try/catch so tests won't fail when calling it.
     try {
       window.scrollTo(0, 0);
     } catch {
-      // ignore in non-DOM environments
+      // ignore
     }
   }, [contentKey]);
 
-  // Memoize sanitized content to avoid re-sanitization on every render
-  // Declare content-derived value up-front so hooks are called in the same order on every render
   const content = pageData?.content || '';
   const sanitizedContent = useMemo(() => DOMPurify.sanitize(content), [content]);
 
-  // Lazy load content when contentKey changes
   useEffect(() => {
     setIsLoading(true);
     setError(null);
-    
-    getContentByKey(contentKey).then(content => {
-      setPageData(content);
-      setIsLoading(false);
-    }).catch(err => {
-      console.error('Error loading content:', err);
-      setError(err);
-      setIsLoading(false);
-    });
+
+    getContentByKey(contentKey)
+      .then((data) => {
+        setPageData(data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error loading content:', err);
+        setError(err);
+        setIsLoading(false);
+      });
   }, [contentKey]);
 
-  // Show loading state
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-[#0D1117] text-[#F0F6FC] font-sans">
-        <Header showBackButton={true} activeTab="" />
-        <main className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-block">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-            </div>
-            <p className="mt-4 text-slate-400">Loading content...</p>
+  const handleSaveToken = (e) => {
+    e.preventDefault();
+    if (!tokenInput.trim()) return;
+    storageService.saveToken(tokenInput.trim());
+    setSavedSuccess(true);
+    setTokenInput('');
+    setTimeout(() => setSavedSuccess(false), 2500);
+  };
+
+  const isGridLayout = pageData?.layout === 'grid' && Array.isArray(pageData?.cards);
+  const availableKeys = getAvailableContentKeys();
+
+  return (
+    <div className="min-h-screen bg-[#0A0A0C] text-white font-sans selection:bg-white/20 selection:text-white flex flex-col justify-between">
+      <SEO
+        title={`${pageData?.title || 'Platform Documentation'} | GitExplorer`}
+        description={pageData?.subtitle || 'Explore GitExplorer guides, APIs, and roadmap.'}
+        canonical={`https://git-explore-one.vercel.app/${contentKey}`}
+      />
+
+      <Header showBackButton={true} activeTab="" />
+
+      <main className="flex-1 pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full">
+        {/* Navigation Breadcrumb & Back */}
+        <div className="flex items-center justify-between gap-4 mb-8">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-white transition-colors duration-200"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Back to Home</span>
+          </Link>
+
+          <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-hide max-w-full">
+            {availableKeys.map((key) => (
+              <Link
+                key={key}
+                to={`/${key}`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-colors duration-200 whitespace-nowrap ${
+                  contentKey === key
+                    ? 'bg-white/[0.08] text-white border border-white/10 font-semibold'
+                    : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03]'
+                }`}
+              >
+                {TAB_LABELS[key] || key}
+              </Link>
+            ))}
           </div>
-        </main>
-      </div>
-    );
-  }
-
-  // Show error state
-  if (error || !pageData) {
-        return (
-            <div className="min-h-screen bg-[#0D1117] text-[#F0F6FC] font-sans">
-                <SEO
-                    title="404 - Page Not Found | GitExplorer"
-                    description="The page you're looking for doesn't exist."
-                    canonical={`https://git-explore-one.vercel.app/${contentKey}`}
-                />
-                <Header showBackButton={true} activeTab="" />
-
-                <main className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
-                    <div className="max-w-4xl mx-auto text-center animate-in fade-in slide-in-from-bottom-4 duration-700">
-                        <div className="mb-8">
-                            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-red-500/20 to-orange-500/20 border border-red-500/30 mb-6">
-                                <span className="text-4xl">⚠️</span>
-                            </div>
-                        </div>
-
-                        <h1 className="text-4xl md:text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[#58A6FF] to-[#BC8CFF]">
-                            Page Not Found
-                        </h1>
-                        <p className="text-xl text-slate-400 font-light mb-8 max-w-2xl mx-auto">
-                            The page "{contentKey}" doesn't exist or has been removed.
-                        </p>
-
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                            <Link
-                                to="/"
-                                className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl transition-colors shadow-lg shadow-indigo-500/20"
-                            >
-                                <Home className="w-5 h-5" />
-                                Back to Home
-                            </Link>
-                            <Link
-                                to="/dashboard"
-                                className="flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white font-medium rounded-xl transition-colors border border-white/10"
-                            >
-                                <ArrowLeft className="w-5 h-5" />
-                                Go to Dashboard
-                            </Link>
-                        </div>
-                    </div>
-        </main>
-            </div>
-        );
-    }
-
-    const title = pageData?.title || '';
-    const subtitle = pageData?.subtitle || '';
-
-    return (
-        <div className="min-h-screen bg-[#0D1117] text-[#F0F6FC] font-sans">
-            <SEO
-                title={`${title} | GitExplorer`}
-                description={subtitle}
-                canonical={`https://git-explore-one.vercel.app/${contentKey}`}
-            />
-            <Header showBackButton={true} activeTab="" />
-
-            {/* Content */}
-            <main className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
-                <article className="mb-12">
-                    <h1 className="text-4xl md:text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[#58A6FF] to-[#BC8CFF]">
-                        {title}
-                    </h1>
-                    {subtitle && (
-                        <p className="text-xl text-slate-400 font-light">
-                            {subtitle}
-                        </p>
-                    )}
-                </article>
-
-                <div
-                    className="prose prose-invert prose-lg max-w-none prose-headings:text-white prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline prose-strong:text-white prose-code:text-blue-300 prose-code:bg-blue-900/20 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-ul:text-slate-400 prose-li:marker:text-slate-600 mb-12"
-                    dangerouslySetInnerHTML={{ __html: sanitizedContent }}
-                />
-
-                {title === 'API Integration' && (
-                    <div className="bg-[#161B22] border border-[#30363D] rounded-xl p-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
-                        <h3 className="text-lg font-semibold text-white mb-4">Enter Access Token</h3>
-                        <div className="flex flex-col sm:flex-row gap-4">
-                            <input
-                                type="password"
-                                placeholder="ghp_..."
-                                className="flex-1 bg-[#0D1117] border border-[#30363D] rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#58A6FF] focus:ring-1 focus:ring-[#58A6FF] transition-all"
-                                onChange={(e) => {
-                                    if (e.target.value.startsWith('ghp_') || e.target.value.startsWith('github_pat_')) {
-                                        storageService.saveToken(e.target.value);
-                                        // Visual feedback could be added here
-                                    }
-                                }}
-                            />
-                            <div className="text-xs text-slate-500 mt-2 sm:mt-0 sm:self-center">
-                                *Token is autosaved to your browser's local storage.
-                            </div>
-                        </div>
-                    </div>
-                )}
-            </main>
         </div>
-    );
+
+        {/* Loading state */}
+        {isLoading && (
+          <div className="py-24 text-center">
+            <div className="inline-block w-8 h-8 rounded-full border-2 border-white/20 border-t-white animate-spin" />
+            <p className="mt-4 text-xs font-mono text-zinc-500">Loading module / {contentKey}...</p>
+          </div>
+        )}
+
+        {/* Error / Not Found */}
+        {!isLoading && (error || !pageData) && (
+          <div className="py-20 text-center max-w-md mx-auto">
+            <div className="w-12 h-12 rounded-xl bg-white/[0.04] border border-white/10 flex items-center justify-center mx-auto mb-4 text-zinc-400">
+              <Terminal className="w-5 h-5" />
+            </div>
+            <h1 className="text-xl font-bold text-white mb-2">Module Not Found</h1>
+            <p className="text-xs text-zinc-400 mb-6">
+              The documentation module <code className="font-mono text-zinc-300">{contentKey}</code> could not be loaded.
+            </p>
+            <Link
+              to="/docs"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black text-xs font-semibold hover:bg-zinc-200 transition-colors"
+            >
+              Go to Documentation
+            </Link>
+          </div>
+        )}
+
+        {/* Loaded Content */}
+        {!isLoading && pageData && (
+          <div>
+            {/* Header Title */}
+            <div className="mb-10 max-w-3xl">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-[#71717A] block mb-2">
+                &lt;MODULE_{contentKey.toUpperCase()} /&gt;
+              </span>
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-3">
+                {pageData.title}
+              </h1>
+              {pageData.subtitle && (
+                <p className="text-sm sm:text-base text-[#A1A1AA] leading-relaxed">
+                  {pageData.subtitle}
+                </p>
+              )}
+            </div>
+
+            {/* Grid Layout (Docs, Features) or Prose Layout */}
+            {isGridLayout ? (
+              <FeatureProjectGrid cards={pageData.cards} />
+            ) : (
+              <div
+                className="prose prose-invert max-w-none mb-12 prose-headings:font-bold prose-headings:text-white prose-p:text-zinc-400 prose-p:leading-relaxed prose-a:text-zinc-300 prose-a:underline hover:prose-a:text-white prose-code:text-zinc-200 prose-code:font-mono prose-code:bg-white/[0.06] prose-code:px-1 prose-code:py-0.5 prose-code:rounded"
+                dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+              />
+            )}
+
+            {/* Token Tester Widget on API Page */}
+            {contentKey === 'api' && (
+              <div className="mt-12 p-6 rounded-2xl bg-[#121215] border border-white/[0.08] max-w-2xl">
+                <div className="flex items-center gap-2 mb-2">
+                  <Key className="w-4 h-4 text-zinc-400" />
+                  <h3 className="text-sm font-bold text-white">Interactive Token Connect</h3>
+                </div>
+                <p className="text-xs text-zinc-400 mb-4 leading-relaxed">
+                  Test and save your Personal Access Token directly to this browser session.
+                </p>
+
+                {savedSuccess ? (
+                  <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono flex items-center gap-2">
+                    <Check className="w-4 h-4" />
+                    Token successfully cached in sessionStorage.
+                  </div>
+                ) : (
+                  <form onSubmit={handleSaveToken} className="flex flex-col sm:flex-row gap-2">
+                    <input
+                      type="password"
+                      value={tokenInput}
+                      onChange={(e) => setTokenInput(e.target.value)}
+                      placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+                      className="flex-1 bg-[#0A0A0C] border border-white/[0.08] rounded-xl px-4 py-2.5 text-xs text-white font-mono placeholder:text-zinc-600 focus:outline-none focus:border-white/25"
+                    />
+                    <button
+                      type="submit"
+                      className="px-5 py-2.5 rounded-xl bg-white text-black text-xs font-semibold hover:bg-zinc-200 transition-colors whitespace-nowrap"
+                    >
+                      Save Token
+                    </button>
+                  </form>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+      </main>
+
+      <BackToTop />
+      <Footer />
+    </div>
+  );
 };
 
 export default InfoPage;

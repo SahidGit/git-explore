@@ -1,179 +1,217 @@
-import React from 'react';
-import { Search, Filter, Calendar, Star, Code, GitFork, ChevronDown } from 'lucide-react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import {
+    Search, ChevronDown, Code, SlidersHorizontal, CalendarDays, Star, X
+} from 'lucide-react';
 
+// ─── Constants ─────────────────────────────────────────
 const LANGUAGES = [
     'JavaScript', 'TypeScript', 'Python', 'Java', 'Go',
-    'Rust', 'C++', 'C#', 'PHP', 'Ruby', 'Swift', 'Kotlin'
+    'Rust', 'C++', 'C#', 'PHP', 'Ruby', 'Swift', 'Kotlin',
+    'Dart', 'Scala', 'Haskell', 'Elixir', 'Zig',
 ];
 
-const FilterPanel = ({ filters, onFilterChange }) => {
-    const [openDropdown, setOpenDropdown] = React.useState(null);
-    const [showAllLanguages, setShowAllLanguages] = React.useState(false);
-    const dropdownRef = React.useRef(null);
+const SORT_OPTIONS = [
+    { value: 'stars',   label: 'Most Stars',         icon: '★' },
+    { value: 'forks',   label: 'Most Forks',          icon: '⑂' },
+    { value: 'updated', label: 'Recently Updated',    icon: '◷' },
+];
 
-    React.useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setOpenDropdown(null);
-            }
+const SINCE_OPTIONS = [
+    { value: 'daily',   label: 'Today' },
+    { value: 'weekly',  label: 'This Week' },
+    { value: 'monthly', label: 'This Month' },
+];
+
+// ─── Pill Dropdown ────────────────────────────────────
+const PillDropdown = ({ id, label, options, value, onChange, disabled = false, icon: Icon }) => {
+    const [open, setOpen] = useState(false);
+    const ref = useRef(null);
+
+    // Close on outside click
+    useEffect(() => {
+        const handler = (e) => {
+            if (ref.current && !ref.current.contains(e.target)) setOpen(false);
         };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        document.addEventListener('mousedown', handler);
+        return () => document.removeEventListener('mousedown', handler);
     }, []);
 
-    const toggleDropdown = (name) => {
-        setOpenDropdown(openDropdown === name ? null : name);
-    };
-
-    const displayedLanguages = showAllLanguages ? LANGUAGES : LANGUAGES.slice(0, 8);
+    const selected = options.find((o) => o.value === value);
+    const displayLabel = selected ? selected.label : label;
 
     return (
-        <div className="relative z-20 bg-slate-900/20 backdrop-blur-xl border border-white/10 rounded-2xl p-4 mb-8 shadow-2xl shadow-black/20" ref={dropdownRef}>
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-                {/* Search */}
-                <div className="md:col-span-5 relative group">
-                    <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-400 transition-colors" />
-                    <input
-                        type="text"
-                        placeholder="Search repositories..."
-                        value={filters.query}
-                        onChange={(e) => onFilterChange({ ...filters, query: e.target.value })}
-                        className="relative w-full bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-xl pl-10 pr-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all placeholder:text-slate-500 hover:bg-slate-900/60 hover:border-white/20"
-                    />
+        <div ref={ref} className="relative">
+            <button
+                id={id}
+                type="button"
+                disabled={disabled}
+                onClick={() => !disabled && setOpen((v) => !v)}
+                aria-haspopup="listbox"
+                aria-expanded={open}
+                className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg border text-xs font-medium transition-all duration-200 select-none whitespace-nowrap ${
+                    disabled
+                        ? 'opacity-40 cursor-not-allowed bg-[#121215] border-white/[0.06] text-zinc-500'
+                        : open
+                        ? 'bg-[#16161A] border-white/20 text-white'
+                        : 'bg-[#121215] border-white/[0.08] text-zinc-300 hover:border-white/20 hover:text-white'
+                }`}
+            >
+                {Icon && <Icon className="w-3.5 h-3.5 text-zinc-500 flex-shrink-0" strokeWidth={1.5} />}
+                <span className={selected ? 'text-white' : ''}>{displayLabel}</span>
+                <ChevronDown
+                    className={`w-3 h-3 text-zinc-500 flex-shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+                />
+            </button>
+
+            {open && (
+                <div
+                    className="absolute top-full left-0 mt-2 min-w-[160px] bg-[#16161A] border border-white/[0.08] rounded-xl shadow-2xl shadow-black/50 z-50 overflow-hidden py-1"
+                    role="listbox"
+                >
+                    {options.map((opt) => (
+                        <button
+                            key={opt.value}
+                            role="option"
+                            aria-selected={value === opt.value}
+                            onClick={() => {
+                                onChange(opt.value);
+                                setOpen(false);
+                            }}
+                            className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-[13px] text-left transition-colors duration-150 ${
+                                value === opt.value
+                                    ? 'text-white bg-white/[0.06]'
+                                    : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
+                            }`}
+                        >
+                            {opt.icon && (
+                                <span className="text-zinc-500 font-mono text-[11px] w-4 text-center">
+                                    {opt.icon}
+                                </span>
+                            )}
+                            {opt.label}
+                            {value === opt.value && (
+                                <span className="ml-auto w-1.5 h-1.5 rounded-full bg-white/60 flex-shrink-0" />
+                            )}
+                        </button>
+                    ))}
                 </div>
+            )}
+        </div>
+    );
+};
 
-                {/* Language Filter */}
-                <div className="md:col-span-3 relative group">
-                    <div
-                        onClick={() => toggleDropdown('language')}
-                        className={`relative w-full bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-xl pl-10 pr-4 py-3 text-sm text-white cursor-pointer flex items-center justify-between transition-all hover:bg-slate-900/60 hover:border-white/20 ${openDropdown === 'language' ? 'border-blue-500/50 ring-1 ring-blue-500/50 bg-slate-900/60' : ''}`}
-                    >
-                        <div className="flex items-center gap-2 truncate">
-                            <Code className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${openDropdown === 'language' ? 'text-blue-400' : 'text-slate-400'}`} />
-                            <span className={!filters.language ? 'text-slate-400' : ''}>
-                                {filters.language || 'All Languages'}
-                            </span>
-                        </div>
-                        <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${openDropdown === 'language' ? 'rotate-180 text-blue-400' : ''}`} />
-                    </div>
+// ─── Main FilterPanel ─────────────────────────────────
+const FilterPanel = ({ filters, onFilterChange }) => {
+    const [focused, setFocused] = useState(false);
 
-                    {openDropdown === 'language' && (
-                        <div className="absolute top-full left-0 right-0 mt-2 bg-[#0D1117]/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl shadow-black/50 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                            <div className="p-2 max-h-60 overflow-y-auto custom-scrollbar">
-                                <button
-                                    onClick={() => {
-                                        onFilterChange({ ...filters, language: '' });
-                                        setOpenDropdown(null);
-                                    }}
-                                    className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-all ${!filters.language ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}
-                                >
-                                    All Languages
-                                </button>
-                                {displayedLanguages.map(lang => (
-                                    <button
-                                        key={lang}
-                                        onClick={() => {
-                                            onFilterChange({ ...filters, language: lang });
-                                            setOpenDropdown(null);
-                                        }}
-                                        className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-all ${filters.language === lang ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}
-                                    >
-                                        {lang}
-                                    </button>
-                                ))}
-                                {!showAllLanguages && (
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setShowAllLanguages(true);
-                                        }}
-                                        className="w-full mt-2 py-2 px-3 rounded-lg text-xs text-center text-blue-400 bg-blue-500/5 hover:bg-blue-500/10 border border-blue-500/10 hover:border-blue-500/20 transition-all flex items-center justify-center gap-2 group"
-                                    >
-                                        <span>View All Languages</span>
-                                        <ChevronDown className="w-3 h-3 group-hover:translate-y-0.5 transition-transform" />
-                                    </button>
-                                )}
-                            </div>
-                        </div>
+    const setFilter = useCallback(
+        (key, val) => onFilterChange({ ...filters, [key]: val }),
+        [filters, onFilterChange]
+    );
+
+    const clearSearch = () => setFilter('query', '');
+    const hasActiveFilters = filters.language || filters.sort !== 'stars' || filters.since !== 'daily';
+
+    return (
+        <div className="mb-6 space-y-3">
+            {/* ── Search bar ── */}
+            <div className="relative group">
+                <Search
+                    className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors duration-200 pointer-events-none ${
+                        focused ? 'text-zinc-300' : 'text-zinc-500'
+                    }`}
+                />
+                <input
+                    id="repo-search"
+                    type="text"
+                    placeholder="Search repositories..."
+                    value={filters.query}
+                    onChange={(e) => setFilter('query', e.target.value)}
+                    onFocus={() => setFocused(true)}
+                    onBlur={() => setFocused(false)}
+                    autoComplete="off"
+                    spellCheck={false}
+                    aria-label="Search repositories"
+                    className={`w-full bg-[#121215]/80 backdrop-blur-md border rounded-xl pl-10 pr-20 py-3 text-[13px] text-white placeholder:text-zinc-600 focus:outline-none transition-all duration-200 ${
+                        focused
+                            ? 'border-white/25 shadow-[0_0_0_1px_rgba(255,255,255,0.04)]'
+                            : 'border-white/[0.08] hover:border-white/15'
+                    }`}
+                />
+                {/* Right-side decorators */}
+                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                    {filters.query ? (
+                        <button
+                            onClick={clearSearch}
+                            className="p-0.5 text-zinc-500 hover:text-white transition-colors duration-150 rounded"
+                            aria-label="Clear search"
+                        >
+                            <X className="w-3.5 h-3.5" />
+                        </button>
+                    ) : (
+                        <kbd className="text-[10px] font-mono text-zinc-500 bg-white/[0.04] border border-white/[0.08] px-1.5 py-0.5 rounded select-none hidden sm:inline-flex">
+                            /
+                        </kbd>
                     )}
                 </div>
+            </div>
 
-                {/* Sort Filter */}
-                <div className="md:col-span-2 relative group">
-                    <div
-                        onClick={() => toggleDropdown('sort')}
-                        className={`relative w-full bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-xl pl-10 pr-4 py-3 text-sm text-white cursor-pointer flex items-center justify-between transition-all hover:bg-slate-900/60 hover:border-white/20 ${openDropdown === 'sort' ? 'border-blue-500/50 ring-1 ring-blue-500/50 bg-slate-900/60' : ''}`}
+            {/* ── Filter pills row ── */}
+            <div className="flex flex-wrap items-center gap-2">
+                {/* Language */}
+                <PillDropdown
+                    id="filter-language"
+                    label="<> All Languages"
+                    icon={Code}
+                    value={filters.language}
+                    onChange={(v) => setFilter('language', v)}
+                    options={[
+                        { value: '', label: 'All Languages' },
+                        ...LANGUAGES.map((l) => ({ value: l, label: l })),
+                    ]}
+                />
+
+                {/* Sort */}
+                <PillDropdown
+                    id="filter-sort"
+                    label="⑂ Sort By"
+                    icon={SlidersHorizontal}
+                    value={filters.sort}
+                    onChange={(v) => setFilter('sort', v)}
+                    options={SORT_OPTIONS}
+                />
+
+                {/* Timeframe — disabled when searching */}
+                <PillDropdown
+                    id="filter-since"
+                    label="◷ Timeframe"
+                    icon={CalendarDays}
+                    value={filters.since}
+                    onChange={(v) => setFilter('since', v)}
+                    options={SINCE_OPTIONS}
+                    disabled={!!filters.query}
+                />
+
+                {/* Active filter count badge */}
+                {hasActiveFilters && (
+                    <button
+                        onClick={() =>
+                            onFilterChange({ ...filters, language: '', sort: 'stars', since: 'daily' })
+                        }
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-white/[0.08] bg-white/[0.03] text-[11px] font-mono text-zinc-500 hover:text-white hover:border-white/20 transition-all duration-200"
+                        aria-label="Reset filters"
                     >
-                        <div className="flex items-center gap-2 truncate">
-                            <Filter className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${openDropdown === 'sort' ? 'text-blue-400' : 'text-slate-400'}`} />
-                            <span>
-                                {filters.sort === 'stars' ? 'Most Stars' : filters.sort === 'forks' ? 'Most Forks' : 'Recently Updated'}
-                            </span>
-                        </div>
-                        <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${openDropdown === 'sort' ? 'rotate-180 text-blue-400' : ''}`} />
-                    </div>
+                        <X className="w-3 h-3" />
+                        Reset
+                    </button>
+                )}
 
-                    {openDropdown === 'sort' && (
-                        <div className="absolute top-full left-0 right-0 mt-2 bg-[#0D1117]/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl shadow-black/50 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                            <div className="p-2">
-                                {[
-                                    { value: 'stars', label: 'Most Stars' },
-                                    { value: 'forks', label: 'Most Forks' },
-                                    { value: 'updated', label: 'Recently Updated' }
-                                ].map(option => (
-                                    <button
-                                        key={option.value}
-                                        onClick={() => {
-                                            onFilterChange({ ...filters, sort: option.value });
-                                            setOpenDropdown(null);
-                                        }}
-                                        className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-all ${filters.sort === option.value ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}
-                                    >
-                                        {option.label}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </div>
-
-                {/* Time Range */}
-                <div className="md:col-span-2 relative group">
-                    <div
-                        onClick={() => !filters.query && toggleDropdown('since')}
-                        className={`relative w-full bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-xl pl-10 pr-4 py-3 text-sm text-white flex items-center justify-between transition-all ${filters.query ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-slate-900/60 hover:border-white/20'} ${openDropdown === 'since' ? 'border-blue-500/50 ring-1 ring-blue-500/50 bg-slate-900/60' : ''}`}
-                    >
-                        <div className="flex items-center gap-2 truncate">
-                            <Calendar className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${openDropdown === 'since' ? 'text-blue-400' : 'text-slate-400'}`} />
-                            <span>
-                                {filters.since === 'daily' ? 'Today' : filters.since === 'weekly' ? 'This Week' : 'This Month'}
-                            </span>
-                        </div>
-                        <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${openDropdown === 'since' ? 'rotate-180 text-blue-400' : ''}`} />
-                    </div>
-
-                    {openDropdown === 'since' && !filters.query && (
-                        <div className="absolute top-full left-0 right-0 mt-2 bg-[#0D1117]/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl shadow-black/50 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                            <div className="p-2">
-                                {[
-                                    { value: 'daily', label: 'Today' },
-                                    { value: 'weekly', label: 'This Week' },
-                                    { value: 'monthly', label: 'This Month' }
-                                ].map(option => (
-                                    <button
-                                        key={option.value}
-                                        onClick={() => {
-                                            onFilterChange({ ...filters, since: option.value });
-                                            setOpenDropdown(null);
-                                        }}
-                                        className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-all ${filters.since === option.value ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}
-                                    >
-                                        {option.label}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
+                {/* Results count — injected by parent if needed via slot */}
+                <div className="ml-auto hidden sm:flex items-center gap-1.5">
+                    {filters.query && (
+                        <span className="text-[11px] font-mono text-zinc-600">
+                            Searching: <span className="text-zinc-400">&quot;{filters.query}&quot;</span>
+                        </span>
                     )}
                 </div>
             </div>

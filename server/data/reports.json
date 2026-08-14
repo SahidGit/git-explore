@@ -1,0 +1,14 @@
+[
+  {
+    "id": "6a7f58d63fc06cf76d54477f",
+    "issueType": "Bug Report",
+    "pageUrl": "/dashboard",
+    "description": "Sample issue report created to verify database & storage persistence.",
+    "email": "dev@gitexplorer.app",
+    "ipAddress": "::1",
+    "userAgent": "node",
+    "status": "open",
+    "createdAt": "2026-08-14T18:05:10.734Z",
+    "updatedAt": "2026-08-14T18:05:10.737Z"
+  }
+]

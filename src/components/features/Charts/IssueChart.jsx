@@ -1,5 +1,6 @@
 import React from 'react';
 import { Doughnut } from 'react-chartjs-2';
+import { FONT_SANS } from '../../../utils/fonts';
 
 const IssueChart = ({ open, closed }) => {
     const data = {
@@ -30,7 +31,7 @@ const IssueChart = ({ open, closed }) => {
                 labels: {
                     color: '#94a3b8', // Slate-400
                     font: {
-                        family: "'Inter', sans-serif",
+                        family: FONT_SANS,
                         size: 12,
                     },
                     usePointStyle: true,

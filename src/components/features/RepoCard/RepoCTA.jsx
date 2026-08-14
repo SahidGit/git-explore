@@ -1,37 +1,53 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import iconGrid from '../../../assets/icon-grid.png';
+import { ArrowRight, Sparkles, Terminal } from 'lucide-react';
 
 const RepoCTA = () => {
     return (
-        <div className="w-full flex justify-center py-8 z-10 relative">
-            <Link
-                to="/dashboard"
-                className="group flex items-center justify-center gap-2 rounded-full
-                    bg-gradient-to-r from-[#238636] to-[#2ea043] text-white font-bold 
-                    px-8 py-3 text-lg
-                    shadow-[0_4px_12px_rgba(46,160,67,0.3)] 
-                    border border-[#3fb950]/50
-                    transition-all duration-300 ease-out
-                    hover:scale-105 hover:shadow-[0_8px_20px_rgba(46,160,67,0.4)] hover:-translate-y-0.5
-                    active:scale-98
-                    focus:outline-none focus:ring-2 focus:ring-[#3fb950] focus:ring-offset-2 focus:ring-offset-[#0D1117]
-                    overflow-hidden"
-                aria-label="Explore Trending Repositories"
-            >
-                {/* Shimmer Effect */}
-                <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent z-10" />
+        <div className="w-full py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto z-10 relative">
+            <div className="relative rounded-2xl border border-white/10 bg-[#121215] p-8 md:p-12 overflow-hidden text-center shadow-2xl">
+                {/* Subtle radial glow */}
+                <div
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none mix-blend-screen"
+                    style={{
+                        background: 'radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.04) 0%, transparent 70%)',
+                    }}
+                    aria-hidden="true"
+                />
 
-                {/* Icon & Text */}
-                <div className="relative z-20 flex items-center gap-3">
-                    <img
-                        src={iconGrid}
-                        alt=""
-                        className="w-5 h-5 object-contain opacity-90 group-hover:opacity-100"
-                    />
-                    <span className="leading-none tracking-wide text-shadow-sm">Explore Repo</span>
+                <div className="relative z-10 max-w-2xl mx-auto space-y-6">
+                    <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-[11px] font-mono uppercase tracking-widest text-[#71717A]">
+                        <Sparkles className="w-3 h-3 text-zinc-400" />
+                        Zero Config • Local-First • 100% Free
+                    </span>
+
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                        Ready to uncover the open-source signal?
+                    </h2>
+
+                    <p className="text-base text-[#A1A1AA] leading-relaxed">
+                        Start exploring trending repositories, inspecting maintainer activity rhythms,
+                        and curating private bookmarks on your local machine.
+                    </p>
+
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                        <Link
+                            to="/dashboard"
+                            className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-black text-sm font-semibold hover:bg-zinc-200 active:scale-[0.98] transition-all duration-200"
+                        >
+                            Launch Dashboard
+                            <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
+                        </Link>
+
+                        <Link
+                            to="/docs"
+                            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/10 text-[#A1A1AA] text-sm font-medium hover:border-white/20 hover:text-white transition-all duration-200"
+                        >
+                            Read Documentation
+                        </Link>
+                    </div>
                 </div>
-            </Link>
+            </div>
         </div>
     );
 };

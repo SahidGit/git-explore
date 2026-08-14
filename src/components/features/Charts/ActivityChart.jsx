@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
+import { FONT_SANS } from '../../../utils/fonts';
 
 const ActivityChart = ({ data }) => {
     const chartRef = useRef(null);
@@ -82,6 +83,7 @@ const ActivityChart = ({ data }) => {
                 ticks: {
                     color: '#64748b', // Slate-500
                     font: {
+                        family: FONT_SANS,
                         size: 10,
                     },
                 },
@@ -95,6 +97,7 @@ const ActivityChart = ({ data }) => {
                     color: '#64748b',
                     stepSize: 1,
                     font: {
+                        family: FONT_SANS,
                         size: 10,
                     },
                 },

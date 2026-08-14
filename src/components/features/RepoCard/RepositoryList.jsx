@@ -1,10 +1,48 @@
 import React from 'react';
-import { Star, GitFork, Bookmark, ExternalLink, Search, ChevronDown } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion'; // eslint-disable-line no-unused-vars
-import { formatNumber, getRelativeTime } from '../../../utils/formatters';
-import { SkeletonCard } from '../../ui/SkeletonLoader';
+import { Search, ChevronDown } from 'lucide-react';
+import RepoCard from './RepoCard';
 import ErrorMessage from '../../ui/ErrorMessage';
 
+// ─── Skeleton card ────────────────────────────────────
+const SkeletonCard = () => (
+    <div className="flex flex-col bg-white/[0.03] border border-white/[0.05] rounded-xl p-5 animate-pulse h-44">
+        {/* Header */}
+        <div className="flex items-center gap-2.5 mb-3">
+            <div className="w-7 h-7 rounded-md bg-white/[0.06] flex-shrink-0" />
+            <div className="space-y-1.5 flex-1 min-w-0">
+                <div className="h-2 w-16 rounded-full bg-white/[0.05]" />
+                <div className="h-3 w-28 rounded-full bg-white/[0.07]" />
+            </div>
+        </div>
+        {/* Description lines */}
+        <div className="space-y-2 flex-1 mb-4">
+            <div className="h-2.5 w-full rounded-full bg-white/[0.05]" />
+            <div className="h-2.5 w-4/5 rounded-full bg-white/[0.04]" />
+        </div>
+        {/* Footer */}
+        <div className="flex items-center gap-3 pt-3 border-t border-white/[0.05]">
+            <div className="h-2 w-14 rounded-full bg-white/[0.05]" />
+            <div className="h-2 w-10 rounded-full bg-white/[0.04]" />
+            <div className="h-2 w-10 rounded-full bg-white/[0.04]" />
+            <div className="h-2 w-12 rounded-full bg-white/[0.03] ml-auto" />
+        </div>
+    </div>
+);
+
+// ─── Empty state ──────────────────────────────────────
+const EmptyState = () => (
+    <div className="flex flex-col items-center justify-center py-24 text-center">
+        <div className="w-12 h-12 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center mb-4">
+            <Search className="w-5 h-5 text-zinc-600" strokeWidth={1.5} />
+        </div>
+        <h3 className="text-sm font-semibold text-white mb-2">No repositories found</h3>
+        <p className="text-[13px] text-zinc-500 max-w-xs">
+            Try adjusting your search query or filter criteria to find what you&apos;re looking for.
+        </p>
+    </div>
+);
+
+// ─── RepositoryList ───────────────────────────────────
 const RepositoryList = ({
     repositories,
     loading,
@@ -14,12 +52,13 @@ const RepositoryList = ({
     onLoadMore,
     hasMore,
     bookmarkedIds,
-    onBookmarkToggle
+    onBookmarkToggle,
 }) => {
+    // Loading — initial fetch (empty list)
     if (loading && (!repositories || repositories.length === 0)) {
         return (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                {[...Array(6)].map((_, i) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8" aria-busy="true" aria-label="Loading repositories">
+                {[...Array(9)].map((_, i) => (
                     <SkeletonCard key={i} />
                 ))}
             </div>
@@ -28,115 +67,39 @@ const RepositoryList = ({
 
     if (error) return <ErrorMessage message={error} onRetry={onRetry} />;
 
-    if (!repositories || repositories.length === 0) {
-        return (
-            <div className="text-center py-20">
-                <div className="bg-slate-800/50 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-                    <Search className="w-10 h-10 text-slate-500" />
-                </div>
-                <h3 className="text-xl font-semibold text-slate-300 mb-2">No repositories found</h3>
-                <p className="text-slate-400">Try adjusting your search or filters</p>
-            </div>
-        );
-    }
+    if (!repositories || repositories.length === 0) return <EmptyState />;
 
     return (
-        <>
-            {process.env.NODE_ENV === 'development' && typeof console !== 'undefined' && console.debug && console.debug('RepoList Render. Bookmarked IDs:', [...bookmarkedIds], 'First ID Type:', bookmarkedIds.size > 0 ? typeof [...bookmarkedIds][0] : 'N/A')}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                <AnimatePresence mode="popLayout">
-                    {repositories.map((repo, index) => (
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.9 }}
-                            transition={{ duration: 0.2, delay: index * 0.05 }}
-                            key={repo.id}
-                            className="group relative bg-slate-800/40 hover:bg-slate-800/60 border border-slate-700/50 hover:border-blue-500/50 rounded-xl p-5 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-1"
-                        >
-                            <div className="flex justify-between items-start mb-3">
-                                <div className="flex items-center gap-3">
-                                    <img
-                                        src={repo.owner.avatar_url}
-                                        alt={repo.owner.login}
-                                        className="w-10 h-10 rounded-full border border-slate-700"
-                                    />
-                                    <div>
-                                        <h3
-                                            onClick={() => onRepoClick(repo)}
-                                            className="font-semibold text-white hover:text-blue-400 cursor-pointer truncate max-w-[160px] transition-colors"
-                                        >
-                                            {repo.name}
-                                        </h3>
-                                        <p className="text-xs text-slate-400">{repo.owner.login}</p>
-                                    </div>
-                                </div>
-                                <button
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        if (process.env.NODE_ENV === 'development' && typeof console !== 'undefined' && console.debug) {
-                                            console.debug('Bookmark clicked for:', repo.name, 'ID:', repo.id, 'Type:', typeof repo.id);
-                                        }
-                                        onBookmarkToggle(repo);
-                                    }}
-                                    className={`relative z-50 cursor-pointer p-2 rounded-lg transition-all duration-200 ${bookmarkedIds.has(repo.id)
-                                        ? 'bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500/20'
-                                        : 'bg-slate-700/30 text-slate-400 hover:bg-slate-700/50 hover:text-white'
-                                        }`}
-                                >
-                                    <Bookmark className={`w-4 h-4 ${bookmarkedIds.has(repo.id) ? 'fill-current' : ''}`} />
-                                </button>
-                            </div>
-
-                            <p className="text-sm text-slate-300 mb-4 line-clamp-2 min-h-[40px]">
-                                {repo.description || 'No description available'}
-                            </p>
-
-                            <div className="flex items-center justify-between text-xs text-slate-400 mt-auto pt-4 border-t border-slate-700/50">
-                                <div className="flex items-center gap-3">
-                                    <span className="flex items-center gap-1">
-                                        <Star className="w-3 h-3 text-yellow-500" />
-                                        {formatNumber(repo.stargazers_count)}
-                                    </span>
-                                    <span className="flex items-center gap-1">
-                                        <GitFork className="w-3 h-3 text-blue-500" />
-                                        {formatNumber(repo.forks_count)}
-                                    </span>
-                                </div>
-                                <span className="text-slate-500">{getRelativeTime(repo.updated_at)}</span>
-                            </div>
-                        </motion.div>
-                    ))}
-                </AnimatePresence>
+        <section aria-label="Repository results">
+            {/* Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                {repositories.map((repo) => (
+                    <RepoCard
+                        key={repo.id}
+                        repo={repo}
+                        onRepoClick={onRepoClick}
+                        onBookmarkToggle={onBookmarkToggle}
+                        isBookmarked={bookmarkedIds?.has(repo.id) ?? false}
+                    />
+                ))}
+                {/* Inline skeleton cards appended during "load more" */}
+                {loading && [...Array(3)].map((_, i) => <SkeletonCard key={`more-${i}`} />)}
             </div>
 
-            {hasMore && (
-                <div className="flex justify-center mt-8">
-                    <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+            {/* Load more */}
+            {hasMore && !loading && (
+                <div className="flex justify-center mt-2 mb-8">
+                    <button
+                        id="load-more-btn"
                         onClick={onLoadMore}
-                        className="group relative px-8 py-3 bg-slate-900/50 hover:bg-slate-800/50 text-white rounded-2xl transition-all duration-300 border border-white/10 hover:border-blue-500/50 shadow-lg hover:shadow-blue-500/20 backdrop-blur-md overflow-hidden"
+                        className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-white/[0.08] bg-[#121215] text-[13px] font-medium text-zinc-300 hover:text-white hover:border-white/20 hover:bg-white/[0.02] transition-all duration-200"
                     >
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                        <div className="relative flex items-center gap-3">
-                            {loading ? (
-                                <>
-                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                    <span>Loading Repositories...</span>
-                                </>
-                            ) : (
-                                <>
-                                    <span>View More Repositories</span>
-                                    <ChevronDown className="w-4 h-4 group-hover:translate-y-1 transition-transform" />
-                                </>
-                            )}
-                        </div>
-                    </motion.button>
+                        Load more repositories
+                        <ChevronDown className="w-3.5 h-3.5 text-zinc-500 group-hover:text-zinc-300 group-hover:translate-y-0.5 transition-all duration-200" />
+                    </button>
                 </div>
             )}
-        </>
+        </section>
     );
 };
 

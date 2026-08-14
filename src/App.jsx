@@ -4,6 +4,9 @@ import { AnimatePresence } from 'framer-motion';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import InfoPage from './pages/InfoPage';
+import Resources from './pages/Resources';
+import ReportIssue from './pages/ReportIssue';
+import GitCheatSheet from './pages/GitCheatSheet';
 import NotFound from './pages/NotFound';
 import PageTransition from './components/ui/PageTransition';
 import './styles/App.css';
@@ -13,9 +16,8 @@ function App() {
   const location = useLocation();
 
   // Memoize dynamic routes to avoid regeneration on every render
-  // getAvailableContentKeys() returns the list of content keys: features, changelog, docs, api, resources, roadmap
   const dynamicRoutes = useMemo(
-    () => getAvailableContentKeys().map(key => ({
+    () => getAvailableContentKeys().filter(key => key !== 'resources').map(key => ({
       key,
       path: `/${key}`,
       contentKey: key
@@ -44,6 +46,21 @@ function App() {
         <Route path="/profile" element={
           <PageTransition key="profile">
             <Dashboard activeTab="profile" />
+          </PageTransition>
+        } />
+        <Route path="/resources" element={
+          <PageTransition key="resources">
+            <Resources />
+          </PageTransition>
+        } />
+        <Route path="/report" element={
+          <PageTransition key="report">
+            <ReportIssue />
+          </PageTransition>
+        } />
+        <Route path="/cheatsheet" element={
+          <PageTransition key="cheatsheet">
+            <GitCheatSheet />
           </PageTransition>
         } />
 

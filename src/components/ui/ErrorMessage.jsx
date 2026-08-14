@@ -17,7 +17,7 @@ const ErrorMessage = ({ message, onRetry }) => {
                 </div>
             </div>
 
-            <h3 className="text-2xl font-bold text-[#F0F6FC] mb-2 font-sans">Connection Lost</h3>
+            <h3 className="text-2xl font-bold text-[#F0F6FC] mb-2">Connection Lost</h3>
             <p className="text-[#8B949E] mb-8 max-w-md text-lg">
                 {message || 'Oops! It seems like the ducks have wandered off with the connection.'}
             </p>

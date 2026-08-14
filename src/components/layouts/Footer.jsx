@@ -1,147 +1,95 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaGithub, FaTwitter, FaLinkedin } from 'react-icons/fa';
-import { MdEmail } from 'react-icons/md';
-import heartIcon from '../../assets/heart.png';
+import { Github, ArrowUpRight } from 'lucide-react';
 
 const Footer = () => {
-    const [email, setEmail] = React.useState('');
-    const [status, setStatus] = React.useState('idle'); // idle, loading, success, error
-    const [message, setMessage] = React.useState('');
-
-    const handleSubscribe = (e) => {
-        e.preventDefault();
-        // ... (existing subscribe logic)
-        setMessage('');
-
-        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            setStatus('error');
-            setMessage('Please enter a valid email address.');
-            return;
-        }
-
-        setStatus('loading');
-        setTimeout(() => {
-            setStatus('success');
-            setMessage("You're in! Check your inbox.");
-            setEmail('');
-            setTimeout(() => {
-                setStatus('idle');
-                setMessage('');
-            }, 5000);
-        }, 1500);
-    };
-
     return (
-        <footer className="bg-[#0D1117] border-t border-[#30363D] pt-16 pb-8">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-                    {/* Brand Column */}
-                    <div className="space-y-4">
-                        <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-lg bg-[#58A6FF]/10 flex items-center justify-center border border-[#58A6FF]/20">
-                                <FaGithub className="w-5 h-5 text-[#58A6FF]" />
+        <footer className="relative bg-[#0A0A0C] border-t border-white/[0.08]" aria-label="Site footer">
+            {/* Top gradient hairline */}
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" aria-hidden="true" />
+
+            <div className="max-w-[1200px] mx-auto px-6 py-10 md:py-12">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+                    
+                    {/* Left: Brand + Creator credit */}
+                    <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 text-center sm:text-left">
+                        <Link to="/" className="inline-flex items-center gap-2 group" aria-label="GitExplorer home">
+                            <div className="flex items-center justify-center h-8 w-8 rounded-lg border border-white/10 bg-white/[0.04] transition-colors duration-300 group-hover:border-white/20">
+                                <Github className="h-4 w-4 text-white" aria-hidden="true" />
                             </div>
-                            <span className="text-xl font-bold text-[#F0F6FC]">
-                                GitExplorer
-                            </span>
-                        </div>
-                        <p className="text-[#8B949E] text-sm leading-relaxed">
-                            Discover, analyze, and manage open source projects with a powerful, modern dashboard designed for developers.
+                            <span className="font-bold text-base tracking-tight text-white">GitExplorer</span>
+                        </Link>
+                        <span className="hidden sm:inline-block text-zinc-600 font-mono">•</span>
+                        <p className="text-xs text-[#71717A]">
+                            Curated open-source intelligence built by{' '}
+                            <Link to="/resources" className="text-zinc-300 hover:text-white transition-colors underline decoration-white/20 underline-offset-2">
+                                Sahid Sarfaraz
+                            </Link>
+                            .
                         </p>
-                        <div className="flex gap-4">
-                            <a href="https://github.com/SahidGit/git-explorer" target="_blank" rel="noopener noreferrer" className="text-[#8B949E] hover:text-[#F0F6FC] transition-colors">
-                                <FaGithub className="w-5 h-5" />
-                            </a>
-                            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-[#8B949E] hover:text-[#58A6FF] transition-colors">
-                                <FaTwitter className="w-5 h-5" />
-                            </a>
-                            <a href="https://www.linkedin.com/in/sahid-sarfaraz" target="_blank" rel="noopener noreferrer" className="text-[#8B949E] hover:text-[#58A6FF] transition-colors">
-                                <FaLinkedin className="w-5 h-5" />
-                            </a>
-                        </div>
                     </div>
 
-                    {/* Product Links */}
-                    <div>
-                        <h3 className="text-[#F0F6FC] font-semibold mb-6 font-sans">Product</h3>
-                        <ul className="space-y-3">
-                            <li>
-                                <Link to="/features" className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm">Features</Link>
-                            </li>
-                            <li>
-                                <Link to="/dashboard" className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm">Trending</Link>
-                            </li>
-                            <li>
-                                <Link to="/bookmarks" className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm">Bookmarks</Link>
-                            </li>
-                            <li>
-                                <Link to="/changelog" className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm">Changelog</Link>
-                            </li>
-                        </ul>
-                    </div>
-
-                    {/* Resources Links */}
-                    <div>
-                        <h3 className="text-[#F0F6FC] font-semibold mb-6 font-sans">Resources</h3>
-                        <ul className="space-y-3">
-                            <li>
-                                <Link to="/docs" className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm">Documentation</Link>
-                            </li>
-                            <li>
-                                <Link to="/api" className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm">API Reference</Link>
-                            </li>
-                            <li>
-                                <Link to="/roadmap" className="text-[#8B949E] hover:text-[#58A6FF] transition-colors text-sm">Roadmap</Link>
-                            </li>
-                        </ul>
-                    </div>
-
-                    {/* Newsletter */}
-                    <div>
-                        <h3 className="text-[#F0F6FC] font-semibold mb-6 font-sans">Stay Updated</h3>
-                        <p className="text-[#8B949E] text-sm mb-4">
-                            Subscribe to our newsletter for the latest updates and features.
-                        </p>
-                        <form className="space-y-3" onSubmit={handleSubscribe}>
-                            <div className="relative">
-                                <MdEmail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8B949E]" />
-                                <input
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="Enter your email"
-                                    disabled={status === 'loading' || status === 'success'}
-                                    className={`w-full bg-[#161B22] border rounded-lg py-2.5 pl-10 pr-4 text-sm text-[#F0F6FC] placeholder:text-[#8B949E] focus:outline-none focus:ring-1 transition-all
-                                        ${status === 'error' ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-[#30363D] focus:border-[#58A6FF] focus:ring-[#58A6FF]'}`}
-                                />
-                            </div>
-                            {message && (
-                                <p className={`text-xs ${status === 'error' ? 'text-red-400' : 'text-green-400'} animate-in fade-in slide-in-from-top-1`}>
-                                    {message}
-                                </p>
-                            )}
-                            <button
-                                disabled={status === 'loading' || status === 'success'}
-                                className={`w-full py-2.5 rounded-lg text-white text-sm font-medium transition-all border
-                                ${status === 'success'
-                                        ? 'bg-green-600 border-green-500 cursor-default'
-                                        : 'bg-[#238636] hover:bg-[#2ea043] border-[#3fb950]'}`}
-                            >
-                                {status === 'loading' ? 'Subscribing...' : status === 'success' ? 'Subscribed!' : 'Subscribe'}
-                            </button>
-                        </form>
+                    {/* Right: Essential Clean Links */}
+                    <div className="flex flex-wrap items-center justify-center gap-6 text-[13px] font-mono">
+                        <Link
+                            to="/dashboard"
+                            className="text-zinc-400 hover:text-white transition-colors duration-200"
+                        >
+                            Explore
+                        </Link>
+                        <Link
+                            to="/cheatsheet"
+                            className="text-zinc-400 hover:text-white transition-colors duration-200"
+                        >
+                            Cheat Sheet
+                        </Link>
+                        <Link
+                            to="/bookmarks"
+                            className="text-zinc-400 hover:text-white transition-colors duration-200"
+                        >
+                            Bookmarks
+                        </Link>
+                        <Link
+                            to="/report"
+                            className="text-zinc-400 hover:text-white transition-colors duration-200"
+                        >
+                            Report
+                        </Link>
+                        <Link
+                            to="/docs"
+                            className="text-zinc-400 hover:text-white transition-colors duration-200"
+                        >
+                            Documentation
+                        </Link>
+                        <a
+                            href="https://github.com/SahidGit/git-explorer"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-zinc-400 hover:text-white transition-colors duration-200 group"
+                        >
+                            <span>Source on GitHub</span>
+                            <ArrowUpRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-white transition-colors" />
+                        </a>
                     </div>
                 </div>
 
-                <div className="border-t border-[#30363D] pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <p className="text-[#8B949E] text-sm">
-                        © 2025 Developers. All rights reserved.
-                    </p>
-                    <div className="flex items-center gap-1 text-[#8B949E] text-sm">
-                        <span>Made with</span>
-                        <img src={heartIcon} alt="Heart" className="w-12 h-12" />
-                        <span>for developers</span>
+                {/* Bottom status & copyright bar */}
+                <div className="mt-8 pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-mono text-[#52525B]">
+                    <p>© {new Date().getFullYear()} GitExplorer • Zero Telemetry • Local-First</p>
+
+                    {/* Pulsing Status indicator */}
+                    <div
+                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/[0.06] bg-white/[0.02]"
+                        aria-label="API status: Operational"
+                        role="status"
+                    >
+                        <span className="relative flex h-2 w-2 flex-shrink-0">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-50" />
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                        </span>
+                        <span className="text-[11px] font-mono text-[#71717A]">
+                            API Status: Operational
+                        </span>
                     </div>
                 </div>
             </div>

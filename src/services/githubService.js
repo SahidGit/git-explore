@@ -11,11 +11,30 @@ const api = axios.create({
 
 export const setGithubToken = (token) => {
     if (token) {
-        api.defaults.headers.common['Authorization'] = `token ${token}`;
+        api.defaults.headers.common['Authorization'] = token.startsWith('token ') || token.startsWith('Bearer ') ? token : `token ${token}`;
     } else {
         delete api.defaults.headers.common['Authorization'];
     }
 };
+
+// Response interceptor to handle token failures and rate limit errors with actionable help
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response) {
+            const status = error.response.status;
+            if (status === 401) {
+                error.helpMessage = 'Invalid GitHub Token (Bad credentials). Check your key for typos or generate a new token on GitHub.';
+            } else if (status === 403) {
+                const isRateLimit = error.response.headers['x-ratelimit-remaining'] === '0';
+                error.helpMessage = isRateLimit
+                    ? 'GitHub API rate limit exceeded (60 req/hr reached). Connect a Personal Access Token in the header to unlock 5,000 req/hr.'
+                    : 'Forbidden access. Your token may lack required public_repo read permissions.';
+            }
+        }
+        return Promise.reject(error);
+    }
+);
 
 export const searchRepositories = async ({ query, sort = 'stars', order = 'desc', page = 1, perPage = 30 }) => {
     const q = query || 'stars:>1000';
@@ -43,6 +62,19 @@ export const getTrendingRepositories = async (language = '', since = 'daily', pa
     const query = `created:>${dateStr}${language ? ` language:${language}` : ''}`;
 
     return searchRepositories({ query, sort: 'stars', order: 'desc', page });
+};
+
+export const getMonthlyTopRepositories = async () => {
+    const date = new Date();
+    date.setDate(date.getDate() - 30);
+    const dateStr = date.toISOString().split('T')[0];
+    const query = `created:>${dateStr}`;
+    try {
+        const data = await searchRepositories({ query, sort: 'stars', order: 'desc', page: 1, perPage: 5 });
+        return data.items || [];
+    } catch (_) {
+        return [];
+    }
 };
 
 export const getRepositoryDetails = async (owner, repo) => {
@@ -93,4 +125,9 @@ export const getIssueStats = async (owner, repo) => {
         // Error handled by caller
         return { open: 0, closed: 0 };
     }
+};
+
+export const getRateLimit = async () => {
+    const response = await api.get('/rate_limit');
+    return response.data;
 };
