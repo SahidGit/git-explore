@@ -33,10 +33,23 @@ export default {
           'sans-serif',
         ],
         heading: [
+          'Syne',
+          'Space Grotesk',
           'Inter',
-          'system-ui',
-          '-apple-system',
           'sans-serif',
+        ],
+        syne: [
+          'Syne',
+          'sans-serif',
+        ],
+        space: [
+          'Space Grotesk',
+          'sans-serif',
+        ],
+        editorial: [
+          'Newsreader',
+          'Georgia',
+          'serif',
         ],
         mono: [
           'JetBrains Mono',

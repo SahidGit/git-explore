@@ -30,14 +30,22 @@ api.interceptors.response.use(
                 error.helpMessage = isRateLimit
                     ? 'GitHub API rate limit exceeded (60 req/hr reached). Connect a Personal Access Token in the header to unlock 5,000 req/hr.'
                     : 'Forbidden access. Your token may lack required public_repo read permissions.';
+            } else if (status === 422) {
+                error.helpMessage = 'GitHub API search syntax error (422 Unprocessable Entity). Try simplifying your search terms.';
             }
         }
         return Promise.reject(error);
     }
 );
 
-export const searchRepositories = async ({ query, sort = 'stars', order = 'desc', page = 1, perPage = 30 }) => {
-    const q = query || 'stars:>1000';
+export const searchRepositories = async ({ query, sort = 'stars', order = 'desc', page = 1, perPage = 30, language = '' }) => {
+    let q = (query || '').trim();
+    if (!q) {
+        q = 'stars:>1000';
+    }
+    if (language && !q.toLowerCase().includes('language:')) {
+        q = `${q} language:${language}`;
+    }
     const response = await api.get('/search/repositories', {
         params: {
             q,

@@ -1,23 +1,91 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Github, ArrowRight, TrendingUp, Star } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import {
+    Github, ArrowRight, TrendingUp, Star, Sparkles, Bot, Cpu,
+    MessageSquare, Terminal, Globe, Code
+} from 'lucide-react';
 
-import heroMid from '../../assets/hero-mid.avif';
+import heroMid from '../../assets/hero-mid.png';
 import heroBot from '../../assets/hero-bot.png';
 
 // ─── Ecosystem Pills Data ─────────────────────────────
-const ECOSYSTEM_LANGS = [
-    { name: 'TypeScript', count: '48k repos', color: '#3178c6' },
-    { name: 'Rust', count: '14k repos', color: '#dea584' },
-    { name: 'Python', count: '62k repos', color: '#3572a5' },
-    { name: 'Go', count: '29k repos', color: '#00add8' },
-    { name: 'Zig', count: '3.2k repos', color: '#ec915c' },
-    { name: 'JavaScript', count: '95k repos', color: '#f7df1e' },
-    { name: 'C++', count: '22k repos', color: '#f34b7d' },
+const ECOSYSTEM_CATEGORIES = [
+    {
+        id: 'deepseek',
+        name: 'DeepSeek AI',
+        query: 'deepseek',
+        badge: 'NEW',
+        color: '#6366F1',
+        icon: Sparkles,
+    },
+    {
+        id: 'ai-skills',
+        name: 'AI Skills & Agents',
+        query: 'topic:ai',
+        color: '#A855F7',
+        icon: Bot,
+    },
+    {
+        id: 'open-models',
+        name: 'Open Source Models',
+        query: 'topic:open-source-llm',
+        color: '#10B981',
+        icon: Cpu,
+    },
+    {
+        id: 'chatbots',
+        name: 'AI Chatbots',
+        query: 'topic:chatbot',
+        color: '#EC4899',
+        icon: MessageSquare,
+    },
+    {
+        id: 'ollama',
+        name: 'Ollama & Local AI',
+        query: 'ollama',
+        color: '#F59E0B',
+        icon: Terminal,
+    },
+    {
+        id: 'python',
+        name: 'Python AI',
+        language: 'Python',
+        color: '#3572a5',
+        icon: Code,
+    },
+    {
+        id: 'typescript',
+        name: 'TypeScript',
+        language: 'TypeScript',
+        color: '#3178c6',
+        icon: Code,
+    },
+    {
+        id: 'rust',
+        name: 'Rust',
+        language: 'Rust',
+        color: '#dea584',
+        icon: Code,
+    },
+    {
+        id: 'web-dev',
+        name: 'Web Dev',
+        query: 'topic:web',
+        color: '#00add8',
+        icon: Globe,
+    },
 ];
 
 // ─── Live signal repos for dashboard preview ──────────
 const MOCK_REPOS = [
+    {
+        name: 'deepseek-ai/DeepSeek-V3',
+        desc: 'Official repository for DeepSeek-V3 open source model and architecture specs',
+        stars: '62.4k',
+        lang: 'Python',
+        langColor: '#3572a5',
+        delta: '+12.5k this week',
+    },
     {
         name: 'astral-sh/uv',
         desc: 'An extremely fast Python package and project manager written in Rust',
@@ -27,20 +95,12 @@ const MOCK_REPOS = [
         delta: '+4.2k this week',
     },
     {
-        name: 'vercel/next.js',
-        desc: 'The React Framework for the Web',
-        stars: '124.8k',
-        lang: 'TypeScript',
-        langColor: '#3178c6',
-        delta: '+2.8k this week',
-    },
-    {
         name: 'ollama/ollama',
         desc: 'Get up and running with Llama 3.3, DeepSeek, and other LLMs locally',
         stars: '106.1k',
         lang: 'Go',
         langColor: '#00add8',
-        delta: '+3.1k this week',
+        delta: '+5.8k this week',
     },
 ];
 
@@ -67,8 +127,12 @@ const Hero = ({ onExplore }) => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const handleLanguageClick = (lang) => {
-        navigate(`/dashboard?language=${encodeURIComponent(lang)}`);
+    const handleItemClick = (item) => {
+        if (item.query) {
+            navigate(`/dashboard?query=${encodeURIComponent(item.query)}`);
+        } else if (item.language) {
+            navigate(`/dashboard?language=${encodeURIComponent(item.language)}`);
+        }
     };
 
     return (
@@ -76,44 +140,52 @@ const Hero = ({ onExplore }) => {
             className="relative w-full flex flex-col items-center justify-start pt-32 pb-0 px-4 overflow-hidden bg-[#0A0A0C]"
             aria-label="Hero Introduction"
         >
-            {/* ── 1. The Parallax Background Layers (Refined Opacity & Crisp Depth) ─────────────────── */}
-            {/* Primary Mid Landscape Art (Scrolls at 35% speed) */}
+            {/* ── 1. The Parallax Background Layers (Crystal Clear Landscape Art & Seamless Motion) ─────────────────── */}
+            {/* Primary Mid Landscape Art (Full Opacity, 100% Crisp Visibility, Smooth Parallax Depth) */}
             <div
-                className="absolute inset-0 w-full h-[125%] bg-cover bg-center sm:bg-top opacity-30 pointer-events-none transition-transform duration-75 ease-out will-change-transform"
+                className="absolute inset-0 w-full h-[130%] -top-8 bg-cover bg-center sm:bg-top opacity-100 pointer-events-none transition-transform duration-75 ease-out will-change-transform"
                 style={{
                     backgroundImage: `url(${heroMid})`,
-                    transform: `translate3d(0, ${scrollY * 0.35}px, 0)`,
+                    transform: `translate3d(0, ${Math.min(scrollY * 0.25, 220)}px, 0)`,
                 }}
                 aria-hidden="true"
             />
 
-            {/* Subtle Horizon Detail Layer (Scrolls at 20% speed for multi-plane depth) */}
+            {/* Subtle Horizon Detail Layer (Now full‑screen with smoother parallax) */}
             <div
-                className="absolute inset-0 w-full h-[120%] bg-cover bg-bottom opacity-20 pointer-events-none transition-transform duration-75 ease-out will-change-transform mix-blend-screen"
+                className="absolute inset-0 w-full h-full bg-cover bg-bottom pointer-events-none transition-transform duration-75 ease-out will-change-transform"
                 style={{
                     backgroundImage: `url(${heroBot})`,
-                    transform: `translate3d(0, ${scrollY * 0.2}px, 0)`,
+                    opacity: 1,
+                    transform: `translate3d(0, ${Math.min(scrollY * 0.08, 80)}px, 0)`,
                 }}
                 aria-hidden="true"
             />
 
-            {/* ── 2. Cinematic Gradient Overlay (Seamlessly Fades to #0A0A0C) ── */}
+            {/* ── 2. Subtle Bottom Fade Gradient Overlay (Preserves Full Image Visibility & Seamlessly Merges with Page) ── */}
             <div
-                className="absolute inset-0 bg-gradient-to-b from-[#0A0A0C]/30 via-[#0A0A0C]/70 to-[#0A0A0C] pointer-events-none z-0"
-                aria-hidden="true"
-            />
-
-            {/* Subtle radial glow to maintain crisp text contrast */}
-            <div
-                className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[750px] h-[450px] rounded-full pointer-events-none mix-blend-screen"
-                style={{
-                    background: 'radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.04) 0%, transparent 70%)',
-                }}
+                className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-[#0A0A0C] pointer-events-none z-0"
                 aria-hidden="true"
             />
 
             {/* ── 3. Foreground Content ─────────────────────────────── */}
-            <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center text-center space-y-8">
+            <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center text-center space-y-6">
+
+                {/* Announcement Thinbar: AI Newsroom (Beta) */}
+                <div className="animate-fadeInUp">
+                    <Link
+                        to="/ai-news"
+                        className="group inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#121216]/90 border border-[#FF5A1F]/30 hover:border-[#FF5A1F] hover:bg-[#18181D] transition-all duration-300 text-xs font-mono shadow-[0_0_25px_-5px_rgba(255,90,31,0.25)] hover:shadow-[0_0_30px_-3px_rgba(255,90,31,0.4)]"
+                    >
+                        <span className="bg-[#FF5A1F] text-black font-extrabold text-[9px] uppercase px-1.5 py-0.5 tracking-wider">
+                            BETA
+                        </span>
+                        <span className="text-zinc-300 group-hover:text-white transition-colors">
+                            AI Newsroom: Frontier Model Race, Benchmarks &amp; Sourced Intel
+                        </span>
+                        <span className="text-[#FF5A1F] group-hover:translate-x-0.5 transition-transform font-bold">→</span>
+                    </Link>
+                </div>
 
                 {/* Grounded Top Badge */}
                 <div className="animate-fadeInUp">
@@ -150,7 +222,7 @@ const Hero = ({ onExplore }) => {
                     <button
                         id="hero-explore-btn"
                         onClick={onExplore}
-                        className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-black text-[15px] font-semibold hover:bg-[#E4E4E7] active:scale-[0.98] transition-all duration-200 shadow-[0_0_30px_-10px_rgba(255,255,255,0.3)]"
+                        className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-black text-[15px] font-semibold hover:bg-[#E4E4E7] active:scale-[0.98] transition-all duration-200 shadow-[0_0_30px_-10px_rgba(255,255,255,0.3)] cursor-pointer"
                     >
                         Explore Repositories
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
@@ -158,7 +230,7 @@ const Hero = ({ onExplore }) => {
 
                     <a
                         id="hero-github-btn"
-                        href="https://github.com/SahidGit/git-explorer"
+                        href="https://github.com/SahidGit/git-explore"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="group inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/10 bg-white/[0.02] text-[#A1A1AA] text-[15px] font-medium hover:border-white/20 hover:text-white transition-all duration-300"
@@ -190,7 +262,7 @@ const Hero = ({ onExplore }) => {
                                 <span className="w-2.5 h-2.5 rounded-full bg-white/20" />
                             </div>
                             <div className="flex-1 bg-[#0A0A0C] border border-white/[0.06] rounded-md px-3 py-1.5 flex items-center justify-between">
-                                <span className="text-[11px] font-mono text-[#71717A]">git-explorer.app/explore?sort=weekly_velocity</span>
+                                <span className="text-[11px] font-mono text-[#71717A]">git-explore.app/explore?query=deepseek</span>
                                 <span className="text-[10px] font-mono text-emerald-500/70 flex items-center gap-1.5">
                                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse inline-block" />
                                     live query
@@ -245,24 +317,32 @@ const Hero = ({ onExplore }) => {
             </div>
 
             {/* ── 5. Replaced Marquee with Interactive Filterable Ecosystem Strip ────────────────── */}
-            <div className="w-full border-t border-white/[0.08] bg-[#0E0E10]/95 backdrop-blur-md py-4 px-4 relative z-20">
-                <div className="max-w-6xl mx-auto flex items-center justify-center sm:justify-between gap-4 flex-wrap text-xs font-mono">
-                    <span className="text-zinc-500 text-[11px] tracking-wider uppercase flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-white/40" />
+            <div className="w-full border-t border-white/[0.08] bg-[#0E0E10]/95 backdrop-blur-md py-5 px-4 relative z-20">
+                <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono">
+                    <span className="text-zinc-400 text-[11px] tracking-wider uppercase flex items-center gap-2 font-semibold">
+                        <Sparkles className="w-3.5 h-3.5 text-indigo-400 animate-pulse" />
                         Explore By Ecosystem:
                     </span>
 
                     <div className="flex items-center gap-2 flex-wrap justify-center">
-                        {ECOSYSTEM_LANGS.map((lang) => (
-                            <button
-                                key={lang.name}
-                                onClick={() => handleLanguageClick(lang.name)}
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-zinc-300 hover:text-white hover:border-white/25 hover:bg-white/[0.08] transition-all duration-200"
-                            >
-                                <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: lang.color }} />
-                                <span>{lang.name}</span>
-                            </button>
-                        ))}
+                        {ECOSYSTEM_CATEGORIES.map((item) => {
+                            const IconComp = item.icon;
+                            return (
+                                <button
+                                    key={item.id || item.name}
+                                    onClick={() => handleItemClick(item)}
+                                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-zinc-300 hover:text-white hover:border-white/25 hover:bg-white/[0.08] transition-all duration-200 cursor-pointer group"
+                                >
+                                    <IconComp className="w-3.5 h-3.5 transition-transform group-hover:scale-110" style={{ color: item.color }} />
+                                    <span>{item.name}</span>
+                                    {item.badge && (
+                                        <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+                                            {item.badge}
+                                        </span>
+                                    )}
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
             </div>
@@ -271,3 +351,4 @@ const Hero = ({ onExplore }) => {
 };
 
 export default Hero;
+

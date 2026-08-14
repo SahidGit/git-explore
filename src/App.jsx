@@ -7,6 +7,7 @@ import InfoPage from './pages/InfoPage';
 import Resources from './pages/Resources';
 import ReportIssue from './pages/ReportIssue';
 import GitCheatSheet from './pages/GitCheatSheet';
+import AiNewsroom from './pages/AiNewsroom';
 import NotFound from './pages/NotFound';
 import PageTransition from './components/ui/PageTransition';
 import './styles/App.css';
@@ -61,6 +62,11 @@ function App() {
         <Route path="/cheatsheet" element={
           <PageTransition key="cheatsheet">
             <GitCheatSheet />
+          </PageTransition>
+        } />
+        <Route path="/ai-news" element={
+          <PageTransition key="ai-news">
+            <AiNewsroom />
           </PageTransition>
         } />
 

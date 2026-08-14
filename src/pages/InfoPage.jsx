@@ -6,6 +6,7 @@ import Footer from '../components/layouts/Footer';
 import BackToTop from '../components/ui/BackToTop';
 import SEO from '../components/ui/SEO';
 import FeatureProjectGrid from '../components/features/FeatureProjectGrid';
+import PageNavigation from '../components/ui/PageNavigation';
 import { getContentByKey, getAvailableContentKeys } from '../data/contentLoader';
 import { storageService } from '../services/storageService';
 import { ArrowLeft, Key, Check, Terminal, ExternalLink } from 'lucide-react';
@@ -17,6 +18,9 @@ const TAB_LABELS = {
   roadmap: 'Roadmap',
   changelog: 'Changelog',
   resources: 'Resources',
+  about: 'About',
+  disclaimer: 'Disclaimer',
+  terms: 'Terms of Use',
 };
 
 const InfoPage = ({ contentKey }) => {
@@ -194,6 +198,9 @@ const InfoPage = ({ contentKey }) => {
                 )}
               </div>
             )}
+
+            {/* Sequential Next / Previous Page Navigation */}
+            <PageNavigation currentKey={contentKey} />
           </div>
         )}
       </main>

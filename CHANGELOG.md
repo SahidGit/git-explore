@@ -2,9 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
-## [2.0.0] - 2025-11-29
+## [2.1.0] - 2026-08-15
 
 ### Added
+- **AI Newsroom**: Experimental high-end AI intelligence magazine covering frontier foundation models, open-source weight releases, regional labs, and arXiv research.
+- **Git Cheat Sheet**: Comprehensive step-by-step command reference.
+- **Report Issue Form**: Mandatory issue selection and description character minimum enforcement, with celebratory success state.
+- **Hero Enhancements**: Improved parallax scrolling effects.
+
+### Changed
+- **Documentation**: Updated README with AI Newsroom and Git commands information, including "New" tags.
+- **Creator Credit**: Footer link updated to point to `#creator-heading` on Resources page.
+
+## [2.0.0] - 2025-11-29
 - **New Landing Page**: Completely redesigned landing page with "Hero", "Features", and "Footer" sections.
 - **Seamless Marquee**: Infinite scrolling marquee in the Hero section displaying key features.
 - **Material Icons**: Integrated `react-icons` for a consistent, professional look.

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
     Github, Search, Bookmark, X, ArrowLeft, ChevronDown, Key,
-    AlertTriangle, HelpCircle, ExternalLink, Check, Trash2, Loader2, Terminal
+    AlertTriangle, HelpCircle, ExternalLink, Check, Trash2, Loader2, Terminal, Sparkles
 } from 'lucide-react';
 import { getRateLimit, setGithubToken } from '../../services/githubService';
 
@@ -103,28 +103,29 @@ const Header = ({ activeTab, onTokenSave, showBackButton }) => {
         { label: 'Explore', to: '/dashboard', tab: 'explore', icon: Search },
         { label: 'Cheat Sheet', to: '/cheatsheet', tab: 'cheatsheet', icon: Terminal },
         { label: 'Bookmarks', to: '/bookmarks', tab: 'bookmarks', icon: Bookmark },
-        { label: 'Report', to: '/report', tab: 'report', icon: AlertTriangle },
+        { label: 'AI News', to: '/ai-news', tab: 'ai-news', icon: Sparkles },
     ];
 
     return (
         <>
-            <header
-                className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-                    isScrolled
-                        ? 'bg-[#0A0A0C]/80 backdrop-blur-md border-b border-white/[0.08]'
-                        : 'bg-transparent'
-                }`}
-            >
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between h-16">
+            {/* ── Sarvam.ai Inspired Floating Dock Header ── */}
+            <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-5xl transition-all duration-300">
+                <div
+                    className={`rounded-full px-4 sm:px-6 py-2.5 transition-all duration-300 ${
+                        isScrolled
+                            ? 'bg-[#0A0A0C]/90 backdrop-blur-2xl border border-white/15 shadow-[0_12px_40px_rgba(0,0,0,0.8)] shadow-black/80'
+                            : 'bg-[#0E0E12]/80 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)]'
+                    }`}
+                >
+                    <div className="flex items-center justify-between">
 
-                        {/* Left: Logo + optional back button */}
-                        <div className="flex items-center gap-5">
+                        {/* Left: Brand Capsule */}
+                        <div className="flex items-center gap-3">
                             <Link to="/" className="flex items-center gap-2.5 group" aria-label="GitExplorer home">
-                                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/[0.06] border border-white/10 group-hover:border-white/20 transition-colors duration-300">
-                                    <Github className="w-4 h-4 text-white" />
+                                <div className="flex items-center justify-center w-7 h-7 rounded-full bg-white/10 border border-white/15 group-hover:border-white/30 group-hover:bg-white/15 transition-all duration-300 shadow-inner">
+                                    <Github className="w-3.5 h-3.5 text-white" />
                                 </div>
-                                <span className="text-[15px] font-semibold text-white tracking-[-0.02em]">
+                                <span className="text-sm font-bold text-white tracking-tight group-hover:text-zinc-200 transition-colors">
                                     GitExplorer
                                 </span>
                             </Link>
@@ -132,71 +133,74 @@ const Header = ({ activeTab, onTokenSave, showBackButton }) => {
                             {showBackButton && (
                                 <Link
                                     to="/"
-                                    className="hidden md:flex items-center gap-1.5 text-sm text-[#A1A1AA] hover:text-white transition-colors duration-200 group/back"
+                                    className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-full text-xs text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all duration-200"
                                 >
-                                    <ArrowLeft className="w-3.5 h-3.5 group-hover/back:-translate-x-0.5 transition-transform duration-200" />
+                                    <ArrowLeft className="w-3 h-3" />
                                     <span>Home</span>
                                 </Link>
                             )}
                         </div>
 
-                        {/* Center: Desktop nav */}
+                        {/* Center: Desktop Floating Dock Items */}
                         <nav
-                            className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2"
-                            aria-label="Primary navigation"
+                            className="hidden md:flex items-center gap-1 bg-white/[0.04] p-1 rounded-full border border-white/[0.06]"
+                            aria-label="Primary dock navigation"
                         >
-                            {navLinks.map(({ label, to, tab }) => (
-                                <Link
-                                    key={tab}
-                                    to={to}
-                                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
-                                        activeTab === tab
-                                            ? 'text-white bg-white/[0.08]'
-                                            : 'text-[#A1A1AA] hover:text-white hover:bg-white/[0.04]'
-                                    }`}
-                                >
-                                    {label}
-                                </Link>
-                            ))}
+                            {navLinks.map(({ label, to, tab }) => {
+                                const isActive = activeTab === tab;
+                                return (
+                                    <Link
+                                        key={tab}
+                                        to={to}
+                                        className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
+                                            isActive
+                                                ? 'bg-white text-black font-semibold shadow-md shadow-white/10'
+                                                : 'text-zinc-400 hover:text-white hover:bg-white/[0.06]'
+                                        }`}
+                                    >
+                                        {label}
+                                    </Link>
+                                );
+                            })}
                             <Link
                                 to="/profile"
-                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                                className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
                                     activeTab === 'profile'
-                                        ? 'text-white bg-white/[0.08]'
-                                        : 'text-[#A1A1AA] hover:text-white hover:bg-white/[0.04]'
+                                        ? 'bg-white text-black font-semibold shadow-md shadow-white/10'
+                                        : 'text-zinc-400 hover:text-white hover:bg-white/[0.06]'
                                 }`}
                             >
                                 Profile
                             </Link>
                         </nav>
 
-                        {/* Right: Connect Token CTA */}
-                        <div className="hidden md:flex items-center gap-3">
+                        {/* Right: Action CTA Dock Button */}
+                        <div className="hidden md:flex items-center gap-2">
                             <button
                                 id="connect-token-btn"
                                 onClick={() => setShowTokenInput(true)}
-                                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-black text-sm font-semibold hover:bg-[#E4E4E7] active:scale-[0.98] transition-all duration-200"
+                                className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white text-black text-xs font-semibold hover:bg-zinc-200 active:scale-95 transition-all duration-200 shadow-md shadow-white/10 cursor-pointer"
                             >
-                                <Key className="w-3.5 h-3.5" />
-                                Connect Token
+                                <Key className="w-3.5 h-3.5 text-black" />
+                                <span>Connect Token</span>
                             </button>
                         </div>
 
-                        {/* Modern Floating Hamburger Button */}
+                        {/* Mobile Hamburger Button */}
                         <button
                             id="mobile-menu-btn"
-                            className="md:hidden flex flex-col justify-center items-center w-10 h-10 rounded-xl bg-white/[0.04] border border-white/10 text-white hover:border-white/25 active:scale-95 transition-all duration-200"
+                            className="md:hidden flex items-center justify-center w-8 h-8 rounded-full bg-white/[0.06] border border-white/10 text-white hover:border-white/25 active:scale-95 transition-all"
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                             aria-expanded={isMobileMenuOpen}
                             aria-label="Toggle menu"
                         >
                             {isMobileMenuOpen ? (
-                                <X className="w-5 h-5 text-white" />
+                                <X className="w-4 h-4 text-white" />
                             ) : (
-                                <div className="flex flex-col gap-1.5 w-4 items-end">
-                                    <span className="w-4 h-0.5 rounded-full bg-white transition-all" />
-                                    <span className="w-2.5 h-0.5 rounded-full bg-white/70 transition-all" />
-                                    <span className="w-4 h-0.5 rounded-full bg-white transition-all" />
+                                <div className="flex flex-col gap-1 w-3.5 items-end">
+                                    <span className="w-3.5 h-0.5 rounded-full bg-white" />
+                                    <span className="w-2 h-0.5 rounded-full bg-white/70" />
+                                    <span className="w-3.5 h-0.5 rounded-full bg-white" />
                                 </div>
                             )}
                         </button>
@@ -204,76 +208,76 @@ const Header = ({ activeTab, onTokenSave, showBackButton }) => {
                 </div>
             </header>
 
-            {/* Mobile menu overlay */}
+            {/* Mobile Dock Menu Overlay */}
             {isMobileMenuOpen && (
                 <div
                     id="mobile-menu"
-                    className="fixed inset-0 z-50 bg-[#0A0A0C]/98 backdrop-blur-xl md:hidden flex flex-col"
+                    className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl md:hidden flex flex-col justify-center items-center p-4"
                     style={{ animation: 'fadeInUp 0.2s ease-out forwards' }}
                 >
-                    <div className="flex justify-between items-center px-6 h-16 border-b border-white/[0.08]">
-                        <Link
-                            to="/"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className="flex items-center gap-2.5"
-                        >
-                            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/[0.06] border border-white/10">
-                                <Github className="w-4 h-4 text-white" />
-                            </div>
-                            <span className="text-[15px] font-semibold text-white tracking-[-0.02em]">GitExplorer</span>
-                        </Link>
-                        <button
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className="p-2 text-[#A1A1AA] hover:text-white transition-colors duration-200 rounded-lg hover:bg-white/[0.06]"
-                            aria-label="Close menu"
-                        >
-                            <X className="w-5 h-5" />
-                        </button>
-                    </div>
-
-                    <div className="flex-1 flex flex-col p-6 gap-2">
-                        {navLinks.map(({ label, to, tab, icon: Icon }) => (
+                    <div className="w-full max-w-sm bg-[#121216] border border-white/15 rounded-3xl p-6 shadow-2xl space-y-4">
+                        <div className="flex justify-between items-center pb-3 border-b border-white/[0.08]">
                             <Link
-                                key={tab}
-                                to={to}
+                                to="/"
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className={`flex items-center gap-3 px-4 py-4 rounded-xl text-[15px] font-medium transition-colors duration-200 border ${
-                                    activeTab === tab
-                                        ? 'text-white bg-white/[0.06] border-white/10'
-                                        : 'text-[#A1A1AA] border-transparent hover:text-white hover:bg-white/[0.04]'
+                                className="flex items-center gap-2"
+                            >
+                                <div className="flex items-center justify-center w-7 h-7 rounded-full bg-white/10 border border-white/15">
+                                    <Github className="w-3.5 h-3.5 text-white" />
+                                </div>
+                                <span className="text-sm font-bold text-white">GitExplorer</span>
+                            </Link>
+                            <button
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className="p-1.5 text-zinc-400 hover:text-white rounded-full bg-white/[0.06]"
+                                aria-label="Close menu"
+                            >
+                                <X className="w-4 h-4" />
+                            </button>
+                        </div>
+
+                        <div className="flex flex-col gap-2 pt-1">
+                            {navLinks.map(({ label, to, tab, icon: Icon }) => (
+                                <Link
+                                    key={tab}
+                                    to={to}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-medium transition-all ${
+                                        activeTab === tab
+                                            ? 'text-white bg-white/[0.12] border border-white/15 font-semibold'
+                                            : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
+                                    }`}
+                                >
+                                    <Icon className="w-4 h-4 text-zinc-400" />
+                                    <span>{label}</span>
+                                </Link>
+                            ))}
+                            <Link
+                                to="/profile"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-medium transition-all ${
+                                    activeTab === 'profile'
+                                        ? 'text-white bg-white/[0.12] border border-white/15 font-semibold'
+                                        : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
                                 }`}
                             >
-                                <Icon className="w-4 h-4" />
-                                {label}
-                                <ChevronDown className="w-3.5 h-3.5 ml-auto -rotate-90 opacity-40" />
+                                <div className="w-4 h-4 rounded-full border-2 border-current opacity-70" />
+                                Profile
                             </Link>
-                        ))}
-                        <Link
-                            to="/profile"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className={`flex items-center gap-3 px-4 py-4 rounded-xl text-[15px] font-medium transition-colors duration-200 border ${
-                                activeTab === 'profile'
-                                    ? 'text-white bg-white/[0.06] border-white/10'
-                                    : 'text-[#A1A1AA] border-transparent hover:text-white hover:bg-white/[0.04]'
-                            }`}
-                        >
-                            <div className="w-4 h-4 rounded-full border-2 border-current opacity-70" />
-                            Profile
-                            <ChevronDown className="w-3.5 h-3.5 ml-auto -rotate-90 opacity-40" />
-                        </Link>
+                        </div>
 
-                        <div className="my-2 h-px bg-white/[0.06]" />
-
-                        <button
-                            onClick={() => {
-                                setIsMobileMenuOpen(false);
-                                setShowTokenInput(true);
-                            }}
-                            className="flex items-center gap-3 px-4 py-4 rounded-xl text-[15px] font-semibold text-black bg-white hover:bg-[#E4E4E7] transition-colors duration-200 justify-center"
-                        >
-                            <Key className="w-4 h-4" />
-                            Connect Token
-                        </button>
+                        <div className="pt-2 border-t border-white/[0.08]">
+                            <button
+                                onClick={() => {
+                                    setIsMobileMenuOpen(false);
+                                    setShowTokenInput(true);
+                                }}
+                                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-full bg-white text-black text-xs font-semibold hover:bg-zinc-200 transition-all cursor-pointer shadow-md"
+                            >
+                                <Key className="w-4 h-4" />
+                                Connect Token
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

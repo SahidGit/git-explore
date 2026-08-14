@@ -4,9 +4,10 @@ import Header from '../components/layouts/Header';
 import Footer from '../components/layouts/Footer';
 import BackToTop from '../components/ui/BackToTop';
 import SEO from '../components/ui/SEO';
+import PageNavigation from '../components/ui/PageNavigation';
 import {
     ArrowLeft, ArrowUpRight, Github, Linkedin, Twitter,
-    Sparkles, Terminal, Code2, Layers, Cpu, Compass
+    Sparkles, Terminal, Code2, Layers, Cpu, Compass, Link2
 } from 'lucide-react';
 import sahidPhoto from '../assets/team-sahid.png';
 
@@ -81,6 +82,16 @@ const CURATED_TOOLS = [
 
 const Resources = () => {
     useEffect(() => {
+        if (window.location.hash) {
+            const id = window.location.hash.replace('#', '');
+            const element = document.getElementById(id);
+            if (element) {
+                setTimeout(() => {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 150);
+                return;
+            }
+        }
         window.scrollTo(0, 0);
     }, []);
 
@@ -198,8 +209,12 @@ const Resources = () => {
                     </div>
                 </section>
 
-                {/* ── MODULE 02: Redesigned Compact Team & Creator Section ── */}
-                <section aria-labelledby="creator-heading" className="space-y-8 pt-8 border-t border-white/[0.08]">
+                {/* ── MODULE 02: Team & Creator Section ── */}
+                <section
+                    id="creator"
+                    aria-labelledby="creator-heading"
+                    className="space-y-8 pt-8 border-t border-white/[0.08] scroll-mt-28"
+                >
                     <div className="max-w-2xl mx-auto text-center space-y-3">
                         <div className="inline-flex items-center gap-3 justify-center mb-1">
                             <span className="text-[10px] font-mono text-[#71717A] tracking-widest uppercase">
@@ -220,9 +235,26 @@ const Resources = () => {
                         </p>
                     </div>
 
-                    {/* Compact Profile Card */}
-                    <div className="max-w-2xl mx-auto bg-[#121215] border border-white/10 rounded-2xl p-6 sm:p-8 shadow-2xl hover:border-white/20 transition-all duration-300">
-                        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 text-center sm:text-left">
+                    {/* Compact Profile Card with Dotted Matrix Background */}
+                    <div className="relative max-w-2xl mx-auto bg-[#121215] border border-white/15 rounded-2xl p-6 sm:p-8 shadow-2xl hover:border-white/25 transition-all duration-300 overflow-hidden group">
+                        
+                        {/* Dotted Matrix Background Pattern (Scoped solely to Creator Card) */}
+                        <div
+                            className="absolute inset-0 pointer-events-none opacity-35"
+                            style={{
+                                backgroundImage: 'radial-gradient(circle, rgba(255, 255, 255, 0.28) 1.2px, transparent 1.2px)',
+                                backgroundSize: '16px 16px',
+                            }}
+                            aria-hidden="true"
+                        />
+
+                        {/* Subtle ambient glow inside card */}
+                        <div
+                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-white/[0.03] blur-3xl pointer-events-none"
+                            aria-hidden="true"
+                        />
+
+                        <div className="relative z-10 flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 text-center sm:text-left">
                             {/* Avatar & Tag Container */}
                             <div className="flex flex-col items-center flex-shrink-0">
                                 <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border border-white/15 bg-[#0A0A0C] shadow-2xl group/photo">
@@ -290,20 +322,23 @@ const Resources = () => {
                                     </a>
 
                                     <a
-                                        href="https://github.com/SahidGit/git-explorer"
+                                        href="https://linktr.ee/sahidxdev"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="hover:text-white transition-colors inline-flex items-center gap-1.5 text-xs font-mono group"
-                                        aria-label="GitExplorer Repository"
+                                        aria-label="Sahid Sarfaraz Linktree"
                                     >
-                                        <Code2 className="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors" />
-                                        <span>Source</span>
+                                        <Link2 className="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors" />
+                                        <span>Linktree</span>
                                     </a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
+
+                {/* Page Navigation Redirection */}
+                <PageNavigation currentKey="resources" />
             </main>
 
             <BackToTop />

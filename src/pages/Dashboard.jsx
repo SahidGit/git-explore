@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-// import { useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import SEO from '../components/ui/SEO';
 import Header from '../components/layouts/Header';
+import Footer from '../components/layouts/Footer';
 import FilterPanel from '../components/features/FilterPanel';
 import RepositoryList from '../components/features/RepoCard/RepositoryList';
 import BookmarksPanel from '../components/features/BookmarksPanel';
@@ -16,18 +17,34 @@ import ErrorMessage from '../components/ui/ErrorMessage';
 import BackToTop from '../components/ui/BackToTop';
 
 const Dashboard = ({ activeTab }) => {
+    const [searchParams] = useSearchParams();
+
     const [repositories, setRepositories] = useState([]);
     const [monthlyTopRepos, setMonthlyTopRepos] = useState([]);
     const [monthlyLoading, setMonthlyLoading] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [selectedRepo, setSelectedRepo] = useState(null);
-    const [filters, setFilters] = useState({
-        query: '',
-        language: '',
-        sort: 'stars',
-        since: 'daily'
-    });
+
+    const [filters, setFilters] = useState(() => ({
+        query: searchParams.get('query') || '',
+        language: searchParams.get('language') || '',
+        sort: searchParams.get('sort') || 'stars',
+        since: searchParams.get('since') || 'daily'
+    }));
+
+    // Keep filters in sync when URL search params change
+    useEffect(() => {
+        const q = searchParams.get('query') || '';
+        const lang = searchParams.get('language') || '';
+        if (q || lang) {
+            setFilters(prev => ({
+                ...prev,
+                query: q || prev.query,
+                language: lang || prev.language
+            }));
+        }
+    }, [searchParams]);
 
     const [page, setPage] = useState(1);
     const [bookmarkedIds, setBookmarkedIds] = useState(new Set(storageService.getBookmarks().map(b => b.id)));
@@ -203,6 +220,7 @@ const Dashboard = ({ activeTab }) => {
             )}
 
             <BackToTop />
+            <Footer />
         </div>
     );
 };

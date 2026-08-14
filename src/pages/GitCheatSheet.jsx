@@ -4,6 +4,7 @@ import Header from '../components/layouts/Header';
 import Footer from '../components/layouts/Footer';
 import BackToTop from '../components/ui/BackToTop';
 import SEO from '../components/ui/SEO';
+import PageNavigation from '../components/ui/PageNavigation';
 import { GIT_CHEATSHEET_CATEGORIES, GIT_COMMANDS } from '../data/gitCheatSheetData';
 
 const GitCheatSheet = () => {
@@ -181,6 +182,9 @@ const GitCheatSheet = () => {
                         </section>
                     ))
                 )}
+
+                {/* Page Navigation Redirection */}
+                <PageNavigation currentKey="cheatsheet" />
             </main>
 
             <BackToTop />

@@ -10,6 +10,9 @@ const contentModules = {
   api: () => import('./content/api').then(m => m.apiContent),
   resources: () => import('./content/resources').then(m => m.resourcesContent),
   roadmap: () => import('./content/roadmap').then(m => m.roadmapContent),
+  about: () => import('./content/about').then(m => m.aboutContent),
+  disclaimer: () => import('./content/disclaimer').then(m => m.disclaimerContent),
+  terms: () => import('./content/terms').then(m => m.termsContent),
 };
 
 const cache = new Map();
