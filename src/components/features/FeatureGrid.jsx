@@ -12,7 +12,7 @@ const FEATURES = [
         renderVisual: () => (
             <div className="w-full max-w-sm rounded-xl border border-white/10 bg-[#0A0A0C] p-4 space-y-3 font-mono text-xs">
                 <div className="flex items-center justify-between border-b border-white/10 pb-2">
-                    <span className="text-zinc-400 flex items-center gap-1.5 text-[11px]">
+                    <span className="text-zinc-300 flex items-center gap-1.5 text-[11px]">
                         <Search className="w-3.5 h-3.5 text-emerald-400" />
                         <span>Filter: topic:ai</span>
                     </span>
@@ -20,9 +20,9 @@ const FEATURES = [
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                     <span className="px-2 py-0.5 rounded-md bg-white/10 text-white font-bold text-[10px]">Today</span>
-                    <span className="px-2 py-0.5 rounded-md bg-white/[0.04] text-zinc-400 text-[10px]">This Week</span>
-                    <span className="px-2 py-0.5 rounded-md bg-[#3572a5]/20 text-[#3572a5] border border-[#3572a5]/30 text-[10px]">Python</span>
-                    <span className="px-2 py-0.5 rounded-md bg-[#dea584]/20 text-[#dea584] border border-[#dea584]/30 text-[10px]">Rust</span>
+                    <span className="px-2 py-0.5 rounded-md bg-white/[0.04] text-zinc-300 text-[10px]">This Week</span>
+                    <span className="px-2 py-0.5 rounded-md bg-[#3572a5]/25 text-sky-300 border border-[#3572a5]/40 text-[10px]">Python</span>
+                    <span className="px-2 py-0.5 rounded-md bg-[#dea584]/25 text-amber-200 border border-[#dea584]/40 text-[10px]">Rust</span>
                 </div>
             </div>
         ),
@@ -44,15 +44,15 @@ const FEATURES = [
                 </div>
                 <div className="grid grid-cols-3 gap-2 text-center text-[10px]">
                     <div className="bg-white/[0.04] border border-white/10 p-1.5 rounded">
-                        <span className="text-zinc-500 block">Forks</span>
+                        <span className="text-zinc-400 block">Forks</span>
                         <span className="text-white font-bold">12.5k</span>
                     </div>
                     <div className="bg-white/[0.04] border border-white/10 p-1.5 rounded">
-                        <span className="text-zinc-500 block">License</span>
+                        <span className="text-zinc-400 block">License</span>
                         <span className="text-emerald-400 font-bold">MIT</span>
                     </div>
                     <div className="bg-white/[0.04] border border-white/10 p-1.5 rounded">
-                        <span className="text-zinc-500 block">Issues</span>
+                        <span className="text-zinc-400 block">Issues</span>
                         <span className="text-zinc-300 font-bold">294</span>
                     </div>
                 </div>
@@ -107,7 +107,7 @@ const FEATURES = [
                 <div className="flex items-center justify-between text-[11px] bg-white/[0.04] p-2 rounded border border-white/10">
                     <span className="text-zinc-300">DeepSeek-V3</span>
                     <span className="text-emerald-400 font-bold">$0.14 / M tokens</span>
-                    <span className="text-zinc-500 text-[10px]">arXiv:2412.19437</span>
+                    <span className="text-zinc-400 text-[10px]">arXiv:2412.19437</span>
                 </div>
             </div>
         ),
@@ -147,9 +147,10 @@ const FeatureGrid = () => {
                             <div>
                                 <Link
                                     to={feature.link}
+                                    aria-label={`Explore ${feature.title}`}
                                     className="inline-flex items-center gap-1.5 text-xs font-mono text-white hover:text-emerald-400 transition-colors"
                                 >
-                                    <span>Explore Feature</span>
+                                    <span>Explore {feature.title}</span>
                                     <span>&rarr;</span>
                                 </Link>
                             </div>

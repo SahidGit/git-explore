@@ -11,7 +11,7 @@ const GithubSyncSection = () => {
                 <div className="p-8 sm:p-12 border-b md:border-b-0 md:border-r border-white/10 flex flex-col justify-between space-y-8">
                     <div className="relative h-48 rounded-xl border border-white/10 bg-[#0E0E10] p-6 flex flex-col justify-between font-mono text-xs overflow-hidden">
                         <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                            <span className="text-zinc-400 flex items-center gap-1.5 text-[11px]">
+                            <span className="text-zinc-300 flex items-center gap-1.5 text-[11px]">
                                 <Terminal className="w-3.5 h-3.5 text-emerald-400" />
                                 <span>git rebase -i HEAD~3</span>
                             </span>
@@ -19,11 +19,11 @@ const GithubSyncSection = () => {
                         </div>
                         <div className="space-y-1">
                             <p className="text-white font-semibold font-sans text-sm">Step-by-Step Terminal Reference</p>
-                            <p className="text-zinc-500 text-[11px]">Setup, Staging, Branching, Remotes &amp; Undoing Changes</p>
+                            <p className="text-zinc-400 text-[11px]">Setup, Staging, Branching, Remotes &amp; Undoing Changes</p>
                         </div>
-                        <div className="flex items-center justify-between pt-2 border-t border-white/10 text-zinc-400 text-[11px]">
+                        <div className="flex items-center justify-between pt-2 border-t border-white/10 text-zinc-300 text-[11px]">
                             <span>Safety pro-tips included</span>
-                            <Link to="/cheatsheet" className="text-white hover:text-emerald-400 transition-colors">
+                            <Link to="/cheatsheet" aria-label="View Git Command Cheat Sheet" className="text-white font-semibold hover:text-emerald-400 transition-colors">
                                 View Cheat Sheet &rarr;
                             </Link>
                         </div>
@@ -46,7 +46,7 @@ const GithubSyncSection = () => {
                 <div className="p-8 sm:p-12 flex flex-col justify-between space-y-8">
                     <div className="relative h-48 rounded-xl border border-white/10 bg-[#0E0E10] p-6 flex flex-col justify-between font-mono text-xs overflow-hidden">
                         <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                            <span className="text-zinc-400 flex items-center gap-1.5 text-[11px]">
+                            <span className="text-zinc-300 flex items-center gap-1.5 text-[11px]">
                                 <Bookmark className="w-3.5 h-3.5 text-indigo-400" />
                                 <span>IndexedDB / LocalStorage</span>
                             </span>
@@ -59,9 +59,9 @@ const GithubSyncSection = () => {
                                 JSON / CSV
                             </span>
                         </div>
-                        <div className="flex items-center justify-between pt-2 border-t border-white/10 text-zinc-400 text-[11px]">
+                        <div className="flex items-center justify-between pt-2 border-t border-white/10 text-zinc-300 text-[11px]">
                             <span>Zero telemetry &bull; Local-first</span>
-                            <Link to="/bookmarks" className="text-white hover:text-indigo-400 transition-colors">
+                            <Link to="/bookmarks" aria-label="Open Saved Bookmarks and Developer Notes" className="text-white font-semibold hover:text-indigo-400 transition-colors">
                                 Open Bookmarks &rarr;
                             </Link>
                         </div>

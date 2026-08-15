@@ -1,0 +1,17 @@
+# GitExplorer — Developer Intelligence Layer
+
+> GitExplorer tracks active open-source repositories, contributor velocity, and frontier AI model specifications before they hit mainstream feeds. Zero telemetry, local-first, raw GitHub graph signal.
+
+## Documentation & API Endpoints
+
+- [GitExplorer Dashboard Documentation](https://git-explore-one.vercel.app/docs): Technical documentation on REST/GraphQL API rate limits, PAT connection, and local storage architecture.
+- [GitHub API Integration Specs](https://git-explore-one.vercel.app/api): Raw GitHub GraphQL and REST API querying guide with curl snippets.
+- [Git Cheat Sheet Reference](https://git-explore-one.vercel.app/cheatsheet): Line-by-line step-by-step Git command reference with explanations and one-click copy.
+- [AI Newsroom & Frontier Intel](https://git-explore-one.vercel.app/ai-news): Real-time frontier AI model specifications, benchmark updates, pricing comparisons, and direct arXiv research paper links.
+- [Platform Roadmap](https://git-explore-one.vercel.app/roadmap): Upcoming features, releases, and architectural milestones.
+- [Changelog & System Updates](https://git-explore-one.vercel.app/changelog): Detailed release history and system updates.
+
+## Source Code & Community
+
+- [GitHub Repository](https://github.com/SahidGit/git-explore): Official open-source repository (MIT Licensed).
+- [Report an Issue / Suggestion](https://git-explore-one.vercel.app/report): Submit bug reports, model spec corrections, or feature proposals.

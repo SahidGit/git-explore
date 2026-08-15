@@ -194,7 +194,7 @@ const Hero = ({ onExplore }) => {
 
                 {/* ── Live Dashboard Mockup Card ── */}
                 <div className="w-full max-w-4xl mx-auto mt-8 sm:mt-12 relative">
-                    <div className="rounded-2xl border border-white/15 bg-[#121215]/95 backdrop-blur-2xl overflow-hidden shadow-2xl">
+                    <div className="rounded-2xl border border-white/15 bg-[#121215]/95 backdrop-blur-2xl overflow-hidden shadow-2xl min-h-[260px]">
                         {/* Chrome bar */}
                         <div className="flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 border-b border-white/10 bg-[#0E0E10]">
                             <div className="flex items-center gap-1.5 sm:gap-2">
