@@ -108,24 +108,26 @@ const PillDropdown = ({ id, label, options, value, onChange, disabled = false, i
                 onClick={() => !disabled && setOpen((v) => !v)}
                 aria-haspopup="listbox"
                 aria-expanded={open}
-                className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg border text-xs font-medium transition-all duration-200 select-none whitespace-nowrap ${
+                className={`inline-flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-mono font-medium transition-all duration-200 select-none whitespace-nowrap cursor-pointer active:scale-[0.98] ${
                     disabled
                         ? 'opacity-40 cursor-not-allowed bg-[#121215] border-white/[0.06] text-zinc-500'
                         : open
-                        ? 'bg-[#16161A] border-white/20 text-white'
-                        : 'bg-[#121215] border-white/[0.08] text-zinc-300 hover:border-white/20 hover:text-white'
+                        ? 'bg-white text-black border-white font-bold shadow-lg'
+                        : value
+                        ? 'bg-white/10 border-white/20 text-white font-semibold'
+                        : 'bg-[#121215] border-white/[0.08] text-zinc-300 hover:border-white/20 hover:text-white hover:bg-white/[0.04]'
                 }`}
             >
-                {Icon && <Icon className="w-3.5 h-3.5 text-zinc-500 flex-shrink-0" strokeWidth={1.5} />}
-                <span className={selected && selected.value !== '' ? 'text-white font-semibold' : ''}>{displayLabel}</span>
+                {Icon && <Icon className="w-3.5 h-3.5 flex-shrink-0" strokeWidth={1.5} />}
+                <span>{displayLabel}</span>
                 <ChevronDown
-                    className={`w-3 h-3 text-zinc-500 flex-shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+                    className={`w-3 h-3 flex-shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
                 />
             </button>
 
             {open && (
                 <div
-                    className="absolute top-full left-0 mt-2 min-w-[180px] max-h-64 bg-[#16161A] border border-white/[0.08] rounded-xl shadow-2xl shadow-black/50 z-50 overflow-y-auto py-1 scrollbar-thin scrollbar-thumb-white/10"
+                    className="absolute top-full left-0 mt-2 min-w-[180px] max-h-64 bg-[#16161A] border border-white/15 rounded-xl shadow-2xl z-50 overflow-y-auto py-1 font-mono text-xs"
                     role="listbox"
                 >
                     {options.map((opt) => (
@@ -137,10 +139,10 @@ const PillDropdown = ({ id, label, options, value, onChange, disabled = false, i
                                 onChange(opt.value);
                                 setOpen(false);
                             }}
-                            className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-[13px] text-left transition-colors duration-150 ${
+                            className={`w-full flex items-center gap-2.5 px-3 py-2 text-[12px] text-left transition-colors duration-150 cursor-pointer ${
                                 value === opt.value
-                                    ? 'text-white bg-white/[0.06]'
-                                    : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
+                                    ? 'text-white font-bold bg-white/10'
+                                    : 'text-zinc-400 hover:text-white hover:bg-white/[0.06]'
                             }`}
                         >
                             {opt.icon && (
@@ -188,7 +190,7 @@ const FilterPanel = ({ filters, onFilterChange }) => {
             <div className="relative group">
                 <Search
                     className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors duration-200 pointer-events-none ${
-                        focused ? 'text-zinc-300' : 'text-zinc-500'
+                        focused ? 'text-white' : 'text-zinc-500'
                     }`}
                 />
                 <input
@@ -202,10 +204,10 @@ const FilterPanel = ({ filters, onFilterChange }) => {
                     autoComplete="off"
                     spellCheck={false}
                     aria-label="Search repositories"
-                    className={`w-full bg-[#121215]/80 backdrop-blur-md border rounded-xl pl-10 pr-20 py-3 text-[13px] text-white placeholder:text-zinc-600 focus:outline-none transition-all duration-200 ${
+                    className={`w-full bg-[#121215]/80 backdrop-blur-md border rounded-xl pl-10 pr-20 py-3 text-xs sm:text-sm font-mono text-white placeholder:text-zinc-600 focus:outline-none transition-all duration-200 ${
                         focused
-                            ? 'border-white/25 shadow-[0_0_0_1px_rgba(255,255,255,0.04)]'
-                            : 'border-white/[0.08] hover:border-white/15'
+                            ? 'border-white/30 shadow-lg'
+                            : 'border-white/[0.08] hover:border-white/20'
                     }`}
                 />
                 {/* Right-side decorators */}
@@ -213,7 +215,7 @@ const FilterPanel = ({ filters, onFilterChange }) => {
                     {filters.query ? (
                         <button
                             onClick={clearSearch}
-                            className="p-0.5 text-zinc-500 hover:text-white transition-colors duration-150 rounded"
+                            className="p-1 text-zinc-500 hover:text-white transition-colors duration-150 rounded-md cursor-pointer"
                             aria-label="Clear search"
                         >
                             <X className="w-3.5 h-3.5" />
@@ -239,16 +241,16 @@ const FilterPanel = ({ filters, onFilterChange }) => {
                             key={cat.id}
                             type="button"
                             onClick={() => handleCategoryClick(cat.query)}
-                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-medium transition-all duration-200 select-none cursor-pointer ${
+                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-mono font-medium transition-all duration-200 select-none cursor-pointer active:scale-[0.98] ${
                                 isActive
-                                    ? 'bg-white/15 border-white/30 text-white shadow-lg shadow-purple-500/10 scale-105'
+                                    ? 'bg-white text-black border-white font-bold shadow-md'
                                     : 'bg-[#121215] border-white/[0.08] text-zinc-400 hover:border-white/20 hover:text-white hover:bg-white/[0.04]'
                             }`}
                             title={cat.description}
                         >
-                            <IconComp className={`w-3.5 h-3.5 ${isActive ? 'text-purple-400' : 'text-zinc-500'}`} />
+                            <IconComp className={`w-3.5 h-3.5 ${isActive ? 'text-black' : 'text-zinc-500'}`} />
                             <span>{cat.shortLabel}</span>
-                            {isActive && <X className="w-3 h-3 text-zinc-400 hover:text-white ml-0.5" />}
+                            {isActive && <X className="w-3 h-3 text-black/70 hover:text-black ml-0.5" />}
                         </button>
                     );
                 })}
@@ -300,32 +302,20 @@ const FilterPanel = ({ filters, onFilterChange }) => {
                     disabled={!!filters.query}
                 />
 
-                {/* Active filter reset badge */}
+                {/* Clear all filters button */}
                 {hasActiveFilters && (
                     <button
-                        onClick={() =>
-                            onFilterChange({ query: '', language: '', sort: 'stars', since: 'daily' })
-                        }
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-white/[0.08] bg-white/[0.03] text-[11px] font-mono text-zinc-500 hover:text-white hover:border-white/20 transition-all duration-200 cursor-pointer"
-                        aria-label="Reset filters"
+                        type="button"
+                        onClick={() => onFilterChange({ query: '', language: '', sort: 'stars', since: 'daily' })}
+                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-mono font-bold text-zinc-400 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 active:scale-[0.98] transition-all cursor-pointer"
                     >
-                        <X className="w-3 h-3" />
-                        Reset All
+                        <X className="w-3.5 h-3.5 text-zinc-400" />
+                        <span>Clear All</span>
                     </button>
                 )}
-
-                {/* Search status indicator */}
-                <div className="ml-auto hidden sm:flex items-center gap-1.5">
-                    {filters.query && (
-                        <span className="text-[11px] font-mono text-zinc-500">
-                            Topic: <span className="text-zinc-300 font-semibold">{activeCategory ? activeCategory.shortLabel : `"${filters.query}"`}</span>
-                        </span>
-                    )}
-                </div>
             </div>
         </div>
     );
 };
 
 export default FilterPanel;
-

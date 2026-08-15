@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     AlertCircle, CheckCircle2, Send, Loader2, ArrowLeft, Bug,
     Lightbulb, FileText, Link2, HelpCircle, ShieldCheck, RefreshCw, Home
@@ -30,6 +30,13 @@ const MAX_CHARS = 2000;
 
 const ReportIssue = () => {
     const navigate = useNavigate();
+
+    useEffect(() => {
+        try {
+            window.scrollTo(0, 0);
+        } catch (_) {}
+    }, []);
+
     const [formData, setFormData] = useState({
         issueType: '',
         pageUrl: '',
@@ -93,21 +100,20 @@ const ReportIssue = () => {
                 localStorage.setItem('gitexplorer_user_reports', JSON.stringify(existingReports.slice(0, 50)));
             } catch (_) {}
 
-            // 2. Attempt backend dispatch if API endpoint is reachable
-            try {
-                await fetch('http://localhost:5000/api/reports', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        ...formData,
-                        cfTurnstileToken: turnstileToken,
-                    }),
-                });
-            } catch (_) {
-                // Silently fallback to local queue if backend is not started
+            // 2. Attempt backend dispatch if API endpoint is configured
+            const apiBase = import.meta.env.VITE_API_URL;
+            if (apiBase) {
+                try {
+                    await fetch(`${apiBase}/api/reports`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ ...formData, cfTurnstileToken: turnstileToken }),
+                    });
+                } catch (_) {
+                    // Silently queue locally if backend is unreachable
+                }
             }
+
 
             setStatus('success');
             setSuccessMessage('Thank you! Your feedback has been verified and submitted successfully.');
@@ -138,29 +144,34 @@ const ReportIssue = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#0A0A0C] text-white flex flex-col selection:bg-white/20 selection:text-white font-sans">
+        <div className="flex min-h-screen flex-col bg-[#0A0A0C] text-white font-sans selection:bg-white/20 selection:text-white">
             <SEO
-                title="Report an Issue or Suggestion | GitExplorer"
-                description="Report incorrect data, broken links, or request new features for GitExplorer and AI Newsroom."
+                title="Report an Issue · GitExplorer"
+                description="Report incorrect data, broken links, or request new features for GitExplorer."
                 canonical="https://git-explore-one.vercel.app/report"
             />
-            <Header onSearchClick={() => {}} />
+            <Header onSearchClick={() => {}} showBackButton />
 
-            <main className="flex-1 max-w-3xl w-full mx-auto px-4 sm:px-6 py-28 sm:py-32">
-                
-                {/* Back Link */}
-                <div className="mb-6">
-                    <Link
-                        to="/"
-                        className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-white transition-colors"
-                    >
-                        <ArrowLeft className="w-3.5 h-3.5" />
-                        <span>Back to GitExplorer</span>
-                    </Link>
-                </div>
+            <main className="relative z-0 flex-1 overflow-hidden pt-28 sm:pt-32">
 
-                {/* Main Card Container */}
-                <div className="rounded-2xl border border-white/[0.08] bg-[#121215] p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+                {/* ── Section 1: Hero & Form Container (Entire.io Frame Style) ── */}
+                <section className="border-b border-white/10">
+                    <div className="mx-auto w-full max-w-[1280px] border-white/10 min-[1280px]:border-x px-6 py-12 md:px-20">
+                        <div className="mx-auto flex w-full max-w-[720px] flex-col gap-6">
+                            
+                            {/* Back Link */}
+                            <div>
+                                <Link
+                                    to="/"
+                                    className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-white transition-colors"
+                                >
+                                    <ArrowLeft className="w-3.5 h-3.5" />
+                                    <span>Back to GitExplorer</span>
+                                </Link>
+                            </div>
+
+                            {/* Main Card Container */}
+                            <div className="rounded-2xl border border-white/10 bg-[#121215] p-6 sm:p-10 shadow-2xl relative overflow-hidden">
                     {/* Top ambient glow */}
                     <div
                         className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-32 pointer-events-none mix-blend-screen opacity-50"
@@ -173,7 +184,7 @@ const ReportIssue = () => {
                     {/* Header with BETA tag */}
                     <div className="text-center sm:text-left mb-8 pb-6 border-b border-white/[0.06] relative z-10">
                         <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 mb-2.5">
-                            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-heading">
+                            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-space">
                                 Report an Issue / Suggestion
                             </h1>
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/20 text-[10px] font-mono font-semibold text-amber-400 uppercase tracking-wider">
@@ -181,7 +192,7 @@ const ReportIssue = () => {
                                 Beta
                             </span>
                         </div>
-                        <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-xl">
+                        <p className="text-sm sm:text-base text-zinc-300 leading-relaxed max-w-xl font-sans font-normal">
                             Report incorrect data, broken arXiv links, model price discrepancies, or feature suggestions for GitExplorer &amp; AI Newsroom.
                         </p>
                     </div>
@@ -396,10 +407,13 @@ const ReportIssue = () => {
                             </button>
                         </form>
                     )}
-                </div>
+                            </div>
 
-                {/* Page Navigation Redirection */}
-                <PageNavigation currentKey="report" />
+                            {/* Page Navigation Redirection */}
+                            <PageNavigation currentKey="report" />
+                        </div>
+                    </div>
+                </section>
             </main>
 
             <BackToTop />

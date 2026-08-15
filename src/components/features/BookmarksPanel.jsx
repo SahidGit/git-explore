@@ -37,7 +37,7 @@ const EmptyBookmarks = () => (
 
         <Link
             to="/dashboard"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black text-[13px] font-semibold hover:bg-[#E4E4E7] transition-colors duration-200 active:scale-[0.98]"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-black font-mono font-extrabold text-xs hover:bg-zinc-200 transition-all duration-200 active:scale-[0.98] shadow-xl cursor-pointer"
         >
             Explore Trending Repos
         </Link>

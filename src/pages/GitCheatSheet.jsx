@@ -1,147 +1,144 @@
-import React, { useState, useMemo } from 'react';
-import { Search, Copy, Check, Terminal, Sparkles, BookOpen, Filter, ArrowRight, CornerDownRight, Zap } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 import Header from '../components/layouts/Header';
 import Footer from '../components/layouts/Footer';
 import BackToTop from '../components/ui/BackToTop';
 import SEO from '../components/ui/SEO';
 import PageNavigation from '../components/ui/PageNavigation';
 import { GIT_CHEATSHEET_CATEGORIES, GIT_COMMANDS } from '../data/gitCheatSheetData';
+import { Terminal, Copy, Check, Search, CornerDownRight, Zap } from 'lucide-react';
 
 const GitCheatSheet = () => {
-    const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
+    const [searchQuery, setSearchQuery] = useState('');
     const [copiedId, setCopiedId] = useState(null);
 
-    // Filter commands by active category and search query
-    const filteredCommands = useMemo(() => {
-        return GIT_COMMANDS.filter((cmd) => {
-            const matchesCategory =
-                selectedCategory === 'all' || cmd.category === selectedCategory;
+    useEffect(() => {
+        try {
+            window.scrollTo(0, 0);
+        } catch {
+            // ignore
+        }
+    }, []);
 
-            const q = searchQuery.toLowerCase().trim();
-            const matchesSearch =
-                !q ||
-                cmd.title.toLowerCase().includes(q) ||
-                cmd.command.toLowerCase().includes(q) ||
-                cmd.explanation.toLowerCase().includes(q) ||
-                cmd.categoryName.toLowerCase().includes(q);
-
-            return matchesCategory && matchesSearch;
-        });
-    }, [searchQuery, selectedCategory]);
-
-    // Group commands by category
-    const groupedCommands = useMemo(() => {
-        const groups = {};
-        filteredCommands.forEach((cmd) => {
-            if (!groups[cmd.category]) {
-                groups[cmd.category] = {
-                    name: cmd.categoryName,
-                    items: [],
-                };
-            }
-            groups[cmd.category].items.push(cmd);
-        });
-        return groups;
-    }, [filteredCommands]);
-
-    // Handle One-Click Clipboard Copy with visual feedback
-    const handleCopy = (cmd) => {
-        if (!navigator.clipboard) return;
-        navigator.clipboard.writeText(cmd.command);
-        setCopiedId(cmd.id);
-        setTimeout(() => setCopiedId(null), 2000);
+    const handleCopy = (item) => {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(item.command);
+            setCopiedId(item.id);
+            setTimeout(() => setCopiedId(null), 2000);
+        }
     };
 
+    // Filter commands by search & category
+    const filteredCommands = GIT_COMMANDS.filter((cmd) => {
+        const matchesCategory = selectedCategory === 'all' || cmd.category === selectedCategory;
+        const q = searchQuery.toLowerCase().trim();
+        const matchesQuery =
+            !q ||
+            cmd.title.toLowerCase().includes(q) ||
+            cmd.command.toLowerCase().includes(q) ||
+            cmd.explanation.toLowerCase().includes(q);
+        return matchesCategory && matchesQuery;
+    });
+
+    // Group commands by category for display
+    const groupedCommands = GIT_CHEATSHEET_CATEGORIES.reduce((acc, cat) => {
+        if (cat.id === 'all') return acc;
+        const items = filteredCommands.filter((c) => c.category === cat.id);
+        if (items.length > 0) {
+            acc[cat.id] = {
+                name: cat.name,
+                items,
+            };
+        }
+        return acc;
+    }, {});
+
     return (
-        <div className="min-h-screen bg-[#0A0A0C] text-white flex flex-col selection:bg-white/20 selection:text-white">
+        <div className="flex min-h-screen flex-col bg-[#0A0A0C] text-white font-sans selection:bg-white/20 selection:text-white">
             <SEO
-                title="Git Cheat Sheet & Command Guide | GitExplorer"
+                title="Git Cheat Sheet · Step-by-Step Commands"
                 description="One-click copyable Git commands for beginners and developers. Step-by-step setup, staging, branching, remotes, and undoing changes."
             />
             <Header activeTab="cheatsheet" onSearchClick={() => {}} />
 
-            {/* ── Hero Banner ── */}
-            <section aria-label="Git Cheat Sheet Header" className="relative pt-32 pb-10 px-4 sm:px-6 lg:px-8 border-b border-white/[0.08] overflow-hidden">
-                {/* Background glow */}
-                <div
-                    className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] pointer-events-none mix-blend-screen opacity-40"
-                    style={{
-                        background: 'radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.08) 0%, transparent 70%)',
-                    }}
-                    aria-hidden="true"
-                />
+            <main className="relative z-0 flex-1 overflow-hidden pt-28 sm:pt-32">
 
-                <div className="max-w-4xl mx-auto text-center space-y-4 relative z-10">
-                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-xs font-mono text-zinc-300">
-                        <Terminal className="w-3.5 h-3.5 text-emerald-400" />
-                        <span>Step-by-Step Command Guide &bull; One-Click Copy</span>
+                {/* ── Section 1: Hero Banner ── */}
+                <section aria-label="Git Cheat Sheet Header" className="border-b border-white/10">
+                    <div className="mx-auto w-full max-w-[1280px] border-white/10 min-[1280px]:border-x px-6 py-12 md:px-20 md:py-16">
+                        <div className="mx-auto flex w-full max-w-[720px] flex-col gap-4 text-center sm:text-left">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-white/[0.04] border border-white/10 text-xs font-mono text-zinc-300 w-fit">
+                                <Terminal className="w-3.5 h-3.5 text-emerald-400" />
+                                <span>Step-by-Step Command Guide &bull; One-Click Copy</span>
+                            </div>
+
+                            <h1 className="text-3xl sm:text-4xl font-extrabold font-space text-white tracking-tight">
+                                Git Cheat Sheet
+                            </h1>
+
+                            <p className="text-sm md:text-base font-sans text-zinc-400 leading-relaxed font-normal">
+                                Line-by-line step-by-step Git command reference. Copy commands in one click, follow clear execution steps, and master terminal workflows.
+                            </p>
+                        </div>
                     </div>
+                </section>
 
-                    <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-                        Git Cheat Sheet
-                    </h1>
+                {/* ── Sticky Navigation & Filter Bar ── */}
+                <div className="sticky top-16 z-40 bg-[#0A0A0C]/95 backdrop-blur-xl border-b border-white/10 py-3.5 px-4 sm:px-6 shadow-2xl">
+                    <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 md:px-20 flex flex-col md:flex-row items-center gap-3.5 justify-between">
+                        
+                        {/* Live Search Bar */}
+                        <div className="relative w-full md:w-80">
+                            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
+                            <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                placeholder="Filter by keyword (e.g. commit, push, reset)..."
+                                className="w-full bg-[#121215] border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-white placeholder:text-zinc-500 font-mono focus:outline-none focus:border-white/30 transition-all duration-200"
+                            />
+                            {searchQuery && (
+                                <button
+                                    onClick={() => setSearchQuery('')}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white text-xs font-mono cursor-pointer"
+                                >
+                                    Clear
+                                </button>
+                            )}
+                        </div>
 
-                    <p className="text-sm sm:text-base text-zinc-400 max-w-2xl mx-auto leading-relaxed">
-                        Line-by-line step-by-step Git command reference. Copy commands in one click, follow clear execution steps, and master terminal workflows.
-                    </p>
-                </div>
-            </section>
-
-            {/* ── Sticky Navigation & Filter Bar ── */}
-            <div className="sticky top-16 z-40 bg-[#0A0A0C]/95 backdrop-blur-xl border-b border-white/[0.08] py-3.5 px-4 sm:px-6 shadow-2xl">
-                <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-3.5 justify-between">
-                    
-                    {/* Live Search Bar */}
-                    <div className="relative w-full md:w-80">
-                        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Filter by keyword (e.g. commit, push, reset)..."
-                            className="w-full bg-[#121215] border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-white placeholder:text-zinc-500 font-mono focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all duration-200"
-                        />
-                        {searchQuery && (
-                            <button
-                                onClick={() => setSearchQuery('')}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white text-xs font-mono"
-                            >
-                                Clear
-                            </button>
-                        )}
-                    </div>
-
-                    {/* Category Navigation Pills */}
-                    <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 scrollbar-none text-xs font-mono">
-                        {GIT_CHEATSHEET_CATEGORIES.map((cat) => (
-                            <button
-                                key={cat.id}
-                                onClick={() => setSelectedCategory(cat.id)}
-                                className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-all duration-200 ${
-                                    selectedCategory === cat.id
-                                        ? 'bg-white text-black font-semibold shadow-md'
-                                        : 'bg-white/[0.04] text-zinc-400 border border-white/[0.06] hover:text-white hover:bg-white/[0.08]'
-                                }`}
-                            >
-                                {cat.name}
-                            </button>
-                        ))}
+                        {/* Category Navigation Pills */}
+                        <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 scrollbar-none text-xs font-mono">
+                            {GIT_CHEATSHEET_CATEGORIES.map((cat) => (
+                                <button
+                                    key={cat.id}
+                                    onClick={() => setSelectedCategory(cat.id)}
+                                    className={`px-3 py-1.5 rounded-xl whitespace-nowrap transition-all duration-200 cursor-pointer active:scale-[0.98] ${
+                                        selectedCategory === cat.id
+                                            ? 'bg-white text-black font-extrabold shadow-md'
+                                            : 'bg-white/[0.04] text-zinc-400 border border-white/[0.08] hover:text-white hover:bg-white/[0.08]'
+                                    }`}
+                                >
+                                    {cat.name}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {/* ── Line-by-Line Step-by-Step Content ── */}
-            <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-10 space-y-14">
+                {/* ── Section 2: Commands Grid ── */}
+                <section className="border-b border-white/10">
+                    <div className="mx-auto w-full max-w-[1280px] border-white/10 min-[1280px]:border-x px-6 py-12 md:px-20">
+                        <div className="mx-auto max-w-[900px] space-y-14">
                 
                 {filteredCommands.length === 0 ? (
-                    <div className="py-20 text-center space-y-3">
+                    <div className="py-20 text-center space-y-3 font-mono">
                         <Terminal className="w-8 h-8 text-zinc-600 mx-auto" />
-                        <p className="text-base text-zinc-300 font-medium">No commands found for &ldquo;{searchQuery}&rdquo;</p>
+                        <p className="text-base text-zinc-300 font-semibold">No commands found for &ldquo;{searchQuery}&rdquo;</p>
                         <p className="text-xs text-zinc-500 font-mono">Try searching for keywords like &lsquo;commit&rsquo;, &lsquo;branch&rsquo;, &lsquo;checkout&rsquo;, or reset your filter.</p>
                         <button
                             onClick={() => { setSearchQuery(''); setSelectedCategory('all'); }}
-                            className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-mono text-white transition-colors"
+                            className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black font-bold text-xs font-mono active:scale-[0.98] transition-all cursor-pointer"
                         >
                             Reset Search &amp; Filters
                         </button>
@@ -158,7 +155,7 @@ const GitCheatSheet = () => {
                                         SEQUENCE
                                     </span>
                                     <span className="w-4 h-px bg-white/20" />
-                                    <h2 className="text-lg sm:text-xl font-extrabold text-white tracking-tight">
+                                    <h2 className="text-lg sm:text-xl font-extrabold text-white tracking-tight font-space">
                                         {group.name}
                                     </h2>
                                 </div>
@@ -184,7 +181,10 @@ const GitCheatSheet = () => {
                 )}
 
                 {/* Page Navigation Redirection */}
-                <PageNavigation currentKey="cheatsheet" />
+                        <PageNavigation currentKey="cheatsheet" />
+                        </div>
+                    </div>
+                </section>
             </main>
 
             <BackToTop />
@@ -193,10 +193,10 @@ const GitCheatSheet = () => {
     );
 };
 
-// ── Line-by-Line Step Row Sub-component ────────────────────────
+// ─── Subcomponent: Line-by-Line Step Row Card ─────────────
 const StepRowCard = ({ stepIndex, item, isCopied, onCopy }) => {
     return (
-        <div className="rounded-2xl border border-white/[0.08] bg-[#121215] p-5 sm:p-6 hover:border-white/20 transition-all duration-300 shadow-xl space-y-3.5 group">
+        <div className="rounded-xl border border-white/[0.08] bg-[#121215] p-5 sm:p-6 space-y-4 hover:border-white/20 transition-all duration-200 group">
             
             {/* Top Step Header Row */}
             <div className="flex flex-wrap items-center justify-between gap-2">
@@ -228,10 +228,10 @@ const StepRowCard = ({ stepIndex, item, isCopied, onCopy }) => {
                 <button
                     onClick={onCopy}
                     aria-label={`Copy command ${item.command}`}
-                    className={`absolute right-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-lg border text-xs font-mono transition-all duration-200 flex items-center gap-1.5 shadow-md ${
+                    className={`absolute right-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl border text-xs font-mono font-bold transition-all duration-200 flex items-center gap-1.5 shadow-md active:scale-[0.98] cursor-pointer ${
                         isCopied
                             ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
-                            : 'bg-white/[0.08] border-white/15 text-zinc-300 hover:text-white hover:bg-white/[0.16]'
+                            : 'bg-white/10 border-white/20 text-white hover:bg-white/20'
                     }`}
                 >
                     {isCopied ? (

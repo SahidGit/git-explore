@@ -19,7 +19,7 @@ export const docsContent = {
         'GitExplorer is a privacy-first layer on top of GitHub. Open Explore to browse trending repositories, use filters to narrow results, and click any repo for deep analytics — no sign-up required.',
       links: [
         { label: 'Open dashboard', href: '/dashboard' },
-        { label: 'Browse resources', href: '/resources' },
+        { label: 'Company overview', href: '/company' },
       ],
     },
     {

@@ -25,6 +25,7 @@ const Dashboard = ({ activeTab }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [selectedRepo, setSelectedRepo] = useState(null);
+    const [isFallback, setIsFallback] = useState(false);
 
     const [filters, setFilters] = useState(() => ({
         query: searchParams.get('query') || '',
@@ -63,6 +64,7 @@ const Dashboard = ({ activeTab }) => {
     const fetchRepositories = useCallback(async (pageNum = 1) => {
         setLoading(true);
         setError(null);
+        setIsFallback(false);
         try {
             let data;
             if (filters.query) {
@@ -75,6 +77,8 @@ const Dashboard = ({ activeTab }) => {
             } else {
                 data = await githubService.getTrendingRepositories(filters.language, filters.since, pageNum);
             }
+
+            if (data.isFallback) setIsFallback(true);
 
             if (pageNum === 1) {
                 setRepositories(data.items || []);
@@ -102,7 +106,6 @@ const Dashboard = ({ activeTab }) => {
     };
 
     const handleBookmarkToggle = (repo) => {
-        console.log('Toggling bookmark ID:', repo.id);
         storageService.toggleBookmark(repo);
         setBookmarkedIds(prev => {
             const next = new Set(prev);
@@ -121,16 +124,28 @@ const Dashboard = ({ activeTab }) => {
 
     const getSEOProps = () => {
         switch (activeTab) {
-            case 'bookmarks': return { title: 'My Bookmarks | GitExplorer', description: 'View your saved repositories.', canonical: 'https://git-explore-one.vercel.app/bookmarks' };
-            case 'profile': return { title: 'Developer Profile | GitExplorer', description: 'Analyze GitHub profiles and stats.', canonical: 'https://git-explore-one.vercel.app/profile' };
-            default: return { title: 'Explore Repositories | GitExplorer', description: 'Discover trending open source projects.', canonical: 'https://git-explore-one.vercel.app/dashboard' };
+            case 'bookmarks': return {
+                title: 'Bookmarks — GitExplorer',
+                description: 'Your curated collection of repositories. Stored locally, private by default.',
+                canonical: 'https://git-explore-one.vercel.app/bookmarks'
+            };
+            case 'profile': return {
+                title: 'Developer Profile — GitExplorer',
+                description: 'Analyze GitHub contributor profiles with activity heatmaps and contribution history.',
+                canonical: 'https://git-explore-one.vercel.app/profile'
+            };
+            default: return {
+                title: 'Explore Repositories — GitExplorer',
+                description: 'Discover trending open-source repositories by language, time window, and momentum. Raw GitHub data, structured into signal.',
+                canonical: 'https://git-explore-one.vercel.app/dashboard'
+            };
         }
     };
 
     const seo = getSEOProps();
 
     return (
-        <div className="min-h-screen bg-[#0A0A0C] text-white font-sans selection:bg-white/20 selection:text-white">
+        <div className="flex min-h-screen flex-col bg-[#0A0A0C] text-white font-sans selection:bg-white/20 selection:text-white">
             <SEO
                 title={seo.title}
                 description={seo.description}
@@ -154,59 +169,79 @@ const Dashboard = ({ activeTab }) => {
                 showBackButton={true}
             />
 
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24 space-y-6">
+            <main className="relative z-0 flex-1 overflow-hidden pt-28 sm:pt-32 border-b border-white/10">
+                <div className="mx-auto w-full max-w-[1280px] min-[1280px]:border-x border-white/10 px-4 sm:px-6 md:px-8 py-8 space-y-6">
 
-                {/* Error State */}
-                {error && (
-                    <ErrorMessage
-                        message={error}
-                        onRetry={() => fetchRepositories(page)}
-                    />
-                )}
+                    {/* Offline/fallback banner */}
+                    {isFallback && (
+                        <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-amber-500/20 bg-amber-500/5 text-amber-400 text-xs font-mono">
+                            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0 animate-pulse" />
+                            <span>
+                                GitHub API unavailable — showing curated essential stacks.
+                                <a
+                                    href="https://github.com/settings/tokens/new"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="ml-2 underline text-amber-300 hover:text-white transition-colors"
+                                >
+                                    Connect a token to restore live data ↗
+                                </a>
+                            </span>
+                        </div>
+                    )}
 
-                {/* Dashboard Content */}
-                <div className="min-h-[60vh]">
-                    {activeTab === 'explore' && (
-                        <section aria-label="Explore Repositories">
-                            {/* Top 5 Hot Repositories of the Month Showcase */}
-                            <TopFiveFeatured
-                                repositories={monthlyTopRepos}
-                                loading={monthlyLoading}
-                                onRepoClick={setSelectedRepo}
+                    {/* Error State */}
+                    {error && (
+                        <ErrorMessage
+                            message={error}
+                            onRetry={() => fetchRepositories(page)}
+                        />
+                    )}
+
+                    {/* Dashboard Content */}
+                    <div className="min-h-[60vh]">
+                        {activeTab === 'explore' && (
+                            <section aria-label="Explore Repositories">
+                                {/* Top 5 Hot Repositories of the Month Showcase */}
+                                <TopFiveFeatured
+                                    repositories={monthlyTopRepos}
+                                    loading={monthlyLoading}
+                                    onRepoClick={setSelectedRepo}
+                                />
+
+                                <FilterPanel
+                                    filters={filters}
+                                    onFilterChange={setFilters}
+                                />
+
+                                <RepositoryList
+                                    repositories={repositories}
+                                    loading={loading}
+                                    onRepoClick={setSelectedRepo}
+                                    onBookmarkToggle={handleBookmarkToggle}
+                                    bookmarkedIds={bookmarkedIds}
+                                    hasMore={!loading && repositories.length > 0 && !filters.query}
+                                    onLoadMore={handleLoadMore}
+                                />
+
+                            </section>
+                        )}
+
+                        {activeTab === 'bookmarks' && (
+                            <BookmarksPanel
+                                onRepoSelect={setSelectedRepo}
+                                onBookmarkToggle={handleBookmarkToggle}
+                                bookmarkedIds={bookmarkedIds}
                             />
+                        )}
 
-                            <FilterPanel
+                        {activeTab === 'profile' && (
+                            <ProfileView
                                 filters={filters}
                                 onFilterChange={setFilters}
                             />
-
-                            <RepositoryList
-                                repositories={repositories}
-                                loading={loading}
-                                onRepoClick={setSelectedRepo}
-                                onBookmarkToggle={handleBookmarkToggle}
-                                bookmarkedIds={bookmarkedIds}
-                                hasMore={!loading && repositories.length > 0 && !filters.query}
-                                onLoadMore={handleLoadMore}
-                            />
-
-                        </section>
-                    )}
-
-                    {activeTab === 'bookmarks' && (
-                        <BookmarksPanel
-                            onRepoSelect={setSelectedRepo}
-                            onBookmarkToggle={handleBookmarkToggle}
-                            bookmarkedIds={bookmarkedIds}
-                        />
-                    )}
-
-                    {activeTab === 'profile' && (
-                        <ProfileView
-                            filters={filters}
-                            onFilterChange={setFilters}
-                        />
-                    )}
+                        )}
+                    </div>
                 </div>
             </main>
 

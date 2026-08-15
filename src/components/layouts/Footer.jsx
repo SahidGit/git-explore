@@ -1,231 +1,127 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Github, ArrowUpRight, ChevronDown, Compass } from 'lucide-react';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Github, ArrowUpRight } from 'lucide-react';
 
-const APP_DROPDOWN_PAGES = [
+const AI_PROMPT_LINKS = [
     {
-        category: 'Core App Tools',
-        items: [
-            { label: 'Explore', path: '/dashboard' },
-            { label: 'Cheat Sheet', path: '/cheatsheet' },
-            { label: 'Bookmarks', path: '/bookmarks' },
-            { label: 'Profile', path: '/profile' },
-            { label: 'AI News', path: '/ai-news' },
-        ]
+        name: 'ChatGPT',
+        url: 'https://chatgpt.com/?q=What%20is%20GitExplorer%20(git-explore-one.vercel.app)%3F%20Tell%20me%20about%20their%20open%20source%20repository%20intelligence%20platform.',
     },
     {
-        category: 'Product & Releases',
-        items: [
-            { label: 'Features', path: '/features' },
-            { label: 'Documentation', path: '/docs' },
-            { label: 'API Reference', path: '/api' },
-            { label: 'Changelog', path: '/changelog' },
-            { label: 'Roadmap', path: '/roadmap' },
-            { label: 'Resources', path: '/resources' },
-        ]
+        name: 'Claude',
+        url: 'https://claude.ai/new?q=What%20is%20GitExplorer%20(git-explore-one.vercel.app)%3F%20Tell%20me%20about%20their%20open%20source%20repository%20intelligence%20platform.',
     },
     {
-        category: 'Legal & Info',
-        items: [
-            { label: 'About', path: '/about' },
-            { label: 'Disclaimer', path: '/disclaimer' },
-            { label: 'Terms of Use', path: '/terms' },
-            { label: 'Report an issue', path: '/report' },
-        ]
-    }
+        name: 'Perplexity',
+        url: 'https://www.perplexity.ai/search?q=What%20is%20GitExplorer%20(git-explore-one.vercel.app)%3F%20Tell%20me%20about%20their%20open%20source%20repository%20intelligence%20platform.',
+    },
+    {
+        name: 'Google AI',
+        url: 'https://www.google.com/search?udm=50&q=What%20is%20GitExplorer%20(git-explore-one.vercel.app)%3F%20Tell%20me%20about%20their%20open%20source%20repository%20intelligence%20platform.',
+    },
+    {
+        name: 'Grok',
+        url: 'https://grok.com/?q=What%20is%20GitExplorer%20(git-explore-one.vercel.app)%3F%20Tell%20me%20about%20their%20open%20source%20repository%20intelligence%20platform.',
+    },
 ];
 
 const Footer = () => {
-    const navigate = useNavigate();
-    const [open, setOpen] = useState(false);
-    const dropdownRef = useRef(null);
-
-    // Close on outside click
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-                setOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-
-    const handleNavigate = (path) => {
-        setOpen(false);
-        if (path.startsWith('http')) {
-            window.open(path, '_blank', 'noopener,noreferrer');
-        } else {
-            navigate(path);
-        }
-    };
-
     return (
-        <footer className="relative bg-[#0A0A0C] border-t border-white/[0.08]" aria-label="Site footer">
-            {/* Top gradient hairline */}
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" aria-hidden="true" />
+        <footer className="border-b border-white/10 bg-[#0A0A0C]" aria-label="Site footer">
+            <div className="mx-auto w-full max-w-[1280px] min-[1280px]:border-x border-white/10 px-4 sm:px-8 py-8 sm:py-12 flex flex-col gap-8 sm:gap-10">
 
-            <div className="max-w-[1200px] mx-auto px-6 py-6 md:py-8">
-                <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-
-                    {/* Left: Brand + Creator credit */}
-                    <div className="flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left">
-                        <Link to="/" className="inline-flex items-center gap-2 group" aria-label="GitExplorer home">
-                            <div className="flex items-center justify-center h-7 w-7 rounded-full border border-white/10 bg-white/[0.04] transition-colors duration-300 group-hover:border-white/20">
-                                <Github className="h-3.5 w-3.5 text-white" aria-hidden="true" />
-                            </div>
-                            <span className="font-bold text-sm tracking-tight text-white">GitExplorer</span>
-                        </Link>
-                        <span className="hidden sm:inline-block text-zinc-600 font-mono">•</span>
-                        <p className="text-xs text-[#71717A]">
-                            Built by{' '}
-                            <Link to="/resources#creator-heading" className="text-zinc-300 hover:text-white transition-colors underline decoration-white/20 underline-offset-2">
-                                Sahid Sarfaraz
-                            </Link>
-                        </p>
+                {/* Grid Links Columns */}
+                <div className="grid gap-6 sm:gap-8 grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 text-xs font-sans">
+                    <div>
+                        <h3 className="font-semibold text-white font-mono uppercase tracking-wider mb-3 sm:mb-4">Product</h3>
+                        <ul className="space-y-2 text-zinc-400 font-mono">
+                            <li><Link to="/dashboard" className="hover:text-white transition-colors">Explorer Dashboard</Link></li>
+                            <li><Link to="/cheatsheet" className="hover:text-white transition-colors">Git Cheat Sheet</Link></li>
+                            <li><Link to="/docs" className="hover:text-white transition-colors">Documentation</Link></li>
+                            <li><Link to="/api" className="hover:text-white transition-colors">API Reference</Link></li>
+                        </ul>
                     </div>
 
-                    {/* Right: Priority Ordered Featured Direct Tags + App Navigation Dropdown */}
-                    <div className="flex flex-wrap items-center justify-center gap-3.5 sm:gap-4 text-xs font-mono">
+                    <div>
+                        <h3 className="font-semibold text-white font-mono uppercase tracking-wider mb-3 sm:mb-4">Features</h3>
+                        <ul className="space-y-2 text-zinc-400 font-mono">
+                            <li><Link to="/ai-news" className="hover:text-white transition-colors">AI Newsroom</Link></li>
+                            <li><Link to="/bookmarks" className="hover:text-white transition-colors">Bookmarks</Link></li>
+                            <li><Link to="/profile" className="hover:text-white transition-colors">Developer Profile</Link></li>
+                            <li><Link to="/changelog" className="hover:text-white transition-colors">Changelog</Link></li>
+                        </ul>
+                    </div>
 
-                        {/* Interactive App Tools Dropdown (Explore, Cheat Sheet, Bookmarks, Profile, Roadmap) */}
-                        <div ref={dropdownRef} className="relative">
-                            <button
-                                type="button"
-                                onClick={() => setOpen((prev) => !prev)}
-                                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-medium transition-all duration-200 cursor-pointer select-none ${
-                                    open
-                                        ? 'bg-white/15 border-white/30 text-white'
-                                        : 'bg-white/[0.04] border-white/10 text-zinc-300 hover:border-white/20 hover:text-white'
-                                }`}
-                                aria-label="Explore and App Tools Menu"
-                                aria-expanded={open}
-                            >
-                                <Compass className="w-3.5 h-3.5 text-indigo-400" />
-                                <span>Explore &amp; App ▾</span>
-                            </button>
+                    <div>
+                        <h3 className="font-semibold text-white font-mono uppercase tracking-wider mb-3 sm:mb-4">Company</h3>
+                        <ul className="space-y-2 text-zinc-400 font-mono">
+                            <li><Link to="/company" className="hover:text-white transition-colors">Company &amp; Vision</Link></li>
+                            <li><Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
+                            <li><Link to="/disclaimer" className="hover:text-white transition-colors">Disclaimer</Link></li>
+                            <li><Link to="/report" className="text-amber-400 hover:text-amber-300 font-bold transition-colors">Report an Issue</Link></li>
+                        </ul>
+                    </div>
 
-                            {/* Glassmorphic Dropdown Popover */}
-                            {open && (
-                                <div className="absolute bottom-full left-0 md:left-auto md:right-0 mb-2 w-56 bg-[#121216] border border-white/15 rounded-2xl shadow-2xl z-50 overflow-hidden p-2 text-left space-y-2 backdrop-blur-xl">
-                                    {APP_DROPDOWN_PAGES.map((group) => (
-                                        <div key={group.category} className="space-y-1">
-                                            <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 px-2.5 pt-1 block">
-                                                {group.category}
-                                            </span>
-                                            {group.items.map((item) => (
-                                                <button
-                                                    key={item.path}
-                                                    type="button"
-                                                    onClick={() => handleNavigate(item.path)}
-                                                    className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-mono text-zinc-300 hover:text-white hover:bg-white/[0.06] transition-colors duration-150 cursor-pointer"
-                                                >
-                                                    <span>{item.label}</span>
-                                                    <span className="text-[10px] text-zinc-600">→</span>
-                                                </button>
-                                            ))}
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
+                    <div>
+                        <h3 className="font-semibold text-white font-mono uppercase tracking-wider mb-3 sm:mb-4">Connect</h3>
+                        <ul className="space-y-2 text-zinc-400 font-mono">
+                            <li>
+                                <a href="https://github.com/SahidGit/git-explore" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors inline-flex items-center gap-1">
+                                    <span>GitHub Repo</span>
+                                    <ArrowUpRight className="w-3 h-3 text-zinc-500" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://x.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors inline-flex items-center gap-1">
+                                    <span>Twitter / X</span>
+                                    <ArrowUpRight className="w-3 h-3 text-zinc-500" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Logo SVG side column */}
+                    <div className="col-span-2 sm:col-span-4 lg:col-span-1 flex lg:flex-col justify-between items-start lg:items-end text-zinc-600 border-t sm:border-t-0 border-white/10 pt-4 sm:pt-0">
+                        <Link to="/" className="flex items-center gap-2 text-white font-bold font-space text-sm sm:text-base">
+                            <Github className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
+                            <span>GitExplorer</span>
+                        </Link>
+                        <span className="text-[10px] sm:text-[11px] font-mono text-zinc-500">v2.0 &bull; Open Source</span>
+                    </div>
+                </div>
+
+                {/* AI Prompt Links & Copyright Bar */}
+                <div className="pt-6 sm:pt-8 border-t border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-6 text-xs font-mono text-zinc-400">
+                    {/* Ask AI Buttons */}
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full md:w-auto">
+                        <span className="text-white font-semibold text-[11px] sm:text-xs">Ask about GitExplorer on:</span>
+                        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                            {AI_PROMPT_LINKS.map((link) => (
+                                <a
+                                    key={link.name}
+                                    href={link.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    title={`Ask about GitExplorer on ${link.name}`}
+                                    className="px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg border border-white/10 bg-white/[0.04] text-[11px] sm:text-xs text-zinc-300 hover:text-white hover:border-white/25 hover:bg-white/[0.08] transition-all"
+                                >
+                                    {link.name}
+                                </a>
+                            ))}
                         </div>
+                    </div>
 
-                        {/* Priority Ordered Featured Direct Inline Links */}
-                        <Link
-                            to="/docs"
-                            className="text-zinc-400 hover:text-white transition-colors duration-200"
-                        >
-                            Documentation
-                        </Link>
-
-                        <Link
-                            to="/about"
-                            className="text-zinc-400 hover:text-white transition-colors duration-200"
-                        >
-                            About
-                        </Link>
-
-                        <Link
-                            to="/api"
-                            className="text-zinc-400 hover:text-white transition-colors duration-200"
-                        >
-                            API
-                        </Link>
-
-                        <Link
-                            to="/changelog"
-                            className="text-zinc-400 hover:text-white transition-colors duration-200"
-                        >
-                            Changelog
-                        </Link>
-
-                        <Link
-                            to="/report"
-                            className="text-amber-400 hover:text-amber-300 font-semibold transition-colors duration-200"
-                        >
-                            Report an issue
-                        </Link>
-
-                        {/* GitHub Source Link */}
-                        <a
-                            href="https://github.com/SahidGit/git-explore"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-zinc-400 hover:text-white transition-colors duration-200 group"
-                        >
-                            <span>GitHub</span>
-                            <ArrowUpRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-white transition-colors" />
-                        </a>
+                    {/* Copyright & Zero Telemetry */}
+                    <div className="flex flex-wrap items-center gap-3 text-[10px] sm:text-[11px] text-zinc-500 pt-2 md:pt-0 border-t md:border-t-0 border-white/10 w-full md:w-auto">
+                        <span>© {new Date().getFullYear()} GitExplorer Inc.</span>
+                        <span>&bull;</span>
+                        <span className="text-zinc-400">Zero Telemetry &bull; Local-First</span>
                     </div>
                 </div>
 
-                {/* Bottom status & copyright bar */}
-                <div className="mt-5 pt-4 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] font-mono text-[#52525B]">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                        <span>© {new Date().getFullYear()} GitExplorer</span>
-                        <span className="text-zinc-600">•</span>
-                        <a
-                            href="https://en.wikipedia.org/wiki/Telemetry_(software)"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="group text-zinc-400 hover:text-white transition-colors underline decoration-white/20 underline-offset-2 hover:decoration-white inline-flex items-center gap-0.5"
-                            title="AI Summary: Zero Telemetry means GitExplorer collects 0 user activity logs, 0 analytics scripts, and 0 tracking cookies."
-                        >
-                            <span>Zero Telemetry</span>
-                            <ArrowUpRight className="w-3 h-3 text-zinc-500 group-hover:text-white transition-colors" />
-                        </a>
-                        <span className="text-zinc-600">•</span>
-                        <a
-                            href="https://en.wikipedia.org/wiki/Local-first_software"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="group text-zinc-400 hover:text-white transition-colors underline decoration-white/20 underline-offset-2 hover:decoration-white inline-flex items-center gap-0.5"
-                            title="AI Summary: Local-First software prioritizes browser-local storage over cloud servers. Tokens and bookmarks never leave your device."
-                        >
-                            <span>Local-First</span>
-                            <ArrowUpRight className="w-3 h-3 text-zinc-500 group-hover:text-white transition-colors" />
-                        </a>
-                    </div>
-
-                    {/* Pulsing Status indicator */}
-                    <div
-                        className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full border border-white/[0.06] bg-white/[0.02]"
-                        aria-label="API status: Operational"
-                        role="status"
-                    >
-                        <span className="relative flex h-2 w-2 flex-shrink-0">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-50" />
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-                        </span>
-                        <span className="text-[11px] font-mono text-[#71717A]">
-                            API Status: Operational
-                        </span>
-                    </div>
-                </div>
             </div>
         </footer>
     );
 };
 
 export default Footer;
-

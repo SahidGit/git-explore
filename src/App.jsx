@@ -1,90 +1,66 @@
-import React, { useMemo } from 'react';
+import React, { Suspense } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import Home from './pages/Home';
-import Dashboard from './pages/Dashboard';
-import InfoPage from './pages/InfoPage';
-import Resources from './pages/Resources';
-import ReportIssue from './pages/ReportIssue';
-import GitCheatSheet from './pages/GitCheatSheet';
-import AiNewsroom from './pages/AiNewsroom';
-import NotFound from './pages/NotFound';
 import PageTransition from './components/ui/PageTransition';
 import './styles/App.css';
-import { getAvailableContentKeys } from './data/contentLoader';
+
+// Route-level code splitting — each page chunk loads on demand
+const Home = React.lazy(() => import('./pages/Home'));
+const Dashboard = React.lazy(() => import('./pages/Dashboard'));
+const ReportIssue = React.lazy(() => import('./pages/ReportIssue'));
+const GitCheatSheet = React.lazy(() => import('./pages/GitCheatSheet'));
+const AiNewsroom = React.lazy(() => import('./pages/AiNewsroom'));
+const Company = React.lazy(() => import('./pages/Company'));
+const InfoPage = React.lazy(() => import('./pages/InfoPage'));
+const NotFound = React.lazy(() => import('./pages/NotFound'));
+
+/** Minimal page skeleton shown during route-level chunk loading */
+const PageLoader = () => (
+  <div className="min-h-screen bg-[#0A0A0C] flex items-center justify-center">
+    <div className="flex items-center gap-2 text-zinc-600">
+      <span className="w-1.5 h-1.5 rounded-full bg-zinc-700 animate-pulse" />
+      <span className="w-1.5 h-1.5 rounded-full bg-zinc-700 animate-pulse [animation-delay:150ms]" />
+      <span className="w-1.5 h-1.5 rounded-full bg-zinc-700 animate-pulse [animation-delay:300ms]" />
+    </div>
+  </div>
+);
+
+/** Dynamic InfoPage routes using the visual master renderer */
+const DYNAMIC_INFO_ROUTES = ['changelog', 'docs', 'api', 'roadmap', 'disclaimer', 'terms'];
 
 function App() {
   const location = useLocation();
 
-  // Memoize dynamic routes to avoid regeneration on every render
-  const dynamicRoutes = useMemo(
-    () => getAvailableContentKeys().filter(key => key !== 'resources').map(key => ({
-      key,
-      path: `/${key}`,
-      contentKey: key
-    })),
-    []
-  );
-
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={
-          <PageTransition key="home">
-            <Home />
-          </PageTransition>
-        } />
-        <Route path="/dashboard" element={
-          <PageTransition key="dashboard">
-            <Dashboard activeTab="explore" />
-          </PageTransition>
-        } />
-        <Route path="/bookmarks" element={
-          <PageTransition key="bookmarks">
-            <Dashboard activeTab="bookmarks" />
-          </PageTransition>
-        } />
-        <Route path="/profile" element={
-          <PageTransition key="profile">
-            <Dashboard activeTab="profile" />
-          </PageTransition>
-        } />
-        <Route path="/resources" element={
-          <PageTransition key="resources">
-            <Resources />
-          </PageTransition>
-        } />
-        <Route path="/report" element={
-          <PageTransition key="report">
-            <ReportIssue />
-          </PageTransition>
-        } />
-        <Route path="/cheatsheet" element={
-          <PageTransition key="cheatsheet">
-            <GitCheatSheet />
-          </PageTransition>
-        } />
-        <Route path="/ai-news" element={
-          <PageTransition key="ai-news">
-            <AiNewsroom />
-          </PageTransition>
-        } />
+    <Suspense fallback={<PageLoader />}>
+      <AnimatePresence mode="wait" initial={false}>
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<PageTransition><Home /></PageTransition>} />
 
-        {dynamicRoutes.map(route => (
-          <Route key={route.key} path={route.path} element={
-            <PageTransition key={`info-${route.key}`}>
-              <InfoPage contentKey={route.contentKey} />
-            </PageTransition>
-          } />
-        ))}
+          {/* Dashboard tabs share the same chunk */}
+          <Route path="/dashboard" element={<PageTransition><Dashboard activeTab="explore" /></PageTransition>} />
+          <Route path="/bookmarks" element={<PageTransition><Dashboard activeTab="bookmarks" /></PageTransition>} />
+          <Route path="/profile" element={<PageTransition><Dashboard activeTab="profile" /></PageTransition>} />
 
-        <Route path="*" element={
-          <PageTransition key="not-found">
-            <NotFound />
-          </PageTransition>
-        } />
-      </Routes>
-    </AnimatePresence>
+          {/* Dedicated full-page routes */}
+          <Route path="/report" element={<PageTransition><ReportIssue /></PageTransition>} />
+          <Route path="/cheatsheet" element={<PageTransition><GitCheatSheet /></PageTransition>} />
+          <Route path="/ai-news" element={<PageTransition><AiNewsroom /></PageTransition>} />
+          <Route path="/company" element={<PageTransition><Company /></PageTransition>} />
+
+          {/* Dynamic content InfoPage routes with high-end vision design */}
+          {DYNAMIC_INFO_ROUTES.map((key) => (
+            <Route
+              key={key}
+              path={`/${key}`}
+              element={<PageTransition><InfoPage contentKey={key} /></PageTransition>}
+            />
+          ))}
+
+          <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
+        </Routes>
+      </AnimatePresence>
+    </Suspense>
   );
 }
 

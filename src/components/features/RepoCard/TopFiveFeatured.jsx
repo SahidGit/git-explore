@@ -1,26 +1,14 @@
 import React from 'react';
-import { Flame, Star, GitFork, Sparkles, ChevronRight, Award, Trophy } from 'lucide-react';
+import { Flame, Star, ChevronRight, Award, Trophy, Sparkles } from 'lucide-react';
 import { formatNumber } from '../../../utils/formatters';
+import { SkeletonTopFive } from '../../ui/SkeletonLoader';
+
 
 const TopFiveFeatured = ({ repositories, onRepoClick, loading }) => {
     // Current Month & Year (e.g. August 2026)
     const currentMonthYear = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
 
-    if (loading) {
-        return (
-            <div className="mb-8 p-6 rounded-2xl bg-[#121215] border border-white/[0.08] space-y-4">
-                <div className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-amber-500/20 animate-pulse" />
-                    <div className="h-4 w-48 bg-white/10 rounded animate-pulse" />
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-                    {[1, 2, 3, 4, 5].map((i) => (
-                        <div key={i} className="h-36 rounded-xl bg-white/[0.03] border border-white/[0.06] animate-pulse p-4 space-y-3" />
-                    ))}
-                </div>
-            </div>
-        );
-    }
+    if (loading) return <SkeletonTopFive />;
 
     if (!repositories || repositories.length === 0) return null;
 

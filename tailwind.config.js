@@ -26,6 +26,7 @@ export default {
       },
       fontFamily: {
         sans: [
+          'Plus Jakarta Sans',
           'Inter',
           'system-ui',
           '-apple-system',
@@ -33,23 +34,25 @@ export default {
           'sans-serif',
         ],
         heading: [
-          'Syne',
           'Space Grotesk',
+          'Plus Jakarta Sans',
+          'Syne',
+          'Inter',
+          'sans-serif',
+        ],
+        space: [
+          'Space Grotesk',
+          'Plus Jakarta Sans',
+          'sans-serif',
+        ],
+        jakarta: [
+          'Plus Jakarta Sans',
           'Inter',
           'sans-serif',
         ],
         syne: [
           'Syne',
           'sans-serif',
-        ],
-        space: [
-          'Space Grotesk',
-          'sans-serif',
-        ],
-        editorial: [
-          'Newsreader',
-          'Georgia',
-          'serif',
         ],
         mono: [
           'JetBrains Mono',
@@ -69,6 +72,14 @@ export default {
         fadeInUp: {
           '0%': { opacity: '0', transform: 'translateY(24px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        slideDown: {
+          '0%': { opacity: '0', transform: 'translateY(-8px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        slideUp: {
+          '0%': { opacity: '1', transform: 'translateY(0)' },
+          '100%': { opacity: '0', transform: 'translateY(-8px)' },
         },
         terminalBlink: {
           '0%, 100%': { opacity: '1' },
@@ -90,10 +101,13 @@ export default {
         'fadeInUp-d2': 'fadeInUp 0.7s ease-out 0.2s forwards',
         'fadeInUp-d3': 'fadeInUp 0.7s ease-out 0.35s forwards',
         'fadeInUp-d4': 'fadeInUp 0.7s ease-out 0.5s forwards',
+        slideDown: 'slideDown 0.15s ease-out forwards',
+        slideUp: 'slideUp 0.15s ease-in forwards',
         terminalBlink: 'terminalBlink 1s step-start infinite',
         glowPulse: 'glowPulse 3s ease-in-out infinite',
         'spin-slow': 'spin-slow 4s linear infinite',
       },
+
       backgroundImage: {
         'dot-grid': 'radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px)',
       },

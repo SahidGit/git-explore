@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Terminal, Code, Cpu } from 'lucide-react';
 
-// ─── Mock terminal lines ──────────────────────────────
 const TERMINAL_LINES = [
     { type: 'prompt', text: '~ /git-explorer/query', delay: 0 },
     { type: 'command', text: 'curl -s https://api.github.com/repos/vercel/next.js \\', delay: 600 },
@@ -19,23 +19,21 @@ const TERMINAL_LINES = [
 ];
 
 const LINE_COLORS = {
-    prompt: 'text-[#71717A]',
+    prompt: 'text-zinc-500',
     command: 'text-white',
-    'command-cont': 'text-[#A1A1AA]',
+    'command-cont': 'text-zinc-400',
     blank: '',
-    output: 'text-[#A1A1AA]',
-    'output-key': 'text-[#7DD3FC]',   // sky-300 — JSON keys
-    'output-val': 'text-[#86EFAC]',   // green-300 — numbers/booleans
-    'output-str': 'text-[#FCA5A5]',   // red-300 — strings
+    output: 'text-zinc-400',
+    'output-key': 'text-sky-300',
+    'output-val': 'text-emerald-300',
+    'output-str': 'text-rose-300',
 };
 
-// ─── Component ────────────────────────────────────────
 const TerminalSection = () => {
     const [visibleLines, setVisibleLines] = useState(0);
     const [hasStarted, setHasStarted] = useState(false);
     const sectionRef = useRef(null);
 
-    // Start animation when section enters viewport
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
@@ -50,14 +48,11 @@ const TerminalSection = () => {
         return () => observer.disconnect();
     }, [hasStarted]);
 
-    // Stagger line reveal
     useEffect(() => {
         if (!hasStarted) return;
-
         const timers = TERMINAL_LINES.map((line, i) =>
             setTimeout(() => setVisibleLines((v) => Math.max(v, i + 1)), line.delay)
         );
-
         return () => timers.forEach(clearTimeout);
     }, [hasStarted]);
 
@@ -65,79 +60,55 @@ const TerminalSection = () => {
         <section
             id="terminal"
             ref={sectionRef}
-            className="relative bg-[#0A0A0C] py-24 overflow-hidden"
+            className="border-b border-white/10 bg-[#0A0A0C] overflow-hidden"
             aria-label="Terminal API demo"
         >
-            {/* Ambient glow behind terminal */}
-            <div
-                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] pointer-events-none mix-blend-screen"
-                style={{
-                    background:
-                        'radial-gradient(ellipse at 50% 100%, rgba(134,239,172,0.04) 0%, transparent 70%)',
-                }}
-                aria-hidden="true"
-            />
-
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-
-                {/* Section header */}
-                <div className="mb-14 max-w-xl">
-                    <div className="flex items-center gap-3 mb-5">
-                        <span className="text-[10px] font-mono text-[#71717A] tracking-widest uppercase">01</span>
-                        <span className="w-6 h-px bg-white/20" />
-                        <span className="text-[10px] font-mono text-[#71717A] tracking-widest uppercase">API Layer</span>
+            <div className="mx-auto w-full max-w-[1280px] min-[1280px]:border-x border-white/10 px-6 py-16 md:py-20">
+                <div className="mx-auto max-w-xl text-center mb-12">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-xs font-mono text-emerald-400 uppercase tracking-widest mb-4">
+                        <Terminal className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>API Layer &bull; Zero Telemetry</span>
                     </div>
 
-                    <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-4">
-                        Query the open-source graph.
+                    <h2 className="text-3xl md:text-4xl font-extrabold font-space text-white tracking-tight mb-3">
+                        Query the open-source graph directly.
                     </h2>
 
-                    <p className="text-base text-[#71717A] leading-relaxed">
-                        GitExplorer sits directly on top of the GitHub API.
-                        Structured queries, clean output, zero noise.
+                    <p className="text-sm md:text-base font-sans text-zinc-400 leading-relaxed font-normal">
+                        GitExplorer sits directly on top of the GitHub GraphQL &amp; REST APIs. Structured queries, clean outputs, zero noise.
                     </p>
                 </div>
 
-                {/* Terminal window */}
-                <div className="rounded-2xl border border-white/[0.08] overflow-hidden bg-[#0E0E10] shadow-2xl">
-
-                    {/* Terminal chrome */}
-                    <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/[0.06] bg-[#121215]">
-                        {/* Muted dots */}
-                        <div className="flex gap-2">
-                            <span className="w-2.5 h-2.5 rounded-full bg-white/[0.15]" />
-                            <span className="w-2.5 h-2.5 rounded-full bg-white/[0.15]" />
-                            <span className="w-2.5 h-2.5 rounded-full bg-white/[0.15]" />
+                {/* Terminal macOS Frame */}
+                <div className="max-w-3xl mx-auto rounded-2xl border border-white/10 bg-[#0E0E10] overflow-hidden shadow-2xl">
+                    {/* Header */}
+                    <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-[#121215]">
+                        <div className="flex items-center gap-2">
+                            <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
+                            <span className="w-2.5 h-2.5 rounded-full bg-[#FEBC2E]" />
+                            <span className="w-2.5 h-2.5 rounded-full bg-[#28C840]" />
                         </div>
-
-                        {/* Path label */}
-                        <span className="text-[11px] font-mono text-[#71717A] tracking-wide">
+                        <span className="text-xs font-mono text-zinc-400 tracking-wide">
                             ~ /git-explorer/query
                         </span>
-
-                        {/* Spacer for symmetry */}
-                        <div className="w-14" />
+                        <div className="w-12" />
                     </div>
 
-                    {/* Terminal body */}
-                    <div
-                        className="p-6 min-h-[340px] font-mono text-[13px] leading-[1.85] overflow-x-auto"
-                        aria-live="polite"
-                        aria-label="Terminal output"
-                    >
+                    {/* Output */}
+                    <div className="p-6 min-h-[320px] font-mono text-xs sm:text-sm leading-[1.8] overflow-x-auto bg-[#0A0A0C]">
                         {TERMINAL_LINES.slice(0, visibleLines).map((line, i) => (
                             <div
                                 key={i}
-                                className={`${LINE_COLORS[line.type] || 'text-[#A1A1AA]'} whitespace-pre`}
+                                className={`${LINE_COLORS[line.type] || 'text-zinc-400'} whitespace-pre`}
                             >
                                 {line.type === 'prompt' ? (
                                     <span>
-                                        <span className="text-emerald-400/80">❯</span>
-                                        <span className="text-[#71717A]"> {line.text} </span>
+                                        <span className="text-emerald-400 font-bold">❯</span>
+                                        <span className="text-zinc-500"> {line.text} </span>
                                     </span>
                                 ) : line.type === 'command' ? (
                                     <span>
-                                        <span className="text-[#71717A]">$ </span>
+                                        <span className="text-zinc-500">$ </span>
                                         {line.text}
                                     </span>
                                 ) : (
@@ -145,40 +116,10 @@ const TerminalSection = () => {
                                 )}
                             </div>
                         ))}
-
-                        {/* Blinking cursor — only when animation is running */}
                         {hasStarted && visibleLines < TERMINAL_LINES.length && (
-                            <span
-                                className="inline-block w-[7px] h-[14px] bg-white/60 animate-terminalBlink align-middle"
-                                aria-hidden="true"
-                            />
-                        )}
-
-                        {/* Done state prompt */}
-                        {visibleLines >= TERMINAL_LINES.length && (
-                            <div className="mt-2 text-[#71717A]">
-                                <span className="text-emerald-400/80">❯</span>
-                                <span className="animate-terminalBlink inline-block w-[7px] h-[14px] bg-white/50 align-middle ml-1.5" aria-hidden="true" />
-                            </div>
+                            <span className="inline-block w-2 h-4 bg-emerald-400 animate-pulse align-middle ml-1" />
                         )}
                     </div>
-                </div>
-
-                {/* Stat chips below terminal */}
-                <div className="mt-6 flex flex-wrap items-center gap-3">
-                    {[
-                        { dot: 'bg-emerald-400', text: 'Direct client-side GitHub REST query' },
-                        { dot: 'bg-sky-400', text: 'Power User Mode: 5,000 req/hr' },
-                        { dot: 'bg-white/40', text: 'Zero proxies • Zero middleware' },
-                    ].map(({ dot, text }) => (
-                        <span
-                            key={text}
-                            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/[0.08] bg-white/[0.03] text-[12px] font-mono text-[#A1A1AA]"
-                        >
-                            <span className={`w-1.5 h-1.5 rounded-full ${dot} flex-shrink-0`} />
-                            {text}
-                        </span>
-                    ))}
                 </div>
             </div>
         </section>

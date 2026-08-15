@@ -5,6 +5,7 @@ import {
     AlertTriangle, HelpCircle, ExternalLink, Check, Trash2, Loader2, Terminal, Sparkles
 } from 'lucide-react';
 import { getRateLimit, setGithubToken } from '../../services/githubService';
+import AnnouncementBar from '../ui/AnnouncementBar';
 
 const Header = ({ activeTab, onTokenSave, showBackButton }) => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -13,6 +14,7 @@ const Header = ({ activeTab, onTokenSave, showBackButton }) => {
     const [token, setToken] = useState('');
     const [isVerifying, setIsVerifying] = useState(false);
     const [tokenSaved, setTokenSaved] = useState(false);
+    const [tokenCleared, setTokenCleared] = useState(false);
     const [tokenError, setTokenError] = useState('');
     const [showHelp, setShowHelp] = useState(false);
     const [activeQuota, setActiveQuota] = useState(null);
@@ -47,69 +49,62 @@ const Header = ({ activeTab, onTokenSave, showBackButton }) => {
 
         const cleanedToken = token.trim();
         if (!cleanedToken) {
-            setTokenError('Please enter a GitHub Personal Access Token.');
-            return;
-        }
-
-        // Basic format check
-        if (!cleanedToken.startsWith('ghp_') && !cleanedToken.startsWith('github_pat_') && cleanedToken.length < 20) {
-            setTokenError('Invalid token format. GitHub tokens usually start with ghp_ or github_pat_.');
-            setShowHelp(true);
+            setTokenError('Please enter a valid GitHub token.');
             return;
         }
 
         setIsVerifying(true);
-
         try {
-            // Test key live against GitHub API
             setGithubToken(cleanedToken);
             const rateData = await getRateLimit();
 
-            if (onTokenSave) {
-                onTokenSave(cleanedToken);
+            if (rateData && rateData.rate) {
+                setActiveQuota(rateData.rate);
+                setTokenSaved(true);
+                setToken('');
+
+                if (onTokenSave) onTokenSave(cleanedToken);
+
+                setTimeout(() => {
+                    setTokenSaved(false);
+                    setShowTokenInput(false);
+                }, 1800);
             }
-
-            setActiveQuota(rateData.rate);
-            setTokenSaved(true);
-            setIsVerifying(false);
-            setToken('');
-
-            setTimeout(() => {
-                setTokenSaved(false);
-                setShowTokenInput(false);
-            }, 1800);
         } catch (err) {
+            console.error('Token verification failed:', err);
+            setTokenError('Invalid GitHub token. Please check your token scopes and try again.');
+        } finally {
             setIsVerifying(false);
-            setTokenError(
-                err.helpMessage ||
-                'Failed to verify key. Check for typos or generate a new key on GitHub.'
-            );
-            setShowHelp(true);
         }
     };
 
     const handleClearToken = () => {
-        setGithubToken(null);
-        if (onTokenSave) onTokenSave('');
-        localStorage.removeItem('gitexplorer_github_token');
-        setToken('');
-        setTokenError('');
-        setTokenSaved(false);
+        setGithubToken('');
         setActiveQuota(null);
-        alert('GitHub token cleared. Reverted to public unauthenticated requests.');
+        setTokenCleared(true);
+        if (onTokenSave) onTokenSave('');
+        setTimeout(() => {
+            setTokenCleared(false);
+            setShowTokenInput(false);
+        }, 1500);
     };
 
     const navLinks = [
-        { label: 'Explore', to: '/dashboard', tab: 'explore', icon: Search },
-        { label: 'Cheat Sheet', to: '/cheatsheet', tab: 'cheatsheet', icon: Terminal },
-        { label: 'Bookmarks', to: '/bookmarks', tab: 'bookmarks', icon: Bookmark },
-        { label: 'AI News', to: '/ai-news', tab: 'ai-news', icon: Sparkles },
+        { label: 'Dashboard', to: '/dashboard', tab: 'dashboard' },
+        { label: 'AI Newsroom', to: '/ai-news', tab: 'ai-news' },
+        { label: 'Git Cheat Sheet', to: '/cheatsheet', tab: 'cheatsheet' },
+        { label: 'Bookmarks', to: '/bookmarks', tab: 'bookmarks' },
     ];
 
     return (
         <>
-            {/* ── Sarvam.ai Inspired Floating Dock Header ── */}
-            <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-5xl transition-all duration-300">
+            {/* ── Global Top Announcement Info Thin Strip ── */}
+            <div className="fixed top-0 left-0 right-0 z-50">
+                <AnnouncementBar />
+            </div>
+
+            {/* ── Floating Dock Header ── */}
+            <header className="fixed top-9 left-1/2 -translate-x-1/2 z-40 w-[calc(100%-2rem)] max-w-5xl transition-all duration-300">
                 <div
                     className={`rounded-full px-4 sm:px-6 py-2.5 transition-all duration-300 ${
                         isScrolled
@@ -125,7 +120,7 @@ const Header = ({ activeTab, onTokenSave, showBackButton }) => {
                                 <div className="flex items-center justify-center w-7 h-7 rounded-full bg-white/10 border border-white/15 group-hover:border-white/30 group-hover:bg-white/15 transition-all duration-300 shadow-inner">
                                     <Github className="w-3.5 h-3.5 text-white" />
                                 </div>
-                                <span className="text-sm font-bold text-white tracking-tight group-hover:text-zinc-200 transition-colors">
+                                <span className="text-sm font-bold text-white tracking-tight group-hover:text-zinc-200 transition-colors font-space">
                                     GitExplorer
                                 </span>
                             </Link>
@@ -133,7 +128,7 @@ const Header = ({ activeTab, onTokenSave, showBackButton }) => {
                             {showBackButton && (
                                 <Link
                                     to="/"
-                                    className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-full text-xs text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all duration-200"
+                                    className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-full text-xs text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all duration-200 font-mono"
                                 >
                                     <ArrowLeft className="w-3 h-3" />
                                     <span>Home</span>
@@ -143,7 +138,7 @@ const Header = ({ activeTab, onTokenSave, showBackButton }) => {
 
                         {/* Center: Desktop Floating Dock Items */}
                         <nav
-                            className="hidden md:flex items-center gap-1 bg-white/[0.04] p-1 rounded-full border border-white/[0.06]"
+                            className="hidden md:flex items-center gap-1 bg-white/[0.04] p-1 rounded-full border border-white/[0.06] font-mono text-xs"
                             aria-label="Primary dock navigation"
                         >
                             {navLinks.map(({ label, to, tab }) => {
@@ -152,9 +147,9 @@ const Header = ({ activeTab, onTokenSave, showBackButton }) => {
                                     <Link
                                         key={tab}
                                         to={to}
-                                        className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
+                                        className={`px-3.5 py-1.5 rounded-full font-medium transition-all duration-200 ${
                                             isActive
-                                                ? 'bg-white text-black font-semibold shadow-md shadow-white/10'
+                                                ? 'bg-white text-black font-extrabold shadow-md shadow-white/10'
                                                 : 'text-zinc-400 hover:text-white hover:bg-white/[0.06]'
                                         }`}
                                     >
@@ -164,9 +159,9 @@ const Header = ({ activeTab, onTokenSave, showBackButton }) => {
                             })}
                             <Link
                                 to="/profile"
-                                className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
+                                className={`px-3.5 py-1.5 rounded-full font-medium transition-all duration-200 ${
                                     activeTab === 'profile'
-                                        ? 'bg-white text-black font-semibold shadow-md shadow-white/10'
+                                        ? 'bg-white text-black font-extrabold shadow-md shadow-white/10'
                                         : 'text-zinc-400 hover:text-white hover:bg-white/[0.06]'
                                 }`}
                             >
@@ -175,11 +170,11 @@ const Header = ({ activeTab, onTokenSave, showBackButton }) => {
                         </nav>
 
                         {/* Right: Action CTA Dock Button */}
-                        <div className="hidden md:flex items-center gap-2">
+                        <div className="hidden md:flex items-center gap-2 font-mono text-xs">
                             <button
                                 id="connect-token-btn"
                                 onClick={() => setShowTokenInput(true)}
-                                className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white text-black text-xs font-semibold hover:bg-zinc-200 active:scale-95 transition-all duration-200 shadow-md shadow-white/10 cursor-pointer"
+                                className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white text-black font-extrabold hover:bg-zinc-200 active:scale-[0.98] transition-all duration-200 shadow-md shadow-white/10 cursor-pointer"
                             >
                                 <Key className="w-3.5 h-3.5 text-black" />
                                 <span>Connect Token</span>
@@ -212,243 +207,136 @@ const Header = ({ activeTab, onTokenSave, showBackButton }) => {
             {isMobileMenuOpen && (
                 <div
                     id="mobile-menu"
-                    className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl md:hidden flex flex-col justify-center items-center p-4"
+                    className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl md:hidden flex flex-col justify-center items-center p-4 font-mono text-xs"
                     style={{ animation: 'fadeInUp 0.2s ease-out forwards' }}
                 >
-                    <div className="w-full max-w-sm bg-[#121216] border border-white/15 rounded-3xl p-6 shadow-2xl space-y-4">
-                        <div className="flex justify-between items-center pb-3 border-b border-white/[0.08]">
-                            <Link
-                                to="/"
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                className="flex items-center gap-2"
-                            >
-                                <div className="flex items-center justify-center w-7 h-7 rounded-full bg-white/10 border border-white/15">
-                                    <Github className="w-3.5 h-3.5 text-white" />
-                                </div>
-                                <span className="text-sm font-bold text-white">GitExplorer</span>
-                            </Link>
-                            <button
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                className="p-1.5 text-zinc-400 hover:text-white rounded-full bg-white/[0.06]"
-                                aria-label="Close menu"
-                            >
-                                <X className="w-4 h-4" />
-                            </button>
+                    <div className="w-full max-w-sm bg-[#121215] border border-white/10 rounded-2xl p-6 space-y-4 text-center relative shadow-2xl">
+                        <button
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="absolute right-4 top-4 p-2 rounded-full bg-white/[0.06] text-zinc-400 hover:text-white"
+                        >
+                            <X className="w-4 h-4" />
+                        </button>
+
+                        <div className="flex justify-center mb-2">
+                            <div className="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
+                                <Github className="w-5 h-5 text-white" />
+                            </div>
                         </div>
 
-                        <div className="flex flex-col gap-2 pt-1">
-                            {navLinks.map(({ label, to, tab, icon: Icon }) => (
+                        <h3 className="text-base font-bold text-white font-space">GitExplorer Navigation</h3>
+
+                        <div className="flex flex-col gap-2 pt-2">
+                            {navLinks.map(({ label, to, tab }) => (
                                 <Link
                                     key={tab}
                                     to={to}
                                     onClick={() => setIsMobileMenuOpen(false)}
-                                    className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-medium transition-all ${
+                                    className={`py-3 px-4 rounded-xl text-sm font-semibold transition-all ${
                                         activeTab === tab
-                                            ? 'text-white bg-white/[0.12] border border-white/15 font-semibold'
-                                            : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
+                                            ? 'bg-white text-black font-extrabold'
+                                            : 'bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08] hover:text-white'
                                     }`}
                                 >
-                                    <Icon className="w-4 h-4 text-zinc-400" />
-                                    <span>{label}</span>
+                                    {label}
                                 </Link>
                             ))}
                             <Link
                                 to="/profile"
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-medium transition-all ${
+                                className={`py-3 px-4 rounded-xl text-sm font-semibold transition-all ${
                                     activeTab === 'profile'
-                                        ? 'text-white bg-white/[0.12] border border-white/15 font-semibold'
-                                        : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
+                                        ? 'bg-white text-black font-extrabold'
+                                        : 'bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08] hover:text-white'
                                 }`}
                             >
-                                <div className="w-4 h-4 rounded-full border-2 border-current opacity-70" />
-                                Profile
+                                Developer Profile
+                            </Link>
+                            <Link
+                                to="/report"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className="py-3 px-4 rounded-xl text-sm font-semibold bg-amber-500/10 text-amber-300 border border-amber-500/30 hover:bg-amber-500/20 transition-all flex items-center justify-center gap-2"
+                            >
+                                <AlertTriangle className="w-4 h-4 text-amber-400" />
+                                <span>Report an Issue / Suggestion</span>
                             </Link>
                         </div>
 
-                        <div className="pt-2 border-t border-white/[0.08]">
+                        <div className="pt-2 border-t border-white/10">
                             <button
                                 onClick={() => {
                                     setIsMobileMenuOpen(false);
                                     setShowTokenInput(true);
                                 }}
-                                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-full bg-white text-black text-xs font-semibold hover:bg-zinc-200 transition-all cursor-pointer shadow-md"
+                                className="w-full py-3 px-4 rounded-xl bg-white text-black font-bold text-xs flex items-center justify-center gap-2"
                             >
-                                <Key className="w-4 h-4" />
-                                Connect Token
+                                <Key className="w-4 h-4 text-black" />
+                                <span>Connect GitHub Token</span>
                             </button>
                         </div>
                     </div>
                 </div>
             )}
 
-            {/* Token modal with Verification & Help / Troubleshooting Options */}
+            {/* Token Config Modal */}
             {showTokenInput && (
-                <div
-                    className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-y-auto"
-                    onClick={(e) => { if (e.target === e.currentTarget) setShowTokenInput(false); }}
-                >
-                    <div
-                        className="w-full max-w-md bg-[#121215] border border-white/[0.08] rounded-2xl shadow-2xl p-6 sm:p-7 my-8 relative"
-                        style={{ animation: 'fadeInUp 0.2s ease-out forwards' }}
-                    >
-                        <div className="flex justify-between items-start mb-4">
-                            <div>
-                                <span className="block text-[10px] font-mono uppercase tracking-widest text-[#71717A] mb-1">
-                                    &lt;POWER_USER_MODE /&gt;
-                                </span>
-                                <h3 className="text-lg font-bold text-white tracking-tight">Connect GitHub Token</h3>
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-200">
+                    <div className="w-full max-w-md bg-[#121215] border border-white/10 rounded-2xl p-6 space-y-5 shadow-2xl font-mono text-xs">
+                        <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                            <div className="flex items-center gap-2">
+                                <Key className="w-4 h-4 text-emerald-400" />
+                                <h3 className="text-sm font-bold text-white font-space">GitHub PAT Configuration</h3>
                             </div>
                             <button
                                 onClick={() => setShowTokenInput(false)}
-                                className="p-1.5 text-[#71717A] hover:text-white transition-colors duration-200 rounded-lg hover:bg-white/[0.06] -mt-1"
-                                aria-label="Close"
+                                className="p-1 rounded-lg bg-white/[0.04] text-zinc-400 hover:text-white"
                             >
                                 <X className="w-4 h-4" />
                             </button>
                         </div>
 
-                        {/* Current Quota Status */}
-                        {activeQuota && (
-                            <div className="mb-4 p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-between text-xs font-mono">
-                                <span className="text-zinc-400">Current API Quota:</span>
-                                <span className="text-emerald-400 font-bold">
-                                    {activeQuota.remaining} / {activeQuota.limit} req/hr
-                                </span>
-                            </div>
-                        )}
-
-                        <p className="text-xs sm:text-sm text-[#A1A1AA] leading-relaxed mb-5">
-                            Add a personal access token to unlock <span className="text-white font-medium">5,000 req/hr</span>. Your token is stored in your browser&apos;s localStorage and never transmitted to any server.
+                        <p className="text-zinc-400 leading-relaxed font-sans text-xs">
+                            Save a personal access token in your browser to upgrade rate limits from 60 to <strong className="text-white">5,000 requests/hour</strong>. Stored strictly in your local browser storage.
                         </p>
 
-                        {/* Error Alert Box in case of failure or wrong key */}
-                        {tokenError && (
-                            <div className="mb-5 p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs font-mono space-y-2">
-                                <div className="flex items-start gap-2 font-bold text-rose-400">
-                                    <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                                    <span>Token Verification Failed</span>
-                                </div>
-                                <p className="leading-relaxed">{tokenError}</p>
+                        {activeQuota && (
+                            <div className="bg-[#0A0A0C] border border-white/10 rounded-xl p-3 flex items-center justify-between text-xs">
+                                <span className="text-zinc-400">Current Quota Limit:</span>
+                                <span className="text-emerald-400 font-bold">{activeQuota.remaining} / {activeQuota.limit} req/hr</span>
                             </div>
                         )}
 
-                        {tokenSaved ? (
-                            <div className="flex items-center gap-2.5 py-3.5 px-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs sm:text-sm font-mono">
-                                <Check className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                                <span>Token verified &amp; saved! Quota set to 5,000 req/hr.</span>
+                        <form onSubmit={handleTokenSubmit} className="space-y-3">
+                            <input
+                                type="password"
+                                value={token}
+                                onChange={(e) => setToken(e.target.value)}
+                                placeholder="ghp_your_personal_access_token..."
+                                className="w-full bg-[#0A0A0C] border border-white/10 rounded-xl p-3 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/30"
+                            />
+
+                            {tokenError && <p className="text-rose-400 text-xs">{tokenError}</p>}
+                            {tokenSaved && <p className="text-emerald-400 text-xs">Token saved successfully!</p>}
+                            {tokenCleared && <p className="text-amber-400 text-xs">Token cleared. Reverted to anonymous limit.</p>}
+
+                            <div className="flex items-center justify-end gap-2 pt-2">
+                                <button
+                                    type="button"
+                                    onClick={handleClearToken}
+                                    className="px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-zinc-400 hover:text-rose-400 transition-colors"
+                                >
+                                    Clear Token
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={isVerifying}
+                                    className="px-4 py-2 rounded-xl bg-white text-black font-extrabold hover:bg-zinc-200 transition-colors flex items-center gap-1.5 cursor-pointer"
+                                >
+                                    {isVerifying ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
+                                    <span>{isVerifying ? 'Verifying...' : 'Save Token'}</span>
+                                </button>
                             </div>
-                        ) : (
-                            <form onSubmit={handleTokenSubmit} className="space-y-4">
-                                <div className="space-y-1.5">
-                                    <label htmlFor="token-input" className="block text-[11px] font-mono text-zinc-400">
-                                        Personal Access Token (classic or fine-grained)
-                                    </label>
-                                    <input
-                                        id="token-input"
-                                        type="password"
-                                        value={token}
-                                        onChange={(e) => {
-                                            setToken(e.target.value);
-                                            if (tokenError) setTokenError('');
-                                        }}
-                                        placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
-                                        autoFocus
-                                        className="w-full bg-[#0A0A0C] border border-white/[0.10] rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder:text-[#52525B] font-mono focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all duration-200"
-                                    />
-                                </div>
-
-                                <div className="flex gap-2">
-                                    <button
-                                        id="save-token-btn"
-                                        type="submit"
-                                        disabled={isVerifying}
-                                        className="flex-1 bg-white hover:bg-[#E4E4E7] text-black font-semibold py-3 rounded-xl transition-all duration-200 text-xs sm:text-sm active:scale-[0.99] flex items-center justify-center gap-2 shadow-lg disabled:opacity-50"
-                                    >
-                                        {isVerifying ? (
-                                            <>
-                                                <Loader2 className="w-4 h-4 animate-spin text-black" />
-                                                <span>Verifying key…</span>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Key className="w-4 h-4" />
-                                                <span>Verify &amp; Save Token</span>
-                                            </>
-                                        )}
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        onClick={handleClearToken}
-                                        title="Clear existing token"
-                                        className="px-3 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-zinc-400 hover:text-rose-400 hover:border-rose-500/30 transition-all"
-                                    >
-                                        <Trash2 className="w-4 h-4" />
-                                    </button>
-                                </div>
-                            </form>
-                        )}
-
-                        {/* Collapsible Help & Troubleshooting Section */}
-                        <div className="mt-5 pt-4 border-t border-white/[0.08]">
-                            <button
-                                type="button"
-                                onClick={() => setShowHelp(!showHelp)}
-                                className="w-full flex items-center justify-between text-xs font-mono text-zinc-400 hover:text-white transition-colors focus:outline-none"
-                            >
-                                <span className="flex items-center gap-1.5">
-                                    <HelpCircle className="w-3.5 h-3.5 text-sky-400" />
-                                    Need Help or Key Troubleshooting?
-                                </span>
-                                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${showHelp ? 'rotate-180 text-white' : ''}`} />
-                            </button>
-
-                            {showHelp && (
-                                <div className="mt-3 space-y-3 text-xs font-mono text-zinc-400 bg-white/[0.02] border border-white/[0.06] p-3.5 rounded-xl leading-relaxed">
-                                    <div className="space-y-1">
-                                        <div className="text-white font-semibold flex items-center gap-1">
-                                            1. How to create a free GitHub Token:
-                                        </div>
-                                        <p className="text-[11px] text-zinc-400">
-                                            Go to GitHub &rarr; Settings &rarr; Developer Settings &rarr; Personal Access Tokens. Select &ldquo;Generate new token (classic)&rdquo; and check <span className="text-white">public_repo</span>.
-                                        </p>
-                                        <a
-                                            href="https://github.com/settings/tokens"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-1 text-sky-400 hover:underline text-[11px] pt-1"
-                                        >
-                                            <span>Open GitHub Token Settings</span>
-                                            <ExternalLink className="w-3 h-3" />
-                                        </a>
-                                    </div>
-
-                                    <div className="space-y-1 border-t border-white/[0.06] pt-2">
-                                        <div className="text-white font-semibold">
-                                            2. Troubleshooting Key Failures:
-                                        </div>
-                                        <ul className="list-disc list-inside space-y-1 text-[11px] text-zinc-400">
-                                            <li>Ensure the key starts with <span className="text-white">ghp_</span> or <span className="text-white">github_pat_</span>.</li>
-                                            <li>Verify the key has not expired on GitHub.</li>
-                                            <li>If you hit rate limits, connecting any valid key immediately grants 5,000 req/hr.</li>
-                                        </ul>
-                                    </div>
-
-                                    <div className="border-t border-white/[0.06] pt-2 flex items-center justify-between">
-                                        <span className="text-[11px] text-zinc-500">Still having trouble?</span>
-                                        <Link
-                                            to="/report"
-                                            onClick={() => setShowTokenInput(false)}
-                                            className="text-amber-400 hover:underline text-[11px] inline-flex items-center gap-1"
-                                        >
-                                            <span>Report an Issue</span>
-                                            <ExternalLink className="w-3 h-3" />
-                                        </Link>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
+                        </form>
                     </div>
                 </div>
             )}

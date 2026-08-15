@@ -48,8 +48,8 @@
     color: #ffffff;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Inter', system-ui, sans-serif;
+  h1, h2, h3, h4, h5, h6, .font-heading, .font-space {
+    font-family: 'Space Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif !important;
     letter-spacing: -0.025em;
   }
 }
@@ -215,8 +215,8 @@
 }
 
 /* Legacy prose */
-.prose { font-family: 'Inter', system-ui, sans-serif; }
-.prose :where(h1, h2, h3, h4, h5, h6) { font-family: 'Inter', system-ui, sans-serif; }
+.prose { font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; }
+.prose :where(h1, h2, h3, h4, h5, h6) { font-family: 'Space Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif !important; }
 
 /* Legacy text-shadow */
 @layer utilities {

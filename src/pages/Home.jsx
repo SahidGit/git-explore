@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/layouts/Header';
 import Hero from '../components/layouts/Hero';
+import StatsSection from '../components/features/StatsSection';
 import TerminalSection from '../components/features/TerminalSection';
-import SessionTimeline from '../components/features/SessionTimeline';
+import FeatureGrid from '../components/features/FeatureGrid';
 import GithubSyncSection from '../components/features/GithubSyncSection';
 import FAQ from '../components/ui/FAQ';
 import Footer from '../components/layouts/Footer';
@@ -29,7 +29,7 @@ const Home = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#0A0A0C] text-white font-sans selection:bg-white/20 selection:text-white">
+        <div className="min-h-screen bg-[#0A0A0C] text-white font-sans selection:bg-white/20 selection:text-white flex flex-col">
             <SEO
                 title="GitExplorer — The Open-Source Intelligence Layer"
                 description="Raw GitHub data, structured into signal. Discover trending repositories, analyze contributors, and find momentum before it's mainstream."
@@ -53,16 +53,14 @@ const Home = () => {
                 showBackButton={false}
             />
 
-            <main>
+            <main className="flex-1">
                 <Hero onExplore={handleExplore} />
+                <StatsSection />
                 <TerminalSection />
-                <SessionTimeline />
+                <FeatureGrid />
                 <GithubSyncSection />
                 <FAQ />
-
-                <section aria-label="Call to Action">
-                    <RepoCTA />
-                </section>
+                <RepoCTA />
             </main>
 
             <BackToTop />

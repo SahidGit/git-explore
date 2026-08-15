@@ -1,17 +1,25 @@
-import { motion } from 'framer-motion'; // eslint-disable-line no-unused-vars
+import React from 'react';
+import { motion } from 'framer-motion';
 
-const PageTransition = ({ children }) => {
-    return (
-        <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            className="w-full"
-        >
-            {children}
-        </motion.div>
-    );
+const variants = {
+  initial: { opacity: 0, y: 8 },
+  animate: { opacity: 1, y: 0 },
+  exit:    { opacity: 0, y: -8 },
 };
+
+const transition = { duration: 0.18, ease: 'easeInOut' };
+
+/** Wraps each route in a subtle fade+slide transition */
+const PageTransition = ({ children }) => (
+  <motion.div
+    variants={variants}
+    initial="initial"
+    animate="animate"
+    exit="exit"
+    transition={transition}
+  >
+    {children}
+  </motion.div>
+);
 
 export default PageTransition;

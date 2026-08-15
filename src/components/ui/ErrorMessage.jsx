@@ -1,6 +1,6 @@
 import React from 'react';
-import { MdRefresh } from 'react-icons/md';
-import { WifiOff } from 'lucide-react';
+import { WifiOff, RefreshCw } from 'lucide-react';
+
 
 const ErrorMessage = ({ message, onRetry }) => {
     return (
@@ -23,7 +23,7 @@ const ErrorMessage = ({ message, onRetry }) => {
                     onClick={onRetry}
                     className="flex items-center gap-2 px-6 py-3 bg-[#238636] hover:bg-[#2ea043] text-white rounded-full transition-all hover:scale-105 font-medium shadow-lg hover:shadow-[#238636]/40 cursor-pointer"
                 >
-                    <MdRefresh className="w-5 h-5" />
+                    <RefreshCw className="w-5 h-5" />
                     Try Again
                 </button>
             )}
