@@ -38,8 +38,11 @@ app.use('/api/reports', reportsRouter);
 app.use('/api/github', githubRouter);
 
 // ─── MongoDB Connection ───────────────────────────────
+console.log('Connecting to MongoDB database...');
 mongoose
-    .connect(MONGODB_URI)
+    .connect(MONGODB_URI, {
+        serverSelectionTimeoutMS: 5000, // Timeout after 5s if unreachable
+    })
     .then(() => console.log('✓ MongoDB connected'))
     .catch((err) => console.warn('⚠ MongoDB unavailable (reports will use disk store):', err.message));
 
