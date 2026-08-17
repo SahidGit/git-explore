@@ -54,14 +54,14 @@ export const storageService = {
 
     // Token
     getToken: () => {
-        return sessionStorage.getItem(STORAGE_KEYS.TOKEN);
+        return localStorage.getItem(STORAGE_KEYS.TOKEN);
     },
 
     saveToken: (token) => {
         if (token) {
-            sessionStorage.setItem(STORAGE_KEYS.TOKEN, token);
+            localStorage.setItem(STORAGE_KEYS.TOKEN, token);
         } else {
-            sessionStorage.removeItem(STORAGE_KEYS.TOKEN);
+            localStorage.removeItem(STORAGE_KEYS.TOKEN);
         }
     },
 };

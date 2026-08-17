@@ -27,14 +27,14 @@ const AI_PROMPT_LINKS = [
 
 const Footer = () => {
     return (
-        <footer className="border-b border-white/10 bg-[#0A0A0C]" aria-label="Site footer">
-            <div className="mx-auto w-full max-w-[1280px] min-[1280px]:border-x border-white/10 px-4 sm:px-8 py-8 sm:py-12 flex flex-col gap-8 sm:gap-10">
+        <footer className="border-b border-white/10 bg-[#0A0A0B]" aria-label="Site footer">
+            <div className="mx-auto w-full max-w-[1280px] min-[1280px]:border-x border-white/10 px-4 sm:px-8 py-12 sm:py-16 flex flex-col gap-8 sm:gap-10">
 
                 {/* Grid Links Columns */}
                 <div className="grid gap-6 sm:gap-8 grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 text-xs font-sans">
                     <div>
-                        <h3 className="font-semibold text-white font-mono uppercase tracking-wider mb-3 sm:mb-4">Product</h3>
-                        <ul className="space-y-2 text-zinc-400 font-mono">
+                        <h3 className="eyebrow-tracker text-[#71717A] mb-3 sm:mb-4">Product</h3>
+                        <ul className="space-y-2 text-[#94A3B8] font-mono">
                             <li><Link to="/dashboard" className="hover:text-white transition-colors">Explorer Dashboard</Link></li>
                             <li><Link to="/cheatsheet" className="hover:text-white transition-colors">Git Cheat Sheet</Link></li>
                             <li><Link to="/docs" className="hover:text-white transition-colors">Documentation</Link></li>

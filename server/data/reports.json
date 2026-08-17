@@ -1,5 +1,17 @@
 [
   {
+    "id": "6a835e53325bf251f1fa624e",
+    "issueType": "Feature Request &#x2F; Platform Idea",
+    "pageUrl": "",
+    "description": "the report issue panel is not working properly",
+    "email": "",
+    "ipAddress": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+    "status": "open",
+    "createdAt": "2026-08-17T19:17:39.259Z",
+    "updatedAt": "2026-08-17T19:17:39.259Z"
+  },
+  {
     "id": "6a7f58d63fc06cf76d54477f",
     "issueType": "Bug Report",
     "pageUrl": "/dashboard",

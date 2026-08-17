@@ -147,6 +147,18 @@ export const getMonthlyTopRepositories = async () => {
   }
 };
 
+export const getWeeklyTopRepositories = async () => {
+  try {
+    const date = new Date();
+    date.setDate(date.getDate() - 7);
+    const query = `created:>${date.toISOString().split('T')[0]}`;
+    const data = await searchRepositories({ query, sort: 'stars', order: 'desc', page: 1, perPage: 5 });
+    return data.items?.length ? data.items : FALLBACK_TOP_FIVE;
+  } catch {
+    return FALLBACK_TOP_FIVE;
+  }
+};
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Repository Detail, Languages, Contributors
 // ─────────────────────────────────────────────────────────────────────────────

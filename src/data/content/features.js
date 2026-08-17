@@ -78,7 +78,7 @@ export const featuresContent = {
       description:
         'Dark-mode native, keyboard-friendly, and distraction-free. Every screen is tuned for long research sessions — dense information, clear hierarchy, and instant navigation.',
       links: [
-        { label: 'See the roadmap', href: '/roadmap' },
+        { label: 'Documentation', href: '/docs' },
         { label: 'Changelog', href: '/changelog' },
       ],
     },

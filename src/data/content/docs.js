@@ -82,7 +82,7 @@ export const docsContent = {
         'GitExplorer is an independent tool — not affiliated with GitHub, Inc. We do not store credentials on external servers. All repository content remains the property of its respective owners.',
       links: [
         { label: 'API security notes', href: '/api' },
-        { label: 'Product roadmap', href: '/roadmap' },
+        { label: 'Changelog', href: '/changelog' },
       ],
     },
   ],

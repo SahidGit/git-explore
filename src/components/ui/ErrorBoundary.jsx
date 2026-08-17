@@ -9,7 +9,11 @@ import {
     Check,
     Bug,
     ShieldAlert,
-    Terminal
+    Terminal,
+    Cpu,
+    Clock,
+    FileText,
+    ArrowRight
 } from 'lucide-react';
 
 class ErrorBoundary extends Component {
@@ -19,7 +23,7 @@ class ErrorBoundary extends Component {
             hasError: false,
             error: null,
             errorInfo: null,
-            showDetails: false,
+            activeLogTab: 'log', // 'log' | 'stack' | 'env'
             copied: false
         };
     }
@@ -30,7 +34,7 @@ class ErrorBoundary extends Component {
 
     componentDidCatch(error, errorInfo) {
         this.setState({ errorInfo });
-        console.error("GitExplorer ErrorBoundary caught an error:", error, errorInfo);
+        console.error("GitExplorer ErrorBoundary intercepted runtime exception:", error, errorInfo);
     }
 
     handleReset = () => {
@@ -38,7 +42,7 @@ class ErrorBoundary extends Component {
             hasError: false,
             error: null,
             errorInfo: null,
-            showDetails: false,
+            activeLogTab: 'log',
             copied: false
         });
         if (this.props.onReset) {
@@ -56,10 +60,10 @@ class ErrorBoundary extends Component {
 
     handleCopyError = () => {
         const { error, errorInfo } = this.state;
-        const errorText = `[GitExplorer Runtime Exception]
-Error: ${error?.name || 'Error'}: ${error?.message || 'Unknown error'}
-Location: ${window.location.href}
-Time: ${new Date().toISOString()}
+        const errorText = `[GitExplorer System Exception]
+Error: ${error?.name || 'Error'}: ${error?.message || 'Unknown runtime error'}
+Route: ${window.location.href}
+Timestamp: ${new Date().toISOString()}
 
 Stack Trace:
 ${error?.stack || 'No stack trace available'}
@@ -71,14 +75,10 @@ ${errorInfo?.componentStack || 'No component stack available'}`;
             this.setState({ copied: true });
             setTimeout(() => {
                 this.setState({ copied: false });
-            }, 2500);
+            }, 2000);
         }).catch(err => {
-            console.error('Failed to copy error details:', err);
+            console.error('Failed to copy error logs:', err);
         });
-    };
-
-    toggleDetails = () => {
-        this.setState(prevState => ({ showDetails: !prevState.showDetails }));
     };
 
     render() {
@@ -89,164 +89,203 @@ ${errorInfo?.componentStack || 'No component stack available'}`;
                     : this.props.fallback;
             }
 
-            const errorMessage = this.state.error?.message || this.state.error?.toString() || 'An unexpected error occurred.';
+            const errorMessage = this.state.error?.message || this.state.error?.toString() || 'An unhandled execution state occurred.';
             const errorStack = this.state.error?.stack;
             const componentStack = this.state.errorInfo?.componentStack;
 
             return (
-                <div className="min-h-screen bg-[#0A0A0C] text-white font-sans flex flex-col justify-between items-center p-4 sm:p-6 lg:p-8 relative overflow-hidden selection:bg-rose-500/30 selection:text-rose-200">
-                    {/* Background Decorative Glow Effects */}
-                    <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-rose-600/10 rounded-full blur-[120px] pointer-events-none" />
-                    <div className="absolute bottom-10 right-10 w-[350px] h-[350px] bg-purple-600/10 rounded-full blur-[100px] pointer-events-none" />
+                <div className="min-h-screen bg-[#08090a] text-white font-sans flex flex-col justify-between items-center p-4 sm:p-6 lg:p-10 relative overflow-hidden selection:bg-rose-500/20 selection:text-rose-300">
+                    
+                    {/* Very Faint Radial Glows & Canvas Borders */}
+                    <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-rose-500/[0.04] rounded-full blur-[140px] pointer-events-none" />
+                    <div className="absolute bottom-10 right-10 w-[400px] h-[400px] bg-indigo-500/[0.03] rounded-full blur-[120px] pointer-events-none" />
 
-                    <div className="w-full max-w-2xl my-auto space-y-8 relative z-10 py-12">
-                        {/* Status Icon & Title Badge */}
-                        <div className="text-center space-y-4">
-                            <div className="relative inline-flex items-center justify-center">
-                                <div className="absolute inset-0 bg-rose-500/20 rounded-2xl blur-xl animate-pulse" />
-                                <div className="relative bg-[#16161A] p-4 rounded-2xl border border-rose-500/30 text-rose-400 shadow-2xl shadow-rose-950/40">
-                                    <ShieldAlert className="w-12 h-12" />
+                    <div className="w-full max-w-4xl my-auto space-y-6 relative z-10 py-8">
+                        
+                        {/* Precision Bento Grid Layout */}
+                        <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                            
+                            {/* Top Left Bento Cell: Exception Header */}
+                            <div className="md:col-span-8 p-6 sm:p-8 rounded-2xl border border-white/[0.08] bg-[#0d0f12]/90 backdrop-blur-md space-y-4 shadow-2xl flex flex-col justify-between">
+                                <div className="space-y-3">
+                                    <div className="flex items-center gap-2">
+                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider bg-rose-500/10 text-rose-400 border border-rose-500/20 uppercase">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />
+                                            STATUS_CODE: 500_RUNTIME_EXCEPTION
+                                        </span>
+                                    </div>
+                                    
+                                    <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight font-space">
+                                        System Exception Intercepted
+                                    </h1>
+                                    
+                                    <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans max-w-xl">
+                                        GitExplorer encountered an unhandled application state. Execution stopped safely to preserve client-side storage integrity.
+                                    </p>
                                 </div>
                             </div>
 
-                            <div className="space-y-2">
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono uppercase tracking-widest bg-rose-500/10 text-rose-400 border border-rose-500/20">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping" />
-                                    STATUS_CODE: 500_RUNTIME_EXCEPTION
-                                </span>
-                                <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                                    System Exception Intercepted
-                                </h1>
-                                <p className="text-sm text-zinc-400 max-w-md mx-auto leading-relaxed">
-                                    GitExplorer encountered an unhandled execution state. The system stopped safely to protect your workspace.
-                                </p>
+                            {/* Top Right Bento Cell: Environment Telemetry */}
+                            <div className="md:col-span-4 p-6 rounded-2xl border border-white/[0.08] bg-[#0d0f12]/90 backdrop-blur-md font-mono text-xs space-y-3 shadow-2xl flex flex-col justify-between">
+                                <div className="flex items-center justify-between text-zinc-400 border-b border-white/[0.06] pb-2 text-[11px]">
+                                    <span className="flex items-center gap-1.5 font-bold text-white">
+                                        <Cpu className="w-3.5 h-3.5 text-indigo-400" />
+                                        TELEMETRY
+                                    </span>
+                                    <span className="text-emerald-400 font-bold">&bull; ISOLATED</span>
+                                </div>
+
+                                <div className="space-y-2 text-[11px]">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-zinc-500">Timestamp:</span>
+                                        <span className="text-zinc-300 font-medium">{new Date().toLocaleTimeString()}</span>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-zinc-500">Route:</span>
+                                        <span className="text-zinc-300 font-medium truncate max-w-[120px]">{window.location.pathname}</span>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-zinc-500">Storage:</span>
+                                        <span className="text-emerald-400 font-medium">IndexedDB Intact</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        {/* Terminal Box Preview */}
-                        <div className="rounded-2xl border border-white/10 bg-[#0E0E11] overflow-hidden shadow-2xl backdrop-blur-md">
-                            <div className="flex items-center justify-between px-4 py-3 bg-[#131317] border-b border-white/[0.06]">
-                                <div className="flex items-center gap-2">
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block" />
-                                        <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block" />
-                                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block" />
-                                    </div>
-                                    <span className="text-xs font-mono text-zinc-400 flex items-center gap-1.5 ml-2">
-                                        <Terminal className="w-3.5 h-3.5 text-zinc-500" />
-                                        ~ /errors/uncaught-exception.log
-                                    </span>
+                        {/* Interactive Terminal Bento Card with Tabs */}
+                        <div className="rounded-2xl border border-white/[0.08] bg-[#0d0f12]/95 backdrop-blur-md overflow-hidden shadow-2xl">
+                            
+                            {/* Top Bar with Tab Buttons & Copy Micro-interaction */}
+                            <div className="flex flex-wrap items-center justify-between px-4 py-2.5 bg-[#08090a] border-b border-white/[0.06] gap-3">
+                                <div className="flex items-center gap-1.5 font-mono text-xs">
+                                    <button
+                                        type="button"
+                                        onClick={() => this.setState({ activeLogTab: 'log' })}
+                                        className={`px-3 py-1 rounded-lg transition-all cursor-pointer text-xs font-medium ${
+                                            this.state.activeLogTab === 'log'
+                                                ? 'bg-rose-500/10 text-rose-300 border border-rose-500/30 font-bold'
+                                                : 'text-zinc-400 hover:text-white'
+                                        }`}
+                                    >
+                                        Console Log
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => this.setState({ activeLogTab: 'stack' })}
+                                        className={`px-3 py-1 rounded-lg transition-all cursor-pointer text-xs font-medium ${
+                                            this.state.activeLogTab === 'stack'
+                                                ? 'bg-rose-500/10 text-rose-300 border border-rose-500/30 font-bold'
+                                                : 'text-zinc-400 hover:text-white'
+                                        }`}
+                                    >
+                                        Stack Trace
+                                    </button>
                                 </div>
+
                                 <button
                                     onClick={this.handleCopyError}
-                                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white text-xs font-mono transition-colors cursor-pointer"
-                                    title="Copy error details"
+                                    className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/[0.04] border border-white/10 hover:bg-white/[0.08] text-zinc-300 hover:text-white text-xs font-mono transition-all cursor-pointer"
                                 >
                                     {this.state.copied ? (
                                         <>
                                             <Check className="w-3.5 h-3.5 text-emerald-400" />
-                                            <span className="text-emerald-400">Copied!</span>
+                                            <span className="text-emerald-400 font-bold">Copied to Clipboard</span>
                                         </>
                                     ) : (
                                         <>
-                                            <Copy className="w-3.5 h-3.5" />
-                                            <span>Copy Log</span>
+                                            <Copy className="w-3.5 h-3.5 text-zinc-400" />
+                                            <span>Copy Error Log</span>
                                         </>
                                     )}
                                 </button>
                             </div>
 
-                            <div className="p-5 font-mono text-xs space-y-3">
-                                <div className="flex items-start gap-2 text-rose-400 bg-rose-950/30 p-3 rounded-lg border border-rose-500/20">
-                                    <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
-                                    <span className="break-all font-semibold">{errorMessage}</span>
-                                </div>
+                            {/* Terminal Output Body */}
+                            <div className="p-5 sm:p-6 font-mono text-xs space-y-4 bg-[#08090a]">
+                                
+                                {this.state.activeLogTab === 'log' && (
+                                    <div className="space-y-3">
+                                        {/* Low-Saturation Crimson Pill */}
+                                        <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 flex items-start gap-3">
+                                            <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                                            <div className="space-y-1">
+                                                <span className="font-bold text-rose-300 block">Exception Details:</span>
+                                                <p className="break-all font-mono text-xs leading-relaxed text-slate-300">
+                                                    {errorMessage}
+                                                </p>
+                                            </div>
+                                        </div>
 
-                                <div className="text-zinc-500 text-[11px] flex items-center justify-between pt-1">
-                                    <span>Captured at: {new Date().toLocaleTimeString()}</span>
-                                    <span>Target: GitExplorer App State</span>
-                                </div>
-                            </div>
-                        </div>
+                                        <div className="p-4 rounded-xl bg-[#0d0f12] border border-white/[0.06] text-slate-400 text-xs leading-relaxed font-mono">
+                                            <span className="text-zinc-500 block mb-1">// System Diagnostic Note</span>
+                                            This exception was caught by GitExplorer boundary. Check component inputs, state mutations, or API responses for unexpected null pointers.
+                                        </div>
+                                    </div>
+                                )}
 
-                        {/* Expandable Stack Trace Section */}
-                        {(errorStack || componentStack) && (
-                            <div className="rounded-xl border border-white/10 bg-[#0E0E11] overflow-hidden">
-                                <button
-                                    onClick={this.toggleDetails}
-                                    className="w-full px-4 py-3 flex items-center justify-between text-xs font-mono text-zinc-400 hover:text-white bg-[#131317] hover:bg-white/[0.02] transition-colors text-left cursor-pointer"
-                                >
-                                    <span className="flex items-center gap-2">
-                                        <Bug className="w-4 h-4 text-rose-400" />
-                                        {this.state.showDetails ? 'Hide Stack Trace & Call Tree' : 'Inspect Stack Trace & Call Tree'}
-                                    </span>
-                                    {this.state.showDetails ? (
-                                        <ChevronUp className="w-4 h-4" />
-                                    ) : (
-                                        <ChevronDown className="w-4 h-4" />
-                                    )}
-                                </button>
-
-                                {this.state.showDetails && (
-                                    <div className="p-4 bg-[#0A0A0C] border-t border-white/[0.06] font-mono text-[11px] text-zinc-400 max-h-64 overflow-y-auto space-y-4 scrollbar-thin scrollbar-thumb-white/10">
+                                {this.state.activeLogTab === 'stack' && (
+                                    <div className="space-y-3 max-h-72 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10">
                                         {errorStack && (
-                                            <div>
-                                                <div className="text-zinc-300 font-semibold mb-1">Error Stack:</div>
-                                                <pre className="whitespace-pre-wrap break-all text-rose-300/80 bg-black/40 p-3 rounded border border-white/5">
+                                            <div className="space-y-1">
+                                                <span className="text-zinc-400 text-[11px] font-bold block">Error Stack Trace:</span>
+                                                <pre className="text-slate-300 bg-[#0d0f12] p-4 rounded-xl border border-white/[0.06] whitespace-pre-wrap break-all text-[11px] leading-relaxed">
                                                     {errorStack}
                                                 </pre>
                                             </div>
                                         )}
+
                                         {componentStack && (
-                                            <div>
-                                                <div className="text-zinc-300 font-semibold mb-1">Component Stack:</div>
-                                                <pre className="whitespace-pre-wrap break-all text-zinc-400 bg-black/40 p-3 rounded border border-white/5">
+                                            <div className="space-y-1 pt-2">
+                                                <span className="text-zinc-400 text-[11px] font-bold block">Component Tree Stack:</span>
+                                                <pre className="text-slate-400 bg-[#0d0f12] p-4 rounded-xl border border-white/[0.06] whitespace-pre-wrap break-all text-[11px] leading-relaxed">
                                                     {componentStack}
                                                 </pre>
                                             </div>
                                         )}
                                     </div>
                                 )}
-                            </div>
-                        )}
 
-                        {/* Action Buttons */}
+                            </div>
+                        </div>
+
+                        {/* Tactile Low-Profile Action Buttons */}
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
                             <button
                                 onClick={this.handleReset}
-                                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white text-black text-xs font-semibold hover:bg-zinc-200 active:scale-[0.98] transition-all shadow-lg shadow-white/10 cursor-pointer"
+                                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white text-black font-mono text-xs font-extrabold hover:bg-zinc-200 active:scale-[0.98] transition-all duration-200 shadow-md cursor-pointer"
                             >
-                                <RefreshCw className="w-4 h-4" />
-                                Try Again
+                                <RefreshCw className="w-3.5 h-3.5 text-black" />
+                                <span>Try Again</span>
                             </button>
 
                             <button
                                 onClick={this.handleReload}
-                                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-white/10 bg-white/5 text-zinc-200 text-xs font-medium hover:bg-white/10 hover:border-white/20 hover:text-white active:scale-[0.98] transition-all cursor-pointer"
+                                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-white/15 bg-white/[0.04] text-zinc-200 hover:text-white hover:bg-white/[0.08] hover:border-white/30 font-mono text-xs font-bold active:scale-[0.98] transition-all duration-200 cursor-pointer"
                             >
-                                <RefreshCw className="w-4 h-4 text-zinc-400" />
-                                Hard Reload
+                                <RefreshCw className="w-3.5 h-3.5 text-zinc-400" />
+                                <span>Hard Reload</span>
                             </button>
 
                             <button
                                 onClick={this.handleGoHome}
-                                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-white/10 bg-transparent text-zinc-400 text-xs font-medium hover:border-white/20 hover:text-white transition-all cursor-pointer"
+                                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-white/10 bg-transparent text-zinc-400 hover:text-white hover:border-white/20 font-mono text-xs font-medium transition-all duration-200 cursor-pointer"
                             >
-                                <Home className="w-4 h-4" />
-                                Return Home
+                                <Home className="w-3.5 h-3.5" />
+                                <span>Return Home</span>
                             </button>
                         </div>
-                    </div>
 
-                    {/* Footer note */}
-                    <div className="relative z-10 text-center text-xs text-zinc-600 font-mono py-4">
-                        GitExplorer Exception Handler • Need help?{' '}
-                        <a
-                            href="/report"
-                            className="text-zinc-400 hover:text-white underline underline-offset-4 transition-colors"
-                        >
-                            Report issue
-                        </a>
+                        {/* Footer Link */}
+                        <div className="text-center text-xs text-zinc-500 font-mono pt-4">
+                            GitExplorer Exception Guard &bull; Need technical help?{' '}
+                            <a
+                                href="/report"
+                                className="text-zinc-300 hover:text-white underline underline-offset-4 transition-colors"
+                            >
+                                Report an Issue ↗
+                            </a>
+                        </div>
+
                     </div>
                 </div>
             );
@@ -257,4 +296,5 @@ ${errorInfo?.componentStack || 'No component stack available'}`;
 }
 
 export default ErrorBoundary;
+
 

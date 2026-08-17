@@ -9,7 +9,6 @@ export const PAGE_NAVIGATION_SEQUENCE = [
   { key: 'api', label: 'API Reference', path: '/api', desc: 'Unlock 5,000 req/hr with GitHub PAT' },
   { key: 'cheatsheet', label: 'Git Cheat Sheet', path: '/cheatsheet', desc: 'Master essential Git CLI commands' },
   { key: 'changelog', label: 'Changelog', path: '/changelog', desc: 'Recent feature releases & improvements' },
-  { key: 'roadmap', label: 'Product Roadmap', path: '/roadmap', desc: 'Upcoming features & community ideas' },
   { key: 'about', label: 'About GitExplorer', path: '/about', desc: 'Independent architecture & privacy' },
   { key: 'disclaimer', label: 'Disclaimer', path: '/disclaimer', desc: 'Third-party trademark & API notice' },
   { key: 'terms', label: 'Terms of Use', path: '/terms', desc: 'Platform usage & credential safety' },

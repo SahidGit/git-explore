@@ -26,7 +26,7 @@ const PageLoader = () => (
 );
 
 /** Dynamic InfoPage routes using the visual master renderer */
-const DYNAMIC_INFO_ROUTES = ['changelog', 'docs', 'api', 'roadmap', 'disclaimer', 'terms'];
+const DYNAMIC_INFO_ROUTES = ['changelog', 'docs', 'api', 'disclaimer', 'terms'];
 
 function App() {
   const location = useLocation();

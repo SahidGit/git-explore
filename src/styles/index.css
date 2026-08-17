@@ -4,16 +4,25 @@
 
 @layer base {
   :root {
-    /* AI-native design tokens */
-    --canvas: #0A0A0C;
-    --surface: #121215;
-    --surface-elevated: #16161A;
+    /* Entire.io Design System Surface Tokens */
+    --canvas: #0A0A0B;
+    --canvas-deep: #0D0E11;
+    --canvas-pure: #000000;
+    --surface: #121316;
+    --surface-elevated: #16181D;
+    
+    /* Text Tokens */
     --text-primary: #FFFFFF;
-    --text-secondary: #A1A1AA;
+    --text-secondary: #94A3B8;
     --text-muted: #71717A;
-    --border: rgba(255, 255, 255, 0.08);
+    --border-hairline: rgba(255, 255, 255, 0.08);
 
-    /* Legacy GitHub tokens for dashboard/other pages */
+    /* Accents & Status */
+    --accent-emerald: #10B981;
+    --accent-indigo: #6366F1;
+    --overlay-hover: rgba(255, 255, 255, 0.08);
+
+    /* Legacy GitHub tokens for dashboard views */
     --color-github-bg: #0D1117;
     --color-github-card: #161B22;
     --color-github-border: #30363D;
@@ -32,14 +41,14 @@
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 5rem;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Geist', 'Inter', system-ui, -apple-system, sans-serif;
     line-height: 1.5;
     font-weight: 400;
   }
 
   body,
   #root {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Geist', 'Inter', system-ui, -apple-system, sans-serif;
   }
 
   /* Selection styles */
@@ -49,8 +58,12 @@
   }
 
   h1, h2, h3, h4, h5, h6, .font-heading, .font-space {
-    font-family: 'Space Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif !important;
-    letter-spacing: -0.025em;
+    font-family: 'Space Grotesk', 'Geist', 'Inter', system-ui, sans-serif !important;
+    letter-spacing: -0.03em;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'Geist Mono', 'JetBrains Mono', 'Fira Code', monospace !important;
   }
 }
 
@@ -112,36 +125,20 @@
   50%       { opacity: 0.9; }
 }
 
-@keyframes shimmer {
-  100% { transform: translateX(100%); }
-}
-
-@keyframes waddle {
-  0%, 100% { transform: rotate(-2deg) translateY(0); }
-  50%       { transform: rotate(2deg) translateY(-4px); }
-}
-
-/* ─── Utility classes ────────────────────────────────── */
+/* ─── Utility & Component Classes ───────────────────── */
 
 .animate-marquee { animation: marquee 40s linear infinite; }
 .animate-fadeInUp { animation: fadeInUp 0.7s ease-out forwards; }
-.animate-fadeInUp-d1 { opacity: 0; animation: fadeInUp 0.7s ease-out 0.1s forwards; }
-.animate-fadeInUp-d2 { opacity: 0; animation: fadeInUp 0.7s ease-out 0.2s forwards; }
-.animate-fadeInUp-d3 { opacity: 0; animation: fadeInUp 0.7s ease-out 0.35s forwards; }
-.animate-fadeInUp-d4 { opacity: 0; animation: fadeInUp 0.7s ease-out 0.5s forwards; }
 .animate-terminalBlink { animation: terminalBlink 1s step-start infinite; }
 .animate-glowPulse { animation: glowPulse 3s ease-in-out infinite; }
-.animate-waddle { animation: waddle 1s ease-in-out infinite; }
 
-/* ─── Design utilities ───────────────────────────────── */
-
-/* Dot-grid background — used in Hero */
+/* Micro-grid & Dot-grid background matrix */
 .dot-grid-bg {
-  background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1.2px, transparent 1.2px);
   background-size: 28px 28px;
 }
 
-/* Hairline glow separator */
+/* Hairline separator line */
 .gradient-hr {
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
@@ -150,75 +147,66 @@
 
 /* Glass panel utility */
 .glass-panel {
-  background: rgba(18, 18, 21, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(18, 19, 22, 0.75);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* Terminal text-glow */
-.terminal-glow {
-  text-shadow: 0 0 12px rgba(134, 239, 172, 0.4);
-}
-
-/* Bento card hover */
+/* Bento box modular card */
 .bento-card {
-  background: #121215;
+  background: #121316;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
-  transition: border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
 .bento-card:hover {
-  border-color: rgba(255, 255, 255, 0.22);
-  background-color: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.2);
+  background-color: #16181D;
 }
 
-/* Moving Border Gradient (legacy — used in dashboard) */
-@property --angle {
-  syntax: '<angle>';
-  initial-value: 0deg;
-  inherits: false;
+/* Primary Action Buttons (CTA) */
+.btn-primary-cta {
+  background-color: #FFFFFF;
+  color: #0A0A0B;
+  font-weight: 700;
+  border-radius: 9999px;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
-@keyframes border-rotate {
-  to { --angle: 360deg; }
+.btn-primary-cta:hover {
+  background-color: #E4E4E7;
+  transform: translateY(-1px);
 }
 
-.huly-glow {
-  position: relative;
-  padding: 3px;
-  border-radius: 0.75rem;
-  background: conic-gradient(
-    from var(--angle) at 50% 50%,
-    transparent 0%, transparent 10%,
-    #58A6FF 20%,
-    transparent 30%, transparent 60%,
-    #FF5F56 70%,
-    transparent 80%, transparent 100%
-  );
-  animation: border-rotate 4s linear infinite;
+/* Secondary / Outline Buttons */
+.btn-secondary-outline {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+  font-weight: 600;
+  border-radius: 9999px;
+  transition: all 0.2s ease-in-out;
 }
 
-.huly-glow::before {
-  content: "";
-  position: absolute;
-  inset: 3px;
-  background: #161B22;
-  border-radius: inherit;
-  z-index: 1;
+.btn-secondary-outline:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
 }
 
-.huly-glow > * {
-  position: relative;
-  z-index: 2;
+/* Section Overline Eyebrows */
+.eyebrow-tracker {
+  font-family: 'Geist Mono', 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #71717A;
 }
 
-/* Legacy prose */
-.prose { font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; }
-.prose :where(h1, h2, h3, h4, h5, h6) { font-family: 'Space Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif !important; }
-
-/* Legacy text-shadow */
+/* Text shadow utilities */
 @layer utilities {
   .text-shadow-sm {
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);

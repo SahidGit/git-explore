@@ -207,34 +207,42 @@ const ReportIssue = () => {
 
                     {/* Success Confirmation Card (Replaces form on completion) */}
                     {status === 'success' ? (
-                        <div className="p-8 rounded-2xl bg-emerald-500/10 border-2 border-emerald-500/40 text-center space-y-6 animate-fadeInUp">
-                            <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center mx-auto text-emerald-400">
-                                <CheckCircle2 className="w-8 h-8" />
+                        <div className="p-8 sm:p-12 rounded-2xl bg-white/[0.02] border border-white/[0.08] backdrop-blur-md text-center space-y-6 animate-fadeInUp shadow-2xl">
+                            {/* Minimal SVG Stroke Icon */}
+                            <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto text-emerald-400">
+                                <CheckCircle2 className="w-6 h-6 stroke-[1.75]" />
                             </div>
                             
-                            <div className="space-y-2">
-                                <h3 className="text-xl font-bold text-white font-heading">
+                            <div className="space-y-3">
+                                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-mono text-[10px] font-semibold tracking-wider uppercase">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                                    <span>SUBMISSION VERIFIED</span>
+                                </div>
+
+                                <h3 className="text-xl sm:text-2xl font-bold text-white font-space tracking-tight">
                                     Report Submitted Successfully!
                                 </h3>
-                                <p className="text-xs sm:text-sm text-zinc-300 font-mono max-w-md mx-auto leading-relaxed">
-                                    {successMessage} Your feedback has been verified and stored in the local audit ledger.
+
+                                <p className="text-xs sm:text-sm text-slate-400 font-mono max-w-md mx-auto leading-relaxed">
+                                    {successMessage} Your feedback has been verified and logged in the local audit ledger.
                                 </p>
                             </div>
 
-                            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+                            {/* Low-profile Glass Pill Buttons */}
+                            <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3 font-mono text-xs">
                                 <button
                                     onClick={handleReset}
-                                    className="px-5 py-2.5 rounded-xl bg-white text-black font-semibold text-xs hover:bg-zinc-200 transition-colors flex items-center gap-2 cursor-pointer"
+                                    className="px-5 py-2.5 rounded-full bg-white/[0.04] border border-white/[0.12] text-white hover:bg-white/[0.08] hover:border-white/25 active:scale-[0.98] transition-all duration-200 font-medium flex items-center gap-2 cursor-pointer shadow-sm"
                                 >
-                                    <RefreshCw className="w-3.5 h-3.5" />
+                                    <RefreshCw className="w-3.5 h-3.5 text-zinc-400" />
                                     <span>Submit Another Report</span>
                                 </button>
                                 
                                 <Link
                                     to="/dashboard"
-                                    className="px-5 py-2.5 rounded-xl bg-white/10 text-white font-semibold text-xs hover:bg-white/20 transition-colors flex items-center gap-2"
+                                    className="px-5 py-2.5 rounded-full bg-white/[0.04] border border-white/[0.12] text-white hover:bg-white/[0.08] hover:border-white/25 active:scale-[0.98] transition-all duration-200 font-medium flex items-center gap-2 shadow-sm"
                                 >
-                                    <Home className="w-3.5 h-3.5" />
+                                    <Home className="w-3.5 h-3.5 text-zinc-400" />
                                     <span>Return to Explorer</span>
                                 </Link>
                             </div>

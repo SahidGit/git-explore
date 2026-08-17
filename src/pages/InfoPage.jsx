@@ -8,15 +8,14 @@ import SEO from '../components/ui/SEO';
 import FeatureProjectGrid from '../components/features/FeatureProjectGrid';
 import PageNavigation from '../components/ui/PageNavigation';
 import { getContentByKey, getAvailableContentKeys } from '../data/contentLoader';
-import { storageService } from '../services/storageService';
-import { ArrowLeft, Key, Check, Terminal, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Key, Check, Terminal, ExternalLink, ShieldCheck, CheckCircle2, AlertTriangle, Loader2, Play } from 'lucide-react';
 import visionBg from '../assets/vision-mission-bg.avif';
+import { useAuth } from '../context/AuthContext';
 
 const TAB_LABELS = {
   docs: 'Documentation',
   api: 'API Reference',
   changelog: 'Changelog',
-  roadmap: 'Roadmap',
   disclaimer: 'Disclaimer',
   terms: 'Terms of Use',
 };
@@ -26,8 +25,25 @@ const InfoPage = ({ contentKey }) => {
   const [pageData, setPageData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [tokenInput, setTokenInput] = useState('');
-  const [savedSuccess, setSavedSuccess] = useState(false);
+
+  // AuthContext integration for live token testing
+  const {
+    token,
+    user,
+    isConnected,
+    rateLimit,
+    isVerifying,
+    tokenError,
+    connectToken,
+    disconnectToken,
+    refreshRateLimit
+  } = useAuth();
+
+  const [inputToken, setInputToken] = useState('');
+  const [localSuccess, setLocalSuccess] = useState(false);
+  const [localError, setLocalError] = useState('');
+  const [testConsoleOutput, setTestConsoleOutput] = useState(null);
+  const [isTestingApi, setIsTestingApi] = useState(false);
 
   useEffect(() => {
     try {
@@ -56,13 +72,71 @@ const InfoPage = ({ contentKey }) => {
       });
   }, [contentKey]);
 
-  const handleSaveToken = (e) => {
+  const handleSaveToken = async (e) => {
     e.preventDefault();
-    if (!tokenInput.trim()) return;
-    storageService.saveToken(tokenInput.trim());
-    setSavedSuccess(true);
-    setTokenInput('');
-    setTimeout(() => setSavedSuccess(false), 2500);
+    setLocalError('');
+    setLocalSuccess(false);
+
+    const cleaned = inputToken.trim();
+    if (!cleaned) {
+      setLocalError('Please enter a GitHub Personal Access Token.');
+      return;
+    }
+
+    const result = await connectToken(cleaned);
+    if (result.success) {
+      setLocalSuccess(true);
+      setInputToken('');
+      setTimeout(() => setLocalSuccess(false), 3000);
+    } else {
+      setLocalError(result.error || 'Invalid or Expired Token');
+    }
+  };
+
+  const handleRunLiveTest = async () => {
+    setIsTestingApi(true);
+    setTestConsoleOutput(null);
+
+    try {
+      const activeToken = token || inputToken.trim();
+      const headers = {
+        Accept: 'application/vnd.github.v3+json',
+      };
+      if (activeToken) {
+        const prefix = activeToken.startsWith('token ') || activeToken.startsWith('Bearer ') ? '' : 'Bearer ';
+        headers['Authorization'] = `${prefix}${activeToken}`;
+      }
+
+      const res = await fetch('https://api.github.com/user', { headers });
+      const status = res.status;
+      const limit = res.headers.get('x-ratelimit-limit');
+      const remaining = res.headers.get('x-ratelimit-remaining');
+
+      let body;
+      try {
+        body = await res.json();
+      } catch {
+        body = { message: 'No JSON body returned' };
+      }
+
+      setTestConsoleOutput({
+        status,
+        ok: res.ok,
+        limit,
+        remaining,
+        body,
+        timestamp: new Date().toISOString(),
+      });
+    } catch (err) {
+      setTestConsoleOutput({
+        status: 500,
+        ok: false,
+        error: err.message,
+        timestamp: new Date().toISOString(),
+      });
+    } finally {
+      setIsTestingApi(false);
+    }
   };
 
   const isGridLayout = pageData?.layout === 'grid' && Array.isArray(pageData?.cards);
@@ -72,13 +146,13 @@ const InfoPage = ({ contentKey }) => {
     <div className="flex min-h-screen flex-col bg-[#0A0A0C] text-white font-sans selection:bg-white/20 selection:text-white">
       <SEO
         title={`${pageData?.title || 'Platform Documentation'} · GitExplorer`}
-        description={pageData?.subtitle || 'Explore GitExplorer guides, APIs, and roadmap.'}
+        description={pageData?.subtitle || 'Explore GitExplorer guides, API reference, and technical documentation.'}
         canonical={`https://git-explore-one.vercel.app/${contentKey}`}
       />
 
       <Header showBackButton={true} activeTab="" />
 
-      <main className="relative z-0 flex-1 overflow-hidden pt-28 sm:pt-32">
+      <main className="relative z-0 flex-1 overflow-hidden pt-28 sm:pt-32 border-b border-white/10">
 
         {/* ── Section 1: Hero Banner (Entire.io Frame Style) ── */}
         <section className="border-b border-white/10 relative overflow-hidden">
@@ -170,7 +244,7 @@ const InfoPage = ({ contentKey }) => {
                 {isGridLayout ? (
                   <FeatureProjectGrid cards={pageData.cards} />
                 ) : (
-                  <div className="rounded-2xl border border-white/10 bg-[#121215] p-6 sm:p-10 shadow-2xl mb-12">
+                  <div className="rounded-2xl border border-white/10 bg-[#121215] p-6 sm:p-10 shadow-2xl mb-8">
                     <div
                       className="prose prose-invert max-w-none prose-headings:font-space prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-white prose-p:text-zinc-300 prose-p:leading-relaxed prose-a:text-indigo-400 prose-a:underline hover:prose-a:text-indigo-300 prose-code:text-indigo-300 prose-code:font-mono prose-code:bg-[#0A0A0C] prose-code:px-2 prose-code:py-1 prose-code:rounded-md prose-blockquote:border-l-2 prose-blockquote:border-indigo-500 prose-blockquote:pl-4 prose-blockquote:text-zinc-300 prose-blockquote:bg-white/[0.02] prose-blockquote:py-1"
                       dangerouslySetInnerHTML={{ __html: sanitizedContent }}
@@ -178,39 +252,144 @@ const InfoPage = ({ contentKey }) => {
                   </div>
                 )}
 
-                {/* Token Tester Widget on API Page */}
+                {/* ── Interactive Token Connection & Live API Tester (API Page Only) ── */}
                 {contentKey === 'api' && (
-                  <div className="mt-8 p-8 rounded-2xl bg-[#121215] border border-white/10 shadow-2xl space-y-4">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Key className="w-4 h-4 text-emerald-400" />
-                      <h3 className="text-base font-bold font-space text-white">Interactive Token Connect</h3>
-                    </div>
-                    <p className="text-xs font-sans text-zinc-400 leading-relaxed">
-                      Test and save your Personal Access Token directly to this browser session to unlock 5,000 req/hr.
-                    </p>
-
-                    {savedSuccess ? (
-                      <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono flex items-center gap-2">
-                        <Check className="w-4 h-4" />
-                        Token successfully cached in sessionStorage.
+                  <div className="mt-8 p-6 sm:p-8 rounded-2xl bg-[#12141A] border border-white/15 shadow-2xl space-y-6">
+                    
+                    {/* Header Bar */}
+                    <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+                          <Key className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <h3 className="text-base font-bold font-space text-white">Live Token Connection &amp; API Tester</h3>
+                          <p className="text-xs text-zinc-400 font-sans">Verify your GitHub Personal Access Token and inspect real-time rate limit quota.</p>
+                        </div>
                       </div>
-                    ) : (
-                      <form onSubmit={handleSaveToken} className="flex flex-col sm:flex-row gap-2.5">
+
+                      {isConnected && user && (
+                        <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-mono font-bold flex items-center gap-1.5">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                          @{user.login}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Live Quota Indicator Bar */}
+                    <div className="p-4 rounded-xl border border-white/10 bg-[#0B0C0E] space-y-2 font-mono text-xs">
+                      <div className="flex items-center justify-between text-zinc-300">
+                        <span className="font-bold text-white flex items-center gap-2">
+                          <ShieldCheck className="w-4 h-4 text-indigo-400" />
+                          API Rate Limit Quota
+                        </span>
+                        <span className="text-emerald-400 font-bold">
+                          {rateLimit ? `${rateLimit.remaining} / ${rateLimit.limit} req/hr` : '60 / 60 req/hr (Anonymous)'}
+                        </span>
+                      </div>
+                      
+                      {/* Quota bar graph */}
+                      <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
+                        <div
+                          className="h-full bg-emerald-400 transition-all duration-300"
+                          style={{
+                            width: rateLimit ? `${Math.min(100, (rateLimit.remaining / rateLimit.limit) * 100)}%` : '100%'
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Banners */}
+                    {localSuccess && (
+                      <div className="p-3.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-xs font-mono flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                        <span>Token Connected Successfully! Verified with GitHub API.</span>
+                      </div>
+                    )}
+
+                    {(localError || tokenError) && !localSuccess && (
+                      <div className="p-3.5 rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-300 text-xs font-mono flex items-center gap-2">
+                        <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />
+                        <span>{localError || tokenError}</span>
+                      </div>
+                    )}
+
+                    {/* Token Input Form */}
+                    <form onSubmit={handleSaveToken} className="space-y-3 font-mono text-xs">
+                      <div className="flex flex-col sm:flex-row gap-2.5">
                         <input
                           type="password"
-                          value={tokenInput}
-                          onChange={(e) => setTokenInput(e.target.value)}
-                          placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
-                          className="flex-1 bg-[#0A0A0C] border border-white/10 rounded-xl px-4 py-3 text-xs text-white font-mono placeholder:text-zinc-600 focus:outline-none focus:border-white/30"
+                          value={inputToken}
+                          onChange={(e) => setInputToken(e.target.value)}
+                          placeholder={isConnected ? "••••••••••••••••••••••••••••" : "Paste ghp_your_token_here..."}
+                          className="flex-1 bg-[#0B0C0E] border border-white/15 rounded-xl px-4 py-3 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-mono"
                         />
                         <button
                           type="submit"
-                          className="px-6 py-3 rounded-xl bg-white text-black text-xs font-semibold hover:bg-zinc-200 transition-colors whitespace-nowrap cursor-pointer"
+                          disabled={isVerifying}
+                          className="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                         >
-                          Save Token
+                          {isVerifying ? (
+                            <>
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                              <span>Verifying...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Check className="w-4 h-4" />
+                              <span>{isConnected ? 'Update Token' : 'Verify & Connect'}</span>
+                            </>
+                          )}
                         </button>
-                      </form>
-                    )}
+                      </div>
+
+                      {isConnected && (
+                        <div className="flex justify-end pt-1">
+                          <button
+                            type="button"
+                            onClick={() => disconnectToken()}
+                            className="text-xs text-zinc-400 hover:text-rose-400 transition-colors underline"
+                          >
+                            Disconnect Token
+                          </button>
+                        </div>
+                      )}
+                    </form>
+
+                    {/* Live Test Execution Console */}
+                    <div className="pt-2 border-t border-white/10 space-y-3 font-mono text-xs">
+                      <div className="flex items-center justify-between">
+                        <span className="text-zinc-300 font-bold flex items-center gap-2">
+                          <Terminal className="w-4 h-4 text-emerald-400" />
+                          Live API Test Console
+                        </span>
+                        <button
+                          type="button"
+                          onClick={handleRunLiveTest}
+                          disabled={isTestingApi}
+                          className="px-3.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 border border-white/15 text-white font-bold transition-all flex items-center gap-1.5 cursor-pointer text-xs"
+                        >
+                          {isTestingApi ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Play className="w-3.5 h-3.5 text-emerald-400" />}
+                          <span>Execute GET /user</span>
+                        </button>
+                      </div>
+
+                      {testConsoleOutput && (
+                        <div className="p-4 rounded-xl border border-white/10 bg-[#0B0C0E] space-y-2 overflow-x-auto text-[11px] leading-relaxed">
+                          <div className="flex items-center justify-between text-zinc-400 border-b border-white/10 pb-2">
+                            <span className="flex items-center gap-2">
+                              <span className={`w-2 h-2 rounded-full ${testConsoleOutput.ok ? 'bg-emerald-400' : 'bg-rose-400'}`} />
+                              HTTP STATUS: {testConsoleOutput.status}
+                            </span>
+                            <span>{testConsoleOutput.timestamp}</span>
+                          </div>
+                          <pre className="text-zinc-300 whitespace-pre-wrap font-mono">
+                            {JSON.stringify(testConsoleOutput.body, null, 2)}
+                          </pre>
+                        </div>
+                      )}
+                    </div>
+
                   </div>
                 )}
 
@@ -229,3 +408,4 @@ const InfoPage = ({ contentKey }) => {
 };
 
 export default InfoPage;
+
