@@ -14,10 +14,26 @@ dist
 dist-ssr
 *.local
 .env
+.env.local
+.env.*.local
 server/.env
+server/.env.local
+server/.env.*.local
 .agents
 
-# Editor directories and files
+# User Data & Sensitive Files
+server/data/reports.json
+server/data/reports/
+server/logs/
+*.db
+*.sqlite
+*.sqlite3
+
+# Database
+.mongodb
+.mongo
+
+# IDE & Editor
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
@@ -28,3 +44,18 @@ server/.env
 *.njsproj
 *.sln
 *.sw?
+*.swp
+*.swo
+*~
+
+# Build & Runtime
+build/
+.cache/
+*.tsbuildinfo
+
+# Testing
+coverage/
+.nyc_output/
+
+# OS
+Thumbs.db
