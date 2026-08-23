@@ -61,31 +61,33 @@ const NotFound = () => {
                                 <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-space">
                                     Lost in the open-source graph.
                                 </h1>
-                                <p className="text-sm sm:text-base text-zinc-400 leading-relaxed max-w-sm mx-auto">
-                                    The route you're looking for doesn't exist in this repository. Try heading back to explore the latest trends.
+                                <p className="text-sm md:text-base text-zinc-400 max-w-md mx-auto leading-relaxed font-sans font-normal">
+                                    The route you requested does not exist or has been refactored. Let's get you back to signal.
                                 </p>
                             </div>
 
-                            {/* CTA Buttons */}
-                            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                            {/* CTA buttons */}
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2 font-mono text-xs">
                                 <Link
                                     to="/"
-                                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white text-[#0A0A0C] font-bold text-sm transition-all hover:bg-white/90 cursor-pointer"
+                                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-black font-extrabold hover:bg-zinc-200 active:scale-[0.98] transition-all shadow-md"
                                 >
                                     <Home className="w-4 h-4" />
-                                    Back Home
+                                    <span>Return Home</span>
                                 </Link>
                                 <Link
                                     to="/dashboard"
-                                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white/10 text-white font-bold text-sm border border-white/20 transition-all hover:bg-white/15 cursor-pointer"
+                                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-white/15 bg-white/[0.04] text-white font-semibold hover:border-white/30 hover:bg-white/[0.08] active:scale-[0.98] transition-all"
                                 >
-                                    <Search className="w-4 h-4" />
-                                    Start Exploring
+                                    <Search className="w-4 h-4 text-emerald-400" />
+                                    <span>Explore Repositories</span>
                                 </Link>
                             </div>
+
                         </div>
                     </div>
                 </section>
+
             </main>
 
             <Footer />
