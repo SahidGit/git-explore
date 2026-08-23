@@ -1,42 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import {
-    AlertCircle, CheckCircle2, Send, Loader2, ArrowLeft, Bug,
-    Lightbulb, FileText, Link2, HelpCircle, ShieldCheck, RefreshCw, Home
-} from 'lucide-react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 import Header from '../components/layouts/Header';
 import Footer from '../components/layouts/Footer';
-import BackToTop from '../components/ui/BackToTop';
 import SEO from '../components/ui/SEO';
-import PageNavigation from '../components/ui/PageNavigation';
-import CloudflareTurnstile from '../components/ui/CloudflareTurnstile';
-import { Link, useNavigate } from 'react-router-dom';
-
-const ISSUE_TYPES = [
-    { value: '', label: 'Select an issue or correction category *', disabled: true },
-    { value: 'AI Newsroom: Inaccurate Model Pricing / Specs', label: 'AI Newsroom: Inaccurate Model Pricing / Specs', icon: FileText },
-    { value: 'AI Newsroom: Broken arXiv / Paper Link', label: 'AI Newsroom: Broken arXiv / Paper Link', icon: Link2 },
-    { value: 'AI Newsroom: Missing Model / Lab Suggestion', label: 'AI Newsroom: Missing Model / Lab Suggestion', icon: Lightbulb },
-    { value: 'GitExplorer: Repository Search / Filter Bug', label: 'GitExplorer: Repository Search / Filter Bug', icon: Bug },
-    { value: 'GitHub API & Token Rate Limit Issue', label: 'GitHub API & Token Rate Limit Issue', icon: HelpCircle },
-    { value: 'Local Bookmarks & Export Bug', label: 'Local Bookmarks & Export Bug', icon: Bug },
-    { value: 'UI Layout / Responsive Glitch', label: 'UI Layout / Responsive Glitch', icon: Bug },
-    { value: 'Feature Request / Platform Idea', label: 'Feature Request / Platform Idea', icon: Lightbulb },
-    { value: 'Documentation or Typo Correction', label: 'Documentation or Typo Correction', icon: FileText },
-    { value: 'Other / General Feedback', label: 'Other / General Feedback', icon: HelpCircle },
-];
-
-const MIN_CHARS = 20;
-const MAX_CHARS = 2000;
+import Turnstile from 'react-turnstile';
 
 const ReportIssue = () => {
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        try {
-            window.scrollTo(0, 0);
-        } catch (_) {}
-    }, []);
-
     const [formData, setFormData] = useState({
         issueType: '',
         pageUrl: '',
@@ -44,54 +14,36 @@ const ReportIssue = () => {
         email: '',
     });
 
-    const [turnstileToken, setTurnstileToken] = useState('');
-    const [status, setStatus] = useState('idle'); // 'idle' | 'loading' | 'success' | 'error'
+    const [status, setStatus] = useState('idle');
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-
-    const currentLength = formData.description.length;
-    const isDescriptionValid = formData.description.trim().length >= MIN_CHARS;
-    const isFormValid = formData.issueType !== '' && isDescriptionValid && !!turnstileToken;
+    const [turnstileToken, setTurnstileToken] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        if (name === 'description' && value.length > MAX_CHARS) return;
         setFormData((prev) => ({ ...prev, [name]: value }));
-        if (status === 'error') setErrorMessage('');
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setStatus('submitting');
         setErrorMessage('');
         setSuccessMessage('');
 
-        if (!formData.issueType) {
-            setStatus('error');
-            setErrorMessage('Please select an issue type category from the dropdown.');
-            return;
-        }
-
-        if (formData.description.trim().length < MIN_CHARS) {
-            setStatus('error');
-            setErrorMessage(`Description is too short. Please provide at least ${MIN_CHARS} characters (currently ${formData.description.trim().length}).`);
-            return;
-        }
-
-        if (!turnstileToken) {
-            setStatus('error');
-            setErrorMessage('Please complete the Cloudflare verification challenge below to confirm human session.');
-            return;
-        }
-
-        setStatus('loading');
-
         try {
-            // 1. Always record report locally first (privacy-first & zero data loss)
+            if (!formData.issueType) {
+                throw new Error('Please select an issue type.');
+            }
+            if (!formData.description || formData.description.trim().length < 10) {
+                throw new Error('Description must be at least 10 characters.');
+            }
+
             const localReport = {
-                id: `report_${Date.now()}`,
+                issueType: formData.issueType,
+                pageUrl: formData.pageUrl,
+                description: formData.description,
+                email: formData.email,
                 timestamp: new Date().toISOString(),
-                ...formData,
-                turnstileTokenVerified: true,
             };
 
             try {
@@ -100,7 +52,6 @@ const ReportIssue = () => {
                 localStorage.setItem('gitexplorer_user_reports', JSON.stringify(existingReports.slice(0, 50)));
             } catch (_) {}
 
-            // 2. Attempt backend dispatch if API endpoint is configured
             const apiBase = import.meta.env.VITE_API_URL;
             if (apiBase) {
                 try {
@@ -113,7 +64,6 @@ const ReportIssue = () => {
                     // Silently queue locally if backend is unreachable
                 }
             }
-
 
             setStatus('success');
             setSuccessMessage('Thank you! Your feedback has been verified and submitted successfully.');
@@ -148,7 +98,7 @@ const ReportIssue = () => {
             <SEO
                 title="Report an Issue · GitExplorer"
                 description="Report incorrect data, broken links, or request new features for GitExplorer."
-                canonical="https://git-explore-one.vercel.app/report"
+                canonical="https://exploregit.vercel.app/report"
             />
             <Header onSearchClick={() => {}} showBackButton />
 
@@ -172,259 +122,146 @@ const ReportIssue = () => {
 
                             {/* Main Card Container */}
                             <div className="rounded-2xl border border-white/10 bg-[#121215] p-6 sm:p-10 shadow-2xl relative overflow-hidden">
-                    {/* Top ambient glow */}
-                    <div
-                        className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-32 pointer-events-none mix-blend-screen opacity-50"
-                        style={{
-                            background: 'radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.08) 0%, transparent 70%)',
-                        }}
-                        aria-hidden="true"
-                    />
+                                {/* Top ambient glow */}
+                                <div
+                                    className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-32 pointer-events-none mix-blend-screen opacity-50"
+                                    style={{
+                                        background: 'radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.08) 0%, transparent 70%)',
+                                    }}
+                                    aria-hidden="true"
+                                />
 
-                    {/* Header with BETA tag */}
-                    <div className="text-center sm:text-left mb-8 pb-6 border-b border-white/[0.06] relative z-10">
-                        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 mb-2.5">
-                            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-space">
-                                Report an Issue / Suggestion
-                            </h1>
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/20 text-[10px] font-mono font-semibold text-amber-400 uppercase tracking-wider">
-                                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                                Beta
-                            </span>
-                        </div>
-                        <p className="text-sm sm:text-base text-zinc-300 leading-relaxed max-w-xl font-sans font-normal">
-                            Report incorrect data, broken arXiv links, model price discrepancies, or feature suggestions for GitExplorer &amp; AI Newsroom.
-                        </p>
-                    </div>
-
-                    {/* Error Feedback Message */}
-                    {status === 'error' && errorMessage && (
-                        <div className="mb-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-start gap-3 text-rose-400 text-xs sm:text-sm font-mono animate-fadeInUp">
-                            <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                            <div>{errorMessage}</div>
-                        </div>
-                    )}
-
-                    {/* Success Confirmation Card (Replaces form on completion) */}
-                    {status === 'success' ? (
-                        <div className="p-8 sm:p-12 rounded-2xl bg-white/[0.02] border border-white/[0.08] backdrop-blur-md text-center space-y-6 animate-fadeInUp shadow-2xl">
-                            {/* Minimal SVG Stroke Icon */}
-                            <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto text-emerald-400">
-                                <CheckCircle2 className="w-6 h-6 stroke-[1.75]" />
-                            </div>
-                            
-                            <div className="space-y-3">
-                                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-mono text-[10px] font-semibold tracking-wider uppercase">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                                    <span>SUBMISSION VERIFIED</span>
-                                </div>
-
-                                <h3 className="text-xl sm:text-2xl font-bold text-white font-space tracking-tight">
-                                    Report Submitted Successfully!
-                                </h3>
-
-                                <p className="text-xs sm:text-sm text-slate-400 font-mono max-w-md mx-auto leading-relaxed">
-                                    {successMessage} Your feedback has been verified and logged in the local audit ledger.
-                                </p>
-                            </div>
-
-                            {/* Low-profile Glass Pill Buttons */}
-                            <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3 font-mono text-xs">
-                                <button
-                                    onClick={handleReset}
-                                    className="px-5 py-2.5 rounded-full bg-white/[0.04] border border-white/[0.12] text-white hover:bg-white/[0.08] hover:border-white/25 active:scale-[0.98] transition-all duration-200 font-medium flex items-center gap-2 cursor-pointer shadow-sm"
-                                >
-                                    <RefreshCw className="w-3.5 h-3.5 text-zinc-400" />
-                                    <span>Submit Another Report</span>
-                                </button>
-                                
-                                <Link
-                                    to="/dashboard"
-                                    className="px-5 py-2.5 rounded-full bg-white/[0.04] border border-white/[0.12] text-white hover:bg-white/[0.08] hover:border-white/25 active:scale-[0.98] transition-all duration-200 font-medium flex items-center gap-2 shadow-sm"
-                                >
-                                    <Home className="w-3.5 h-3.5 text-zinc-400" />
-                                    <span>Return to Explorer</span>
-                                </Link>
-                            </div>
-                        </div>
-                    ) : (
-                        /* Form */
-                        <form onSubmit={handleSubmit} className="space-y-6 relative z-10" noValidate>
-                            
-                            {/* Issue Type (Required) */}
-                            <div className="space-y-2">
-                                <label htmlFor="issueType" className="block text-xs font-mono font-medium text-zinc-300">
-                                    Issue Type <span className="text-rose-400">*</span>
-                                </label>
-                                <div className="relative">
-                                    <select
-                                        id="issueType"
-                                        name="issueType"
-                                        value={formData.issueType}
-                                        onChange={handleChange}
-                                        required
-                                        className="w-full appearance-none rounded-xl border border-white/10 bg-[#0A0A0C] px-4 py-3 text-xs sm:text-sm text-white focus:border-[#FF5A1F] focus:outline-none focus:ring-1 focus:ring-[#FF5A1F] transition-all duration-200 cursor-pointer"
-                                    >
-                                        {ISSUE_TYPES.map((type) => (
-                                            <option
-                                                key={type.value}
-                                                value={type.value}
-                                                disabled={type.disabled}
-                                                className="bg-[#121215] text-white py-1"
-                                            >
-                                                {type.label}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 font-mono text-xs">
-                                        ▼
-                                    </div>
-                                </div>
-                                {!formData.issueType && (
-                                    <p className="text-[11px] text-amber-400/80 font-mono">
-                                        * Please select an issue category to proceed.
+                                {/* Header with BETA tag */}
+                                <div className="relative space-y-2 pb-6 border-b border-white/10">
+                                    <span className="inline-block px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-mono font-bold">
+                                        FEEDBACK SYSTEM
+                                    </span>
+                                    <h2 className="text-2xl sm:text-3xl font-extrabold font-space text-white">
+                                        Report an Issue
+                                    </h2>
+                                    <p className="text-sm text-zinc-400">
+                                        Help us improve GitExplorer by reporting bugs, suggesting features, or providing feedback.
                                     </p>
-                                )}
-                            </div>
-
-                            {/* Page or Section (Optional) */}
-                            <div className="space-y-2">
-                                <label htmlFor="pageUrl" className="block text-xs font-mono font-medium text-zinc-300">
-                                    Page or Section <span className="text-zinc-500 font-normal">(Optional)</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    id="pageUrl"
-                                    name="pageUrl"
-                                    value={formData.pageUrl}
-                                    onChange={handleChange}
-                                    placeholder="e.g., /ai-news#models-section, or repo astral-sh/uv"
-                                    className="w-full rounded-xl border border-white/10 bg-[#0A0A0C] px-4 py-3 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:border-[#FF5A1F] focus:outline-none focus:ring-1 focus:ring-[#FF5A1F] transition-all duration-200"
-                                />
-                                <p className="text-[11px] text-zinc-500 font-mono">
-                                    The URL or section name where the issue was observed.
-                                </p>
-                            </div>
-
-                            {/* Description (Required with Min Characters) */}
-                            <div className="space-y-2">
-                                <div className="flex justify-between items-center">
-                                    <label htmlFor="description" className="block text-xs font-mono font-medium text-zinc-300">
-                                        Description <span className="text-rose-400">*</span>
-                                    </label>
-                                    <span className="text-[11px] font-mono text-zinc-500">
-                                        Min {MIN_CHARS} chars
-                                    </span>
                                 </div>
-                                
-                                <textarea
-                                    id="description"
-                                    name="description"
-                                    rows={5}
-                                    value={formData.description}
-                                    onChange={handleChange}
-                                    required
-                                    placeholder="Describe the issue as clearly as possible — which model price is incorrect, which arXiv link is broken, or what feature you would love to see..."
-                                    className={`w-full rounded-xl border bg-[#0A0A0C] p-4 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-1 transition-all duration-200 resize-y ${
-                                        currentLength > 0 && !isDescriptionValid
-                                            ? 'border-amber-400/50 focus:border-amber-400 focus:ring-amber-400/20'
-                                            : 'border-white/10 focus:border-[#FF5A1F] focus:ring-[#FF5A1F]'
-                                    }`}
-                                />
-                                
-                                {/* Dynamic Character Counter */}
-                                <div className="flex justify-between items-center text-[11px] font-mono">
-                                    <span className="text-zinc-500">
-                                        Markdown supported.
-                                    </span>
-                                    <span
-                                        className={
-                                            currentLength === 0
-                                                ? 'text-zinc-500'
-                                                : !isDescriptionValid
-                                                ? 'text-amber-400 font-bold'
-                                                : currentLength >= MAX_CHARS
-                                                ? 'text-rose-400 font-bold'
-                                                : 'text-emerald-400'
-                                        }
-                                    >
-                                        {!isDescriptionValid && currentLength > 0
-                                            ? `${currentLength} / min ${MIN_CHARS} chars needed`
-                                            : `${currentLength} / ${MAX_CHARS} chars`}
-                                    </span>
-                                </div>
-                            </div>
 
-                            {/* Email (Optional) */}
-                            <div className="space-y-2">
-                                <label htmlFor="email" className="block text-xs font-mono font-medium text-zinc-300">
-                                    Email <span className="text-zinc-500 font-normal">(Optional)</span>
-                                </label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    placeholder="developer@domain.com"
-                                    className="w-full rounded-xl border border-white/10 bg-[#0A0A0C] px-4 py-3 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:border-[#FF5A1F] focus:outline-none focus:ring-1 focus:ring-[#FF5A1F] transition-all duration-200"
-                                />
-                                <p className="text-[11px] text-zinc-500 font-mono">
-                                    We&apos;ll only use this to follow up on your specific report.
-                                </p>
-                            </div>
+                                {/* Form */}
+                                <form onSubmit={handleSubmit} className="relative pt-6 space-y-5">
+                                    {/* Issue Type */}
+                                    <div>
+                                        <label htmlFor="issueType" className="block text-xs font-mono text-zinc-400 mb-2">
+                                            Issue Type
+                                        </label>
+                                        <select
+                                            id="issueType"
+                                            name="issueType"
+                                            value={formData.issueType}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-3 rounded-lg bg-[#0B0C0E] border border-white/10 text-white text-sm focus:outline-none focus:border-indigo-500 transition-colors"
+                                        >
+                                            <option value="">Select an issue type...</option>
+                                            <option value="Bug Report">Bug Report</option>
+                                            <option value="Feature Request">Feature Request</option>
+                                            <option value="Data Correction">Data Correction</option>
+                                            <option value="Performance Issue">Performance Issue</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
 
-                            {/* Cloudflare Turnstile Bot Verification */}
-                            <div className="space-y-2">
-                                <CloudflareTurnstile
-                                    onVerify={(token) => setTurnstileToken(token)}
-                                    onExpire={() => setTurnstileToken('')}
-                                    onError={() => setTurnstileToken(`cf_fallback_${Date.now()}`)}
-                                />
-                            </div>
+                                    {/* Page URL */}
+                                    <div>
+                                        <label htmlFor="pageUrl" className="block text-xs font-mono text-zinc-400 mb-2">
+                                            Page URL (optional)
+                                        </label>
+                                        <input
+                                            id="pageUrl"
+                                            type="url"
+                                            name="pageUrl"
+                                            value={formData.pageUrl}
+                                            onChange={handleChange}
+                                            placeholder="https://exploregit.vercel.app/dashboard"
+                                            className="w-full px-4 py-3 rounded-lg bg-[#0B0C0E] border border-white/10 text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500 transition-colors"
+                                        />
+                                    </div>
 
-                            {/* Submit Button */}
-                            <button
-                                type="submit"
-                                disabled={!isFormValid || status === 'loading'}
-                                className={`w-full py-3.5 px-6 rounded-xl font-semibold text-xs sm:text-sm transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer shadow-lg ${
-                                    isFormValid && status !== 'loading'
-                                        ? 'bg-[#FF5A1F] text-black hover:bg-white active:scale-[0.99] font-bold shadow-[0_0_25px_-5px_rgba(255,90,31,0.4)]'
-                                        : 'bg-white/10 text-zinc-500 cursor-not-allowed border border-white/10'
-                                }`}
-                            >
-                                {status === 'loading' ? (
-                                    <>
-                                        <Loader2 className="w-4 h-4 animate-spin text-black" />
-                                        <span>Submitting Report...</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Send className="w-4 h-4" />
-                                        <span>
-                                            {!formData.issueType
-                                                ? 'Select Issue Type to Submit'
-                                                : !isDescriptionValid
-                                                ? `Enter at least ${MIN_CHARS} characters`
-                                                : !turnstileToken
-                                                ? 'Verify Cloudflare Challenge to Submit'
-                                                : 'Submit Report'}
-                                        </span>
-                                    </>
-                                )}
-                            </button>
-                        </form>
-                    )}
-                            </div>
+                                    {/* Description */}
+                                    <div>
+                                        <label htmlFor="description" className="block text-xs font-mono text-zinc-400 mb-2">
+                                            Description (minimum 10 characters)
+                                        </label>
+                                        <textarea
+                                            id="description"
+                                            name="description"
+                                            value={formData.description}
+                                            onChange={handleChange}
+                                            placeholder="Please provide details about your issue or feature request..."
+                                            rows="5"
+                                            className="w-full px-4 py-3 rounded-lg bg-[#0B0C0E] border border-white/10 text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500 transition-colors resize-none"
+                                        />
+                                    </div>
 
-                            {/* Page Navigation Redirection */}
-                            <PageNavigation currentKey="report" />
+                                    {/* Email */}
+                                    <div>
+                                        <label htmlFor="email" className="block text-xs font-mono text-zinc-400 mb-2">
+                                            Email (optional - for follow-up)
+                                        </label>
+                                        <input
+                                            id="email"
+                                            type="email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            placeholder="your-email@example.com"
+                                            className="w-full px-4 py-3 rounded-lg bg-[#0B0C0E] border border-white/10 text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500 transition-colors"
+                                        />
+                                    </div>
+
+                                    {/* Turnstile Bot Protection */}
+                                    <div className="py-2">
+                                        <Turnstile
+                                            sitekey={import.meta.env.VITE_CLOUDFLARE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'}
+                                            onVerify={(token) => setTurnstileToken(token)}
+                                            theme="dark"
+                                        />
+                                    </div>
+
+                                    {/* Status Messages */}
+                                    {status === 'success' && (
+                                        <div className="p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-sm">
+                                            {successMessage}
+                                        </div>
+                                    )}
+                                    {status === 'error' && (
+                                        <div className="p-4 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-300 text-sm">
+                                            {errorMessage}
+                                        </div>
+                                    )}
+
+                                    {/* Submit Button */}
+                                    <div className="flex gap-3 pt-4">
+                                        <button
+                                            type="submit"
+                                            disabled={status === 'submitting'}
+                                            className="flex-1 px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm transition-all disabled:opacity-50 cursor-pointer"
+                                        >
+                                            {status === 'submitting' ? 'Submitting...' : 'Submit Report'}
+                                        </button>
+                                        {status === 'success' && (
+                                            <button
+                                                type="button"
+                                                onClick={handleReset}
+                                                className="flex-1 px-6 py-3 rounded-lg bg-white/10 hover:bg-white/15 text-white font-bold text-sm border border-white/20 transition-all cursor-pointer"
+                                            >
+                                                Submit Another
+                                            </button>
+                                        )}
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </section>
             </main>
 
-            <BackToTop />
             <Footer />
         </div>
     );

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://git-explore-one.vercel.app/sitemap.xml
+Sitemap: https://exploregit.vercel.app/sitemap.xml

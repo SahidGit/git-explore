@@ -31,15 +31,15 @@ const Home = () => {
             <SEO
                 title="GitExplorer — Find open-source projects gaining momentum"
                 description="GitExplorer surfaces trending repositories using star velocity, contributor activity, and repository health signals."
-                canonical="https://git-explore-one.vercel.app/"
+                canonical="https://exploregit.vercel.app/"
                 schema={{
                     '@context': 'https://schema.org',
                     '@type': 'WebSite',
                     name: 'GitExplorer',
-                    url: 'https://git-explore-one.vercel.app/',
+                    url: 'https://exploregit.vercel.app/',
                     potentialAction: {
                         '@type': 'SearchAction',
-                        target: 'https://git-explore-one.vercel.app/dashboard?query={search_term_string}',
+                        target: 'https://exploregit.vercel.app/dashboard?query={search_term_string}',
                         'query-input': 'required name=search_term_string',
                     },
                 }}
@@ -66,4 +66,3 @@ const Home = () => {
 };
 
 export default Home;
-

@@ -19,7 +19,7 @@ const NotFound = () => {
             <SEO
                 title="404 · Signal Not Found · GitExplorer"
                 description="The requested repository route or resource does not exist."
-                canonical="https://git-explore-one.vercel.app/404"
+                canonical="https://exploregit.vercel.app/404"
             />
             <Header showBackButton={true} activeTab="" />
 
@@ -45,7 +45,7 @@ const NotFound = () => {
                                         <span className="text-emerald-400 font-bold">❯</span> git checkout branch/requested-route
                                     </p>
                                     <p className="text-rose-400 font-medium">
-                                        fatal: pathspec &apos;404&apos; did not match any file(s) known to git.
+                                        fatal: pathspec '404' did not match any file(s) known to git.
                                     </p>
                                     <p className="text-zinc-600">
                                         Status: 404 Not Found • Zero active commits in reference tree.
@@ -61,33 +61,31 @@ const NotFound = () => {
                                 <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-space">
                                     Lost in the open-source graph.
                                 </h1>
-                                <p className="text-sm md:text-base text-zinc-400 max-w-md mx-auto leading-relaxed font-sans font-normal">
-                                    The route you requested does not exist or has been refactored. Let&apos;s get you back to signal.
+                                <p className="text-sm sm:text-base text-zinc-400 leading-relaxed max-w-sm mx-auto">
+                                    The route you're looking for doesn't exist in this repository. Try heading back to explore the latest trends.
                                 </p>
                             </div>
 
-                            {/* CTA buttons */}
-                            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2 font-mono text-xs">
+                            {/* CTA Buttons */}
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
                                 <Link
                                     to="/"
-                                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-black font-extrabold hover:bg-zinc-200 active:scale-[0.98] transition-all shadow-md"
+                                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white text-[#0A0A0C] font-bold text-sm transition-all hover:bg-white/90 cursor-pointer"
                                 >
                                     <Home className="w-4 h-4" />
-                                    <span>Return Home</span>
+                                    Back Home
                                 </Link>
                                 <Link
                                     to="/dashboard"
-                                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-white/15 bg-white/[0.04] text-white font-semibold hover:border-white/30 hover:bg-white/[0.08] active:scale-[0.98] transition-all"
+                                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white/10 text-white font-bold text-sm border border-white/20 transition-all hover:bg-white/15 cursor-pointer"
                                 >
-                                    <Search className="w-4 h-4 text-emerald-400" />
-                                    <span>Explore Repositories</span>
+                                    <Search className="w-4 h-4" />
+                                    Start Exploring
                                 </Link>
                             </div>
-
                         </div>
                     </div>
                 </section>
-
             </main>
 
             <Footer />
