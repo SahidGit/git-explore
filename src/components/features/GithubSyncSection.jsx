@@ -4,7 +4,7 @@ import { Terminal, Bookmark, Copy, Check, Download, ShieldCheck } from 'lucide-r
 
 const GithubSyncSection = () => {
     return (
-        <section className="border-b border-white/10 bg-[#0A0A0C] overflow-hidden" aria-label="GitExplorer Utilities">
+        <section className="border-b border-white/10 bg-[#0A0A0C] overflow-hidden" aria-label="ExploreGit Utilities">
             <div className="mx-auto w-full max-w-[1280px] min-[1280px]:border-x border-white/10 grid grid-cols-1 md:grid-cols-2">
 
                 {/* Left Card: Interactive Git Cheat Sheet */}
@@ -43,14 +43,14 @@ const GithubSyncSection = () => {
                 </div>
 
                 {/* Right Card: Local Bookmarks & Notes */}
-                <div className="p-8 sm:p-12 flex flex-col justify-between space-y-8">
-                    <div className="relative h-48 rounded-xl border border-white/10 bg-[#0E0E10] p-6 flex flex-col justify-between font-mono text-xs overflow-hidden">
+                <div className="p-8 sm:p-12 flex flex-col justify-between space-y-8 font-sans">
+                    <div className="relative h-48 rounded-lg border border-white/10 bg-[#0E0E10] p-6 flex flex-col justify-between text-xs overflow-hidden">
                         <div className="flex items-center justify-between border-b border-white/10 pb-3">
                             <span className="text-zinc-300 flex items-center gap-1.5 text-[11px]">
-                                <Bookmark className="w-3.5 h-3.5 text-indigo-400" />
+                                <Bookmark className="w-3.5 h-3.5 text-accent" />
                                 <span>IndexedDB / LocalStorage</span>
                             </span>
-                            <span className="text-indigo-400 font-bold text-[10px]">100% PRIVATE</span>
+                            <span className="text-accent font-bold text-[10px]">100% PRIVATE</span>
                         </div>
                         <div className="bg-[#0A0A0C] border border-white/10 p-3 rounded-lg text-[11px] text-zinc-300 flex items-center justify-between">
                             <span>Saved Repositories &amp; Developer Notes</span>
@@ -61,17 +61,17 @@ const GithubSyncSection = () => {
                         </div>
                         <div className="flex items-center justify-between pt-2 border-t border-white/10 text-zinc-300 text-[11px]">
                             <span>Zero telemetry &bull; Local-first</span>
-                            <Link to="/bookmarks" aria-label="Open Saved Bookmarks and Developer Notes" className="text-white font-semibold hover:text-indigo-400 transition-colors">
+                            <Link to="/bookmarks" aria-label="Open Saved Bookmarks and Developer Notes" className="text-white font-semibold hover:text-accent transition-colors">
                                 Open Bookmarks &rarr;
                             </Link>
                         </div>
                     </div>
 
                     <div className="text-center md:text-left space-y-2">
-                        <span className="text-[10px] font-mono text-indigo-400 uppercase tracking-widest block font-semibold">
+                        <span className="text-[10px] font-sans text-accent uppercase tracking-wider block font-semibold">
                             BOOKMARKS / EXPORT
                         </span>
-                        <h3 className="text-xl font-bold text-white font-space">
+                        <h3 className="text-xl font-bold text-white">
                             Local Bookmarks &amp; Custom Notes
                         </h3>
                         <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans">

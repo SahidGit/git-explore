@@ -22,7 +22,7 @@ const AiNewsroom = () => {
       <SEO
         title="AI Newsroom — Experimental Frontier AI Intelligence & Model Benchmarks"
         description="A high-end editorial magazine covering frontier AI models, open-source weight momentum, Sakana AI, Sarvam AI, Project Stargate, and arXiv research."
-        canonical="https://git-explore-one.vercel.app/ai-news"
+        canonical="https://exploregit.vercel.app/ai-news"
       />
 
       {/* 1. Sticky Navigation */}

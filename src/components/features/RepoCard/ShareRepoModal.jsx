@@ -146,7 +146,7 @@ const ShareRepoModal = ({ repo, onClose }) => {
                             <div className="flex items-center justify-between pt-2 border-t border-white/[0.06] text-[10px] font-mono text-zinc-400">
                                 <span className="text-zinc-500">{repo.language || 'Code'}</span>
                                 <span className="text-emerald-400 font-semibold flex items-center gap-1">
-                                    <Sparkles className="w-3 h-3" /> Shared via GitExplorer
+                                    <Sparkles className="w-3 h-3" /> Shared via ExploreGit
                                 </span>
                             </div>
                         </div>

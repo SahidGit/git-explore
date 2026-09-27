@@ -3,7 +3,7 @@ import { ChevronDown } from 'lucide-react';
 
 const FAQS = [
     {
-        question: 'Is GitExplorer free to use?',
+        question: 'Is ExploreGit free to use?',
         answer:
             'Completely free. Open source, always. Every feature ships without a paywall — no tiers, no trials, no tracking.',
     },
@@ -25,47 +25,44 @@ const FAQS = [
     {
         question: 'Can I bookmark projects and save notes?',
         answer:
-            'Yes. GitExplorer uses your browser\'s localStorage to persist your curated collections and evaluation notes. Zero cloud dependencies, zero telemetry.',
+            'Yes. ExploreGit uses your browser\'s localStorage to persist your curated collections and evaluation notes. Zero cloud dependencies, zero telemetry.',
     },
 ];
 
-const FAQItem = ({ question, answer, isOpen, onToggle, index }) => {
+const FAQItem = ({ question, answer, isOpen, onClick, index }) => {
     return (
-        <div className="border-t border-white/[0.08] first:border-t-0">
+        <div className="border-b border-white/10 last:border-0">
             <button
+                type="button"
+                className="w-full py-5 sm:py-6 flex items-center justify-between text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-lg group cursor-pointer"
+                onClick={onClick}
                 id={`faq-btn-${index}`}
-                className="w-full flex items-start justify-between gap-6 py-6 text-left focus:outline-none group"
-                onClick={onToggle}
-                aria-expanded={isOpen}
                 aria-controls={`faq-answer-${index}`}
+                aria-expanded={isOpen}
             >
                 <span
-                    className={`text-base md:text-lg font-semibold leading-snug tracking-[-0.01em] transition-colors duration-200 ${
-                        isOpen ? 'text-white' : 'text-white/80 group-hover:text-white'
+                    className={`text-base sm:text-lg font-medium transition-colors ${
+                        isOpen ? 'text-[var(--accent)] font-semibold' : 'text-zinc-200 group-hover:text-white'
                     }`}
                 >
                     {question}
                 </span>
-
                 <ChevronDown
-                    className={`w-5 h-5 text-[#71717A] flex-shrink-0 mt-0.5 transition-transform duration-200 ease-in-out ${
-                        isOpen ? 'rotate-180 text-white' : 'group-hover:text-[#A1A1AA]'
+                    className={`w-5 h-5 shrink-0 transition-transform duration-300 ml-4 ${
+                        isOpen ? 'rotate-180 text-[var(--accent)]' : 'text-zinc-400 group-hover:text-white'
                     }`}
                     aria-hidden="true"
                 />
             </button>
-
             <div
                 id={`faq-answer-${index}`}
                 role="region"
                 aria-labelledby={`faq-btn-${index}`}
-                className="overflow-hidden transition-all duration-300 ease-in-out"
-                style={{
-                    maxHeight: isOpen ? '200px' : '0px',
-                    opacity: isOpen ? 1 : 0,
-                }}
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                    isOpen ? 'max-h-60 opacity-100 pb-6' : 'max-h-0 opacity-0'
+                }`}
             >
-                <p className="text-[#A1A1AA] leading-relaxed pb-6 text-base">
+                <p className="text-[#94A3B8] leading-relaxed text-sm sm:text-base max-w-[65ch]">
                     {answer}
                 </p>
             </div>
@@ -79,39 +76,31 @@ const FAQ = () => {
     return (
         <section
             id="faq"
-            className="bg-[#0A0A0C] py-24"
+            className="bg-[#0A0A0C] py-20 sm:py-24 border-b border-white/10"
             aria-label="Frequently asked questions"
         >
             <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-
                 {/* Section header */}
-                <div className="mb-14">
-                    <div className="flex items-center gap-3 mb-5">
-                        <span className="text-[10px] font-mono text-[#71717A] tracking-widest uppercase">03</span>
-                        <span className="w-6 h-px bg-white/20" />
-                        <span className="text-[10px] font-mono text-[#71717A] tracking-widest uppercase">FAQ</span>
-                    </div>
-
-                    <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-3">
-                        Questions from the terminal.
+                <div className="text-center mb-12 sm:mb-16 space-y-3">
+                    <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight font-heading">
+                        Frequently Asked Questions
                     </h2>
-                    <p className="text-base text-[#71717A]">
+                    <p className="text-base text-[#94A3B8] max-w-xl mx-auto font-sans">
                         Clear answers. No marketing fluff.
                     </p>
                 </div>
 
-                {/* Accordion list */}
-                <div role="list">
+                {/* Single Card Container with Clean Divider Rows */}
+                <div className="bg-[#121316] rounded-xl border border-white/10 p-6 sm:p-8 backdrop-blur-sm">
                     {FAQS.map((faq, index) => (
-                        <div key={index} role="listitem">
-                            <FAQItem
-                                question={faq.question}
-                                answer={faq.answer}
-                                isOpen={index === openIndex}
-                                onToggle={() => setOpenIndex(index === openIndex ? -1 : index)}
-                                index={index}
-                            />
-                        </div>
+                        <FAQItem
+                            key={index}
+                            question={faq.question}
+                            answer={faq.answer}
+                            isOpen={index === openIndex}
+                            onClick={() => setOpenIndex(index === openIndex ? -1 : index)}
+                            index={index}
+                        />
                     ))}
                 </div>
             </div>

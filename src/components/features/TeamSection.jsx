@@ -34,7 +34,7 @@ const TeamSection = () => {
                     </h2>
 
                     <p className="text-base text-[#71717A] leading-relaxed max-w-lg">
-                        GitExplorer is architected and maintained with a relentless focus on performance,
+                        ExploreGit is architected and maintained with a relentless focus on performance,
                         privacy, and developer ergonomics.
                     </p>
                 </div>
@@ -55,13 +55,13 @@ const TeamSection = () => {
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-[#121215] via-transparent to-transparent opacity-60" />
                                     
-                                    {/* Monospace Badge Overlay */}
+                                    {/* Badge Overlay */}
                                     <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
-                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md border border-white/10 text-[10px] font-mono text-zinc-300 uppercase tracking-wider">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md border border-white/10 text-[10px] font-sans font-medium text-zinc-300 uppercase tracking-wider">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                                             Creator & Lead
                                         </span>
-                                        <span className="text-[10px] font-mono text-zinc-400 bg-black/60 px-2 py-0.5 rounded border border-white/10">
+                                        <span className="text-[10px] font-sans font-medium text-zinc-400 bg-black/60 px-2 py-0.5 rounded border border-white/10">
                                             @SahidGit
                                         </span>
                                     </div>
@@ -147,7 +147,7 @@ const TeamSection = () => {
                                 Zero Telemetry. Pure Signal.
                             </h4>
                             <p className="text-sm text-zinc-400 leading-relaxed">
-                                Every line of GitExplorer is designed with privacy as a foundational requirement.
+                                Every line of ExploreGit is designed with privacy as a foundational requirement.
                                 No cross-site trackers, no session recording, and no server-side token retention.
                                 The application queries GitHub&apos;s REST API directly from your client.
                             </p>
@@ -192,7 +192,7 @@ const TeamSection = () => {
                                     Interested in collaborating?
                                 </h4>
                                 <p className="text-xs text-zinc-400">
-                                    GitExplorer is open source. PRs, issue reports, and feature proposals are welcome.
+                                    ExploreGit is open source. PRs, issue reports, and feature proposals are welcome.
                                 </p>
                             </div>
                             <a

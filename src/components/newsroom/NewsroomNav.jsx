@@ -50,7 +50,7 @@ const NewsroomNav = () => {
           <Link
             to="/dashboard"
             className="flex items-center gap-1.5 text-xs font-mono text-[#F8F3EA]/70 hover:text-white transition-colors mr-1"
-            title="Return to GitExplorer Dashboard"
+            title="Return to ExploreGit Dashboard"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Explorer</span>
@@ -64,7 +64,7 @@ const NewsroomNav = () => {
               BETA
             </span>
             <span className="bg-[#FF5A1F] text-black font-mono text-[10px] font-extrabold px-2 py-0.5 uppercase tracking-wider flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-black animate-ping" />
+              <span className="w-1.5 h-1.5 rounded-full bg-black" />
               LATEST
             </span>
           </a>

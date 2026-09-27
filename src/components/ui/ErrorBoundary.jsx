@@ -34,7 +34,7 @@ class ErrorBoundary extends Component {
 
     componentDidCatch(error, errorInfo) {
         this.setState({ errorInfo });
-        console.error("GitExplorer ErrorBoundary intercepted runtime exception:", error, errorInfo);
+        console.error("ExploreGit ErrorBoundary intercepted runtime exception:", error, errorInfo);
     }
 
     handleReset = () => {
@@ -60,7 +60,7 @@ class ErrorBoundary extends Component {
 
     handleCopyError = () => {
         const { error, errorInfo } = this.state;
-        const errorText = `[GitExplorer System Exception]
+        const errorText = `[ExploreGit System Exception]
 Error: ${error?.name || 'Error'}: ${error?.message || 'Unknown runtime error'}
 Route: ${window.location.href}
 Timestamp: ${new Date().toISOString()}
@@ -96,40 +96,37 @@ ${errorInfo?.componentStack || 'No component stack available'}`;
             return (
                 <div className="min-h-screen bg-[#08090a] text-white font-sans flex flex-col justify-between items-center p-4 sm:p-6 lg:p-10 relative overflow-hidden selection:bg-rose-500/20 selection:text-rose-300">
                     
-                    {/* Very Faint Radial Glows & Canvas Borders */}
-                    <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-rose-500/[0.04] rounded-full blur-[140px] pointer-events-none" />
-                    <div className="absolute bottom-10 right-10 w-[400px] h-[400px] bg-indigo-500/[0.03] rounded-full blur-[120px] pointer-events-none" />
-
+                    {/* Subtle Canvas Borders */}
                     <div className="w-full max-w-4xl my-auto space-y-6 relative z-10 py-8">
                         
                         {/* Precision Bento Grid Layout */}
                         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
                             
                             {/* Top Left Bento Cell: Exception Header */}
-                            <div className="md:col-span-8 p-6 sm:p-8 rounded-2xl border border-white/[0.08] bg-[#0d0f12]/90 backdrop-blur-md space-y-4 shadow-2xl flex flex-col justify-between">
+                            <div className="md:col-span-8 p-6 sm:p-8 rounded-lg border border-white/[0.08] bg-[#0d0f12] space-y-4 shadow-sm flex flex-col justify-between">
                                 <div className="space-y-3">
                                     <div className="flex items-center gap-2">
-                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider bg-rose-500/10 text-rose-400 border border-rose-500/20 uppercase">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />
+                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-sans font-bold tracking-wider bg-rose-500/10 text-rose-400 border border-rose-500/20 uppercase">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-rose-400" />
                                             STATUS_CODE: 500_RUNTIME_EXCEPTION
                                         </span>
                                     </div>
                                     
-                                    <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight font-space">
+                                    <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
                                         System Exception Intercepted
                                     </h1>
                                     
                                     <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans max-w-xl">
-                                        GitExplorer encountered an unhandled application state. Execution stopped safely to preserve client-side storage integrity.
+                                        ExploreGit encountered an unhandled application state. Execution stopped safely to preserve client-side storage integrity.
                                     </p>
                                 </div>
                             </div>
 
                             {/* Top Right Bento Cell: Environment Telemetry */}
-                            <div className="md:col-span-4 p-6 rounded-2xl border border-white/[0.08] bg-[#0d0f12]/90 backdrop-blur-md font-mono text-xs space-y-3 shadow-2xl flex flex-col justify-between">
+                            <div className="md:col-span-4 p-6 rounded-lg border border-white/[0.08] bg-[#0d0f12] font-sans text-xs space-y-3 shadow-sm flex flex-col justify-between">
                                 <div className="flex items-center justify-between text-zinc-400 border-b border-white/[0.06] pb-2 text-[11px]">
                                     <span className="flex items-center gap-1.5 font-bold text-white">
-                                        <Cpu className="w-3.5 h-3.5 text-indigo-400" />
+                                        <Cpu className="w-3.5 h-3.5 text-accent" />
                                         TELEMETRY
                                     </span>
                                     <span className="text-emerald-400 font-bold">&bull; ISOLATED</span>
@@ -218,7 +215,7 @@ ${errorInfo?.componentStack || 'No component stack available'}`;
 
                                         <div className="p-4 rounded-xl bg-[#0d0f12] border border-white/[0.06] text-slate-400 text-xs leading-relaxed font-mono">
                                             <span className="text-zinc-500 block mb-1">// System Diagnostic Note</span>
-                                            This exception was caught by GitExplorer boundary. Check component inputs, state mutations, or API responses for unexpected null pointers.
+                                            This exception was caught by ExploreGit boundary. Check component inputs, state mutations, or API responses for unexpected null pointers.
                                         </div>
                                     </div>
                                 )}
@@ -277,7 +274,7 @@ ${errorInfo?.componentStack || 'No component stack available'}`;
 
                         {/* Footer Link */}
                         <div className="text-center text-xs text-zinc-500 font-mono pt-4">
-                            GitExplorer Exception Guard &bull; Need technical help?{' '}
+                            ExploreGit Exception Guard &bull; Need technical help?{' '}
                             <a
                                 href="/report"
                                 className="text-zinc-300 hover:text-white underline underline-offset-4 transition-colors"

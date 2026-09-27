@@ -1,6 +1,6 @@
 # Deployment Guide
 
-GitExplorer is configured for automated deployment to GitHub Pages using GitHub Actions.
+ExploreGit is configured for automated deployment to GitHub Pages using GitHub Actions.
 
 ## Prerequisites
 

@@ -2,9 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Neue Machina';
+  src: url('/NeueMachina-Regular.otf') format('opentype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   :root {
-    /* Entire.io Design System Surface Tokens */
+    /* Primary Accent Color System: oklch(62.7% .194 149.214) */
+    --accent: oklch(62.7% 0.194 149.214);
+    --accent-hover: oklch(68% 0.194 149.214);
+    --accent-muted: oklch(62.7% 0.194 149.214 / 0.15);
+    --accent-subtle: oklch(62.7% 0.194 149.214 / 0.08);
+    --accent-border: oklch(62.7% 0.194 149.214 / 0.25);
+
+    /* Clean Modern SaaS Surface Tokens */
     --canvas: #0A0A0B;
     --canvas-deep: #0D0E11;
     --canvas-pure: #000000;
@@ -14,13 +29,15 @@
     /* Text Tokens */
     --text-primary: #FFFFFF;
     --text-secondary: #94A3B8;
-    --text-muted: #71717A;
+    --text-muted: #94A3B8;
+    --foreground: #FFFFFF;
+    --primary: var(--accent);
     --border-hairline: rgba(255, 255, 255, 0.08);
 
-    /* Accents & Status */
-    --accent-emerald: #10B981;
-    --accent-indigo: #6366F1;
-    --overlay-hover: rgba(255, 255, 255, 0.08);
+    /* Accents & Status - All green accents unified into --accent */
+    --accent-emerald: var(--accent);
+    --accent-indigo: var(--accent);
+    --overlay-hover: rgba(255, 255, 255, 0.06);
 
     /* Legacy GitHub tokens for dashboard views */
     --color-github-bg: #0D1117;
@@ -28,7 +45,7 @@
     --color-github-border: #30363D;
     --color-github-text: #F0F6FC;
     --color-github-text-muted: #8B949E;
-    --color-github-accent: #58A6FF;
+    --color-github-accent: var(--accent);
     --color-github-purple: #7C3AED;
 
     color-scheme: dark;
@@ -41,14 +58,14 @@
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 5rem;
-    font-family: 'Geist', 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
     line-height: 1.5;
     font-weight: 400;
   }
 
   body,
   #root {
-    font-family: 'Geist', 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
   }
 
   /* Selection styles */
@@ -57,13 +74,13 @@
     color: #ffffff;
   }
 
-  h1, h2, h3, h4, h5, h6, .font-heading, .font-space {
-    font-family: 'Space Grotesk', 'Geist', 'Inter', system-ui, sans-serif !important;
-    letter-spacing: -0.03em;
+  h1, h2, h3, h4, h5, h6, .font-heading {
+    font-family: 'Neue Machina', 'Space Grotesk', sans-serif !important;
+    letter-spacing: -0.025em;
   }
 
   code, pre, .font-mono {
-    font-family: 'Geist Mono', 'JetBrains Mono', 'Fira Code', monospace !important;
+    font-family: 'Geist Mono', 'JetBrains Mono', monospace;
   }
 }
 
@@ -145,35 +162,35 @@
   border: none;
 }
 
-/* Glass panel utility */
+/* Flat SaaS panel utility */
 .glass-panel {
-  background: rgba(18, 19, 22, 0.75);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: var(--surface);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* Bento box modular card */
+/* Bento box modular card - small radius, subtle 1px border */
 .bento-card {
-  background: #121316;
+  background: var(--surface);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
+  border-radius: 8px;
   transition: all 0.2s ease-in-out;
 }
 
 .bento-card:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  background-color: #16181D;
+  border-color: rgba(255, 255, 255, 0.18);
+  background-color: var(--surface-elevated);
 }
 
-/* Primary Action Buttons (CTA) */
+/* Primary Action Buttons (CTA) - flat, clean, no glow */
 .btn-primary-cta {
   background-color: #FFFFFF;
   color: #0A0A0B;
+  font-family: 'Geist Mono', monospace;
   font-weight: 700;
-  border-radius: 9999px;
-  transition: all 0.2s ease-in-out;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.15s ease-in-out;
+  box-shadow: none;
 }
 
 .btn-primary-cta:hover {
@@ -199,9 +216,10 @@
 
 /* Section Overline Eyebrows */
 .eyebrow-tracker {
-  font-family: 'Geist Mono', 'JetBrains Mono', monospace;
+  font-family: inherit;
   font-size: 11px;
-  letter-spacing: 0.1em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #71717A;
 }

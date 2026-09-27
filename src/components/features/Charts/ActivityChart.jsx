@@ -28,8 +28,8 @@ const ActivityChart = ({ data }) => {
         if (canvas) {
             const ctx = canvas.getContext('2d');
             gradient = ctx.createLinearGradient(0, 0, 0, 200);
-            gradient.addColorStop(0, 'rgba(16, 185, 129, 0.4)'); // Emerald-500
-            gradient.addColorStop(1, 'rgba(16, 185, 129, 0)');
+            gradient.addColorStop(0, 'oklch(62.7% 0.194 149.214 / 0.35)');
+            gradient.addColorStop(1, 'oklch(62.7% 0.194 149.214 / 0)');
         }
 
         setChartData({
@@ -38,14 +38,14 @@ const ActivityChart = ({ data }) => {
                 {
                     label: 'Commits',
                     data: commitCounts,
-                    borderColor: '#10B981', // Emerald-500
-                    backgroundColor: gradient || 'rgba(16, 185, 129, 0.15)',
+                    borderColor: 'oklch(62.7% 0.194 149.214)',
+                    backgroundColor: gradient || 'oklch(62.7% 0.194 149.214 / 0.12)',
                     tension: 0.4,
                     fill: true,
-                    pointBackgroundColor: '#064e3b',
-                    pointBorderColor: '#10B981',
+                    pointBackgroundColor: 'oklch(35% 0.12 149.214)',
+                    pointBorderColor: 'oklch(62.7% 0.194 149.214)',
                     pointBorderWidth: 2,
-                    pointHoverBackgroundColor: '#10B981',
+                    pointHoverBackgroundColor: 'oklch(62.7% 0.194 149.214)',
                     pointHoverBorderColor: '#fff',
                     pointRadius: 3,
                     pointHoverRadius: 5,
@@ -67,7 +67,7 @@ const ActivityChart = ({ data }) => {
                 backgroundColor: 'rgba(15, 23, 42, 0.95)',
                 titleColor: '#f8fafc',
                 bodyColor: '#cbd5e1',
-                borderColor: 'rgba(16, 185, 129, 0.3)',
+                borderColor: 'oklch(62.7% 0.194 149.214 / 0.3)',
                 borderWidth: 1,
                 padding: 10,
                 displayColors: false,

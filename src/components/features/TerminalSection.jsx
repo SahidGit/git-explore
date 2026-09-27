@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Terminal, Code, Cpu } from 'lucide-react';
 
 const TERMINAL_LINES = [
-    { type: 'prompt', text: '~ /git-explorer/query', delay: 0 },
+    { type: 'prompt', text: '~ /exploregit/query', delay: 0 },
     { type: 'command', text: 'curl -s https://api.github.com/repos/vercel/next.js \\', delay: 600 },
     { type: 'command-cont', text: '  -H "Accept: application/vnd.github.v3+json" | jq .', delay: 900 },
     { type: 'blank', text: '', delay: 1200 },
@@ -75,7 +75,7 @@ const TerminalSection = () => {
                     </h2>
 
                     <p className="text-sm md:text-base font-sans text-zinc-400 leading-relaxed font-normal">
-                        GitExplorer sits directly on top of the GitHub GraphQL &amp; REST APIs. Structured queries, clean outputs, zero noise.
+                        ExploreGit sits directly on top of the GitHub GraphQL &amp; REST APIs. Structured queries, clean outputs, zero noise.
                     </p>
                 </div>
 
@@ -89,7 +89,7 @@ const TerminalSection = () => {
                             <span className="w-2.5 h-2.5 rounded-full bg-[#28C840]" />
                         </div>
                         <span className="text-xs font-mono text-zinc-400 tracking-wide">
-                            ~ /git-explorer/query
+                            ~ /exploregit/query
                         </span>
                         <div className="w-12" />
                     </div>

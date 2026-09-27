@@ -7,7 +7,7 @@ import gitSync from '../../assets/git-sync.png';
 export const docsContent = {
   title: 'Documentation',
   subtitle:
-    'Guides, modules, and best practices for getting the most out of GitExplorer — from first search to authenticated API workflows.',
+    'Guides, modules, and best practices for getting the most out of ExploreGit — from first search to authenticated API workflows.',
   layout: 'grid',
   cards: [
     {
@@ -16,7 +16,7 @@ export const docsContent = {
       title: 'Quick Start',
       badge: 'Start here',
       description:
-        'GitExplorer is a privacy-first layer on top of GitHub. Open Explore to browse trending repositories, use filters to narrow results, and click any repo for deep analytics — no sign-up required.',
+        'ExploreGit is a privacy-first layer on top of GitHub. Open Explore to browse trending repositories, use filters to narrow results, and click any repo for deep analytics — no sign-up required.',
       links: [
         { label: 'Open dashboard', href: '/dashboard' },
         { label: 'Company overview', href: '/company' },
@@ -79,7 +79,7 @@ export const docsContent = {
       title: 'Privacy & Compliance',
       badge: 'Legal',
       description:
-        'GitExplorer is an independent tool — not affiliated with GitHub, Inc. We do not store credentials on external servers. All repository content remains the property of its respective owners.',
+        'ExploreGit is an independent tool — not affiliated with GitHub, Inc. We do not store credentials on external servers. All repository content remains the property of its respective owners.',
       links: [
         { label: 'API security notes', href: '/api' },
         { label: 'Changelog', href: '/changelog' },

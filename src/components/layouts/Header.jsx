@@ -102,133 +102,115 @@ const Header = ({ activeTab, showBackButton }) => {
 
     return (
         <>
-            {/* Top Announcement Bar */}
-            <div className="fixed top-0 left-0 right-0 z-50">
-                <AnnouncementBar />
-            </div>
+            {/* Plain Static Navbar directly on the image background */}
+            <header className="absolute top-0 left-0 right-0 z-40 w-full bg-transparent">
+                <div className="mx-auto w-full max-w-[1400px] px-6 sm:px-8 md:px-12 py-5 sm:py-6 flex items-center justify-between">
 
-            {/* Floating Dock Header */}
-            <header className="fixed top-9 left-1/2 -translate-x-1/2 z-40 w-[calc(100%-2rem)] max-w-5xl transition-all duration-300">
-                <div
-                    className={`rounded-full px-4 sm:px-6 py-2.5 transition-all duration-300 ${
-                        isScrolled
-                            ? 'bg-[#0B0C0E]/90 backdrop-blur-2xl border border-white/15 shadow-2xl'
-                            : 'bg-[#12141A]/80 backdrop-blur-xl border border-white/10 shadow-lg'
-                    }`}
-                >
-                    <div className="flex items-center justify-between">
+                    {/* Left Slot: Logo and Website Name (Direct solid icon + bold text, matching reference style) */}
+                    <div className="flex items-center gap-3 min-w-[200px]">
+                        <Link to="/" className="flex items-center gap-2.5 group" aria-label="ExploreGit home">
+                            <Github className="w-6 h-6 text-white shrink-0 transition-transform duration-200 group-hover:scale-105" fill="currentColor" />
+                            <span className="font-bold text-white text-xl tracking-tight font-sans group-hover:text-zinc-200 transition-colors">
+                                ExploreGit
+                            </span>
+                        </Link>
 
-                        {/* Brand Capsule */}
-                        <div className="flex items-center gap-3">
-                            <Link to="/" className="flex items-center gap-2.5 group" aria-label="GitExplorer home">
-                                <div className="flex items-center justify-center w-7 h-7 rounded-full bg-white/10 border border-white/15 group-hover:border-white/30 transition-all duration-200">
-                                    <Github className="w-3.5 h-3.5 text-white" />
-                                </div>
-                                <span className="text-sm font-bold text-white tracking-tight font-space">
-                                    GitExplorer
-                                </span>
-                            </Link>
-
-                            {showBackButton && (
-                                <Link
-                                    to="/"
-                                    className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-full text-xs text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all duration-200 font-mono"
-                                >
-                                    <ArrowLeft className="w-3 h-3" />
-                                    <span>Home</span>
-                                </Link>
-                            )}
-                        </div>
-
-                        {/* Desktop Navigation Links */}
-                        <nav
-                            className="hidden md:flex items-center gap-1 bg-white/[0.04] p-1 rounded-full border border-white/[0.06] font-mono text-xs"
-                            aria-label="Primary navigation"
-                        >
-                            {navLinks.map(({ label, to, tab }) => {
-                                const isActive = activeTab === tab;
-                                return (
-                                    <Link
-                                        key={tab}
-                                        to={to}
-                                        className={`px-3.5 py-1.5 rounded-full font-medium transition-all duration-200 ${
-                                            isActive
-                                                ? 'bg-white text-black font-extrabold shadow-sm'
-                                                : 'text-zinc-400 hover:text-white hover:bg-white/[0.06]'
-                                        }`}
-                                    >
-                                        {label}
-                                    </Link>
-                                );
-                            })}
+                        {showBackButton && (
                             <Link
-                                to="/profile"
-                                className={`px-3.5 py-1.5 rounded-full font-medium transition-all duration-200 ${
-                                    activeTab === 'profile'
-                                        ? 'bg-white text-black font-extrabold shadow-sm'
-                                        : 'text-zinc-400 hover:text-white hover:bg-white/[0.06]'
-                                }`}
+                                to="/"
+                                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs text-[#94A3B8] hover:text-white transition-all duration-200 font-mono ml-2"
                             >
-                                Profile
+                                <ArrowLeft className="w-3.5 h-3.5" />
+                                <span>Home</span>
                             </Link>
-                        </nav>
-
-                        {/* Desktop Right Action CTA Button (Connected vs Disconnected) */}
-                        <div className="hidden md:flex items-center gap-2 font-mono text-xs">
-                            {isConnected && user ? (
-                                <button
-                                    id="connect-token-btn"
-                                    onClick={handleOpenModal}
-                                    aria-label="Manage GitHub Token"
-                                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-white hover:bg-emerald-500/20 active:scale-[0.98] transition-all cursor-pointer"
-                                >
-                                    <span className="relative flex h-2 w-2">
-                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
-                                    </span>
-                                    {user.avatar_url ? (
-                                        <img
-                                            src={user.avatar_url}
-                                            alt={user.login}
-                                            className="w-4 h-4 rounded-full border border-white/20"
-                                        />
-                                    ) : (
-                                        <User className="w-3.5 h-3.5 text-emerald-400" />
-                                    )}
-                                    <span className="font-bold text-xs">@{user.login}</span>
-                                </button>
-                            ) : (
-                                <button
-                                    id="connect-token-btn"
-                                    onClick={handleOpenModal}
-                                    aria-label="Connect GitHub Token"
-                                    className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white text-black font-extrabold hover:bg-zinc-200 active:scale-[0.98] transition-all cursor-pointer"
-                                >
-                                    <Key className="w-3.5 h-3.5 text-black" />
-                                    <span>Connect Token</span>
-                                </button>
-                            )}
-                        </div>
-
-                        {/* Mobile Hamburger Trigger */}
-                        <button
-                            id="mobile-menu-btn"
-                            className="md:hidden flex items-center justify-center w-8 h-8 rounded-lg bg-white/[0.05] border border-white/15 text-white hover:border-white/30 active:scale-95 transition-all cursor-pointer"
-                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            aria-expanded={isMobileMenuOpen}
-                            aria-label="Toggle mobile menu"
-                        >
-                            {isMobileMenuOpen ? (
-                                <X className="w-4 h-4 text-white" />
-                            ) : (
-                                <div className="flex flex-col gap-1 w-3.5 items-end">
-                                    <span className="w-3.5 h-0.5 rounded-full bg-white" />
-                                    <span className="w-2 h-0.5 rounded-full bg-white/70" />
-                                    <span className="w-3.5 h-0.5 rounded-full bg-white" />
-                                </div>
-                            )}
-                        </button>
+                        )}
                     </div>
+
+                    {/* Middle Slot: All Anchor Tags in Center with NO background color */}
+                    <nav
+                        className="hidden md:flex items-center justify-center gap-8 lg:gap-10 font-sans text-sm font-medium"
+                        aria-label="Primary navigation"
+                    >
+                        {navLinks.map(({ label, to, tab }) => {
+                            const isActive = activeTab === tab;
+                            return (
+                                <Link
+                                    key={tab}
+                                    to={to}
+                                    className={`transition-colors duration-150 py-1.5 ${
+                                        isActive
+                                            ? 'text-white font-semibold'
+                                            : 'text-[#94A3B8] hover:text-white'
+                                    }`}
+                                >
+                                    {label}
+                                </Link>
+                            );
+                        })}
+                        <Link
+                            to="/profile"
+                            className={`transition-colors duration-150 py-1.5 ${
+                                activeTab === 'profile'
+                                    ? 'text-white font-semibold'
+                                    : 'text-[#94A3B8] hover:text-white'
+                            }`}
+                        >
+                            Profile
+                        </Link>
+                    </nav>
+
+                    {/* Right Slot: Connect Token Button (Geist Mono, rounded-xl, no glow) */}
+                    <div className="hidden md:flex items-center justify-end gap-3 min-w-[200px]">
+                        {isConnected && user ? (
+                            <button
+                                id="connect-token-btn"
+                                onClick={handleOpenModal}
+                                aria-label="Manage GitHub Token"
+                                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/20 bg-transparent text-white hover:border-white/40 active:scale-[0.98] transition-all cursor-pointer font-mono font-bold text-xs shadow-none"
+                            >
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                                {user.avatar_url ? (
+                                    <img
+                                        src={user.avatar_url}
+                                        alt={user.login}
+                                        className="w-4 h-4 rounded-full border border-white/20"
+                                    />
+                                ) : (
+                                    <User className="w-3.5 h-3.5 text-emerald-400" />
+                                )}
+                                <span className="font-bold text-xs">@{user.login}</span>
+                            </button>
+                        ) : (
+                            <button
+                                id="connect-token-btn"
+                                onClick={handleOpenModal}
+                                aria-label="Connect GitHub Token"
+                                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-white/20 bg-transparent text-white font-mono font-bold text-xs hover:border-white/40 active:scale-[0.98] transition-all cursor-pointer shadow-none"
+                            >
+                                <Key className="w-3.5 h-3.5 text-white" />
+                                <span>Connect Token</span>
+                            </button>
+                        )}
+                    </div>
+
+                    {/* Mobile Hamburger Trigger */}
+                    <button
+                        id="mobile-menu-btn"
+                        className="md:hidden flex items-center justify-center w-9 h-9 rounded-xl bg-transparent border border-white/20 text-white hover:border-white/40 active:scale-95 transition-all cursor-pointer"
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        aria-expanded={isMobileMenuOpen}
+                        aria-label="Toggle mobile menu"
+                    >
+                        {isMobileMenuOpen ? (
+                            <X className="w-4 h-4 text-white" />
+                        ) : (
+                            <div className="flex flex-col gap-1 w-4 items-end">
+                                <span className="w-4 h-0.5 rounded-full bg-white" />
+                                <span className="w-2.5 h-0.5 rounded-full bg-white/70" />
+                                <span className="w-4 h-0.5 rounded-full bg-white" />
+                            </div>
+                        )}
+                    </button>
                 </div>
             </header>
 
@@ -246,13 +228,11 @@ const Header = ({ activeTab, showBackButton }) => {
                             to="/"
                             onClick={() => setIsMobileMenuOpen(false)}
                             className="flex items-center gap-2.5"
-                            aria-label="GitExplorer mobile home link"
+                            aria-label="ExploreGit mobile home link"
                         >
-                            <div className="w-7 h-7 rounded-full bg-white/10 border border-white/15 flex items-center justify-center">
-                                <Github className="w-3.5 h-3.5 text-white" />
-                            </div>
-                            <span className="text-base font-bold text-white font-space tracking-tight">
-                                GitExplorer
+                            <Github className="w-6 h-6 text-white shrink-0" fill="currentColor" />
+                            <span className="text-xl font-bold text-white font-sans tracking-tight">
+                                ExploreGit
                             </span>
                         </Link>
 
@@ -263,16 +243,16 @@ const Header = ({ activeTab, showBackButton }) => {
                                     setIsMobileMenuOpen(false);
                                     handleOpenModal();
                                 }}
-                                className="px-3.5 py-1.5 rounded-lg bg-white text-black font-semibold text-xs transition-colors hover:bg-[#E4E4E7] cursor-pointer flex items-center gap-1.5"
+                                className="px-4 py-2 rounded-xl bg-white text-black font-bold text-xs transition-all hover:bg-zinc-200 active:scale-[0.98] cursor-pointer flex items-center gap-1.5 font-mono shadow-none"
                             >
-                                <Key className="w-3 h-3 text-black" />
+                                <Key className="w-3.5 h-3.5 text-black" />
                                 <span>{isConnected ? `@${user?.login || 'user'}` : 'Connect Token'}</span>
                             </button>
 
                             <button
                                 onClick={() => setIsMobileMenuOpen(false)}
                                 aria-label="Close mobile menu"
-                                className="w-8 h-8 rounded-lg bg-white/[0.05] border border-white/15 flex items-center justify-center text-white hover:border-white/30 transition-colors cursor-pointer"
+                                className="w-9 h-9 rounded-xl bg-white/[0.05] border border-white/15 flex items-center justify-center text-white hover:border-white/30 transition-colors cursor-pointer"
                             >
                                 <X className="w-4 h-4 text-white" />
                             </button>
@@ -315,7 +295,7 @@ const Header = ({ activeTab, showBackButton }) => {
                         </div>
 
                         {/* Featured Report an Issue Pill & Bottom Metadata in Drawer */}
-                        <div className="pt-6 border-t border-white/[0.08] font-mono text-xs space-y-4">
+                        <div className="pt-6 border-t border-white/[0.08] font-sans text-xs space-y-4">
                             <Link
                                 to="/report"
                                 onClick={() => setIsMobileMenuOpen(false)}
@@ -330,7 +310,7 @@ const Header = ({ activeTab, showBackButton }) => {
 
                             <div className="space-y-1.5 text-zinc-500">
                                 <div className="flex items-center justify-between">
-                                    <span>GitExplorer Intelligence Layer</span>
+                                    <span>ExploreGit Intelligence Layer</span>
                                     <span className="text-emerald-400 font-bold">&bull; Live</span>
                                 </div>
                                 <div className="text-[11px] text-zinc-600">
@@ -345,13 +325,13 @@ const Header = ({ activeTab, showBackButton }) => {
             {/* Token Configuration Modal & Step-by-Step Generation Guide */}
             {showTokenModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-fadeIn">
-                    <div className="w-full max-w-lg bg-[#12141A] border border-white/15 rounded-2xl p-5 sm:p-6 space-y-5 shadow-2xl font-mono text-xs max-h-[90vh] overflow-y-auto">
+                    <div className="w-full max-w-lg bg-[#12141A] border border-white/15 rounded-lg p-5 sm:p-6 space-y-5 shadow-sm font-sans text-xs max-h-[90vh] overflow-y-auto">
                         
                         {/* Modal Header */}
                         <div className="flex items-center justify-between border-b border-white/10 pb-3">
                             <div className="flex items-center gap-2">
-                                <Key className="w-4 h-4 text-indigo-400" />
-                                <h3 className="text-sm font-bold text-white font-space">GitHub Token Configuration</h3>
+                                <Key className="w-4 h-4 text-accent" />
+                                <h3 className="text-sm font-bold text-white">GitHub Token Configuration</h3>
                             </div>
                             <button
                                 onClick={() => setShowTokenModal(false)}
@@ -425,7 +405,7 @@ const Header = ({ activeTab, showBackButton }) => {
                                     value={inputToken}
                                     onChange={(e) => setInputToken(e.target.value)}
                                     placeholder={isConnected ? "••••••••••••••••••••••••••••" : "ghp_your_personal_access_token..."}
-                                    className="w-full bg-[#0B0C0E] border border-white/15 rounded-xl p-3 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-mono"
+                                    className="w-full bg-[#0B0C0E] border border-white/15 rounded-lg p-3 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all font-mono"
                                 />
                             </div>
 
@@ -433,19 +413,19 @@ const Header = ({ activeTab, showBackButton }) => {
                                 <button
                                     type="button"
                                     onClick={() => setShowGuide(!showGuide)}
-                                    className="text-xs font-mono text-indigo-400 hover:text-indigo-300 flex items-center gap-1 transition-colors"
+                                    className="text-xs font-mono text-accent hover:opacity-80 flex items-center gap-1 transition-colors"
                                 >
                                     <HelpCircle className="w-3.5 h-3.5" />
                                     <span>How to generate a token?</span>
                                     {showGuide ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                                 </button>
 
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-2.5">
                                     {isConnected && (
                                         <button
                                             type="button"
                                             onClick={handleDisconnect}
-                                            className="px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-zinc-400 hover:text-rose-400 transition-colors font-mono"
+                                            className="px-4 py-2.5 rounded-xl border border-white/15 bg-white/[0.04] text-zinc-300 hover:text-rose-400 hover:border-rose-500/30 transition-all font-sans font-semibold text-xs active:scale-[0.98] cursor-pointer"
                                         >
                                             Disconnect
                                         </button>
@@ -454,7 +434,7 @@ const Header = ({ activeTab, showBackButton }) => {
                                     <button
                                         type="submit"
                                         disabled={isVerifying}
-                                        className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                                        className="px-5 py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-black font-sans font-extrabold text-xs active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer shadow-md disabled:opacity-50"
                                     >
                                         {isVerifying ? (
                                             <>
@@ -463,7 +443,7 @@ const Header = ({ activeTab, showBackButton }) => {
                                             </>
                                         ) : (
                                             <>
-                                                <Check className="w-3.5 h-3.5" />
+                                                <Check className="w-3.5 h-3.5 stroke-[3]" />
                                                 <span>{isConnected ? 'Update Token' : 'Verify & Connect'}</span>
                                             </>
                                         )}
@@ -477,14 +457,14 @@ const Header = ({ activeTab, showBackButton }) => {
                             <div className="p-4 rounded-xl border border-white/10 bg-[#0B0C0E] space-y-3 font-sans text-xs animate-fadeIn">
                                 <div className="flex items-center justify-between border-b border-white/10 pb-2">
                                     <span className="font-bold text-white font-mono flex items-center gap-1.5 text-[11px]">
-                                        <ShieldCheck className="w-3.5 h-3.5 text-indigo-400" />
+                                        <ShieldCheck className="w-3.5 h-3.5 text-accent" />
                                         Step-by-Step GitHub PAT Setup Guide
                                     </span>
                                     <a
-                                        href="https://github.com/settings/tokens/new?scopes=public_repo,read:user&description=GitExplorer"
+                                        href="https://github.com/settings/tokens/new?scopes=public_repo,read:user&description=ExploreGit"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="text-indigo-400 hover:underline flex items-center gap-1 font-mono text-[11px]"
+                                        className="text-accent hover:underline flex items-center gap-1 font-mono text-[11px]"
                                     >
                                         <span>Open GitHub Setup ↗</span>
                                         <ExternalLink className="w-3 h-3" />
@@ -495,15 +475,15 @@ const Header = ({ activeTab, showBackButton }) => {
                                     <li>
                                         Navigate to{' '}
                                         <a
-                                            href="https://github.com/settings/tokens/new?scopes=public_repo,read:user&description=GitExplorer"
+                                            href="https://github.com/settings/tokens/new?scopes=public_repo,read:user&description=ExploreGit"
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="text-indigo-300 underline font-mono"
+                                            className="text-accent underline font-mono"
                                         >
                                             GitHub Settings → Personal access tokens → Tokens (classic)
                                         </a>.
                                     </li>
-                                    <li>Set Note to <code className="bg-white/10 px-1 py-0.5 rounded font-mono text-white">GitExplorer</code>.</li>
+                                    <li>Set Note to <code className="bg-white/10 px-1 py-0.5 rounded font-mono text-white">ExploreGit</code>.</li>
                                     <li>
                                         Select recommended scopes:
                                         <ul className="list-disc list-inside ml-4 mt-1 space-y-1 font-mono text-[11px] text-zinc-400">

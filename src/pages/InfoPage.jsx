@@ -145,9 +145,9 @@ const InfoPage = ({ contentKey }) => {
   return (
     <div className="flex min-h-screen flex-col bg-[#0A0A0C] text-white font-sans selection:bg-white/20 selection:text-white">
       <SEO
-        title={`${pageData?.title || 'Platform Documentation'} · GitExplorer`}
-        description={pageData?.subtitle || 'Explore GitExplorer guides, API reference, and technical documentation.'}
-        canonical={`https://git-explore-one.vercel.app/${contentKey}`}
+        title={`${pageData?.title || 'Platform Documentation'} · ExploreGit`}
+        description={pageData?.subtitle || 'Explore ExploreGit guides, API reference, and technical documentation.'}
+        canonical={`https://exploregit.vercel.app/${contentKey}`}
       />
 
       <Header showBackButton={true} activeTab="" />
@@ -195,15 +195,15 @@ const InfoPage = ({ contentKey }) => {
             </div>
 
             {/* Title Column */}
-            <div className="mx-auto flex w-full max-w-[720px] flex-col gap-3">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-indigo-400 font-semibold">
+            <div className="mx-auto flex w-full max-w-[720px] flex-col gap-3 font-sans">
+              <span className="text-xs uppercase tracking-wider text-accent font-semibold">
                 &lt;MODULE_{contentKey.toUpperCase()} /&gt;
               </span>
-              <h1 className="text-3xl sm:text-4xl font-extrabold font-space text-white tracking-tight leading-tight">
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight font-heading">
                 {pageData?.title || 'Documentation'}
               </h1>
               {pageData?.subtitle && (
-                <p className="text-sm md:text-base font-sans text-zinc-300 leading-relaxed font-normal">
+                <p className="text-sm md:text-base text-zinc-300 leading-relaxed font-normal">
                   {pageData.subtitle}
                 </p>
               )}
@@ -217,22 +217,22 @@ const InfoPage = ({ contentKey }) => {
             {isLoading && (
               <div className="py-24 text-center">
                 <div className="inline-block w-8 h-8 rounded-full border-2 border-white/20 border-t-white animate-spin" />
-                <p className="mt-4 text-xs font-mono text-zinc-500">Loading module / {contentKey}...</p>
+                <p className="mt-4 text-xs font-sans text-zinc-500">Loading module / {contentKey}...</p>
               </div>
             )}
 
             {!isLoading && (error || !pageData) && (
               <div className="py-20 text-center max-w-md mx-auto">
-                <div className="w-12 h-12 rounded-xl bg-white/[0.04] border border-white/10 flex items-center justify-center mx-auto mb-4 text-zinc-400">
+                <div className="w-12 h-12 rounded-lg bg-white/[0.04] border border-white/10 flex items-center justify-center mx-auto mb-4 text-zinc-400">
                   <Terminal className="w-5 h-5" />
                 </div>
-                <h1 className="text-xl font-bold text-white mb-2 font-space">Module Not Found</h1>
-                <p className="text-xs text-zinc-400 mb-6 font-mono">
+                <h1 className="text-xl font-bold text-white mb-2 font-heading">Module Not Found</h1>
+                <p className="text-xs text-zinc-400 mb-6 font-sans">
                   The documentation module <code className="font-mono text-zinc-300">{contentKey}</code> could not be loaded.
                 </p>
                 <Link
                   to="/docs"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black text-xs font-semibold hover:bg-zinc-200 transition-colors"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white text-black text-xs font-extrabold hover:bg-zinc-200 active:scale-[0.98] transition-all shadow-lg cursor-pointer"
                 >
                   Go to Documentation
                 </Link>
@@ -244,9 +244,9 @@ const InfoPage = ({ contentKey }) => {
                 {isGridLayout ? (
                   <FeatureProjectGrid cards={pageData.cards} />
                 ) : (
-                  <div className="rounded-2xl border border-white/10 bg-[#121215] p-6 sm:p-10 shadow-2xl mb-8">
+                  <div className="rounded-lg border border-white/10 bg-[#121215] p-6 sm:p-10 shadow-sm mb-8">
                     <div
-                      className="prose prose-invert max-w-none prose-headings:font-space prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-white prose-p:text-zinc-300 prose-p:leading-relaxed prose-a:text-indigo-400 prose-a:underline hover:prose-a:text-indigo-300 prose-code:text-indigo-300 prose-code:font-mono prose-code:bg-[#0A0A0C] prose-code:px-2 prose-code:py-1 prose-code:rounded-md prose-blockquote:border-l-2 prose-blockquote:border-indigo-500 prose-blockquote:pl-4 prose-blockquote:text-zinc-300 prose-blockquote:bg-white/[0.02] prose-blockquote:py-1"
+                      className="prose prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-white prose-p:text-zinc-300 prose-p:leading-relaxed prose-a:text-accent prose-a:underline hover:prose-a:opacity-80 prose-code:text-accent prose-code:font-mono prose-code:bg-[#0A0A0C] prose-code:px-2 prose-code:py-1 prose-code:rounded-md prose-blockquote:border-l-2 prose-blockquote:border-accent prose-blockquote:pl-4 prose-blockquote:text-zinc-300 prose-blockquote:bg-white/[0.02] prose-blockquote:py-1"
                       dangerouslySetInnerHTML={{ __html: sanitizedContent }}
                     />
                   </div>
@@ -254,17 +254,17 @@ const InfoPage = ({ contentKey }) => {
 
                 {/* ── Interactive Token Connection & Live API Tester (API Page Only) ── */}
                 {contentKey === 'api' && (
-                  <div className="mt-8 p-6 sm:p-8 rounded-2xl bg-[#12141A] border border-white/15 shadow-2xl space-y-6">
+                  <div className="mt-8 p-6 sm:p-8 rounded-lg bg-[#12141A] border border-white/15 shadow-sm space-y-6 font-sans">
                     
                     {/* Header Bar */}
                     <div className="flex items-center justify-between border-b border-white/10 pb-4">
                       <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+                        <div className="w-8 h-8 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center text-accent">
                           <Key className="w-4 h-4" />
                         </div>
                         <div>
-                          <h3 className="text-base font-bold font-space text-white">Live Token Connection &amp; API Tester</h3>
-                          <p className="text-xs text-zinc-400 font-sans">Verify your GitHub Personal Access Token and inspect real-time rate limit quota.</p>
+                          <h3 className="text-base font-bold text-white">Live Token Connection &amp; API Tester</h3>
+                          <p className="text-xs text-zinc-400">Verify your GitHub Personal Access Token and inspect real-time rate limit quota.</p>
                         </div>
                       </div>
 
@@ -327,7 +327,7 @@ const InfoPage = ({ contentKey }) => {
                         <button
                           type="submit"
                           disabled={isVerifying}
-                          className="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                          className="px-6 py-3 rounded-xl bg-white text-black font-mono font-bold text-xs hover:bg-zinc-200 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-none disabled:opacity-50"
                         >
                           {isVerifying ? (
                             <>
@@ -336,7 +336,7 @@ const InfoPage = ({ contentKey }) => {
                             </>
                           ) : (
                             <>
-                              <Check className="w-4 h-4" />
+                              <Check className="w-4 h-4 stroke-[3]" />
                               <span>{isConnected ? 'Update Token' : 'Verify & Connect'}</span>
                             </>
                           )}
@@ -348,7 +348,7 @@ const InfoPage = ({ contentKey }) => {
                           <button
                             type="button"
                             onClick={() => disconnectToken()}
-                            className="text-xs text-zinc-400 hover:text-rose-400 transition-colors underline"
+                            className="text-xs text-zinc-400 hover:text-rose-400 transition-colors font-mono underline"
                           >
                             Disconnect Token
                           </button>
@@ -359,7 +359,7 @@ const InfoPage = ({ contentKey }) => {
                     {/* Live Test Execution Console */}
                     <div className="pt-2 border-t border-white/10 space-y-3 font-mono text-xs">
                       <div className="flex items-center justify-between">
-                        <span className="text-zinc-300 font-bold flex items-center gap-2">
+                        <span className="text-zinc-300 font-bold flex items-center gap-2 font-mono">
                           <Terminal className="w-4 h-4 text-emerald-400" />
                           Live API Test Console
                         </span>
@@ -367,9 +367,9 @@ const InfoPage = ({ contentKey }) => {
                           type="button"
                           onClick={handleRunLiveTest}
                           disabled={isTestingApi}
-                          className="px-3.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 border border-white/15 text-white font-bold transition-all flex items-center gap-1.5 cursor-pointer text-xs"
+                          className="px-4 py-2 rounded-xl bg-white text-black hover:bg-zinc-200 font-mono font-bold transition-all flex items-center gap-2 cursor-pointer text-xs active:scale-95 shadow-none"
                         >
-                          {isTestingApi ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Play className="w-3.5 h-3.5 text-emerald-400" />}
+                          {isTestingApi ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Play className="w-3.5 h-3.5 fill-black" />}
                           <span>Execute GET /user</span>
                         </button>
                       </div>

@@ -1,6 +1,6 @@
-# Contributing to GitExplorer
+# Contributing to ExploreGit
 
-Thank you for your interest in contributing to GitExplorer! We welcome contributions from the community to make this project better.
+Thank you for your interest in contributing to ExploreGit! We welcome contributions from the community to make this project better.
 
 ## dynamicCodebase Structure
 

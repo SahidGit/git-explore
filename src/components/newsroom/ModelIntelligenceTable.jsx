@@ -61,14 +61,14 @@ const ModelIntelligenceTable = () => {
                 ? 'bg-emerald-500/10 border-emerald-500 text-emerald-400'
                 : 'bg-[#FF5A1F]/10 border-[#FF5A1F] text-[#FF5A1F]'
             }`}>
-              <span className={`w-2 h-2 rounded-full ${dataState.isLive ? 'bg-emerald-400 animate-ping' : 'bg-[#FF5A1F]'}`} />
+              <span className={`w-2 h-2 rounded-full ${dataState.isLive ? 'bg-emerald-400' : 'bg-[#FF5A1F]'}`} />
               {dataState.isLive ? 'Live API Feed' : 'Verified Feb 2026 Audit'}
             </span>
 
             <button
               onClick={loadModels}
               disabled={dataState.loading}
-              className="p-1.5 bg-white/10 hover:bg-white/20 text-[#F8F3EA] transition-colors cursor-pointer disabled:opacity-50 border border-white/20"
+              className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all active:scale-95 cursor-pointer disabled:opacity-50 border border-white/20"
               title="Refresh OpenRouter data"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${dataState.loading ? 'animate-spin' : ''}`} />
@@ -77,10 +77,10 @@ const ModelIntelligenceTable = () => {
         </div>
 
         {/* Filter Buttons & Data Note */}
-        <div className="flex flex-wrap items-center justify-between gap-4 bg-[#F8F3EA]/05 p-3.5 border-2 border-white/15 font-mono text-xs">
+        <div className="flex flex-wrap items-center justify-between gap-4 bg-white/[0.02] p-3.5 border border-white/15 rounded-xl font-sans text-xs">
           <div className="flex flex-wrap gap-2 items-center">
-            <span className="text-[#F8F3EA]/70 uppercase tracking-widest mr-2 text-[10px] flex items-center gap-1 font-bold">
-              <Filter className="w-3 h-3 text-[#FF5A1F]" /> Category Filter:
+            <span className="text-zinc-400 uppercase tracking-widest mr-2 text-[10px] flex items-center gap-1 font-bold">
+              <Filter className="w-3 h-3 text-emerald-400" /> Category Filter:
             </span>
 
             {[
@@ -94,10 +94,10 @@ const ModelIntelligenceTable = () => {
               <button
                 key={f.id}
                 onClick={() => setActiveFilter(f.id)}
-                className={`px-3 py-1.5 text-[11px] font-mono uppercase tracking-wider transition-all cursor-pointer border ${
+                className={`px-3.5 py-1.5 text-xs font-mono rounded-xl transition-all cursor-pointer border active:scale-95 shadow-none ${
                   activeFilter === f.id
-                    ? 'bg-[#FF5A1F] text-black font-extrabold border-black shadow-[2px_2px_0px_#FFF]'
-                    : 'bg-black text-[#F8F3EA]/80 border-white/20 hover:border-white/50'
+                    ? 'bg-white text-black font-bold border-white'
+                    : 'bg-white/[0.04] text-zinc-300 border-white/10 hover:border-white/25 hover:bg-white/[0.08] font-medium'
                 }`}
               >
                 {f.label}

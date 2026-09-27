@@ -17,11 +17,11 @@ const IssueChart = ({ open, closed, openCount, stats }) => {
                 data: [displayOpen, displayClosed],
                 backgroundColor: [
                     'rgba(239, 68, 68, 0.75)', // Red-500 (Open)
-                    'rgba(34, 197, 94, 0.75)', // Green-500 (Closed)
+                    'oklch(62.7% 0.194 149.214 / 0.8)', // Closed Accent
                 ],
                 borderColor: [
                     'rgba(239, 68, 68, 1)',
-                    'rgba(34, 197, 94, 1)',
+                    'oklch(62.7% 0.194 149.214)',
                 ],
                 borderWidth: 1.5,
                 hoverOffset: 4,

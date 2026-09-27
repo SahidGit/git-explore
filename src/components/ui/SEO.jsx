@@ -2,7 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
 const SEO = ({ title, description, canonical, type = 'website', schema }) => {
-    const siteTitle = 'GitExplorer';
+    const siteTitle = 'ExploreGit';
     const fullTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
 
     return (

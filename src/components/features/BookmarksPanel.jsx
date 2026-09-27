@@ -25,7 +25,7 @@ const EmptyBookmarks = () => (
             </div>
             <p className="text-zinc-500 mb-1.5">
                 <span className="text-emerald-400/70">❯</span>{' '}
-                <span className="text-zinc-400">git-explorer bookmarks --list</span>
+                <span className="text-zinc-400">exploregit bookmarks --list</span>
             </p>
             <p className="text-zinc-600">0 records found in local storage.</p>
         </div>
@@ -77,7 +77,7 @@ const BookmarkCard = ({ repo, onRepoClick, onRemove }) => {
                 {/* Remove button */}
                 <button
                     onClick={(e) => { e.stopPropagation(); onRemove(repo); }}
-                    className="flex-shrink-0 p-1.5 rounded-lg text-zinc-600 hover:text-white hover:bg-white/[0.06] transition-all duration-200"
+                    className="flex-shrink-0 p-1.5 rounded-xl text-zinc-500 hover:text-rose-400 hover:bg-rose-500/10 transition-all duration-200 active:scale-95 cursor-pointer"
                     aria-label={`Remove ${repo.name} from bookmarks`}
                 >
                     <X className="w-3.5 h-3.5" />
@@ -145,7 +145,7 @@ const BookmarksPanel = ({ onRepoSelect, onBookmarkToggle }) => {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `gitexplorer-bookmarks-${Date.now()}.json`;
+            a.download = `exploregit-bookmarks-${Date.now()}.json`;
             a.click();
             URL.revokeObjectURL(url);
         } catch (err) {
@@ -179,23 +179,23 @@ const BookmarksPanel = ({ onRepoSelect, onBookmarkToggle }) => {
                 </div>
 
                 {/* Toolbar actions */}
-                <div className="flex items-center gap-2 sm:ml-auto">
+                <div className="flex items-center gap-2.5 sm:ml-auto">
                     <button
                         id="export-bookmarks-btn"
                         onClick={handleExportJSON}
-                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-white/[0.08] bg-[#121215] text-[12px] font-medium text-zinc-400 hover:text-white hover:border-white/20 transition-all duration-200"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-white/15 bg-white/[0.04] text-xs font-mono font-bold text-zinc-300 hover:text-white hover:bg-white/[0.08] hover:border-white/25 active:scale-[0.98] transition-all cursor-pointer shadow-none"
                     >
                         <Download className="w-3.5 h-3.5" />
-                        Export JSON
+                        <span>Export JSON</span>
                     </button>
 
                     <button
                         id="clear-bookmarks-btn"
                         onClick={handleClearAll}
-                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-white/[0.08] bg-[#121215] text-[12px] font-medium text-zinc-500 hover:text-white hover:border-white/20 transition-all duration-200"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-white/15 bg-white/[0.04] text-xs font-mono font-bold text-zinc-400 hover:text-rose-400 hover:border-rose-500/30 hover:bg-rose-500/10 active:scale-[0.98] transition-all cursor-pointer shadow-none"
                     >
                         <Trash2 className="w-3.5 h-3.5" />
-                        Clear All
+                        <span>Clear All</span>
                     </button>
                 </div>
             </div>

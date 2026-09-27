@@ -17,11 +17,7 @@ const NotFound = React.lazy(() => import('./pages/NotFound'));
 /** Minimal page skeleton shown during route-level chunk loading */
 const PageLoader = () => (
   <div className="min-h-screen bg-[#0A0A0C] flex items-center justify-center">
-    <div className="flex items-center gap-2 text-zinc-600">
-      <span className="w-1.5 h-1.5 rounded-full bg-zinc-700 animate-pulse" />
-      <span className="w-1.5 h-1.5 rounded-full bg-zinc-700 animate-pulse [animation-delay:150ms]" />
-      <span className="w-1.5 h-1.5 rounded-full bg-zinc-700 animate-pulse [animation-delay:300ms]" />
-    </div>
+    <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
   </div>
 );
 

@@ -1,6 +1,6 @@
-# GitExplorer Development Roadmap
+# ExploreGit Development Roadmap
 
-This document outlines the strategic plan for the future development of GitExplorer, focusing on data visualization, user experience enhancements, and functional depth.
+This document outlines the strategic plan for the future development of ExploreGit, focusing on data visualization, user experience enhancements, and functional depth.
 
 ## 1. Data Visualization & Insights 📊
 **Objective:** Transform raw data into actionable insights using visual metrics.

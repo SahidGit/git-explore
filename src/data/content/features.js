@@ -64,7 +64,7 @@ export const featuresContent = {
       title: 'Live GitHub Sync',
       badge: 'Just shipped',
       description:
-        'GitExplorer mirrors GitHub data in real time through the public REST API. Browse trending repos, inspect metadata, and jump to source — all from one focused interface.',
+        'ExploreGit mirrors GitHub data in real time through the public REST API. Browse trending repos, inspect metadata, and jump to source — all from one focused interface.',
       links: [
         { label: 'Connect token', href: '/api' },
         { label: 'API reference', href: '/api' },

@@ -29,17 +29,17 @@ const Home = () => {
     return (
         <div className="min-h-screen bg-[#0A0A0C] text-white font-sans selection:bg-white/20 selection:text-white flex flex-col">
             <SEO
-                title="GitExplorer — Find open-source projects gaining momentum"
-                description="GitExplorer surfaces trending repositories using star velocity, contributor activity, and repository health signals."
-                canonical="https://git-explore-one.vercel.app/"
+                title="ExploreGit — Find open-source projects gaining momentum"
+                description="ExploreGit surfaces trending repositories using star velocity, contributor activity, and repository health signals."
+                canonical="https://exploregit.vercel.app/"
                 schema={{
                     '@context': 'https://schema.org',
                     '@type': 'WebSite',
-                    name: 'GitExplorer',
-                    url: 'https://git-explore-one.vercel.app/',
+                    name: 'ExploreGit',
+                    url: 'https://exploregit.vercel.app/',
                     potentialAction: {
                         '@type': 'SearchAction',
-                        target: 'https://git-explore-one.vercel.app/dashboard?query={search_term_string}',
+                        target: 'https://exploregit.vercel.app/dashboard?query={search_term_string}',
                         'query-input': 'required name=search_term_string',
                     },
                 }}

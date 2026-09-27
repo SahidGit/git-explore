@@ -1,10 +1,10 @@
-# GitExplorer
+# ExploreGit
 
 > Find open-source momentum before it becomes obvious.
 
-GitExplorer is a privacy-conscious React app for exploring GitHub repositories, understanding their activity, and keeping a personal shortlist. It also includes a practical Git command reference and an experimental AI Newsroom for tracking models, open-weight releases, research, and infrastructure.
+ExploreGit is a privacy-conscious React app for exploring GitHub repositories, understanding their activity, and keeping a personal shortlist. It also includes a practical Git command reference and an experimental AI Newsroom for tracking models, open-weight releases, research, and infrastructure.
 
-[Live app](https://git-explore-one.vercel.app) · [AI Newsroom](https://git-explore-one.vercel.app/ai-news) · [Git cheat sheet](https://git-explore-one.vercel.app/cheatsheet) · [Report an issue](https://github.com/SahidGit/git-explore/issues)
+[Live app](https://exploregit.vercel.app) · [AI Newsroom](https://exploregit.vercel.app/ai-news) · [Git cheat sheet](https://exploregit.vercel.app/cheatsheet) · [Report an issue](https://github.com/SahidGit/git-explore/issues)
 
 ![React](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-5.4.21-646CFF?logo=vite&logoColor=white)
@@ -22,7 +22,7 @@ GitExplorer is a privacy-conscious React app for exploring GitHub repositories, 
 
 ## How it works
 
-GitExplorer calls the public GitHub REST API directly from the browser. When GitHub is unavailable or rate-limited, selected discovery and analytics views fall back to bundled sample data so the interface remains useful. The AI Newsroom reads OpenRouter's public models endpoint and similarly uses a dated local fallback snapshot when a live request cannot succeed.
+ExploreGit calls the public GitHub REST API directly from the browser. When GitHub is unavailable or rate-limited, selected discovery and analytics views fall back to bundled sample data so the interface remains useful. The AI Newsroom reads OpenRouter's public models endpoint and similarly uses a dated local fallback snapshot when a live request cannot succeed.
 
 Your bookmarks and notes are stored in `localStorage`. Optional GitHub tokens are held only for the current browser session in `sessionStorage`.
 

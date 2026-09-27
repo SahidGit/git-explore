@@ -13,14 +13,14 @@ const ErrorMessage = ({ message, onRetry }) => {
                 </div>
 
                 <div className="space-y-2">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider bg-rose-500/10 text-rose-400 border border-rose-500/20 uppercase">
-                        <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-sans font-bold tracking-wider bg-rose-500/10 text-rose-400 border border-rose-500/20 uppercase">
+                        <span className="w-1.5 h-1.5 rounded-full bg-rose-400" />
                         NETWORK_DISCONNECTED
                     </span>
-                    <h3 className="text-xl font-bold font-space text-white tracking-tight">
+                    <h3 className="text-xl font-bold text-white tracking-tight">
                         Connection Interrupted
                     </h3>
-                    <p className="text-xs text-slate-400 font-mono leading-relaxed max-w-sm">
+                    <p className="text-xs text-slate-400 font-sans leading-relaxed max-w-sm">
                         {message || 'Unable to establish connection with GitHub REST API endpoint. Verify network status or token quota.'}
                     </p>
                 </div>

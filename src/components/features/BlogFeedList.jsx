@@ -25,7 +25,7 @@ const DEFAULT_ARTICLES = [
     date: 'JANUARY 15, 2026',
     author: 'ENGINEERING TEAM',
     title: 'Zero-Telemetry Engineering: Client-Side Token Caching & Browser Isolation',
-    summary: 'How GitExplorer leverages browser sessionStorage encryption and direct REST dispatches to guarantee zero data retention or backend tracking on developer credentials.',
+    summary: 'How ExploreGit leverages browser sessionStorage encryption and direct REST dispatches to guarantee zero data retention or backend tracking on developer credentials.',
     category: 'Architecture',
     link: '/company',
   },

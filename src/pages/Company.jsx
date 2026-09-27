@@ -12,7 +12,7 @@ import valueAutonomy from '../assets/value-autonomy.png';
 import valueInclusion from '../assets/value-inclusion.png';
 import valueProfessionalism from '../assets/value-professionalism.png';
 import { storageService } from '../services/storageService';
-import BlogFeedList from '../components/features/BlogFeedList';
+
 
 // ─── Operating Values (Flush 3-Pane Landscape Section) ───
 const VALUES = [
@@ -87,9 +87,9 @@ const Company = () => {
     return (
         <div className="flex min-h-screen flex-col bg-[#0A0A0C] text-white font-sans selection:bg-white/20 selection:text-white">
             <SEO
-                title="Company · GitExplorer"
+                title="Company · ExploreGit"
                 description="A globally distributed, developer-first platform building where humans and agents collaborate, learn, and ship together."
-                canonical="https://git-explore-one.vercel.app/company"
+                canonical="https://exploregit.vercel.app/company"
             />
             <Header activeTab="company" onTokenSave={handleTokenSave} showBackButton />
 
@@ -99,9 +99,9 @@ const Company = () => {
                 <section className="border-b border-white/10">
                     <div className="mx-auto w-full max-w-[1280px] border-white/10 min-[1280px]:border-x px-6 py-12 md:px-20 md:py-16">
                         <div className="mx-auto flex w-full max-w-[720px] flex-col gap-4">
-                            <h1 className="text-3xl sm:text-4xl font-extrabold font-space text-white tracking-tight">About</h1>
+                            <h1 className="text-3xl sm:text-4xl font-extrabold font-heading text-white tracking-tight">About</h1>
                             <p className="text-sm md:text-base font-sans text-zinc-300 leading-relaxed">
-                                GitExplorer is a globally distributed, remote-first developer intelligence layer with one clear mission: to build the world&apos;s next open-source discovery platform where engineers and AI agents collaborate, learn, and ship together. We operate just as we believe the future of the interconnected developer community will work—bringing clarity to repository momentum, contributor health, and code velocity faster than was ever possible before.
+                                ExploreGit is a globally distributed, remote-first developer intelligence layer with one clear mission: to build the world&apos;s next open-source discovery platform where engineers and AI agents collaborate, learn, and ship together. We operate just as we believe the future of the interconnected developer community will work—bringing clarity to repository momentum, contributor health, and code velocity faster than was ever possible before.
                             </p>
                         </div>
                     </div>
@@ -111,8 +111,8 @@ const Company = () => {
                 <section className="border-b border-white/10">
                     <div className="mx-auto w-full max-w-[1280px] border-white/10 min-[1280px]:border-x px-6 py-10 md:px-20">
                         <div className="mx-auto flex w-full max-w-[720px] flex-col gap-3">
-                            <h2 className="text-2xl sm:text-3xl font-bold font-space text-white tracking-tight">Values</h2>
-                            <p className="text-sm md:text-base font-sans text-zinc-400 leading-relaxed">
+                            <h2 className="text-2xl sm:text-3xl font-bold font-heading text-white tracking-tight">Values</h2>
+                            <p className="text-sm md:text-base font-sans text-[#94A3B8] leading-relaxed">
                                 We are a company built by developers, for developers. Our culture is grounded in autonomy, inclusion, professionalism, transparent feedback, and deep care for craft.
                             </p>
                         </div>
@@ -137,7 +137,7 @@ const Company = () => {
                                 </picture>
                                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/15 via-black/10 to-black/75 group-hover:from-black/10 group-hover:to-black/65 transition-all duration-500" />
                                 <div className="relative flex w-full flex-col justify-between gap-16 z-10">
-                                    <h2 className="text-4xl sm:text-5xl font-extrabold font-space text-white tracking-tight">{val.title}</h2>
+                                    <h2 className="text-4xl sm:text-5xl font-extrabold font-heading text-white tracking-tight">{val.title}</h2>
                                     <p className="text-sm sm:text-base font-sans text-white leading-relaxed max-w-[360px]">{val.description}</p>
                                 </div>
                             </article>
@@ -150,8 +150,8 @@ const Company = () => {
                     <div className="mx-auto w-full max-w-[1280px] border-white/10 min-[1280px]:border-x px-6 py-12 md:px-20">
                         <div className="mx-auto flex w-full max-w-[720px] flex-col gap-8">
                             <div className="flex flex-col gap-2">
-                                <h2 className="text-2xl sm:text-3xl font-bold font-space text-white tracking-tight">How we operate</h2>
-                                <p className="text-sm text-zinc-400 font-sans">Architectural constraints and core operational principles baked into GitExplorer.</p>
+                                <h2 className="text-2xl sm:text-3xl font-bold font-heading text-white tracking-tight">How we operate</h2>
+                                <p className="text-sm text-[#94A3B8] font-sans">Architectural constraints and core operational principles baked into ExploreGit.</p>
                             </div>
                             <div className="grid gap-8 md:grid-cols-2">
                                 {OPERATING_PRINCIPLES.map((op, idx) => (
@@ -160,8 +160,8 @@ const Company = () => {
                                             {idx + 1}
                                         </div>
                                         <div className="flex flex-col gap-1.5 font-sans">
-                                            <h3 className="font-bold text-white text-base font-space">{op.title}</h3>
-                                            <p className="text-sm text-zinc-400 leading-relaxed">{op.desc}</p>
+                                            <h3 className="font-bold text-white text-base font-heading">{op.title}</h3>
+                                            <p className="text-sm text-[#94A3B8] leading-relaxed">{op.desc}</p>
                                         </div>
                                     </article>
                                 ))}
@@ -175,19 +175,19 @@ const Company = () => {
                     <div className="mx-auto w-full max-w-[1280px] border-white/10 min-[1280px]:border-x px-6 py-12 md:px-20">
                         <div className="mx-auto flex w-full max-w-[720px] flex-col gap-8">
                             <div className="flex flex-col gap-3">
-                                <h2 className="text-2xl sm:text-3xl font-bold font-space text-white tracking-tight">Team</h2>
-                                <p className="text-sm md:text-base font-sans text-zinc-400 leading-relaxed">
-                                    What unifies every engineer on GitExplorer is our passion for building developer tools. We have years of experience building applications, contributing to open-source repositories, and crafting developer workflows.
+                                <h2 className="text-2xl sm:text-3xl font-bold font-heading text-white tracking-tight">Team</h2>
+                                <p className="text-sm md:text-base font-sans text-[#94A3B8] leading-relaxed">
+                                    What unifies every engineer on ExploreGit is our passion for building developer tools. We have years of experience building applications, contributing to open-source repositories, and crafting developer workflows.
                                 </p>
                             </div>
-                            <div className="grid gap-4 max-w-xs">
+                            <div className="grid gap-4 max-w-[180px]">
                                 {TEAM.map((member) => (
                                     <article key={member.name} className="flex flex-col gap-3 group">
-                                        <div className="relative aspect-[245/306] overflow-hidden rounded-lg bg-white/5 border border-white/10">
+                                        <div className="relative aspect-square overflow-hidden rounded-lg bg-white/5 border border-white/10">
                                             <img
                                                 src={member.avatar}
                                                 alt={member.name}
-                                                className="size-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                className="size-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                                                 loading="lazy"
                                             />
                                         </div>
@@ -213,12 +213,6 @@ const Company = () => {
                         </div>
                     </div>
                 </section>
-
-                {/* ── Section 6: Engineering Dispatches Feed ── */}
-                <BlogFeedList
-                    title="Engineering & Research Dispatches"
-                    subtitle="Technical deep-dives, architectural notes, and open-weights reasoning benchmarks."
-                />
 
             </main>
 

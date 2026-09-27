@@ -107,10 +107,10 @@ export const calculateRepoHealth = (repo, details, activity, issueStats) => {
 
     if (totalScore >= 92) {
         grade = 'A+';
-        color = '#10B981'; // Emerald
+        color = 'oklch(62.7% 0.194 149.214)';
     } else if (totalScore >= 84) {
         grade = 'A';
-        color = '#34D399'; // Green
+        color = 'oklch(62.7% 0.194 149.214)';
     } else if (totalScore >= 72) {
         grade = 'B';
         color = '#06B6D4'; // Cyan

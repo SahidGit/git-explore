@@ -106,7 +106,7 @@ const NewsroomFooter = () => {
               AI NEWSROOM
             </span>
             <p className="text-xs text-zinc-400 leading-relaxed font-space max-w-md">
-              An independent public intelligence ledger for engineers, researchers, and builders. Built as part of the GitExplorer ecosystem with strict zero-telemetry and local-first architecture.
+              An independent public intelligence ledger for engineers, researchers, and builders. Built as part of the ExploreGit ecosystem with strict zero-telemetry and local-first architecture.
             </p>
           </div>
 
@@ -145,10 +145,10 @@ const NewsroomFooter = () => {
         <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-[11px] text-zinc-500">
           <p>© {new Date().getFullYear()} AI Newsroom • Independent Public Intelligence Ledger</p>
           <div className="flex items-center gap-4">
-            <Link to="/report" className="hover:text-[#FF5A1F] font-bold text-zinc-300">Report Issue</Link>
-            <Link to="/about" className="hover:text-white underline">About</Link>
+            <Link to="/company" className="hover:text-white underline">Company &amp; Vision</Link>
+            <Link to="/terms" className="hover:text-white underline">Terms of Service</Link>
             <Link to="/disclaimer" className="hover:text-white underline">Disclaimer</Link>
-            <Link to="/terms" className="hover:text-white underline">Terms of Use</Link>
+            <Link to="/report" className="hover:text-[#FF5A1F] font-bold text-zinc-300">Report an Issue</Link>
           </div>
         </div>
 

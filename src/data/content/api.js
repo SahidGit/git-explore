@@ -31,7 +31,7 @@ export const apiContent = {
               <p class="text-xs text-zinc-300 leading-relaxed">
                 Open GitHub Settings &rarr; Developer settings &rarr; Personal access tokens &rarr; Tokens (classic).
               </p>
-              <a href="https://github.com/settings/tokens/new?scopes=public_repo,read:user&description=GitExplorer" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-mono text-indigo-400 hover:text-indigo-300 pt-1 font-bold">
+              <a href="https://github.com/settings/tokens/new?scopes=public_repo,read:user&description=ExploreGit" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-mono text-indigo-400 hover:text-indigo-300 pt-1 font-bold">
                 Open GitHub Token Generator ↗
               </a>
             </div>

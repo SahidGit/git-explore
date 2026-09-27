@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Star, GitFork, Bookmark, Share2 } from 'lucide-react';
+import { Star, GitFork, Share2 } from 'lucide-react';
 import { formatNumber, getRelativeTime } from '../../../utils/formatters';
 import ShareRepoModal from './ShareRepoModal';
+import PulseHeart from '../../ui/PulseHeart';
 
 // ─── Language color map (subset) ─────────────────────
 const LANG_COLORS = {
@@ -91,33 +92,36 @@ const RepoCard = ({ repo, onRepoClick, onBookmarkToggle, isBookmarked }) => {
                         </div>
                     </div>
 
-                    {/* Action buttons (Share & Bookmark) */}
-                    <div className="flex items-center gap-1 flex-shrink-0">
+                    {/* Action buttons (Share & PulseHeart) */}
+                    <div className="flex items-center gap-1.5 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                         <button
                             onClick={handleShare}
-                            className="p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-white/[0.06] transition-all duration-200"
+                            className="p-1.5 rounded-xl text-zinc-500 hover:text-white hover:bg-white/[0.06] transition-all duration-200 active:scale-95 cursor-pointer"
                             aria-label={`Share ${repo.name}`}
                             title="Share Repository"
                         >
                             <Share2 className="w-3.5 h-3.5" />
                         </button>
 
-                        <button
-                            onClick={handleBookmark}
-                            className={`p-1.5 rounded-lg transition-all duration-200 ${
-                                isBookmarked
-                                    ? 'text-white bg-white/[0.08] hover:bg-white/[0.12]'
-                                    : 'text-zinc-600 hover:text-white hover:bg-white/[0.06]'
-                            }`}
-                            aria-label={isBookmarked ? `Remove ${repo.name} from bookmarks` : `Bookmark ${repo.name}`}
-                            aria-pressed={isBookmarked}
-                            title={isBookmarked ? 'Remove Bookmark' : 'Bookmark Repository'}
+                        <div
+                            onClick={(e) => e.stopPropagation()}
+                            onPointerDown={(e) => e.stopPropagation()}
+                            className="flex items-center"
                         >
-                            <Bookmark
-                                className="w-3.5 h-3.5 transition-all duration-200"
-                                fill={isBookmarked ? 'currentColor' : 'none'}
+                            <PulseHeart
+                                liked={isBookmarked}
+                                count={repo.stargazers_count || 0}
+                                showCount={false}
+                                onChange={() => onBookmarkToggle(repo)}
+                                size={18}
+                                corner={10}
+                                pillColor="rgba(255, 255, 255, 0.05)"
+                                likedColor="#ff4d6d"
+                                idleColor="#71717A"
+                                label={isBookmarked ? `Remove ${repo.name} from bookmarks` : `Bookmark ${repo.name}`}
+                                className="border border-white/10 hover:border-white/25 transition-all"
                             />
-                        </button>
+                        </div>
                     </div>
                 </div>
 

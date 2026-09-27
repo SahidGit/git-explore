@@ -22,7 +22,7 @@ const AnnouncementBar = () => {
     if (!visible) return null;
 
     return (
-        <div className="bg-[#0E0E10] border-b border-white/10 text-white text-[11px] sm:text-xs font-mono py-1.5 px-4 relative z-50 select-none shadow-md">
+        <div className="bg-[#0E0E10] border-b border-white/10 text-white text-[11px] sm:text-xs font-sans py-1.5 px-4 relative z-50 select-none shadow-sm">
             <div className="mx-auto w-full max-w-[1280px] flex items-center justify-between">
                 
                 {/* Center Content Link */}
@@ -30,14 +30,11 @@ const AnnouncementBar = () => {
                     to="/ai-news"
                     className="mx-auto flex items-center gap-2 hover:text-emerald-300 transition-colors group truncate max-w-[90%] sm:max-w-none"
                 >
-                    <span className="flex h-2 w-2 relative shrink-0">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-                    </span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
                     <span className="font-semibold text-white group-hover:text-emerald-300 transition-colors truncate">
-                        Meet AI Newsroom: Real-time Model Specs &amp; Intel
+                        AI Newsroom: Open model specifications, benchmarks, and research papers
                     </span>
-                    <span className="hidden sm:inline text-zinc-500 font-normal">&bull; Benchmark Updates &amp; Paper Links</span>
+                    <span className="hidden sm:inline text-zinc-400 font-normal">&bull; Updated daily</span>
                     <ArrowRight className="w-3.5 h-3.5 text-emerald-400 group-hover:translate-x-0.5 transition-transform shrink-0" />
                 </Link>
 

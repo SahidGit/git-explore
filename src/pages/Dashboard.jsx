@@ -125,19 +125,19 @@ const Dashboard = ({ activeTab }) => {
     const getSEOProps = () => {
         switch (activeTab) {
             case 'bookmarks': return {
-                title: 'Bookmarks — GitExplorer',
+                title: 'Bookmarks — ExploreGit',
                 description: 'Your curated collection of repositories. Stored locally, private by default.',
-                canonical: 'https://git-explore-one.vercel.app/bookmarks'
+                canonical: 'https://exploregit.vercel.app/bookmarks'
             };
             case 'profile': return {
-                title: 'Developer Profile — GitExplorer',
+                title: 'Developer Profile — ExploreGit',
                 description: 'Analyze GitHub contributor profiles with activity heatmaps and contribution history.',
-                canonical: 'https://git-explore-one.vercel.app/profile'
+                canonical: 'https://exploregit.vercel.app/profile'
             };
             default: return {
-                title: 'Explore Repositories — GitExplorer',
+                title: 'Explore Repositories — ExploreGit',
                 description: 'Discover trending open-source repositories by language, time window, and momentum. Raw GitHub data, structured into signal.',
-                canonical: 'https://git-explore-one.vercel.app/dashboard'
+                canonical: 'https://exploregit.vercel.app/dashboard'
             };
         }
     };
@@ -153,7 +153,7 @@ const Dashboard = ({ activeTab }) => {
                 schema={{
                     "@context": "https://schema.org",
                     "@type": "SoftwareApplication",
-                    "name": "GitExplorer",
+                    "name": "ExploreGit",
                     "applicationCategory": "DeveloperApplication",
                     "operatingSystem": "Web",
                     "offers": {
@@ -174,8 +174,8 @@ const Dashboard = ({ activeTab }) => {
 
                     {/* Offline/fallback banner */}
                     {isFallback && (
-                        <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-amber-500/20 bg-amber-500/5 text-amber-400 text-xs font-mono">
-                            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0 animate-pulse" />
+                        <div className="flex items-center gap-3 px-4 py-3 rounded-lg border border-amber-500/20 bg-amber-500/5 text-amber-400 text-xs font-sans">
+                            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0" />
                             <span>
                                 GitHub API unavailable — showing curated essential stacks.
                                 <a

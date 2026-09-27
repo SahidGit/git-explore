@@ -17,9 +17,9 @@ const NotFound = () => {
     return (
         <div className="flex min-h-screen flex-col bg-[#0A0A0C] text-white font-sans selection:bg-white/20 selection:text-white">
             <SEO
-                title="404 · Signal Not Found · GitExplorer"
+                title="404 · Signal Not Found · ExploreGit"
                 description="The requested repository route or resource does not exist."
-                canonical="https://git-explore-one.vercel.app/404"
+                canonical="https://exploregit.vercel.app/404"
             />
             <Header showBackButton={true} activeTab="" />
 

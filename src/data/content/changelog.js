@@ -1,6 +1,6 @@
 export const changelogContent = {
   title: 'Release Notes',
-  subtitle: 'Changelog and version history for the GitExplorer platform.',
+  subtitle: 'Changelog and version history for the ExploreGit platform.',
   content: `
     <div class="space-y-8">
       <div class="relative border-l border-white/[0.08] ml-3 pl-6 sm:pl-8 space-y-10">

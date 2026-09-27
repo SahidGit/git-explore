@@ -72,11 +72,11 @@ const GitCheatSheet = () => {
                                 <span>Step-by-Step Command Guide &bull; One-Click Copy</span>
                             </div>
 
-                            <h1 className="text-3xl sm:text-4xl font-extrabold font-space text-white tracking-tight">
+                            <h1 className="text-3xl sm:text-4xl font-extrabold font-heading text-white tracking-tight">
                                 Git Cheat Sheet
                             </h1>
 
-                            <p className="text-sm md:text-base font-sans text-zinc-400 leading-relaxed font-normal">
+                            <p className="text-sm md:text-base font-sans text-[#94A3B8] leading-relaxed font-normal">
                                 Line-by-line step-by-step Git command reference. Copy commands in one click, follow clear execution steps, and master terminal workflows.
                             </p>
                         </div>
@@ -108,15 +108,15 @@ const GitCheatSheet = () => {
                         </div>
 
                         {/* Category Navigation Pills */}
-                        <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 scrollbar-none text-xs font-mono">
+                        <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 scrollbar-none text-xs font-mono">
                             {GIT_CHEATSHEET_CATEGORIES.map((cat) => (
                                 <button
                                     key={cat.id}
                                     onClick={() => setSelectedCategory(cat.id)}
-                                    className={`px-3 py-1.5 rounded-xl whitespace-nowrap transition-all duration-200 cursor-pointer active:scale-[0.98] ${
+                                    className={`px-3.5 py-1.5 rounded-xl whitespace-nowrap transition-all duration-200 cursor-pointer active:scale-[0.98] font-mono shadow-none ${
                                         selectedCategory === cat.id
-                                            ? 'bg-white text-black font-extrabold shadow-md'
-                                            : 'bg-white/[0.04] text-zinc-400 border border-white/[0.08] hover:text-white hover:bg-white/[0.08]'
+                                            ? 'bg-white text-black font-bold'
+                                            : 'bg-white/[0.04] text-zinc-400 border border-white/[0.08] hover:text-white hover:bg-white/[0.08] font-medium'
                                     }`}
                                 >
                                     {cat.name}
@@ -138,7 +138,7 @@ const GitCheatSheet = () => {
                         <p className="text-xs text-zinc-500 font-mono">Try searching for keywords like &lsquo;commit&rsquo;, &lsquo;branch&rsquo;, &lsquo;checkout&rsquo;, or reset your filter.</p>
                         <button
                             onClick={() => { setSearchQuery(''); setSelectedCategory('all'); }}
-                            className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black font-bold text-xs font-mono active:scale-[0.98] transition-all cursor-pointer"
+                            className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-black font-bold text-xs font-mono active:scale-[0.98] hover:bg-zinc-200 transition-all cursor-pointer shadow-none"
                         >
                             Reset Search &amp; Filters
                         </button>
@@ -155,7 +155,7 @@ const GitCheatSheet = () => {
                                         SEQUENCE
                                     </span>
                                     <span className="w-4 h-px bg-white/20" />
-                                    <h2 className="text-lg sm:text-xl font-extrabold text-white tracking-tight font-space">
+                                    <h2 className="text-lg sm:text-xl font-extrabold text-white tracking-tight font-heading">
                                         {group.name}
                                     </h2>
                                 </div>
@@ -228,7 +228,7 @@ const StepRowCard = ({ stepIndex, item, isCopied, onCopy }) => {
                 <button
                     onClick={onCopy}
                     aria-label={`Copy command ${item.command}`}
-                    className={`absolute right-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl border text-xs font-mono font-bold transition-all duration-200 flex items-center gap-1.5 shadow-md active:scale-[0.98] cursor-pointer ${
+                    className={`absolute right-3 top-1/2 -translate-y-1/2 px-3.5 py-1.5 rounded-xl border text-xs font-mono font-bold transition-all duration-200 flex items-center gap-1.5 shadow-none active:scale-[0.98] cursor-pointer ${
                         isCopied
                             ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
                             : 'bg-white/10 border-white/20 text-white hover:bg-white/20'
