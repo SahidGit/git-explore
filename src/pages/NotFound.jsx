@@ -45,7 +45,7 @@ const NotFound = () => {
                                         <span className="text-emerald-400 font-bold">❯</span> git checkout branch/requested-route
                                     </p>
                                     <p className="text-rose-400 font-medium">
-                                        fatal: pathspec &apos;404&apos; did not match any file(s) known to git.
+                                        fatal: pathspec '404' did not match any file(s) known to git.
                                     </p>
                                     <p className="text-zinc-600">
                                         Status: 404 Not Found • Zero active commits in reference tree.
@@ -62,7 +62,7 @@ const NotFound = () => {
                                     Lost in the open-source graph.
                                 </h1>
                                 <p className="text-sm md:text-base text-zinc-400 max-w-md mx-auto leading-relaxed font-sans font-normal">
-                                    The route you requested does not exist or has been refactored. Let&apos;s get you back to signal.
+                                    The route you requested does not exist or has been refactored. Let's get you back to signal.
                                 </p>
                             </div>
 
