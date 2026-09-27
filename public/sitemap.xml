@@ -1,68 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://git-explore-one.vercel.app/</loc>
+    <loc>https://exploregit.vercel.app/</loc>
     <lastmod>2025-12-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://git-explore-one.vercel.app/dashboard</loc>
+    <loc>https://exploregit.vercel.app/dashboard</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://git-explore-one.vercel.app/bookmarks</loc>
+    <loc>https://exploregit.vercel.app/bookmarks</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://git-explore-one.vercel.app/profile</loc>
+    <loc>https://exploregit.vercel.app/profile</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://git-explore-one.vercel.app/features</loc>
+    <loc>https://exploregit.vercel.app/features</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://git-explore-one.vercel.app/changelog</loc>
+    <loc>https://exploregit.vercel.app/changelog</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://git-explore-one.vercel.app/docs</loc>
+    <loc>https://exploregit.vercel.app/docs</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://git-explore-one.vercel.app/api</loc>
+    <loc>https://exploregit.vercel.app/api</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://git-explore-one.vercel.app/resources</loc>
+    <loc>https://exploregit.vercel.app/resources</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://git-explore-one.vercel.app/roadmap</loc>
+    <loc>https://exploregit.vercel.app/roadmap</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://git-explore-one.vercel.app/ai-news</loc>
+    <loc>https://exploregit.vercel.app/ai-news</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://git-explore-one.vercel.app/report</loc>
+    <loc>https://exploregit.vercel.app/report</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://git-explore-one.vercel.app/cheatsheet</loc>
+    <loc>https://exploregit.vercel.app/cheatsheet</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
