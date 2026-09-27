@@ -22,7 +22,7 @@ const PageLoader = () => (
 );
 
 /** Dynamic InfoPage routes using the visual master renderer */
-const DYNAMIC_INFO_ROUTES = ['changelog', 'docs', 'api', 'disclaimer', 'terms'];
+const DYNAMIC_INFO_ROUTES = ['changelog', 'docs', 'api', 'disclaimer', 'terms', 'privacy'];
 
 function App() {
   const location = useLocation();
