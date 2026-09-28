@@ -120,6 +120,7 @@ const DashboardPreview = () => {
     const [selectedRepoIdx, setSelectedRepoIdx] = useState(0);
     const [activeTab, setActiveTab] = useState('signal');
     const [hoveredIdx, setHoveredIdx] = useState(6);
+    const [chartMode, setChartMode] = useState('trajectory'); // 'trajectory' | 'velocity' | 'forecast'
 
     const activeRepo = REPO_PRESETS[selectedRepoIdx] || REPO_PRESETS[0];
     const activePt = activeRepo.chartData[hoveredIdx] || activeRepo.chartData[6];
@@ -291,80 +292,350 @@ const DashboardPreview = () => {
                                     </div>
                                 </div>
 
-                                {/* Modern Interactive SVG Star Curve Chart */}
-                                <div className="rounded-xl border border-white/10 bg-[#101115] p-4 sm:p-5 space-y-4">
-                                    <div className="flex flex-wrap items-center justify-between gap-2">
-                                        <div className="flex items-center gap-2">
-                                            <Activity className="w-4 h-4 text-emerald-400" />
-                                            <span className="text-xs sm:text-sm font-mono font-bold text-white">
-                                                7-Day Live Star Trajectory
-                                            </span>
-                                            <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full font-bold">
-                                                LIVE
-                                            </span>
+                                {/* Modern Interactive SVG Star Trajectory Chart */}
+                                <div className="rounded-2xl border border-white/10 bg-[#0F1015]/95 backdrop-blur-xl p-4 sm:p-6 space-y-4 shadow-2xl relative overflow-hidden before:absolute before:inset-x-0 before:top-0 before:h-[2px] before:bg-gradient-to-r before:from-sky-500/0 before:via-sky-400 before:to-indigo-500/0">
+                                    {/* Header Telemetry Row */}
+                                    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.08] pb-3.5">
+                                        <div className="flex items-center gap-2.5">
+                                            <div className="w-8 h-8 rounded-xl bg-sky-500/15 border border-sky-400/30 flex items-center justify-center text-sky-400 shadow-sm shadow-sky-500/20">
+                                                <Activity className="w-4 h-4 text-sky-400 animate-pulse" />
+                                            </div>
+                                            <div>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-xs sm:text-sm font-mono font-bold text-white tracking-tight">
+                                                        7-Day Live Star Trajectory &amp; Velocity Radar
+                                                    </span>
+                                                    <span className="inline-flex items-center gap-1 text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full font-bold">
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                                                        LIVE TELEMETRY
+                                                    </span>
+                                                </div>
+                                                <p className="text-[11px] font-sans text-zinc-400">
+                                                    Real-time stargazer delta computed across 24h intervals with growth acceleration curve
+                                                </p>
+                                            </div>
                                         </div>
 
-                                        {/* Active point hover summary */}
-                                        {activePt && (
-                                            <div className="flex items-center gap-3 text-xs font-mono">
-                                                <span className="text-zinc-400">{activePt.day} ({activePt.date}):</span>
-                                                <span className="text-white font-bold">{formatNumber(activePt.stars)} stars</span>
-                                                <span className="text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                                                    +{formatNumber(activePt.gain)}/day
-                                                </span>
+                                        {/* Chart Mode Switcher & Telemetry metrics */}
+                                        <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
+                                            {/* View Mode Toggle */}
+                                            <div className="flex items-center bg-[#090A0E] border border-white/10 p-0.5 rounded-lg">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setChartMode('trajectory')}
+                                                    className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all cursor-pointer ${
+                                                        chartMode === 'trajectory'
+                                                            ? 'bg-sky-500/20 text-sky-300 border border-sky-400/30 font-bold shadow-sm'
+                                                            : 'text-zinc-400 hover:text-zinc-200'
+                                                    }`}
+                                                >
+                                                    Cumulative Curve
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setChartMode('velocity')}
+                                                    className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all cursor-pointer ${
+                                                        chartMode === 'velocity'
+                                                            ? 'bg-amber-400/20 text-amber-300 border border-amber-400/30 font-bold shadow-sm'
+                                                            : 'text-zinc-400 hover:text-zinc-200'
+                                                    }`}
+                                                >
+                                                    Daily Inflow
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setChartMode('forecast')}
+                                                    className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all cursor-pointer ${
+                                                        chartMode === 'forecast'
+                                                            ? 'bg-purple-500/20 text-purple-300 border border-purple-400/30 font-bold shadow-sm'
+                                                            : 'text-zinc-400 hover:text-zinc-200'
+                                                    }`}
+                                                >
+                                                    30D Forecast
+                                                </button>
                                             </div>
-                                        )}
+
+                                            <span className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/10 text-zinc-300 hidden sm:inline-block">
+                                                7-Day Net: <strong className="text-sky-300">{activeRepo.weeklyVelocity}</strong>
+                                            </span>
+                                        </div>
                                     </div>
 
-                                    {/* SVG Canvas */}
-                                    <div className="relative w-full h-44 sm:h-52 bg-[#0A0A0D] border border-white/5 rounded-lg p-2 pt-4 overflow-hidden">
+                                    {/* SVG Canvas & Chart Body */}
+                                    <div className="relative w-full h-56 sm:h-72 bg-[#08090C] border border-white/[0.08] rounded-xl p-3 sm:p-4 overflow-hidden shadow-inner">
+                                        
+                                        {/* Floating Interactive Hover Tooltip */}
+                                        {activePt && (
+                                            <div 
+                                                className="absolute z-20 pointer-events-none transition-all duration-150 transform -translate-x-1/2"
+                                                style={{
+                                                    left: `${(activePt.x / 700) * 100}%`,
+                                                    top: `${Math.max(8, (activePt.y / 180) * 100 - 38)}%`
+                                                }}
+                                            >
+                                                <div className="bg-[#121318]/95 border border-sky-400/40 px-3.5 py-2 rounded-xl shadow-2xl shadow-sky-500/20 backdrop-blur-md text-center space-y-1 whitespace-nowrap animate-fadeIn ring-1 ring-white/10">
+                                                    <div className="text-[10px] font-mono text-zinc-400 flex items-center justify-center gap-1.5">
+                                                        <span className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-white font-bold">{activePt.day}</span>
+                                                        <span>•</span>
+                                                        <span className="text-zinc-300 font-medium">{activePt.date}</span>
+                                                    </div>
+                                                    <div className="text-xs font-mono font-extrabold text-white flex items-center justify-center gap-1.5">
+                                                        <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
+                                                        <span>{formatNumber(activePt.stars)} Total Stars</span>
+                                                    </div>
+                                                    <div className="text-[11px] font-mono text-emerald-400 font-bold flex items-center justify-center gap-1">
+                                                        <span>▲ +{formatNumber(activePt.gain)}</span>
+                                                        <span className="text-[10px] text-zinc-400 font-normal">in 24h interval</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
                                         <svg
                                             viewBox="0 0 700 180"
                                             className="w-full h-full overflow-visible"
                                             preserveAspectRatio="none"
                                         >
                                             <defs>
-                                                <linearGradient id="saasBlueGrad" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.32" />
-                                                    <stop offset="70%" stopColor="#3B82F6" stopOpacity="0.06" />
-                                                    <stop offset="100%" stopColor="#3B82F6" stopOpacity="0.0" />
+                                                {/* Cyber Dot Grid Pattern */}
+                                                <pattern id="starGridPattern" width="35" height="35" patternUnits="userSpaceOnUse">
+                                                    <circle cx="2" cy="2" r="1" fill="rgba(255,255,255,0.06)" />
+                                                </pattern>
+
+                                                {/* Gradient Fill under the curve */}
+                                                <linearGradient id="starCurveGlow" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.42" />
+                                                    <stop offset="40%" stopColor="#818CF8" stopOpacity="0.20" />
+                                                    <stop offset="80%" stopColor="#6366F1" stopOpacity="0.05" />
+                                                    <stop offset="100%" stopColor="#6366F1" stopOpacity="0.0" />
                                                 </linearGradient>
+
+                                                {/* Gradient Fill for Velocity Bars */}
+                                                <linearGradient id="velocityBarGradient" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stopColor="#F59E0B" stopOpacity="0.9" />
+                                                    <stop offset="60%" stopColor="#F59E0B" stopOpacity="0.4" />
+                                                    <stop offset="100%" stopColor="#F59E0B" stopOpacity="0.1" />
+                                                </linearGradient>
+
+                                                {/* Gradient Stroke for the path */}
+                                                <linearGradient id="starLineStroke" x1="0" y1="0" x2="1" y2="0">
+                                                    <stop offset="0%" stopColor="#38BDF8" />
+                                                    <stop offset="40%" stopColor="#60A5FA" />
+                                                    <stop offset="75%" stopColor="#818CF8" />
+                                                    <stop offset="100%" stopColor="#C084FC" />
+                                                </linearGradient>
+
+                                                {/* Glow Filter */}
+                                                <filter id="neonStarGlow" x="-20%" y="-20%" width="140%" height="140%">
+                                                    <feGaussianBlur stdDeviation="3.5" result="glow" />
+                                                    <feMerge>
+                                                        <feMergeNode in="glow" />
+                                                        <feMergeNode in="SourceGraphic" />
+                                                    </feMerge>
+                                                </filter>
                                             </defs>
 
-                                            {/* Horizontal gridlines */}
-                                            <line x1="40" y1="35" x2="660" y2="35" stroke="rgba(255,255,255,0.06)" strokeDasharray="3 3" />
-                                            <line x1="40" y1="85" x2="660" y2="85" stroke="rgba(255,255,255,0.06)" strokeDasharray="3 3" />
-                                            <line x1="40" y1="135" x2="660" y2="135" stroke="rgba(255,255,255,0.06)" strokeDasharray="3 3" />
+                                            {/* Background Dot Matrix Pattern */}
+                                            <rect x="30" y="10" width="640" height="150" fill="url(#starGridPattern)" />
 
-                                            {/* Area Gradient Fill */}
-                                            <path d={activeRepo.areaPath} fill="url(#saasBlueGrad)" />
+                                            {/* Horizontal Gridlines & Y-Axis Reference Ticks */}
+                                            <line x1="30" y1="30" x2="670" y2="30" stroke="rgba(255,255,255,0.07)" strokeDasharray="3 3" />
+                                            <text x="35" y="26" fill="rgba(255,255,255,0.35)" fontSize="9" fontFamily="monospace" fontWeight="bold">
+                                                {chartMode === 'velocity' ? `MAX PEAK (+${activeRepo.peakGain}/day)` : `PEAK CEILING (${formatNumber(activeRepo.chartData[6].stars)})`}
+                                            </text>
 
-                                            {/* Primary Stroke Line */}
-                                            <path
-                                                d={activeRepo.linePath}
-                                                fill="none"
-                                                stroke="#3B82F6"
-                                                strokeWidth="2.5"
-                                                strokeLinecap="round"
-                                            />
+                                            <line x1="30" y1="75" x2="670" y2="75" stroke="rgba(255,255,255,0.05)" strokeDasharray="3 3" />
+                                            <text x="35" y="71" fill="rgba(255,255,255,0.25)" fontSize="9" fontFamily="monospace">
+                                                {chartMode === 'velocity' ? 'SURGE ACCELERATION (+1.8k/day)' : `MID RANGE (${formatNumber(Math.round((activeRepo.chartData[0].stars + activeRepo.chartData[6].stars) / 2))})`}
+                                            </text>
 
-                                            {/* Active Vertical Guideline */}
-                                            {activePt && (
-                                                <line
-                                                    x1={activePt.x}
-                                                    y1="15"
-                                                    x2={activePt.x}
-                                                    y2="160"
-                                                    stroke="#60A5FA"
-                                                    strokeWidth="1.5"
-                                                    strokeDasharray="3 3"
-                                                    opacity="0.7"
-                                                />
+                                            <line x1="30" y1="120" x2="670" y2="120" stroke="rgba(255,255,255,0.05)" strokeDasharray="3 3" />
+                                            <text x="35" y="116" fill="rgba(255,255,255,0.25)" fontSize="9" fontFamily="monospace">
+                                                {chartMode === 'velocity' ? 'BASELINE PACE (+800/day)' : `BASELINE (${formatNumber(activeRepo.chartData[0].stars)})`}
+                                            </text>
+
+                                            <line x1="30" y1="160" x2="670" y2="160" stroke="rgba(255,255,255,0.1)" />
+
+                                            {/* MODE 1: Cumulative Trajectory Curve (Area + Glowing Spline) */}
+                                            {chartMode === 'trajectory' && (
+                                                <>
+                                                    {/* Area Gradient Fill */}
+                                                    <path d={activeRepo.areaPath} fill="url(#starCurveGlow)" />
+
+                                                    {/* Glow Line Underlay */}
+                                                    <path
+                                                        d={activeRepo.linePath}
+                                                        fill="none"
+                                                        stroke="url(#starLineStroke)"
+                                                        strokeWidth="6"
+                                                        strokeLinecap="round"
+                                                        strokeOpacity="0.45"
+                                                        filter="url(#neonStarGlow)"
+                                                    />
+
+                                                    {/* Primary High-precision Stroke Line */}
+                                                    <path
+                                                        d={activeRepo.linePath}
+                                                        fill="none"
+                                                        stroke="url(#starLineStroke)"
+                                                        strokeWidth="3.5"
+                                                        strokeLinecap="round"
+                                                    />
+                                                </>
                                             )}
 
-                                            {/* Interactive Data Markers */}
-                                            {activeRepo.chartData.map((pt, idx) => {
+                                            {/* MODE 2: Daily Velocity Bars */}
+                                            {chartMode === 'velocity' && (
+                                                <g>
+                                                    {activeRepo.chartData.map((pt, idx) => {
+                                                        const isSelected = hoveredIdx === idx;
+                                                        // Normalize gain between 20px and 130px height
+                                                        const maxGainVal = parseInt(activeRepo.peakGain.replace(/,/g, ''), 10) || 3000;
+                                                        const barHeight = Math.max(25, (pt.gain / maxGainVal) * 125);
+                                                        const barY = 160 - barHeight;
+                                                        const barWidth = 36;
+                                                        const barX = pt.x - barWidth / 2;
+
+                                                        return (
+                                                            <g key={`bar-${pt.day}`} className="cursor-pointer" onClick={() => setHoveredIdx(idx)} onMouseEnter={() => setHoveredIdx(idx)}>
+                                                                {/* Bar Background Capsule */}
+                                                                <rect
+                                                                    x={barX}
+                                                                    y={barY}
+                                                                    width={barWidth}
+                                                                    height={barHeight}
+                                                                    rx="6"
+                                                                    fill={isSelected ? '#F59E0B' : 'url(#velocityBarGradient)'}
+                                                                    fillOpacity={isSelected ? 0.9 : 0.75}
+                                                                    stroke={isSelected ? '#FDE68A' : '#F59E0B'}
+                                                                    strokeWidth={isSelected ? 2 : 1}
+                                                                    className="transition-all duration-200"
+                                                                />
+                                                                {/* Top Glow Cap */}
+                                                                <line
+                                                                    x1={barX}
+                                                                    y1={barY}
+                                                                    x2={barX + barWidth}
+                                                                    y2={barY}
+                                                                    stroke="#FFFFFF"
+                                                                    strokeWidth="2.5"
+                                                                    strokeLinecap="round"
+                                                                    opacity={isSelected ? 1 : 0.6}
+                                                                />
+                                                                {/* Velocity Gain Number on Bar */}
+                                                                <text
+                                                                    x={pt.x}
+                                                                    y={barY - 7}
+                                                                    fill={isSelected ? '#FDE68A' : 'rgba(255,255,255,0.7)'}
+                                                                    fontSize="10"
+                                                                    fontFamily="monospace"
+                                                                    fontWeight="bold"
+                                                                    textAnchor="middle"
+                                                                >
+                                                                    +{formatNumber(pt.gain)}
+                                                                </text>
+                                                            </g>
+                                                        );
+                                                    })}
+                                                </g>
+                                            )}
+
+                                            {/* MODE 3: 30-Day Forecast & Extrapolation Arc */}
+                                            {chartMode === 'forecast' && (
+                                                <>
+                                                    <path d={activeRepo.areaPath} fill="url(#starCurveGlow)" opacity="0.4" />
+                                                    <path
+                                                        d={activeRepo.linePath}
+                                                        fill="none"
+                                                        stroke="url(#starLineStroke)"
+                                                        strokeWidth="3"
+                                                        strokeLinecap="round"
+                                                    />
+                                                    {/* Dotted Extrapolation Arc into future */}
+                                                    <path
+                                                        d={`M 650 ${activeRepo.chartData[6].y} C 665 ${activeRepo.chartData[6].y - 8}, 680 ${activeRepo.chartData[6].y - 14}, 690 ${Math.max(8, activeRepo.chartData[6].y - 18)}`}
+                                                        fill="none"
+                                                        stroke="#C084FC"
+                                                        strokeWidth="2.5"
+                                                        strokeDasharray="4 4"
+                                                    />
+                                                    {/* Target Milestone Marker */}
+                                                    <circle cx="690" cy={Math.max(8, activeRepo.chartData[6].y - 18)} r="4" fill="#C084FC" />
+                                                    <text x="540" y="24" fill="#C084FC" fontSize="10" fontFamily="monospace" fontWeight="bold">
+                                                        🚀 30D Forecast: {formatNumber(activeRepo.stars + 18000)}+
+                                                    </text>
+                                                </>
+                                            )}
+
+                                            {/* Active Crosshair Guidelines (Horizontal & Vertical) */}
+                                            {activePt && chartMode !== 'velocity' && (
+                                                <>
+                                                    {/* Vertical Tracking Line */}
+                                                    <line
+                                                        x1={activePt.x}
+                                                        y1="15"
+                                                        x2={activePt.x}
+                                                        y2="160"
+                                                        stroke="#38BDF8"
+                                                        strokeWidth="1.5"
+                                                        strokeDasharray="3 3"
+                                                        opacity="0.8"
+                                                    />
+                                                    {/* Horizontal Tracking Line */}
+                                                    <line
+                                                        x1="30"
+                                                        y1={activePt.y}
+                                                        x2={activePt.x}
+                                                        y2={activePt.y}
+                                                        stroke="#38BDF8"
+                                                        strokeWidth="1"
+                                                        strokeDasharray="2 2"
+                                                        opacity="0.5"
+                                                    />
+                                                    {/* Ground axis point */}
+                                                    <circle
+                                                        cx={activePt.x}
+                                                        cy="160"
+                                                        r="3"
+                                                        fill="#38BDF8"
+                                                    />
+                                                </>
+                                            )}
+
+                                            {/* Pulsing Radar Sonar Rings on the live edge point (Day 7) */}
+                                            {chartMode !== 'velocity' && (
+                                                <>
+                                                    <circle
+                                                        cx={activeRepo.chartData[6].x}
+                                                        cy={activeRepo.chartData[6].y}
+                                                        r="12"
+                                                        fill="none"
+                                                        stroke="#C084FC"
+                                                        strokeWidth="1.5"
+                                                        opacity="0.6"
+                                                    >
+                                                        <animate attributeName="r" values="6;18;6" dur="2.4s" repeatCount="indefinite" />
+                                                        <animate attributeName="opacity" values="0.8;0;0.8" dur="2.4s" repeatCount="indefinite" />
+                                                    </circle>
+                                                    <circle
+                                                        cx={activeRepo.chartData[6].x}
+                                                        cy={activeRepo.chartData[6].y}
+                                                        r="20"
+                                                        fill="none"
+                                                        stroke="#38BDF8"
+                                                        strokeWidth="1"
+                                                        opacity="0.4"
+                                                    >
+                                                        <animate attributeName="r" values="10;26;10" dur="2.4s" begin="0.8s" repeatCount="indefinite" />
+                                                        <animate attributeName="opacity" values="0.5;0;0.5" dur="2.4s" begin="0.8s" repeatCount="indefinite" />
+                                                    </circle>
+                                                </>
+                                            )}
+
+                                            {/* Interactive Data Node Markers */}
+                                            {chartMode !== 'velocity' && activeRepo.chartData.map((pt, idx) => {
                                                 const isHovered = hoveredIdx === idx;
+                                                const isLast = idx === activeRepo.chartData.length - 1;
                                                 return (
                                                     <g
                                                         key={pt.day}
@@ -381,14 +652,28 @@ const DashboardPreview = () => {
                                                         }}
                                                         className="cursor-pointer group focus:outline-none"
                                                     >
-                                                        <circle cx={pt.x} cy={pt.y} r="20" fill="transparent" />
+                                                        {/* Hit area */}
+                                                        <circle cx={pt.x} cy={pt.y} r="24" fill="transparent" />
+                                                        
+                                                        {/* Outer aura on hover */}
+                                                        {isHovered && (
+                                                            <circle
+                                                                cx={pt.x}
+                                                                cy={pt.y}
+                                                                r="12"
+                                                                fill="#38BDF8"
+                                                                fillOpacity="0.3"
+                                                            />
+                                                        )}
+
+                                                        {/* Node circle */}
                                                         <circle
                                                             cx={pt.x}
                                                             cy={pt.y}
-                                                            r={isHovered ? "6" : "3.5"}
-                                                            fill={isHovered ? "#93C5FD" : "#0E0F12"}
-                                                            stroke="#3B82F6"
-                                                            strokeWidth={isHovered ? "2.5" : "1.5"}
+                                                            r={isHovered ? "6.5" : (isLast ? "5" : "4")}
+                                                            fill={isHovered ? "#FFFFFF" : (isLast ? "#C084FC" : "#090A0E")}
+                                                            stroke={isHovered ? "#38BDF8" : (isLast ? "#E879F9" : "#60A5FA")}
+                                                            strokeWidth={isHovered ? "3" : "2"}
                                                             className="transition-all duration-150"
                                                         />
                                                     </g>
@@ -397,8 +682,8 @@ const DashboardPreview = () => {
                                         </svg>
                                     </div>
 
-                                    {/* Timeline Scrub Buttons */}
-                                    <div className="flex items-center justify-between font-mono text-xs pt-1">
+                                    {/* Interactive Scrub Pills & Date Bar with Live Velocity Badges */}
+                                    <div className="flex items-center justify-between font-mono text-xs pt-1 gap-1.5 overflow-x-auto no-scrollbar">
                                         {activeRepo.chartData.map((pt, idx) => {
                                             const isSelected = hoveredIdx === idx;
                                             return (
@@ -407,13 +692,17 @@ const DashboardPreview = () => {
                                                     type="button"
                                                     onClick={() => setHoveredIdx(idx)}
                                                     onMouseEnter={() => setHoveredIdx(idx)}
-                                                    className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer font-bold ${
+                                                    className={`px-3 py-1.5 rounded-xl transition-all duration-150 cursor-pointer text-xs flex flex-col items-center gap-0.5 shrink-0 border ${
                                                         isSelected
-                                                            ? 'text-white bg-white/15 border border-white/20'
-                                                            : 'text-zinc-500 hover:text-zinc-300'
+                                                            ? 'text-white bg-sky-500/20 border-sky-400/60 shadow-md shadow-sky-500/10 font-bold scale-105'
+                                                            : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] border-white/5 bg-white/[0.02]'
                                                     }`}
                                                 >
-                                                    {pt.day}
+                                                    <div className="flex items-center gap-1 font-mono text-[11px]">
+                                                        <span>{pt.day}</span>
+                                                        <span className="text-[9px] text-emerald-400 font-bold">+{formatNumber(pt.gain)}</span>
+                                                    </div>
+                                                    <span className="text-[10px] text-zinc-400 font-normal">{pt.date}</span>
                                                 </button>
                                             );
                                         })}
