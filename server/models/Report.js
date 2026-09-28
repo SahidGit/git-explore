@@ -1,18 +1,32 @@
 const mongoose = require('mongoose');
 
+const VALID_ISSUE_TYPES = [
+    // 10 UI categories from ReportIssue.jsx
+    'AI Newsroom: Inaccurate Model Pricing / Specs',
+    'AI Newsroom: Broken arXiv / Paper Link',
+    'AI Newsroom: Missing Model / Lab Suggestion',
+    'ExploreGit: Repository Search / Filter Bug',
+    'GitHub API & Token Rate Limit Issue',
+    'Local Bookmarks & Export Bug',
+    'UI Layout / Responsive Glitch',
+    'Feature Request / Platform Idea',
+    'Documentation or Typo Correction',
+    'Other / General Feedback',
+    // 5 Generic / legacy categories
+    'Bug Report',
+    'Feature / Suggestion',
+    'Content / Data Error',
+    'Broken Link',
+    'Other',
+];
+
 const reportSchema = new mongoose.Schema(
     {
         issueType: {
             type: String,
             required: [true, 'Issue type is required'],
             enum: {
-                values: [
-                    'Bug Report',
-                    'Feature / Suggestion',
-                    'Content / Data Error',
-                    'Broken Link',
-                    'Other',
-                ],
+                values: VALID_ISSUE_TYPES,
                 message: '{VALUE} is not a valid issue type',
             },
         },

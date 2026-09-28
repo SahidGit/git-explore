@@ -22,8 +22,12 @@ router.post('/', async (req, res) => {
         const { issueType, pageUrl, description, email, cfTurnstileToken } = req.body;
 
         // Field validation
-        if (!issueType) {
-            return res.status(400).json({ success: false, message: 'Validation failed: issueType is required.' });
+        const validIssueTypes = Report.schema.path('issueType').enumValues;
+        if (!issueType || !validIssueTypes.includes(typeof issueType === 'string' ? issueType.trim() : '')) {
+            return res.status(400).json({
+                success: false,
+                message: `Validation failed: "${issueType || ''}" is not a valid issue type.`,
+            });
         }
         if (!description?.trim()) {
             return res.status(400).json({ success: false, message: 'Validation failed: description is required.' });
@@ -80,7 +84,7 @@ router.post('/', async (req, res) => {
 
         const reportData = {
             id: new mongoose.Types.ObjectId().toString(),
-            issueType: sanitizeString(issueType),
+            issueType: issueType.trim(),
             pageUrl: pageUrl ? sanitizeString(pageUrl.trim()) : '',
             description: sanitizeString(description.trim()),
             email: email ? email.trim().toLowerCase() : '',
