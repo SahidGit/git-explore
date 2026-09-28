@@ -7,7 +7,7 @@ import {
     Github, Linkedin, ExternalLink, Code2, Terminal,
     ShieldCheck, Cpu, GitBranch, Zap, ArrowUpRight
 } from 'lucide-react';
-import sahidPhoto from '../assets/team-sahid.png';
+import sahidPhoto from '../assets/team-sahid.webp';
 import valueAutonomy from '../assets/value-autonomy.png';
 import valueInclusion from '../assets/value-inclusion.png';
 import valueProfessionalism from '../assets/value-professionalism.png';
