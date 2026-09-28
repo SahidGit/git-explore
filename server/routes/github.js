@@ -22,11 +22,61 @@ const getGithubHeaders = (req) => {
     return headers;
 };
 
-/** Proxy helper — forwards a GitHub API request and relays the response */
+/** In-memory cache for GitHub API requests (60s TTL) */
+const proxyCache = new Map();
+const CACHE_TTL_MS = 60 * 1000;
+
+// Periodic cleanup of expired cache entries
+const cacheCleanupTimer = setInterval(() => {
+    const now = Date.now();
+    for (const [key, entry] of proxyCache.entries()) {
+        if (now > entry.expiresAt) {
+            proxyCache.delete(key);
+        }
+    }
+}, 60 * 1000);
+
+if (cacheCleanupTimer.unref) {
+    cacheCleanupTimer.unref();
+}
+
+/** Proxy helper — forwards a GitHub API request, caches successful responses, and relays rate-limit headers */
 const proxyGithub = async (res, url, headers) => {
+    const cacheKey = `${url}::${headers['Authorization'] || 'public'}`;
+    const now = Date.now();
+    const cached = proxyCache.get(cacheKey);
+
+    if (cached && now < cached.expiresAt) {
+        res.setHeader('X-Cache', 'HIT');
+        for (const [headerName, headerVal] of Object.entries(cached.headers)) {
+            res.setHeader(headerName, headerVal);
+        }
+        return res.status(cached.status).json(cached.data);
+    }
+
     try {
         const response = await fetch(url, { headers });
+        const rateLimitHeaders = {};
+        ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-ratelimit-reset', 'x-ratelimit-used', 'etag'].forEach((h) => {
+            const val = response.headers.get(h);
+            if (val) {
+                res.setHeader(h, val);
+                rateLimitHeaders[h] = val;
+            }
+        });
+
         const data = await response.json();
+
+        if (response.ok) {
+            proxyCache.set(cacheKey, {
+                status: response.status,
+                data,
+                headers: rateLimitHeaders,
+                expiresAt: now + CACHE_TTL_MS,
+            });
+        }
+
+        res.setHeader('X-Cache', 'MISS');
         return res.status(response.status).json(data);
     } catch (err) {
         return res.status(500).json({ message: 'Failed to reach GitHub API', error: err.message });

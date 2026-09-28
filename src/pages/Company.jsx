@@ -193,7 +193,7 @@ const Company = () => {
                                         </div>
                                         <div className="leading-6">
                                             <div className="flex items-center justify-between">
-                                                <h3 className="font-semibold text-white font-space text-sm">{member.name}</h3>
+                                                <h3 className="font-semibold text-white font-heading text-sm">{member.name}</h3>
                                                 {member.github && (
                                                     <a
                                                         href={member.github}

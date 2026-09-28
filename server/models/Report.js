@@ -56,4 +56,8 @@ const reportSchema = new mongoose.Schema(
     }
 );
 
+// Indexes for query performance
+reportSchema.index({ status: 1, createdAt: -1 });
+reportSchema.index({ createdAt: -1 });
+
 module.exports = mongoose.model('Report', reportSchema);

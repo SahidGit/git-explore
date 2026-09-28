@@ -29,7 +29,7 @@ const ECOSYSTEM_CATEGORIES = [
     id: "ai-skills",
     name: "AI Skills & Agents",
     badge: "Agentic",
-    color: "#A855F7",
+    color: "#A1A1AA",
     query: "topic:ai",
   },
   {
@@ -43,7 +43,7 @@ const ECOSYSTEM_CATEGORIES = [
     id: "chatbots",
     name: "AI Chatbots",
     badge: "Chat",
-    color: "#EC4899",
+    color: "#71717A",
     query: "topic:chatbot",
   },
   {
@@ -275,8 +275,8 @@ const Hero = ({ onExplore }) => {
         }}
       />
 
-      {/* Main Container Frame */}
-      <div className="mx-auto w-full max-w-[1280px] min-[1280px]:border-x border-white/10 relative z-10 px-4 sm:px-6 pt-4 sm:pt-6 pb-12 sm:pb-16">
+      {/* Main Container Frame - Boundless & Spacious */}
+      <div className="mx-auto w-full max-w-[1280px] relative z-10 px-4 sm:px-6 pt-4 sm:pt-6 pb-12 sm:pb-16">
         <div className="mx-auto flex w-full max-w-[840px] flex-col items-center gap-5 sm:gap-6 text-center">
           {/* Main Headline */}
           <div className="space-y-3 sm:space-y-4 py-1 sm:py-2">
@@ -291,11 +291,11 @@ const Hero = ({ onExplore }) => {
             </p>
           </div>
 
-          {/* Primary CTA Buttons (Geist Mono, rounded-xl, flat solid, no glow) */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full sm:w-auto pt-2 px-4 sm:px-0">
+          {/* Primary CTA Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto pt-2 px-4 sm:px-0">
             <button
               onClick={onExplore}
-              className="group relative inline-flex items-center justify-center gap-2.5 h-12 px-7 rounded-xl bg-white text-black font-mono font-bold text-xs sm:text-sm hover:bg-zinc-200 active:scale-[0.98] transition-all duration-150 shadow-none cursor-pointer w-full sm:w-auto"
+              className="btn-saas-primary w-full sm:w-auto"
             >
               <span>Explore trending repositories</span>
               <ArrowRight className="w-4 h-4 transition-transform duration-150 group-hover:translate-x-1" />
@@ -305,15 +305,15 @@ const Hero = ({ onExplore }) => {
               href="https://github.com/SahidGit/git-explore"
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative inline-flex items-center justify-center gap-2.5 h-12 px-7 rounded-xl bg-[#121215] hover:bg-[#18181D] border border-white/20 hover:border-white/40 text-white font-mono font-bold text-xs sm:text-sm active:scale-[0.98] transition-all duration-150 shadow-none cursor-pointer w-full sm:w-auto"
+              className="btn-saas-secondary w-full sm:w-auto"
             >
-              <Heart className="w-4 h-4 text-rose-500 fill-rose-500 transition-transform duration-150 group-hover:scale-110" />
+              <Heart className="w-4 h-4 text-zinc-300 fill-zinc-300 transition-transform duration-150 group-hover:scale-110" />
               <span>Star on GitHub</span>
             </a>
           </div>
 
           {/* Sub metadata label */}
-          <div className="mt-2 flex flex-wrap items-center justify-center gap-3 text-xs font-sans text-[#94A3B8]">
+          <div className="mt-2 flex flex-wrap items-center justify-center gap-3 text-xs font-sans text-zinc-400">
             <span className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
               Open source &bull; MIT licensed
@@ -325,11 +325,11 @@ const Hero = ({ onExplore }) => {
           </div>
         </div>
 
-        {/* ── Live Discovery Interaction Module ── */}
-        <div className="w-full max-w-4xl mx-auto mt-8 sm:mt-10 relative">
-          <div className="rounded-lg border border-white/15 bg-[#121215]/95 backdrop-blur-2xl overflow-hidden shadow-sm">
-            {/* Top Module Bar with Search Input */}
-            <div className="p-3.5 sm:p-5 border-b border-white/10 bg-[#0E0E10]/90 space-y-3.5">
+        {/* ── Seamless Trending Repos Live Signal Module ── */}
+        <div className="w-full max-w-4xl mx-auto mt-8 sm:mt-12 relative">
+          <div className="rounded-2xl bg-[#0E0F12]/90 backdrop-blur-xl shadow-2xl overflow-hidden">
+            {/* Search Input Bar */}
+            <div className="p-4 sm:p-5 bg-[#121318]/60 space-y-3.5">
               <form onSubmit={handleSearchSubmit} className="relative w-full">
                 <label htmlFor="hero-repo-search" className="sr-only">
                   Search repositories, topics, or languages…
@@ -342,30 +342,30 @@ const Hero = ({ onExplore }) => {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search repositories, topics, or languages…"
-                    className="w-full pl-10 pr-24 py-2.5 sm:py-3 bg-[#0A0A0C] border border-white/15 rounded-lg font-sans text-xs sm:text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition-all"
+                    className="w-full pl-10 pr-24 py-2.5 sm:py-3 bg-black/50 border border-white/10 rounded-xl font-sans text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all"
                   />
                   {searchQuery && (
                     <button
                       type="button"
                       onClick={() => setSearchQuery("")}
                       aria-label="Clear search input"
-                      className="absolute right-16 p-1 text-zinc-400 hover:text-white transition-colors"
+                      className="absolute right-20 p-1 text-zinc-400 hover:text-white transition-colors cursor-pointer"
                     >
                       <X className="w-4 h-4" />
                     </button>
                   )}
                   <button
                     type="submit"
-                    className="absolute right-2 px-3.5 py-1.5 bg-white text-black hover:bg-zinc-200 rounded-lg text-xs font-mono font-bold transition-all active:scale-95 shadow-none cursor-pointer"
+                    className="btn-saas-primary absolute right-2 text-xs h-[32px] px-3.5 rounded-lg"
                   >
                     Filter
                   </button>
                 </div>
               </form>
 
-              {/* Quick Filter Chips */}
+              {/* Quick Filter Chips (Clean Borderless Pills) */}
               <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-0.5 no-scrollbar flex-wrap sm:flex-nowrap">
-                <span className="text-xs font-mono text-zinc-400 uppercase tracking-wider shrink-0 flex items-center gap-1.5 mr-1 font-semibold">
+                <span className="text-xs font-sans text-zinc-400 uppercase tracking-wider shrink-0 flex items-center gap-1.5 mr-1 font-semibold">
                   <Filter className="w-3.5 h-3.5 text-emerald-400" />
                   <span>Quick:</span>
                 </span>
@@ -378,10 +378,10 @@ const Hero = ({ onExplore }) => {
                       onClick={() => handleChipClick(chip)}
                       aria-pressed={isSelected}
                       aria-label={`Filter by ${chip.label}`}
-                      className={`px-3.5 py-1.5 rounded-full text-xs font-mono border transition-all shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-95 shadow-none ${
+                      className={`px-3.5 py-1 rounded-full text-xs font-sans transition-all shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-95 shadow-none border-0 ${
                         isSelected
-                          ? "bg-white text-black border-white shadow-none font-bold"
-                          : "bg-[#121215] text-zinc-300 border-white/10 hover:border-white/25 hover:bg-[#18181D] hover:text-white font-medium"
+                          ? "bg-white text-black font-medium"
+                          : "bg-white/[0.08] text-zinc-300 hover:bg-white/[0.14] hover:text-white font-medium"
                       }`}
                     >
                       {chip.label}
@@ -396,7 +396,7 @@ const Hero = ({ onExplore }) => {
                       setSearchQuery("");
                       setActiveChip(null);
                     }}
-                    className="text-xs font-sans text-zinc-400 hover:text-rose-400 underline ml-auto shrink-0 transition-colors"
+                    className="text-xs font-sans text-zinc-400 hover:text-white underline ml-auto shrink-0 transition-colors"
                   >
                     Reset filters
                   </button>
@@ -404,11 +404,11 @@ const Hero = ({ onExplore }) => {
               </div>
             </div>
 
-            {/* Chrome bar metadata header */}
-            <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/10 bg-[#0A0A0C] text-xs font-sans font-medium text-zinc-400">
+            {/* Signal preview header bar */}
+            <div className="flex items-center justify-between px-5 py-2.5 bg-black/40 text-xs font-sans font-medium text-zinc-400">
               <div className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                <span>LIVE SIGNAL PREVIEW</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="tracking-wide">LIVE SIGNAL PREVIEW</span>
               </div>
               <div>
                 {filteredRepos.length}{" "}
@@ -417,8 +417,8 @@ const Hero = ({ onExplore }) => {
               </div>
             </div>
 
-            {/* Filtered Repository List - Clean divided tabular rows without nested card boxes */}
-            <div className="divide-y divide-white/[0.08] bg-[#0A0A0C]/90 min-h-[220px]">
+            {/* Filtered Repository List - Seamless & Borderless */}
+            <div className="bg-transparent min-h-[220px] p-1.5 space-y-0.5">
               {filteredRepos.length > 0 ? (
                 filteredRepos.map((repo) => (
                   <div
@@ -439,10 +439,10 @@ const Hero = ({ onExplore }) => {
                         );
                       }
                     }}
-                    className="grid grid-cols-12 gap-3 items-center px-4 py-3.5 hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emerald-400 transition-colors cursor-pointer group"
+                    className="grid grid-cols-12 gap-3 items-center px-4 py-3 rounded-xl hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emerald-400 transition-colors cursor-pointer group"
                   >
                     <div className="col-span-12 sm:col-span-6 text-left">
-                      <p className="text-xs sm:text-sm font-sans text-white font-semibold group-hover:text-emerald-300 transition-colors truncate">
+                      <p className="text-xs sm:text-sm font-sans text-white font-medium group-hover:text-emerald-400 transition-colors truncate">
                         {repo.name}
                       </p>
                       <p className="text-xs font-sans text-zinc-400 truncate mt-0.5">
@@ -490,7 +490,7 @@ const Hero = ({ onExplore }) => {
 
       {/* ── Multi-cell Ecosystem Categories Strip ── */}
       <div className="border-t border-white/10 bg-[#0E0E10]/95 backdrop-blur-xl relative z-10">
-        <div className="mx-auto w-full max-w-[1280px] min-[1280px]:border-x border-white/10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6">
+        <div className="mx-auto w-full max-w-[1280px] grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 divide-x divide-white/[0.08]">
           {ECOSYSTEM_CATEGORIES.map((cat) => (
             <div
               key={cat.id}
@@ -504,16 +504,16 @@ const Hero = ({ onExplore }) => {
                   handleCategoryClick(cat);
                 }
               }}
-              className="flex items-center justify-center gap-2 border-b sm:border-b-0 border-r border-white/10 py-3.5 sm:py-4 px-4 cursor-pointer hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 active:scale-[0.98] transition-all select-none group"
+              className="flex items-center justify-center gap-2 border-b sm:border-b-0 border-white/10 py-3.5 sm:py-4 px-4 cursor-pointer hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 active:scale-[0.98] transition-all select-none group"
             >
               <span
                 className="w-2 h-2 rounded-full shrink-0"
                 style={{ backgroundColor: cat.color }}
               />
-              <span className="text-xs font-sans font-semibold text-zinc-200 group-hover:text-white transition-colors truncate">
+              <span className="text-xs font-sans font-medium text-zinc-200 group-hover:text-white transition-colors truncate">
                 {cat.name}
               </span>
-              <span className="text-xs font-sans font-medium text-zinc-400 shrink-0">
+              <span className="text-xs font-sans font-normal text-zinc-400 shrink-0">
                 {cat.badge}
               </span>
             </div>

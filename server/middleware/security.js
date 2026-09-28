@@ -8,7 +8,7 @@ const securityHeaders = (req, res, next) => {
         'Content-Security-Policy',
         [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com",
+            "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
             "frame-src https://challenges.cloudflare.com",
             "connect-src 'self' http://localhost:5000 https://api.github.com https://challenges.cloudflare.com",
             "img-src 'self' data: https:",

@@ -47,10 +47,10 @@ const GithubSyncSection = () => {
                     <div className="relative h-48 rounded-lg border border-white/10 bg-[#0E0E10] p-6 flex flex-col justify-between text-xs overflow-hidden">
                         <div className="flex items-center justify-between border-b border-white/10 pb-3">
                             <span className="text-zinc-300 flex items-center gap-1.5 text-[11px]">
-                                <Bookmark className="w-3.5 h-3.5 text-accent" />
+                                <Bookmark className="w-3.5 h-3.5 text-zinc-300" />
                                 <span>IndexedDB / LocalStorage</span>
                             </span>
-                            <span className="text-accent font-bold text-[10px]">100% PRIVATE</span>
+                            <span className="text-zinc-300 font-bold text-[10px]">100% PRIVATE</span>
                         </div>
                         <div className="bg-[#0A0A0C] border border-white/10 p-3 rounded-lg text-[11px] text-zinc-300 flex items-center justify-between">
                             <span>Saved Repositories &amp; Developer Notes</span>
@@ -61,14 +61,14 @@ const GithubSyncSection = () => {
                         </div>
                         <div className="flex items-center justify-between pt-2 border-t border-white/10 text-zinc-300 text-[11px]">
                             <span>Zero telemetry &bull; Local-first</span>
-                            <Link to="/bookmarks" aria-label="Open Saved Bookmarks and Developer Notes" className="text-white font-semibold hover:text-accent transition-colors">
+                            <Link to="/bookmarks" aria-label="Open Saved Bookmarks and Developer Notes" className="text-white font-semibold hover:text-zinc-300 transition-colors">
                                 Open Bookmarks &rarr;
                             </Link>
                         </div>
                     </div>
 
                     <div className="text-center md:text-left space-y-2">
-                        <span className="text-[10px] font-sans text-accent uppercase tracking-wider block font-semibold">
+                        <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest block font-semibold">
                             BOOKMARKS / EXPORT
                         </span>
                         <h3 className="text-xl font-bold text-white">

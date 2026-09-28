@@ -95,10 +95,10 @@ const ContributionHeatmap = ({ username }) => {
     const getLevelColor = (level) => {
         switch (level) {
             case 0: return 'bg-white/[0.04]';
-            case 1: return 'bg-emerald-950/60 border border-emerald-800/40';
-            case 2: return 'bg-emerald-700/80 border border-emerald-600/40';
-            case 3: return 'bg-emerald-500/90 border border-emerald-400/50';
-            case 4: return 'bg-emerald-400 border border-emerald-300/60';
+            case 1: return 'bg-blue-950/70 border border-blue-900/40';
+            case 2: return 'bg-blue-700/80 border border-blue-600/40';
+            case 3: return 'bg-blue-500/90 border border-blue-400/50';
+            case 4: return 'bg-blue-400 border border-blue-300/60';
             default: return 'bg-white/[0.04]';
         }
     };
@@ -173,12 +173,12 @@ const ContributionHeatmap = ({ username }) => {
                 <div className="p-6 bg-[#121215] rounded-xl border border-white/[0.08] shadow-xl overflow-hidden relative group">
                     <div className="flex items-center justify-between gap-3 mb-3 relative z-10">
                         <div className="flex items-center gap-2">
-                            <Calendar className="w-4 h-4 text-emerald-400" />
+                            <Calendar className="w-4 h-4 text-blue-400" />
                             <h3 className="text-sm font-bold text-white font-mono">
                                 Contribution Activity
                             </h3>
                         </div>
-                        <span className="text-[10px] font-mono text-emerald-400 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                        <span className="text-[10px] font-mono text-blue-400 px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20">
                             {data.totalContributions.toLocaleString()} contributions in last year
                         </span>
                     </div>
@@ -220,10 +220,10 @@ const ContributionHeatmap = ({ username }) => {
                         <span>Less</span>
                         <div className="flex gap-1">
                             <div className="w-[10px] h-[10px] rounded-[2px] bg-white/[0.04]" />
-                            <div className="w-[10px] h-[10px] rounded-[2px] bg-emerald-950/60 border border-emerald-800/40" />
-                            <div className="w-[10px] h-[10px] rounded-[2px] bg-emerald-700/80 border border-emerald-600/40" />
-                            <div className="w-[10px] h-[10px] rounded-[2px] bg-emerald-500 border border-emerald-400/40" />
-                            <div className="w-[10px] h-[10px] rounded-[2px] bg-emerald-400 border border-emerald-300/40" />
+                            <div className="w-[10px] h-[10px] rounded-[2px] bg-blue-950/70 border border-blue-900/40" />
+                            <div className="w-[10px] h-[10px] rounded-[2px] bg-blue-700/80 border border-blue-600/40" />
+                            <div className="w-[10px] h-[10px] rounded-[2px] bg-blue-500 border border-blue-400/40" />
+                            <div className="w-[10px] h-[10px] rounded-[2px] bg-blue-400 border border-blue-300/40" />
                         </div>
                         <span>More</span>
                     </div>

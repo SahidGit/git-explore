@@ -58,7 +58,7 @@ const NotFound = () => {
                                 <span className="text-xs font-mono uppercase tracking-widest text-[#71717A] block">
                                     &lt;STATUS_CODE: 404 /&gt;
                                 </span>
-                                <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-space">
+                                <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-heading">
                                     Lost in the open-source graph.
                                 </h1>
                                 <p className="text-sm md:text-base text-zinc-400 max-w-md mx-auto leading-relaxed font-sans font-normal">
@@ -67,17 +67,17 @@ const NotFound = () => {
                             </div>
 
                             {/* CTA buttons */}
-                            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2 font-mono text-xs">
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2 text-xs">
                                 <Link
                                     to="/"
-                                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-black font-extrabold hover:bg-zinc-200 active:scale-[0.98] transition-all shadow-md"
+                                    className="btn-saas-primary text-xs"
                                 >
                                     <Home className="w-4 h-4" />
                                     <span>Return Home</span>
                                 </Link>
                                 <Link
                                     to="/dashboard"
-                                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-white/15 bg-white/[0.04] text-white font-semibold hover:border-white/30 hover:bg-white/[0.08] active:scale-[0.98] transition-all"
+                                    className="btn-saas-secondary text-xs"
                                 >
                                     <Search className="w-4 h-4 text-emerald-400" />
                                     <span>Explore Repositories</span>

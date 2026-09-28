@@ -18,13 +18,13 @@ const VALUE_PILLARS = [
             <div className="w-full max-w-sm space-y-3 font-sans text-xs">
                 <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
                     <span className="text-zinc-200 flex items-center gap-1.5 text-xs">
-                        <Search className="w-3.5 h-3.5 text-emerald-400" />
+                        <Search className="w-3.5 h-3.5 text-zinc-400" />
                         <span className="font-mono">Filter: topic:ai</span>
                     </span>
-                    <span className="text-emerald-400 text-xs font-bold">&bull; VELOCITY SIGNAL</span>
+                    <span className="text-zinc-300 text-xs font-bold">&bull; VELOCITY SIGNAL</span>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                    <span className="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold text-xs">
+                    <span className="px-2.5 py-1 rounded-md bg-white/10 text-white border border-white/20 font-bold text-xs">
                         +12.5k / wk
                     </span>
                     <span className="px-2.5 py-1 rounded-md bg-white/[0.06] text-zinc-200 text-xs">Today</span>
@@ -46,14 +46,14 @@ const VALUE_PILLARS = [
             <div className="w-full max-w-sm space-y-3 font-sans text-xs">
                 <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
                     <span className="text-white font-bold text-xs truncate">deepseek-ai/DeepSeek-V3</span>
-                    <span className="text-emerald-400 flex items-center gap-1 text-xs font-bold bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">
+                    <span className="text-zinc-200 flex items-center gap-1 text-xs font-bold bg-white/10 border border-white/20 px-2 py-0.5 rounded">
                         HEALTH 98%
                     </span>
                 </div>
                 <div className="grid grid-cols-3 divide-x divide-white/10 border-t border-white/10 pt-2 text-center text-xs">
                     <div className="px-2">
                         <span className="text-zinc-400 block font-medium text-xs">License</span>
-                        <span className="text-emerald-400 font-bold text-xs">MIT</span>
+                        <span className="text-zinc-200 font-bold text-xs">MIT</span>
                     </div>
                     <div className="px-2">
                         <span className="text-zinc-400 block font-medium text-xs">Open Issues</span>
@@ -79,10 +79,10 @@ const VALUE_PILLARS = [
             <div className="w-full max-w-sm space-y-3 font-sans text-xs">
                 <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
                     <span className="text-zinc-200 flex items-center gap-1.5 text-xs">
-                        <Bookmark className="w-3.5 h-3.5 text-accent" />
+                        <Bookmark className="w-3.5 h-3.5 text-zinc-300" />
                         <span>IndexedDB / LocalStorage</span>
                     </span>
-                    <span className="text-accent text-xs font-bold">100% PRIVATE</span>
+                    <span className="text-zinc-300 text-xs font-bold">100% PRIVATE</span>
                 </div>
                 <div className="flex items-center justify-between border-t border-white/10 pt-2.5 text-xs">
                     <span className="text-zinc-300">Saved Repos &amp; Notes</span>

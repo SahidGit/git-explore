@@ -38,6 +38,8 @@ server/logs/
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
+.claude/
+.entire/
 .idea
 .DS_Store
 *.suo

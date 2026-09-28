@@ -318,7 +318,7 @@ const ReportIssue = () => {
                         <span>SUBMISSION VERIFIED</span>
                       </div>
 
-                      <h3 className="text-xl sm:text-2xl font-bold text-white font-space tracking-tight">
+                      <h3 className="text-xl sm:text-2xl font-bold text-white font-heading tracking-tight">
                         Report Submitted Successfully!
                       </h3>
 
@@ -329,10 +329,10 @@ const ReportIssue = () => {
                     </div>
 
                     {/* Low-profile Glass Pill Buttons */}
-                    <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3 font-mono text-xs">
+                    <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3 font-sans text-xs">
                       <button
                         onClick={handleReset}
-                        className="px-5 py-2.5 rounded-xl bg-white text-black hover:bg-zinc-200 active:scale-[0.98] transition-all duration-200 font-bold flex items-center gap-2 cursor-pointer shadow-none"
+                        className="px-5 py-2.5 rounded-xl bg-white text-black hover:bg-zinc-200 active:scale-[0.98] transition-all duration-200 font-semibold flex items-center gap-2 cursor-pointer shadow-none"
                       >
                         <RefreshCw className="w-3.5 h-3.5" />
                         <span>Submit Another Report</span>
@@ -340,7 +340,7 @@ const ReportIssue = () => {
 
                       <Link
                         to="/dashboard"
-                        className="px-5 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.12] text-white hover:bg-white/[0.08] hover:border-white/25 active:scale-[0.98] transition-all duration-200 font-bold flex items-center gap-2 shadow-none"
+                        className="px-5 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.12] text-white hover:bg-white/[0.08] hover:border-white/25 active:scale-[0.98] transition-all duration-200 font-semibold flex items-center gap-2 shadow-none"
                       >
                         <Home className="w-3.5 h-3.5 text-zinc-400" />
                         <span>Return to Explorer</span>
@@ -371,7 +371,7 @@ const ReportIssue = () => {
                           aria-expanded={dropdownOpen}
                           className={`w-full px-4 py-3 rounded-xl border text-left text-xs sm:text-sm flex items-center justify-between transition-all duration-200 bg-[#0A0A0C] cursor-pointer ${
                             dropdownOpen
-                              ? 'border-[#FF5A1F] ring-1 ring-[#FF5A1F]'
+                              ? 'border-white/30 ring-1 ring-white/20'
                               : 'border-white/10 hover:border-white/20'
                           }`}
                         >
@@ -382,7 +382,7 @@ const ReportIssue = () => {
                           </span>
                           <ChevronDown
                             className={`w-4 h-4 text-zinc-400 transition-transform duration-200 ${
-                              dropdownOpen ? 'rotate-180 text-[#FF5A1F]' : ''
+                              dropdownOpen ? 'rotate-180 text-white' : ''
                             }`}
                           />
                         </button>
@@ -409,7 +409,7 @@ const ReportIssue = () => {
                                   }}
                                   className={`w-full px-4 py-2.5 text-left text-xs sm:text-sm flex items-center justify-between transition-colors cursor-pointer ${
                                     isSelected
-                                      ? 'bg-[#FF5A1F]/15 text-[#FF5A1F] font-semibold'
+                                      ? 'bg-white/10 text-white font-semibold'
                                       : 'text-zinc-300 hover:bg-white/[0.06] hover:text-white'
                                   }`}
                                 >
@@ -417,7 +417,7 @@ const ReportIssue = () => {
                                     {IconComponent && <IconComponent className="w-3.5 h-3.5 text-zinc-500 shrink-0" />}
                                     <span className="truncate">{type.label}</span>
                                   </span>
-                                  {isSelected && <Check className="w-4 h-4 text-[#FF5A1F] shrink-0 ml-2" />}
+                                  {isSelected && <Check className="w-4 h-4 text-emerald-400 shrink-0 ml-2" />}
                                 </button>
                               );
                             })}
@@ -449,7 +449,7 @@ const ReportIssue = () => {
                         value={formData.pageUrl}
                         onChange={handleChange}
                         placeholder="e.g., /ai-news#models-section, or repo astral-sh/uv"
-                        className="w-full rounded-xl border border-white/10 bg-[#0A0A0C] px-4 py-3 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:border-[#FF5A1F] focus:outline-none focus:ring-1 focus:ring-[#FF5A1F] transition-all duration-200"
+                        className="w-full rounded-xl border border-white/10 bg-[#0A0A0C] px-4 py-3 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:border-white/30 focus:outline-none focus:ring-1 focus:ring-white/20 transition-all duration-200"
                       />
                       <p className="text-[11px] text-zinc-500 font-mono">
                         The URL or section name where the issue was observed.
@@ -481,7 +481,7 @@ const ReportIssue = () => {
                         className={`w-full rounded-xl border bg-[#0A0A0C] p-4 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-1 transition-all duration-200 resize-y ${
                           currentLength > 0 && !isDescriptionValid
                             ? "border-amber-400/50 focus:border-amber-400 focus:ring-amber-400/20"
-                            : "border-white/10 focus:border-[#FF5A1F] focus:ring-[#FF5A1F]"
+                            : "border-white/10 focus:border-white/30 focus:ring-white/20"
                         }`}
                       />
 
@@ -526,7 +526,7 @@ const ReportIssue = () => {
                         value={formData.email}
                         onChange={handleChange}
                         placeholder="developer@domain.com"
-                        className="w-full rounded-xl border border-white/10 bg-[#0A0A0C] px-4 py-3 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:border-[#FF5A1F] focus:outline-none focus:ring-1 focus:ring-[#FF5A1F] transition-all duration-200"
+                        className="w-full rounded-xl border border-white/10 bg-[#0A0A0C] px-4 py-3 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:border-white/30 focus:outline-none focus:ring-1 focus:ring-white/20 transition-all duration-200"
                       />
                       <p className="text-xs text-zinc-500 font-mono">
                         We&apos;ll only use this to follow up on your specific

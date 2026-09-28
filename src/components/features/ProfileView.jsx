@@ -134,8 +134,8 @@ const ProfileView = ({ filters, onFilterChange }) => {
             {/* ── Page header ── */}
             <div className="flex flex-wrap items-center justify-between gap-4 mb-2">
                 <div>
-                    <h1 className="text-2xl font-bold text-white tracking-tight mb-1">Developer Profile</h1>
-                    <p className="text-[13px] text-zinc-500">
+                    <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight font-heading mb-1">Developer Profile</h1>
+                    <p className="text-xs sm:text-sm font-sans text-zinc-400">
                         Analyze contribution activity, followers, and coding patterns for any GitHub user.
                     </p>
                 </div>
@@ -144,7 +144,7 @@ const ProfileView = ({ filters, onFilterChange }) => {
                     <button
                         type="button"
                         onClick={handleClearSearch}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 bg-white/[0.04] text-xs font-mono text-zinc-300 hover:text-white hover:bg-white/[0.08] transition-colors cursor-pointer"
+                        className="btn-saas-secondary text-xs h-[34px] px-3 gap-1.5"
                     >
                         <X className="w-3.5 h-3.5" />
                         <span>Clear Search (@{activeSearch})</span>
@@ -187,7 +187,7 @@ const ProfileView = ({ filters, onFilterChange }) => {
                                     placeholder="Enter GitHub handle (e.g. torvalds, SahidGit)..."
                                     autoComplete="off"
                                     spellCheck={false}
-                                    className={`w-full bg-[#0A0A0C] border rounded-xl pl-10 pr-9 py-3 font-mono text-[13px] text-white placeholder:text-zinc-600 focus:outline-none transition-all duration-200 ${
+                                    className={`w-full bg-[#0A0A0C] border rounded-xl pl-10 pr-9 py-2.5 font-mono text-[13px] text-white placeholder:text-zinc-600 focus:outline-none transition-all duration-200 ${
                                         inputFocused ? 'border-white/30 ring-1 ring-white/20' : 'border-white/[0.08] hover:border-white/20'
                                     }`}
                                 />
@@ -195,7 +195,7 @@ const ProfileView = ({ filters, onFilterChange }) => {
                                     <button
                                         type="button"
                                         onClick={handleClearSearch}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white p-0.5"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white p-0.5 cursor-pointer"
                                         aria-label="Clear input"
                                     >
                                         <X className="w-3.5 h-3.5" />
@@ -205,11 +205,7 @@ const ProfileView = ({ filters, onFilterChange }) => {
                             <button
                                 type="submit"
                                 disabled={!usernameInput.trim()}
-                                className={`px-5 py-3 rounded-xl font-semibold text-xs font-mono transition-all duration-200 flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
-                                    usernameInput.trim()
-                                        ? 'bg-white text-black hover:bg-zinc-200 active:scale-[0.98]'
-                                        : 'bg-white/10 text-zinc-500 cursor-not-allowed border border-white/10'
-                                }`}
+                                className="btn-saas-primary text-xs h-[42px] px-5 gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed"
                             >
                                 <Search className="w-3.5 h-3.5" />
                                 <span>Search</span>

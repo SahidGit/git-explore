@@ -116,7 +116,7 @@ const RepoCard = ({ repo, onRepoClick, onBookmarkToggle, isBookmarked }) => {
                                 size={18}
                                 corner={10}
                                 pillColor="rgba(255, 255, 255, 0.05)"
-                                likedColor="#ff4d6d"
+                                likedColor="#FFFFFF"
                                 idleColor="#71717A"
                                 label={isBookmarked ? `Remove ${repo.name} from bookmarks` : `Bookmark ${repo.name}`}
                                 className="border border-white/10 hover:border-white/25 transition-all"
@@ -172,4 +172,4 @@ const RepoCard = ({ repo, onRepoClick, onBookmarkToggle, isBookmarked }) => {
     );
 };
 
-export default RepoCard;
+export default React.memo(RepoCard);

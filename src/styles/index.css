@@ -12,41 +12,185 @@
 
 @layer base {
   :root {
-    /* Primary Accent Color System: oklch(62.7% .194 149.214) */
-    --accent: oklch(62.7% 0.194 149.214);
-    --accent-hover: oklch(68% 0.194 149.214);
-    --accent-muted: oklch(62.7% 0.194 149.214 / 0.15);
-    --accent-subtle: oklch(62.7% 0.194 149.214 / 0.08);
-    --accent-border: oklch(62.7% 0.194 149.214 / 0.25);
+    /* ── Typography Token System ────────────────────────────────
+     * Use these variables throughout the entire application.
+     * Never define fonts inline at component level; use these tokens.
+     */
+    --font-heading:   'Neue Machina', 'Space Grotesk', system-ui, sans-serif;
+    --font-body:      'Inter', system-ui, -apple-system, sans-serif;
+    --font-highlight: 'Neue Machina', sans-serif;
+    --font-mono:
+      'Geist Mono',
+      'JetBrains Mono',
+      ui-monospace,
+      'SFMono-Regular',
+      Menlo,
+      Monaco,
+      Consolas,
+      monospace;
 
-    /* Clean Modern SaaS Surface Tokens */
-    --canvas: #0A0A0B;
-    --canvas-deep: #0D0E11;
-    --canvas-pure: #000000;
-    --surface: #121316;
-    --surface-elevated: #16181D;
-    
-    /* Text Tokens */
-    --text-primary: #FFFFFF;
-    --text-secondary: #94A3B8;
-    --text-muted: #94A3B8;
-    --foreground: #FFFFFF;
-    --primary: var(--accent);
-    --border-hairline: rgba(255, 255, 255, 0.08);
+    /* =====================================================
+       BASE
+       ===================================================== */
 
-    /* Accents & Status - All green accents unified into --accent */
-    --accent-emerald: var(--accent);
-    --accent-indigo: var(--accent);
-    --overlay-hover: rgba(255, 255, 255, 0.06);
+    --background: oklch(0% 0 0);
+    --foreground: oklch(98% 0 0);
+
+    /* =====================================================
+       SURFACES
+       ===================================================== */
+
+    --surface-1: oklch(5% 0 0);
+    --surface-2: oklch(8% 0 0);
+    --surface-3: oklch(11% 0 0);
+    --surface-4: oklch(14% 0 0);
+    --surface-5: oklch(18% 0 0);
+
+    /* =====================================================
+       TEXT
+       ===================================================== */
+
+    --text-primary: oklch(98% 0 0);
+    --text-secondary: oklch(78% 0 0);
+    --text-muted: oklch(60% 0 0);
+    --text-subtle: oklch(45% 0 0);
+    --text-disabled: oklch(32% 0 0);
+
+    /* =====================================================
+       BORDERS / DIVIDERS
+       ===================================================== */
+
+    --border-subtle: oklch(14% 0 0);
+    --border: oklch(20% 0 0);
+    --border-hover: oklch(28% 0 0);
+    --border-strong: oklch(35% 0 0);
+
+    /* =====================================================
+       PRIMARY BRAND ACCENT
+       Clean, monochrome, high-contrast SaaS palette (White/Grey/Black)
+       ===================================================== */
+
+    --magenta: #FFFFFF;
+    --magenta-hover: #F4F4F5;
+    --magenta-bright: #FFFFFF;
+    --magenta-muted: rgba(255, 255, 255, 0.12);
+    --magenta-border: rgba(255, 255, 255, 0.20);
+
+    /* =====================================================
+       ORANGE
+       Primarily useful for agent identity, especially
+       Claude Code, rather than the Entire brand itself.
+       ===================================================== */
+
+    --orange: oklch(72% 0.18 55);
+    --orange-hover: oklch(78% 0.18 55);
+    --orange-muted: oklch(25% 0.06 55);
+
+    /* =====================================================
+       BLUE
+       Commits / links / developer information
+       ===================================================== */
+
+    --blue: oklch(65% 0.20 255);
+    --blue-hover: oklch(72% 0.20 255);
+    --blue-bright: oklch(78% 0.18 255);
+    --blue-muted: oklch(24% 0.06 255);
+
+    /* =====================================================
+       GREEN
+       Success / additions / code
+       ===================================================== */
+
+    --green: #10B981;
+    --green-hover: #059669;
+    --green-bright: #34D399;
+    --green-muted: rgba(16, 185, 129, 0.15);
+
+    /* =====================================================
+       RED
+       Errors / deletions / destructive states
+       ===================================================== */
+
+    --red: oklch(65% 0.22 25);
+    --red-hover: oklch(72% 0.22 25);
+    --red-bright: oklch(78% 0.20 25);
+    --red-muted: oklch(24% 0.07 25);
+
+    /* =====================================================
+       YELLOW
+       Warnings
+       ===================================================== */
+
+    --yellow: oklch(82% 0.18 90);
+    --yellow-hover: oklch(87% 0.17 90);
+    --yellow-bright: oklch(92% 0.14 90);
+    --yellow-muted: oklch(27% 0.07 90);
+
+    /* =====================================================
+       CYAN
+       Information / URLs / technical metadata
+       ===================================================== */
+
+    --cyan: oklch(76% 0.14 205);
+    --cyan-hover: oklch(82% 0.14 205);
+    --cyan-bright: oklch(88% 0.11 205);
+    --cyan-muted: oklch(25% 0.05 205);
+
+    /* =====================================================
+       PURPLE
+       Secondary technical / agent-related accent
+       ===================================================== */
+
+    --purple: #A1A1AA;
+    --purple-hover: #E4E4E7;
+    --purple-muted: rgba(255, 255, 255, 0.1);
+
+    /* =====================================================
+       WHITE / BLACK CONTROLS
+       ===================================================== */
+
+    --button-primary-bg: #FFFFFF;
+    --button-primary-text: #0A0A0C;
+
+    --button-primary-hover: #F4F4F5;
+
+    --button-secondary-bg: rgba(255, 255, 255, 0.04);
+    --button-secondary-text: #FFFFFF;
+    --button-secondary-border: rgba(255, 255, 255, 0.12);
+
+    --button-secondary-hover: rgba(255, 255, 255, 0.08);
+
+    /* =====================================================
+       FOCUS
+       ===================================================== */
+
+    --focus: #FFFFFF;
+    --focus-ring: rgba(255, 255, 255, 0.35);
+
+    /* Component & Surface System Aliases */
+    --canvas: var(--background);
+    --canvas-deep: var(--surface-1);
+    --canvas-pure: var(--background);
+    --surface: var(--surface-2);
+    --surface-elevated: var(--surface-3);
+    --accent: #FFFFFF;
+    --accent-hover: #F4F4F5;
+    --accent-muted: rgba(255, 255, 255, 0.12);
+    --accent-subtle: rgba(255, 255, 255, 0.06);
+    --accent-border: rgba(255, 255, 255, 0.20);
+    --accent-emerald: var(--green);
+    --accent-indigo: var(--blue);
+    --primary: #FFFFFF;
+    --border-hairline: var(--border-subtle);
 
     /* Legacy GitHub tokens for dashboard views */
-    --color-github-bg: #0D1117;
-    --color-github-card: #161B22;
-    --color-github-border: #30363D;
-    --color-github-text: #F0F6FC;
-    --color-github-text-muted: #8B949E;
-    --color-github-accent: var(--accent);
-    --color-github-purple: #7C3AED;
+    --color-github-bg: var(--surface-2);
+    --color-github-card: var(--surface-3);
+    --color-github-border: var(--border);
+    --color-github-text: var(--text-primary);
+    --color-github-text-muted: var(--text-secondary);
+    --color-github-accent: #FFFFFF;
+    --color-github-purple: #A1A1AA;
 
     color-scheme: dark;
     font-synthesis: none;
@@ -58,14 +202,16 @@
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 5rem;
-    font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
-    line-height: 1.5;
+    /* Body font: Inter — clear, highly readable UI text */
+    font-family: var(--font-body);
+    line-height: 1.6;
     font-weight: 400;
   }
 
   body,
   #root {
-    font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+    /* Inter as the base body/interface font */
+    font-family: var(--font-body);
   }
 
   /* Selection styles */
@@ -74,13 +220,29 @@
     color: #ffffff;
   }
 
-  h1, h2, h3, h4, h5, h6, .font-heading {
-    font-family: 'Neue Machina', 'Space Grotesk', sans-serif !important;
-    letter-spacing: -0.025em;
+  /* ── Heading Hierarchy: Neue Machina ───────────────────────
+   * All structural headings use Neue Machina (public/NeueMachina-Regular.otf).
+   */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  /* Utility classes — ensure Neue Machina is applied everywhere */
+  .font-heading,
+  .font-space {
+    font-family: var(--font-heading) !important;
+    letter-spacing: -0.02em;
+  }
+
+  /* Neue Machina accent — use ONLY for key brand phrases and highlights */
+  .font-highlight {
+    font-family: var(--font-highlight) !important;
   }
 
   code, pre, .font-mono {
-    font-family: 'Geist Mono', 'JetBrains Mono', monospace;
+    font-family: var(--font-mono);
   }
 }
 
@@ -181,45 +343,193 @@
   background-color: var(--surface-elevated);
 }
 
-/* Primary Action Buttons (CTA) - flat, clean, no glow */
+/* ─── SaaS Button System (Superwhisper & Entire.io Aesthetic) ─────
+ * Clean, compact, refined: 42px height, 14px padding, 8px gap, 9px radius,
+ * Inter font, 14px size, 500 weight, subtle 1px border, solid contrast background.
+ */
+.btn-saas,
+.btn-saas-primary,
 .btn-primary-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  padding: 0 16px;
+  gap: 8px;
+  border-radius: 9px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  border: 1px solid rgba(255, 255, 255, 0.16);
   background-color: #FFFFFF;
-  color: #0A0A0B;
-  font-family: 'Geist Mono', monospace;
-  font-weight: 700;
-  border-radius: 0.75rem;
-  padding: 0.75rem 1.5rem;
-  transition: all 0.15s ease-in-out;
+  color: #0A0A0C;
   box-shadow: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease, color 0.15s ease;
 }
 
+.btn-saas:hover,
+.btn-saas-primary:hover,
 .btn-primary-cta:hover {
+  background-color: #F4F4F5;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-saas:active,
+.btn-saas-primary:active,
+.btn-primary-cta:active {
+  transform: scale(0.98);
   background-color: #E4E4E7;
-  transform: translateY(-1px);
 }
 
-/* Secondary / Outline Buttons */
+.btn-saas:focus-visible,
+.btn-saas-primary:focus-visible,
+.btn-primary-cta:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #0A0A0C, 0 0 0 4px rgba(255, 255, 255, 0.8);
+}
+
+/* Secondary / Subtle Outline SaaS Button */
+.btn-saas-secondary,
 .btn-secondary-outline {
-  background-color: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  padding: 0 16px;
+  gap: 8px;
+  border-radius: 9px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.04);
   color: #FFFFFF;
-  font-weight: 600;
-  border-radius: 9999px;
-  transition: all 0.2s ease-in-out;
+  box-shadow: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease, color 0.15s ease;
 }
 
+.btn-saas-secondary:hover,
 .btn-secondary-outline:hover {
   background-color: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.25);
-  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #FFFFFF;
 }
 
-/* Section Overline Eyebrows */
+.btn-saas-secondary:active,
+.btn-secondary-outline:active {
+  transform: scale(0.98);
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.btn-saas-secondary:focus-visible,
+.btn-secondary-outline:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #0A0A0C, 0 0 0 4px rgba(255, 255, 255, 0.4);
+}
+
+/* Tertiary / Ghost SaaS Button */
+.btn-saas-tertiary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  padding: 0 14px;
+  gap: 8px;
+  border-radius: 9px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  border: 1px solid transparent;
+  background-color: transparent;
+  color: var(--text-secondary);
+  box-shadow: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease, color 0.15s ease;
+}
+
+.btn-saas-tertiary:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #FFFFFF;
+}
+
+.btn-saas-tertiary:active {
+  transform: scale(0.98);
+}
+
+.btn-saas-tertiary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #0A0A0C, 0 0 0 4px rgba(255, 255, 255, 0.4);
+}
+
+/* Destructive SaaS Button */
+.btn-saas-destructive {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  padding: 0 16px;
+  gap: 8px;
+  border-radius: 9px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  background-color: rgba(239, 68, 68, 0.08);
+  color: #F87171;
+  box-shadow: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease, color 0.15s ease;
+}
+
+.btn-saas-destructive:hover {
+  background-color: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #FCA5A5;
+}
+
+.btn-saas-destructive:active {
+  transform: scale(0.98);
+  background-color: rgba(239, 68, 68, 0.2);
+}
+
+.btn-saas-destructive:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #0A0A0C, 0 0 0 4px rgba(239, 68, 68, 0.4);
+}
+
+/* Compact SaaS Button (34px height) */
+.btn-saas-sm {
+  height: 34px;
+  padding: 0 12px;
+  font-size: 12px;
+  gap: 6px;
+  border-radius: 7px;
+}
+
+/* Section Overline Eyebrows — Inter, small caps style */
 .eyebrow-tracker {
-  font-family: inherit;
+  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #71717A;
 }

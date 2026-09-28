@@ -33,7 +33,11 @@ router.post('/', async (req, res) => {
         }
 
         // Cloudflare Turnstile verification
-        const turnstileSecret = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY || '1x0000000000000000000000000000000AA';
+        const isProduction = process.env.NODE_ENV === 'production';
+        const turnstileSecret = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY || (!isProduction ? '1x0000000000000000000000000000000AA' : '');
+        if (isProduction && !process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY) {
+            console.warn('[reports] CLOUDFLARE_TURNSTILE_SECRET_KEY is not configured in production.');
+        }
         const clientIp = req.headers['x-forwarded-for']?.split(',')[0].trim() || req.socket.remoteAddress || '';
 
         if (cfTurnstileToken && !cfTurnstileToken.startsWith('cf_dev_') && !cfTurnstileToken.startsWith('cf_turnstile_')) {
@@ -65,8 +69,8 @@ router.post('/', async (req, res) => {
             updatedAt: new Date().toISOString(),
         };
 
-        // 1. Always persist to local flat-file store
-        appendReport(reportData);
+        // 1. Always persist to local flat-file store asynchronously
+        await appendReport(reportData);
 
         // 2. Also persist to MongoDB if connected
         let savedReport = reportData;
@@ -112,7 +116,7 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const { status, limit = '50' } = req.query;
-        const limitNum = Math.min(parseInt(limit, 10) || 50, 200);
+        const limitNum = Math.max(1, Math.min(parseInt(limit, 10) || 50, 100));
         let reports = [];
 
         if (mongoose.connection.readyState === 1) {
@@ -125,7 +129,7 @@ router.get('/', async (req, res) => {
         }
 
         if (reports.length === 0) {
-            reports = readReports({ status, limit: limitNum });
+            reports = await readReports({ status, limit: limitNum });
         }
 
         return res.status(200).json({ success: true, count: reports.length, data: reports });
