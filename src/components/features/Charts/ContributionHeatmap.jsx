@@ -54,8 +54,16 @@ const ContributionHeatmap = ({ username }) => {
                         weeks.push(currentWeek);
                     }
 
+                    // Compute total contributions from API total.lastYear or sum of all daily counts
+                    const calculatedTotal =
+                        typeof contributionData.total?.lastYear === 'number'
+                            ? contributionData.total.lastYear
+                            : typeof contributionData.totalContributions === 'number'
+                            ? contributionData.totalContributions
+                            : days.reduce((sum, d) => sum + (d.count || 0), 0);
+
                     setData({
-                        totalContributions: contributionData.totalContributions || 0,
+                        totalContributions: calculatedTotal,
                         weeks: weeks,
                     });
                 } else {
@@ -196,20 +204,30 @@ const ContributionHeatmap = ({ username }) => {
 
                                 return (
                                     <div key={weekIndex} className="flex flex-col gap-1">
-                                        {week.map((day, dayIndex) => (
-                                            <div
-                                                key={`${weekIndex}-${dayIndex}`}
-                                                className={`w-[10px] h-[10px] rounded-[2px] transition-all duration-200 hover:scale-125 hover:z-30 relative group/cell ${getLevelColor(day.level)}`}
-                                                title={`${day.count} contributions on ${new Date(day.date).toLocaleDateString()}`}
-                                            >
-                                                {/* Tooltip */}
+                                        {week.map((day, dayIndex) => {
+                                            const isTopRows = dayIndex < 2;
+                                            const verticalPosition = isTopRows ? 'top-full mt-1.5' : 'bottom-full mb-1.5';
+
+                                            return (
                                                 <div
-                                                    className={`absolute bottom-full mb-2 px-2.5 py-1.5 bg-[#0e0e12]/95 backdrop-blur-md text-white text-[10px] font-mono rounded shadow-xl opacity-0 group-hover/cell:opacity-100 pointer-events-none z-30 border border-white/10 w-max max-w-[130px] whitespace-normal break-words text-center leading-tight transition-opacity duration-150 ${horizontalPosition}`}
+                                                    key={`${weekIndex}-${dayIndex}`}
+                                                    className={`w-[10px] h-[10px] rounded-[2px] transition-all duration-200 hover:scale-125 hover:z-30 relative group/cell ${getLevelColor(day.level)}`}
+                                                    title={`${day.count} contributions on ${new Date(day.date).toLocaleDateString()}`}
                                                 >
-                                                    {day.count} {day.count === 1 ? 'contribution' : 'contributions'} on {day.date}
+                                                    {/* Tooltip */}
+                                                    <div
+                                                        className={`absolute ${verticalPosition} ${horizontalPosition} px-2 py-1 bg-[#0e0e12]/95 backdrop-blur-md text-white text-[9px] font-mono rounded shadow-xl opacity-0 group-hover/cell:opacity-100 pointer-events-none z-30 border border-white/10 whitespace-nowrap text-center leading-tight transition-opacity duration-150`}
+                                                    >
+                                                        <div className="font-semibold text-zinc-100">
+                                                            {day.count} {day.count === 1 ? 'contribution' : 'contributions'}
+                                                        </div>
+                                                        <div className="text-[8px] text-zinc-400 mt-0.5 font-normal">
+                                                            {day.date}
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        ))}
+                                            );
+                                        })}
                                     </div>
                                 );
                             })}

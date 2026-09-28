@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Key, User, AlertCircle, CheckCircle, RefreshCw, ExternalLink, Search, X } from 'lucide-react';
+import { Key, User, AlertCircle, CheckCircle, RefreshCw, ExternalLink, Search, X, Sparkles, ArrowRight } from 'lucide-react';
 import { storageService } from '../../services/storageService';
 import * as githubService from '../../services/githubService';
 import { SkeletonRateLimit } from '../ui/SkeletonLoader';
@@ -52,12 +52,59 @@ const RateLimitMeter = ({ used, limit, resetIn }) => {
     );
 };
 
-// ─── Profile quick cards ──────────────────────────────
+// ─── Featured Owner & Popular OSS Maintainers ─────────
+const OWNER_PROFILE = {
+    name: 'Sahid Sarfaraz',
+    username: 'SahidGit',
+    role: 'ExploreGit Founder & Lead Engineer',
+    bio: 'Student x Software Engineer · Building ExploreGit',
+    avatar: 'https://avatars.githubusercontent.com/u/208873568?v=4',
+    badge: 'Creator & Lead',
+};
+
 const SUGGESTED_PROFILES = [
-    { name: 'SahidSarfaraz', username: 'SahidGit', role: 'Project Owner', avatar: 'https://avatars.githubusercontent.com/u/106660867?v=4', owner: true },
-    { name: 'Linus Torvalds', username: 'torvalds', role: 'Linux & Git creator', avatar: 'https://avatars.githubusercontent.com/u/1024025?v=4' },
-    { name: 'Evan You', username: 'yyx990803', role: 'Vue.js creator', avatar: 'https://avatars.githubusercontent.com/u/499550?v=4' },
-    { name: 'Dan Abramov', username: 'gaearon', role: 'React core team', avatar: 'https://avatars.githubusercontent.com/u/810438?v=4' },
+    {
+        name: 'Peter Steinberger',
+        username: 'steipete',
+        role: 'Clawdbot / OpenClaw Creator',
+        avatar: 'https://avatars.githubusercontent.com/u/58493?v=4',
+        tag: 'AI Agents',
+    },
+    {
+        name: 'shadcn',
+        username: 'shadcn',
+        role: 'Creator of shadcn/ui',
+        avatar: 'https://avatars.githubusercontent.com/u/124599?v=4',
+        tag: 'Design Systems',
+    },
+    {
+        name: 'Anthony Fu',
+        username: 'antfu',
+        role: 'Vue / Vite / Nuxt Core Team',
+        avatar: 'https://avatars.githubusercontent.com/u/11247099?v=4',
+        tag: 'Core Dev',
+    },
+    {
+        name: 'Linus Torvalds',
+        username: 'torvalds',
+        role: 'Linux Kernel & Git Creator',
+        avatar: 'https://avatars.githubusercontent.com/u/1024025?v=4',
+        tag: 'Systems',
+    },
+    {
+        name: 'Evan You',
+        username: 'yyx990803',
+        role: 'Vue.js & Vite Creator · VoidZero',
+        avatar: 'https://avatars.githubusercontent.com/u/499550?v=4',
+        tag: 'Frameworks',
+    },
+    {
+        name: 'Charlie Marsh',
+        username: 'charliermarsh',
+        role: 'Astral Founder · uv & Ruff Creator',
+        avatar: 'https://avatars.githubusercontent.com/u/1309177?v=4',
+        tag: 'Tooling',
+    },
 ];
 
 // ─── Main ProfileView ─────────────────────────────────
@@ -217,49 +264,103 @@ const ProfileView = ({ filters, onFilterChange }) => {
                     {activeSearch ? (
                         <ContributionHeatmap username={activeSearch} />
                     ) : (
-                        /* Suggested profiles when no user is searched */
-                        <div className="rounded-xl border border-white/[0.08] bg-[#121215] p-5">
-                            <p className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-4">
-                                Suggested Open Source Maintainers
-                            </p>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                {SUGGESTED_PROFILES.map((profile) => (
-                                    <button
-                                        key={profile.username}
-                                        id={`profile-${profile.username}`}
-                                        type="button"
-                                        onClick={() => {
-                                            setUsernameInput(profile.username);
-                                            triggerSearch(profile.username);
-                                        }}
-                                        className={`flex items-center gap-3 p-3.5 rounded-xl border text-left transition-all duration-200 group cursor-pointer ${
-                                            profile.owner
-                                                ? 'border-white/20 bg-white/[0.04] hover:border-white/30 hover:bg-white/[0.08]'
-                                                : 'border-white/[0.06] bg-transparent hover:border-white/20 hover:bg-white/[0.03]'
-                                        }`}
-                                    >
+                        <div className="space-y-4">
+                            {/* Featured Owner / Project Creator Spotlight Card */}
+                            <div className="rounded-xl border border-white/15 bg-gradient-to-br from-[#14151B] to-[#0E0F13] p-5 shadow-xl relative overflow-hidden group">
+                                <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+
+                                <div className="flex items-center justify-between gap-3 mb-4 relative z-10">
+                                    <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-zinc-400">
+                                        <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+                                        <span>Featured Creator</span>
+                                    </div>
+                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-blue-500/15 border border-blue-500/30 text-blue-400">
+                                        {OWNER_PROFILE.badge}
+                                    </span>
+                                </div>
+
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
+                                    <div className="flex items-center gap-3.5">
                                         <img
-                                            src={profile.avatar}
-                                            alt={profile.name}
-                                            className="w-10 h-10 rounded-full border border-white/10 flex-shrink-0 bg-[#0A0A0C]"
+                                            src={OWNER_PROFILE.avatar}
+                                            alt={OWNER_PROFILE.name}
+                                            className="w-14 h-14 rounded-full border-2 border-blue-500/30 shadow-lg bg-[#0A0A0C] flex-shrink-0"
                                         />
-                                        <div className="min-w-0 flex-1">
-                                            <div className="flex items-center gap-1.5">
-                                                <span className="text-[13px] font-semibold text-white truncate group-hover:text-zinc-200">
-                                                    {profile.name}
+                                        <div>
+                                            <div className="flex items-center gap-2">
+                                                <h3 className="text-base font-bold text-white tracking-tight">
+                                                    {OWNER_PROFILE.name}
+                                                </h3>
+                                                <span className="text-xs font-mono text-zinc-400">
+                                                    @{OWNER_PROFILE.username}
                                                 </span>
-                                                {profile.owner && (
-                                                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-mono font-bold uppercase bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex-shrink-0">
-                                                        Owner
-                                                    </span>
-                                                )}
                                             </div>
-                                            <p className="text-[11px] text-zinc-500 font-mono truncate">
-                                                @{profile.username}
+                                            <p className="text-xs text-blue-300 font-mono mt-0.5">
+                                                {OWNER_PROFILE.role}
+                                            </p>
+                                            <p className="text-[11px] text-zinc-400 mt-1">
+                                                {OWNER_PROFILE.bio}
                                             </p>
                                         </div>
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setUsernameInput(OWNER_PROFILE.username);
+                                            triggerSearch(OWNER_PROFILE.username);
+                                        }}
+                                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black font-semibold text-xs hover:bg-zinc-200 transition-colors shadow cursor-pointer whitespace-nowrap"
+                                    >
+                                        <span>View Activity &amp; Heatmap</span>
+                                        <ArrowRight className="w-3.5 h-3.5" />
                                     </button>
-                                ))}
+                                </div>
+                            </div>
+
+                            {/* Popular Open Source Maintainers */}
+                            <div className="rounded-xl border border-white/[0.08] bg-[#121215] p-5 space-y-4">
+                                <p className="text-[10px] font-mono uppercase tracking-widest text-zinc-500">
+                                    Popular &amp; Viral Open Source Creators
+                                </p>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                    {SUGGESTED_PROFILES.map((profile) => (
+                                        <button
+                                            key={profile.username}
+                                            id={`profile-${profile.username}`}
+                                            type="button"
+                                            onClick={() => {
+                                                setUsernameInput(profile.username);
+                                                triggerSearch(profile.username);
+                                            }}
+                                            className="flex items-center gap-3 p-3 rounded-xl border border-white/[0.06] bg-transparent hover:border-white/20 hover:bg-white/[0.03] text-left transition-all duration-200 group cursor-pointer"
+                                        >
+                                            <img
+                                                src={profile.avatar}
+                                                alt={profile.name}
+                                                className="w-10 h-10 rounded-full border border-white/10 flex-shrink-0 bg-[#0A0A0C]"
+                                            />
+                                            <div className="min-w-0 flex-1">
+                                                <div className="flex items-center justify-between gap-1">
+                                                    <span className="text-[12px] font-semibold text-white truncate group-hover:text-blue-300 transition-colors">
+                                                        {profile.name}
+                                                    </span>
+                                                    {profile.tag && (
+                                                        <span className="text-[9px] font-mono text-zinc-400 bg-white/5 px-1.5 py-0.5 rounded border border-white/5 flex-shrink-0">
+                                                            {profile.tag}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <p className="text-[11px] text-zinc-400 font-mono truncate">
+                                                    @{profile.username}
+                                                </p>
+                                                <p className="text-[10px] text-zinc-500 truncate mt-0.5">
+                                                    {profile.role}
+                                                </p>
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     )}
