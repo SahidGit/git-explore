@@ -101,9 +101,13 @@ const CloudflareTurnstile = ({ onVerify, onError, onExpire, siteKey }) => {
                 };
                 document.head.appendChild(script);
             } else {
-                existingScript.addEventListener('load', () => {
-                    if (isMounted) renderWidget();
-                });
+                if (window.turnstile) {
+                    renderWidget();
+                } else {
+                    existingScript.addEventListener('load', () => {
+                        if (isMounted) renderWidget();
+                    });
+                }
             }
         };
 
@@ -131,7 +135,7 @@ const CloudflareTurnstile = ({ onVerify, onError, onExpire, siteKey }) => {
             {/* Header row */}
             <div className="flex items-center justify-between border-b border-white/[0.06] pb-2.5">
                 <div className="flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-[#FF5A1F]" />
+                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
                     <span className="text-xs font-mono font-bold text-zinc-200">
                         Cloudflare Bot Verification
                     </span>
@@ -145,7 +149,7 @@ const CloudflareTurnstile = ({ onVerify, onError, onExpire, siteKey }) => {
             <div className="min-h-[55px] flex flex-col items-center justify-center py-1">
                 {isLoading && !isVerified && (
                     <div className="flex items-center gap-2.5 text-xs font-mono text-zinc-400 py-2">
-                        <Loader2 className="w-4 h-4 text-[#FF5A1F] animate-spin" />
+                        <Loader2 className="w-4 h-4 text-zinc-400 animate-spin" />
                         <span>Initializing Cloudflare Challenge…</span>
                     </div>
                 )}

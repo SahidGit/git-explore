@@ -25,7 +25,7 @@ export default function PulseHeart({
   idleOutline = true,
   size = 40,
   corner = 32,
-  likedColor = '#ff4d6d',
+  likedColor = '#FFFFFF',
   idleColor = '#8b8b93',
   pillColor = '#232326',
   textColor = '#f5f5f5',

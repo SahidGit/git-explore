@@ -78,11 +78,11 @@ const TopFiveFeatured = ({
     const top5 = (repos && repos.length > 0) ? repos.slice(0, 5) : [];
 
     const rankBadges = [
-        { bg: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30', label: '#1 HOT', icon: Trophy },
-        { bg: 'bg-zinc-300/10 text-zinc-200 border-zinc-300/30', label: '#2 HOT', icon: Award },
-        { bg: 'bg-amber-500/10 text-amber-300 border-amber-500/30', label: '#3 HOT', icon: Award },
-        { bg: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20', label: '#4 TOP', icon: Flame },
-        { bg: 'bg-white/[0.06] text-zinc-300 border-white/10', label: '#5 TOP', icon: Flame },
+        { bg: 'bg-white/10 text-white border-white/20', label: '#1 HOT', icon: Trophy },
+        { bg: 'bg-white/[0.08] text-zinc-200 border-white/15', label: '#2 HOT', icon: Award },
+        { bg: 'bg-white/[0.06] text-zinc-300 border-white/10', label: '#3 HOT', icon: Award },
+        { bg: 'bg-white/[0.05] text-zinc-300 border-white/10', label: '#4 TOP', icon: Flame },
+        { bg: 'bg-white/[0.04] text-zinc-400 border-white/[0.08]', label: '#5 TOP', icon: Flame },
     ];
 
     return (
@@ -91,15 +91,15 @@ const TopFiveFeatured = ({
             {/* Header Bar */}
             <div className="flex flex-wrap items-center justify-between gap-4 mb-5 border-b border-white/[0.08] pb-4">
                 <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-                        <Flame className="w-4 h-4" />
+                    <div className="w-8 h-8 rounded-lg bg-white/[0.06] border border-white/15 flex items-center justify-center text-white">
+                        <Flame className="w-4 h-4 text-white" />
                     </div>
                     <div>
                         <div className="flex items-center gap-2">
                             <h2 className="text-base sm:text-lg font-bold text-white tracking-tight font-heading">
                                 Top 5 Hot Repositories
                             </h2>
-                            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-xs font-sans text-emerald-300 font-semibold">
+                            <span className="px-2.5 py-0.5 rounded-full bg-white/[0.06] border border-white/15 text-xs font-sans text-zinc-200 font-semibold">
                                 {timeRange === 'weekly' ? 'This Week' : currentMonthYear}
                             </span>
                         </div>
@@ -142,7 +142,7 @@ const TopFiveFeatured = ({
                     </div>
 
                     <div className="hidden sm:flex text-[11px] font-sans text-zinc-400 items-center gap-1.5 bg-white/[0.03] px-3 py-1.5 rounded-full border border-white/10">
-                        <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                        <Sparkles className="w-3.5 h-3.5 text-zinc-400" />
                         <span>{timeRange === 'weekly' ? 'Refreshed Weekly' : 'Auto-updated Monthly'}</span>
                     </div>
                 </div>
@@ -168,7 +168,7 @@ const TopFiveFeatured = ({
                                         onRepoClick && onRepoClick(repo);
                                     }
                                 }}
-                                className="group relative rounded-lg bg-[#0D0E11] border border-white/[0.08] hover:border-emerald-500/40 p-4 flex flex-col justify-between cursor-pointer transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                                className="group relative rounded-lg bg-[#0D0E11] border border-white/[0.08] hover:border-white/30 p-4 flex flex-col justify-between cursor-pointer transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
                             >
                                 {/* Card Top: Rank Badge & Stars */}
                                 <div>
@@ -192,7 +192,7 @@ const TopFiveFeatured = ({
                                                 className="w-5 h-5 rounded-md border border-white/10 flex-shrink-0 bg-[#121215]"
                                             />
                                         )}
-                                        <h3 className="text-xs font-semibold font-sans text-white truncate group-hover:text-emerald-300 transition-colors">
+                                        <h3 className="text-xs font-semibold font-sans text-white truncate group-hover:text-zinc-200 transition-colors">
                                             {repo.name}
                                         </h3>
                                     </div>

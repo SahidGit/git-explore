@@ -62,7 +62,7 @@ const PageNavigation = ({ currentKey }) => {
         className="group flex items-start justify-end text-right gap-3.5 p-4 sm:p-5 rounded-lg bg-[#121216] border border-white/10 hover:border-white/25 hover:bg-white/[0.04] transition-all duration-300 shadow-sm"
       >
         <div className="space-y-1 overflow-hidden order-1 sm:order-1">
-          <span className="text-[10px] font-sans font-medium uppercase tracking-wider text-accent block">
+          <span className="text-[10px] font-sans font-medium uppercase tracking-wider text-zinc-400 block">
             Next Topic →
           </span>
           <h4 className="text-sm font-bold text-white tracking-tight group-hover:text-zinc-200 transition-colors truncate">
@@ -73,7 +73,7 @@ const PageNavigation = ({ currentKey }) => {
           </p>
         </div>
         <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white/[0.06] border border-white/10 group-hover:border-white/20 group-hover:bg-white/10 transition-colors flex-shrink-0 mt-0.5 order-2 sm:order-2">
-          <ArrowRight className="w-4 h-4 text-accent group-hover:text-white group-hover:translate-x-0.5 transition-all" />
+          <ArrowRight className="w-4 h-4 text-zinc-300 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
         </div>
       </Link>
     </div>

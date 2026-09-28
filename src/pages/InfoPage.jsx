@@ -143,7 +143,7 @@ const InfoPage = ({ contentKey: propContentKey }) => {
 
           <div className="mx-auto w-full max-w-[1280px] border-white/10 min-[1280px]:border-x px-6 py-12 md:px-20 relative z-10">
             <div className="mx-auto flex w-full max-w-[720px] flex-col gap-3 font-sans">
-              <span className="text-xs uppercase tracking-wider text-accent font-semibold">
+              <span className="text-xs uppercase tracking-wider text-zinc-400 font-mono font-semibold">
                 &lt;MODULE_{contentKey.toUpperCase()} /&gt;
               </span>
               <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight font-heading">
@@ -171,7 +171,7 @@ const InfoPage = ({ contentKey: propContentKey }) => {
                 </p>
                 <Link
                   to="/docs"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white text-black text-xs font-extrabold hover:bg-zinc-200 active:scale-[0.98] transition-all shadow-lg cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white text-black text-xs font-sans font-semibold hover:bg-zinc-200 active:scale-[0.98] transition-all shadow-lg cursor-pointer"
                 >
                   Go to Documentation
                 </Link>
@@ -185,7 +185,7 @@ const InfoPage = ({ contentKey: propContentKey }) => {
                 ) : (
                   <div className="rounded-lg border border-white/10 bg-[#121215] p-6 sm:p-10 shadow-sm mb-8">
                     <div
-                      className="prose prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-white prose-p:text-zinc-300 prose-p:leading-relaxed prose-a:text-accent prose-a:underline hover:prose-a:opacity-80 prose-code:text-accent prose-code:font-mono prose-code:bg-[#0A0A0C] prose-code:px-2 prose-code:py-1 prose-code:rounded-md prose-blockquote:border-l-2 prose-blockquote:border-accent prose-blockquote:pl-4 prose-blockquote:text-zinc-300 prose-blockquote:bg-white/[0.02] prose-blockquote:py-1"
+                      className="prose prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-white prose-p:text-zinc-300 prose-p:leading-relaxed prose-a:text-white prose-a:underline hover:prose-a:text-zinc-300 prose-code:text-zinc-200 prose-code:font-mono prose-code:bg-white/10 prose-code:px-2 prose-code:py-1 prose-code:rounded-md prose-blockquote:border-l-2 prose-blockquote:border-white/40 prose-blockquote:pl-4 prose-blockquote:text-zinc-300 prose-blockquote:bg-white/[0.02] prose-blockquote:py-1"
                       dangerouslySetInnerHTML={{ __html: sanitizedContent }}
                     />
                   </div>
@@ -195,7 +195,7 @@ const InfoPage = ({ contentKey: propContentKey }) => {
                   <div className="mt-8 p-6 sm:p-8 rounded-lg bg-[#12141A] border border-white/15 shadow-sm space-y-6 font-sans">
                     <div className="flex items-center justify-between border-b border-white/10 pb-4">
                       <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center text-accent">
+                        <div className="w-8 h-8 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center text-white">
                           <Key className="w-4 h-4" />
                         </div>
                         <div>
@@ -251,12 +251,12 @@ const InfoPage = ({ contentKey: propContentKey }) => {
                           value={inputToken}
                           onChange={(e) => setInputToken(e.target.value)}
                           placeholder={isConnected ? '••••••••••••••••••••••••••••' : 'Paste ghp_your_token_here...'}
-                          className="flex-1 bg-[#0B0C0E] border border-white/15 rounded-xl px-4 py-3 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-mono"
+                          className="flex-1 bg-[#0B0C0E] border border-white/15 rounded-xl px-4 py-2.5 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all font-mono"
                         />
                         <button
                           type="submit"
                           disabled={isVerifying}
-                          className="px-6 py-3 rounded-xl bg-white text-black font-mono font-bold text-xs hover:bg-zinc-200 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-none disabled:opacity-50"
+                          className="btn-saas-primary text-xs h-[42px] px-6 gap-2 disabled:opacity-50"
                         >
                           {isVerifying ? (
                             <>
@@ -277,7 +277,7 @@ const InfoPage = ({ contentKey: propContentKey }) => {
                           <button
                             type="button"
                             onClick={() => disconnectToken()}
-                            className="text-xs text-zinc-400 hover:text-rose-400 transition-colors font-mono underline"
+                            className="btn-saas-destructive text-xs h-[34px] px-3 gap-1.5"
                           >
                             Disconnect Token
                           </button>
@@ -295,12 +295,12 @@ const InfoPage = ({ contentKey: propContentKey }) => {
                           type="button"
                           onClick={handleRunLiveTest}
                           disabled={isTestingApi}
-                          className="px-4 py-2 rounded-xl bg-white text-black hover:bg-zinc-200 font-mono font-bold transition-all flex items-center gap-2 cursor-pointer text-xs active:scale-95 shadow-none"
+                          className="btn-saas-secondary text-xs h-[36px] px-4 gap-2"
                         >
                           {isTestingApi ? (
                             <Loader2 className="w-3.5 h-3.5 animate-spin" />
                           ) : (
-                            <Play className="w-3.5 h-3.5 fill-black" />
+                            <Play className="w-3.5 h-3.5 fill-current" />
                           )}
                           <span>Execute GET /user</span>
                         </button>

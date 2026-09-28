@@ -127,14 +127,14 @@ const DashboardPreview = () => {
     return (
         <section className="relative border-b border-white/10 bg-[#0A0A0C] py-20 sm:py-28 overflow-hidden select-none" aria-label="Interactive Product Preview">
             {/* Background subtle radial gradient */}
-            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-accent/5 blur-[120px] pointer-events-none rounded-full" />
+            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-white/[0.02] blur-[120px] pointer-events-none rounded-full" />
 
-            <div className="relative mx-auto w-full max-w-[1280px] min-[1280px]:border-x border-white/10 px-4 sm:px-6">
+            <div className="relative mx-auto w-full max-w-[1280px] px-4 sm:px-6">
                 
                 {/* Modern SaaS Section Header */}
                 <div className="mx-auto max-w-3xl text-center mb-12 sm:mb-16 space-y-4">
-                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/[0.04] text-[11px] font-mono font-medium text-emerald-400">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/[0.04] text-[11px] font-mono font-medium text-zinc-300">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                         <span>REPOSITORY INTELLIGENCE PLATFORM</span>
                     </div>
 
@@ -173,9 +173,9 @@ const DashboardPreview = () => {
                                             setSelectedRepoIdx(idx);
                                             setHoveredIdx(6);
                                         }}
-                                        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap ${
+                                        className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-sans font-medium transition-all cursor-pointer whitespace-nowrap border-0 ${
                                             selectedRepoIdx === idx
-                                                ? 'bg-white/15 text-white border border-white/20'
+                                                ? 'bg-white/15 text-white'
                                                 : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
                                         }`}
                                     >
@@ -191,9 +191,9 @@ const DashboardPreview = () => {
                             <button
                                 type="button"
                                 onClick={() => setActiveTab('signal')}
-                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap ${
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-sans font-medium transition-all cursor-pointer whitespace-nowrap border-0 ${
                                     activeTab === 'signal'
-                                        ? 'bg-white/15 text-white border border-white/20 shadow-none'
+                                        ? 'bg-white/15 text-white shadow-none'
                                         : 'text-zinc-400 hover:text-white'
                                 }`}
                             >
@@ -204,22 +204,22 @@ const DashboardPreview = () => {
                             <button
                                 type="button"
                                 onClick={() => setActiveTab('cadence')}
-                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap ${
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-sans font-medium transition-all cursor-pointer whitespace-nowrap border-0 ${
                                     activeTab === 'cadence'
-                                        ? 'bg-white/15 text-white border border-white/20 shadow-none'
+                                        ? 'bg-white/15 text-white shadow-none'
                                         : 'text-zinc-400 hover:text-white'
                                 }`}
                             >
-                                <Users className="w-3.5 h-3.5 text-accent" />
+                                <Users className="w-3.5 h-3.5 text-zinc-300" />
                                 <span>Cadence</span>
                             </button>
 
                             <button
                                 type="button"
                                 onClick={() => setActiveTab('inspector')}
-                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap ${
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-sans font-medium transition-all cursor-pointer whitespace-nowrap border-0 ${
                                     activeTab === 'inspector'
-                                        ? 'bg-white/15 text-white border border-white/20 shadow-none'
+                                        ? 'bg-white/15 text-white shadow-none'
                                         : 'text-zinc-400 hover:text-white'
                                 }`}
                             >
@@ -230,9 +230,9 @@ const DashboardPreview = () => {
                             <button
                                 type="button"
                                 onClick={() => setActiveTab('workflow')}
-                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap ${
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-sans font-medium transition-all cursor-pointer whitespace-nowrap border-0 ${
                                     activeTab === 'workflow'
-                                        ? 'bg-white/15 text-white border border-white/20 shadow-none'
+                                        ? 'bg-white/15 text-white shadow-none'
                                         : 'text-zinc-400 hover:text-white'
                                 }`}
                             >
@@ -324,10 +324,10 @@ const DashboardPreview = () => {
                                             preserveAspectRatio="none"
                                         >
                                             <defs>
-                                                <linearGradient id="saasTealGrad" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.35" />
-                                                    <stop offset="70%" stopColor="var(--accent)" stopOpacity="0.08" />
-                                                    <stop offset="100%" stopColor="var(--accent)" stopOpacity="0.0" />
+                                                <linearGradient id="saasBlueGrad" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.32" />
+                                                    <stop offset="70%" stopColor="#3B82F6" stopOpacity="0.06" />
+                                                    <stop offset="100%" stopColor="#3B82F6" stopOpacity="0.0" />
                                                 </linearGradient>
                                             </defs>
 
@@ -337,13 +337,13 @@ const DashboardPreview = () => {
                                             <line x1="40" y1="135" x2="660" y2="135" stroke="rgba(255,255,255,0.06)" strokeDasharray="3 3" />
 
                                             {/* Area Gradient Fill */}
-                                            <path d={activeRepo.areaPath} fill="url(#saasTealGrad)" />
+                                            <path d={activeRepo.areaPath} fill="url(#saasBlueGrad)" />
 
                                             {/* Primary Stroke Line */}
                                             <path
                                                 d={activeRepo.linePath}
                                                 fill="none"
-                                                stroke="var(--accent)"
+                                                stroke="#3B82F6"
                                                 strokeWidth="2.5"
                                                 strokeLinecap="round"
                                             />
@@ -355,10 +355,10 @@ const DashboardPreview = () => {
                                                     y1="15"
                                                     x2={activePt.x}
                                                     y2="160"
-                                                    stroke="var(--accent)"
+                                                    stroke="#60A5FA"
                                                     strokeWidth="1.5"
                                                     strokeDasharray="3 3"
-                                                    opacity="0.8"
+                                                    opacity="0.7"
                                                 />
                                             )}
 
@@ -368,17 +368,26 @@ const DashboardPreview = () => {
                                                 return (
                                                     <g
                                                         key={pt.day}
+                                                        role="button"
+                                                        tabIndex={0}
+                                                        aria-label={`${pt.day}: ${formatNumber(pt.stars)} stars, +${pt.gain} gain`}
                                                         onClick={() => setHoveredIdx(idx)}
                                                         onMouseEnter={() => setHoveredIdx(idx)}
-                                                        className="cursor-pointer group"
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === 'Enter' || e.key === ' ') {
+                                                                e.preventDefault();
+                                                                setHoveredIdx(idx);
+                                                            }
+                                                        }}
+                                                        className="cursor-pointer group focus:outline-none"
                                                     >
                                                         <circle cx={pt.x} cy={pt.y} r="20" fill="transparent" />
                                                         <circle
                                                             cx={pt.x}
                                                             cy={pt.y}
                                                             r={isHovered ? "6" : "3.5"}
-                                                            fill={isHovered ? "var(--accent)" : "#0E0F12"}
-                                                            stroke="var(--accent)"
+                                                            fill={isHovered ? "#93C5FD" : "#0E0F12"}
+                                                            stroke="#3B82F6"
                                                             strokeWidth={isHovered ? "2.5" : "1.5"}
                                                             className="transition-all duration-150"
                                                         />
@@ -446,7 +455,7 @@ const DashboardPreview = () => {
                                     <div className="p-4 rounded-xl bg-[#121318] border border-white/10 space-y-1.5">
                                         <div className="flex items-center justify-between text-xs text-zinc-400 font-mono">
                                             <span>DECENTRALIZATION</span>
-                                            <GitBranch className="w-4 h-4 text-accent" />
+                                            <GitBranch className="w-4 h-4 text-zinc-300" />
                                         </div>
                                         <div className="text-2xl font-bold font-mono text-white tracking-tight">
                                             High Resiliency
@@ -461,7 +470,7 @@ const DashboardPreview = () => {
                                 <div className="p-5 rounded-xl bg-[#101115] border border-white/10 space-y-4">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
-                                            <Clock className="w-4 h-4 text-accent" />
+                                            <Clock className="w-4 h-4 text-zinc-300" />
                                             <span className="text-xs sm:text-sm font-mono font-bold text-white">
                                                 Weekly Commit Activity by Day
                                             </span>
@@ -476,7 +485,7 @@ const DashboardPreview = () => {
                                                     {item.count}
                                                 </div>
                                                 <div
-                                                    className="w-full max-w-[48px] rounded-t-lg bg-emerald-500/30 group-hover:bg-accent border-t border-x border-emerald-500/40 transition-all duration-150"
+                                                    className="w-full max-w-[48px] rounded-t-lg bg-blue-500/35 group-hover:bg-blue-500/70 border-t border-x border-blue-400/50 transition-all duration-150"
                                                     style={{ height: item.height }}
                                                 />
                                                 <span className="text-xs font-mono text-zinc-400 group-hover:text-white transition-colors">
@@ -546,7 +555,7 @@ const DashboardPreview = () => {
                             <div className="space-y-6">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div className="p-5 rounded-xl bg-[#121318] border border-white/10 space-y-3">
-                                        <div className="flex items-center gap-2 text-accent font-bold font-mono text-xs">
+                                        <div className="flex items-center gap-2 text-white font-bold font-mono text-xs">
                                             <Bookmark className="w-4 h-4" />
                                             <span>Local Bookmarks &amp; Notes</span>
                                         </div>

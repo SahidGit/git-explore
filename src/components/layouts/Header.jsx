@@ -83,9 +83,10 @@ const Header = ({ activeTab, showBackButton }) => {
 
     const navLinks = [
         { label: 'Dashboard', to: '/dashboard', tab: 'dashboard' },
-        { label: 'AI Newsroom', to: '/ai-news', tab: 'ai-news' },
-        { label: 'Git Cheat Sheet', to: '/cheatsheet', tab: 'cheatsheet' },
         { label: 'Bookmarks', to: '/bookmarks', tab: 'bookmarks' },
+        { label: 'Profile', to: '/profile', tab: 'profile' },
+        { label: 'Git Cheat Sheet', to: '/cheatsheet', tab: 'cheatsheet' },
+        { label: 'AI Newsroom', to: '/ai-news', tab: 'ai-news' },
     ];
 
     // Scroll lock when mobile menu is open
@@ -102,15 +103,21 @@ const Header = ({ activeTab, showBackButton }) => {
 
     return (
         <>
-            {/* Plain Static Navbar directly on the image background */}
-            <header className="absolute top-0 left-0 right-0 z-40 w-full bg-transparent">
-                <div className="mx-auto w-full max-w-[1400px] px-6 sm:px-8 md:px-12 py-5 sm:py-6 flex items-center justify-between">
+            {/* Sticky Frosted Navbar with smooth scroll blur transition */}
+            <header
+                className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-200 ${
+                    isScrolled
+                        ? 'bg-[#0A0A0C]/90 backdrop-blur-md border-b border-white/[0.08] shadow-sm'
+                        : 'bg-transparent border-b border-transparent'
+                }`}
+            >
+                <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 md:px-8 py-3.5 sm:py-4 flex items-center justify-between">
 
-                    {/* Left Slot: Logo and Website Name (Direct solid icon + bold text, matching reference style) */}
-                    <div className="flex items-center gap-3 min-w-[200px]">
+                    {/* Left Slot: Logo and Website Name */}
+                    <div className="flex items-center gap-3 min-w-[180px]">
                         <Link to="/" className="flex items-center gap-2.5 group" aria-label="ExploreGit home">
-                            <Github className="w-6 h-6 text-white shrink-0 transition-transform duration-200 group-hover:scale-105" fill="currentColor" />
-                            <span className="font-bold text-white text-xl tracking-tight font-sans group-hover:text-zinc-200 transition-colors">
+                            <Github className="w-5 h-5 sm:w-6 sm:h-6 text-white shrink-0 transition-transform duration-200 group-hover:scale-105" fill="currentColor" />
+                            <span className="font-bold text-white text-base sm:text-lg tracking-tight font-heading group-hover:text-zinc-200 transition-colors">
                                 ExploreGit
                             </span>
                         </Link>
@@ -118,7 +125,7 @@ const Header = ({ activeTab, showBackButton }) => {
                         {showBackButton && (
                             <Link
                                 to="/"
-                                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs text-[#94A3B8] hover:text-white transition-all duration-200 font-mono ml-2"
+                                className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[7px] text-xs text-zinc-400 hover:text-white transition-all duration-150 font-sans font-medium ml-1.5 border border-white/10 hover:border-white/20 bg-white/[0.02]"
                             >
                                 <ArrowLeft className="w-3.5 h-3.5" />
                                 <span>Home</span>
@@ -126,9 +133,9 @@ const Header = ({ activeTab, showBackButton }) => {
                         )}
                     </div>
 
-                    {/* Middle Slot: All Anchor Tags in Center with NO background color */}
+                    {/* Middle Slot: Clean Centered Navigation Links */}
                     <nav
-                        className="hidden md:flex items-center justify-center gap-8 lg:gap-10 font-sans text-sm font-medium"
+                        className="hidden md:flex items-center justify-center gap-7 lg:gap-8 font-sans text-sm font-medium"
                         aria-label="Primary navigation"
                     >
                         {navLinks.map(({ label, to, tab }) => {
@@ -137,36 +144,26 @@ const Header = ({ activeTab, showBackButton }) => {
                                 <Link
                                     key={tab}
                                     to={to}
-                                    className={`transition-colors duration-150 py-1.5 ${
+                                    className={`transition-colors duration-150 py-1 font-sans ${
                                         isActive
                                             ? 'text-white font-semibold'
-                                            : 'text-[#94A3B8] hover:text-white'
+                                            : 'text-zinc-400 hover:text-white font-medium'
                                     }`}
                                 >
                                     {label}
                                 </Link>
                             );
                         })}
-                        <Link
-                            to="/profile"
-                            className={`transition-colors duration-150 py-1.5 ${
-                                activeTab === 'profile'
-                                    ? 'text-white font-semibold'
-                                    : 'text-[#94A3B8] hover:text-white'
-                            }`}
-                        >
-                            Profile
-                        </Link>
                     </nav>
 
-                    {/* Right Slot: Connect Token Button (Geist Mono, rounded-xl, no glow) */}
-                    <div className="hidden md:flex items-center justify-end gap-3 min-w-[200px]">
+                    {/* Right Slot: Connect Token Button */}
+                    <div className="hidden md:flex items-center justify-end gap-3 min-w-[180px]">
                         {isConnected && user ? (
                             <button
                                 id="connect-token-btn"
                                 onClick={handleOpenModal}
                                 aria-label="Manage GitHub Token"
-                                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/20 bg-transparent text-white hover:border-white/40 active:scale-[0.98] transition-all cursor-pointer font-mono font-bold text-xs shadow-none"
+                                className="btn-saas-secondary text-xs h-[38px] px-3 gap-2"
                             >
                                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                                 {user.avatar_url ? (
@@ -178,17 +175,17 @@ const Header = ({ activeTab, showBackButton }) => {
                                 ) : (
                                     <User className="w-3.5 h-3.5 text-emerald-400" />
                                 )}
-                                <span className="font-bold text-xs">@{user.login}</span>
+                                <span className="font-medium text-xs font-mono">@{user.login}</span>
                             </button>
                         ) : (
                             <button
                                 id="connect-token-btn"
                                 onClick={handleOpenModal}
                                 aria-label="Connect GitHub Token"
-                                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-white/20 bg-transparent text-white font-mono font-bold text-xs hover:border-white/40 active:scale-[0.98] transition-all cursor-pointer shadow-none"
+                                className="btn-saas-secondary text-xs h-[38px] px-3 gap-2"
                             >
-                                <Key className="w-3.5 h-3.5 text-white" />
-                                <span>Connect Token</span>
+                                <Key className="w-3.5 h-3.5 text-zinc-300" />
+                                <span className="font-sans font-medium text-xs">Connect Token</span>
                             </button>
                         )}
                     </div>
@@ -196,7 +193,7 @@ const Header = ({ activeTab, showBackButton }) => {
                     {/* Mobile Hamburger Trigger */}
                     <button
                         id="mobile-menu-btn"
-                        className="md:hidden flex items-center justify-center w-9 h-9 rounded-xl bg-transparent border border-white/20 text-white hover:border-white/40 active:scale-95 transition-all cursor-pointer"
+                        className="md:hidden inline-flex items-center justify-center w-[38px] h-[38px] rounded-[9px] bg-white/[0.04] border border-white/15 text-white hover:border-white/30 hover:bg-white/[0.08] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 transition-all cursor-pointer"
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         aria-expanded={isMobileMenuOpen}
                         aria-label="Toggle mobile menu"
@@ -214,14 +211,14 @@ const Header = ({ activeTab, showBackButton }) => {
                 </div>
             </header>
 
-            {/* Mobile Hamburger Navigation Overlay (Full-screen Drawer) */}
+            {/* Mobile Hamburger Navigation Overlay */}
             {isMobileMenuOpen && (
                 <div
                     id="mobile-menu-overlay"
-                    className="fixed inset-0 z-50 bg-[#0D0E11] md:hidden flex flex-col w-screen h-screen overflow-hidden animate-fadeIn"
+                    className="fixed inset-0 z-50 bg-[#0A0A0C] md:hidden flex flex-col w-screen h-screen overflow-hidden animate-fadeIn font-sans"
                 >
                     {/* Header & Action Bar Architecture */}
-                    <div className="flex items-center justify-between px-5 sm:px-6 h-16 border-b border-white/[0.08] bg-[#0D0E11] shrink-0">
+                    <div className="flex items-center justify-between px-5 sm:px-6 h-16 border-b border-white/[0.08] bg-[#0A0A0C] shrink-0">
                         
                         {/* Left Slot: Branding */}
                         <Link
@@ -230,8 +227,8 @@ const Header = ({ activeTab, showBackButton }) => {
                             className="flex items-center gap-2.5"
                             aria-label="ExploreGit mobile home link"
                         >
-                            <Github className="w-6 h-6 text-white shrink-0" fill="currentColor" />
-                            <span className="text-xl font-bold text-white font-sans tracking-tight">
+                            <Github className="w-5 h-5 text-white shrink-0" fill="currentColor" />
+                            <span className="text-base font-bold text-white font-heading tracking-tight">
                                 ExploreGit
                             </span>
                         </Link>
@@ -243,16 +240,16 @@ const Header = ({ activeTab, showBackButton }) => {
                                     setIsMobileMenuOpen(false);
                                     handleOpenModal();
                                 }}
-                                className="px-4 py-2 rounded-xl bg-white text-black font-bold text-xs transition-all hover:bg-zinc-200 active:scale-[0.98] cursor-pointer flex items-center gap-1.5 font-mono shadow-none"
+                                className="btn-saas-primary text-xs h-[36px] px-3 gap-1.5"
                             >
-                                <Key className="w-3.5 h-3.5 text-black" />
+                                <Key className="w-3.5 h-3.5 text-[#0A0A0C]" />
                                 <span>{isConnected ? `@${user?.login || 'user'}` : 'Connect Token'}</span>
                             </button>
 
                             <button
                                 onClick={() => setIsMobileMenuOpen(false)}
                                 aria-label="Close mobile menu"
-                                className="w-9 h-9 rounded-xl bg-white/[0.05] border border-white/15 flex items-center justify-center text-white hover:border-white/30 transition-colors cursor-pointer"
+                                className="w-[36px] h-[36px] rounded-[9px] bg-white/[0.04] border border-white/15 flex items-center justify-center text-white hover:border-white/30 hover:bg-white/[0.08] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 transition-colors cursor-pointer"
                             >
                                 <X className="w-4 h-4 text-white" />
                             </button>
@@ -260,8 +257,8 @@ const Header = ({ activeTab, showBackButton }) => {
                     </div>
 
                     {/* Navigation Links Vertical Stack */}
-                    <nav className="flex-1 overflow-y-auto pt-8 px-6 flex flex-col justify-between pb-10 space-y-8">
-                        <div className="flex flex-col space-y-6">
+                    <nav className="flex-1 overflow-y-auto pt-6 px-6 flex flex-col justify-between pb-8 space-y-6 font-sans">
+                        <div className="flex flex-col space-y-4">
                             {navLinks.map(({ label, to, tab }) => {
                                 const isActive = activeTab === tab;
                                 return (
@@ -269,29 +266,17 @@ const Header = ({ activeTab, showBackButton }) => {
                                         key={tab}
                                         to={to}
                                         onClick={() => setIsMobileMenuOpen(false)}
-                                        className={`text-xl font-semibold transition-colors duration-150 flex items-center justify-between border-b border-white/[0.04] pb-4 ${
+                                        className={`text-base font-medium transition-colors duration-150 flex items-center justify-between border-b border-white/[0.04] pb-3 font-sans ${
                                             isActive
-                                                ? 'text-white font-extrabold text-2xl'
-                                                : 'text-white hover:text-zinc-300'
+                                                ? 'text-white font-semibold'
+                                                : 'text-zinc-400 hover:text-white'
                                         }`}
                                     >
                                         <span>{label}</span>
-                                        {isActive && <span className="w-2 h-2 rounded-full bg-emerald-400" />}
+                                        {isActive && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />}
                                     </Link>
                                 );
                             })}
-                            <Link
-                                to="/profile"
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                className={`text-xl font-semibold transition-colors duration-150 flex items-center justify-between border-b border-white/[0.04] pb-4 ${
-                                    activeTab === 'profile'
-                                        ? 'text-white font-extrabold text-2xl'
-                                        : 'text-white hover:text-zinc-300'
-                                }`}
-                            >
-                                <span>Developer Profile</span>
-                                {activeTab === 'profile' && <span className="w-2 h-2 rounded-full bg-emerald-400" />}
-                            </Link>
                         </div>
 
                         {/* Featured Report an Issue Pill & Bottom Metadata in Drawer */}
@@ -299,19 +284,19 @@ const Header = ({ activeTab, showBackButton }) => {
                             <Link
                                 to="/report"
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className="flex items-center justify-between p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 hover:bg-amber-500/20 active:scale-[0.98] transition-all"
+                                className="flex items-center justify-between p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 hover:bg-amber-500/20 active:scale-[0.98] transition-all font-sans"
                             >
                                 <div className="flex items-center gap-2">
                                     <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
-                                    <span className="font-bold text-xs">Report an Issue / Feedback</span>
+                                    <span className="font-semibold text-xs font-sans">Report an Issue / Feedback</span>
                                 </div>
-                                <span className="text-[11px] font-bold text-amber-400/80">↗</span>
+                                <span className="text-[11px] font-bold text-amber-400/80 font-sans">↗</span>
                             </Link>
 
-                            <div className="space-y-1.5 text-zinc-500">
+                            <div className="space-y-1.5 text-zinc-500 font-sans">
                                 <div className="flex items-center justify-between">
                                     <span>ExploreGit Intelligence Layer</span>
-                                    <span className="text-emerald-400 font-bold">&bull; Live</span>
+                                    <span className="text-emerald-400 font-semibold">&bull; Live</span>
                                 </div>
                                 <div className="text-[11px] text-zinc-600">
                                     100% Local-First &bull; Zero Cloud Telemetry
@@ -324,43 +309,43 @@ const Header = ({ activeTab, showBackButton }) => {
 
             {/* Token Configuration Modal & Step-by-Step Generation Guide */}
             {showTokenModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-fadeIn">
-                    <div className="w-full max-w-lg bg-[#12141A] border border-white/15 rounded-lg p-5 sm:p-6 space-y-5 shadow-sm font-sans text-xs max-h-[90vh] overflow-y-auto">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-fadeIn font-sans">
+                    <div className="w-full max-w-lg bg-[#121215] border border-white/15 rounded-xl p-5 sm:p-6 space-y-5 shadow-2xl font-sans text-xs max-h-[90vh] overflow-y-auto">
                         
                         {/* Modal Header */}
                         <div className="flex items-center justify-between border-b border-white/10 pb-3">
                             <div className="flex items-center gap-2">
-                                <Key className="w-4 h-4 text-accent" />
-                                <h3 className="text-sm font-bold text-white">GitHub Token Configuration</h3>
+                                <Key className="w-4 h-4 text-emerald-400" />
+                                <h3 className="text-sm font-bold text-white font-heading tracking-tight">GitHub Token Configuration</h3>
                             </div>
                             <button
                                 onClick={() => setShowTokenModal(false)}
-                                className="p-1 rounded-lg bg-white/[0.04] text-zinc-400 hover:text-white transition-colors"
+                                className="p-1 rounded-lg bg-white/[0.04] text-zinc-400 hover:text-white transition-colors cursor-pointer"
                             >
                                 <X className="w-4 h-4" />
                             </button>
                         </div>
 
                         {/* Status Quota Card */}
-                        <div className="p-4 rounded-xl border border-white/10 bg-[#0B0C0E] space-y-2">
+                        <div className="p-4 rounded-xl border border-white/10 bg-[#0B0C0E] space-y-2 font-sans">
                             <div className="flex items-center justify-between text-xs">
                                 <span className="text-zinc-400 font-sans">Connection Status:</span>
                                 {isConnected && user ? (
-                                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-bold flex items-center gap-1.5 text-[11px]">
+                                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-semibold flex items-center gap-1.5 text-[11px] font-mono">
                                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
                                         Connected as @{user.login}
                                     </span>
                                 ) : (
-                                    <span className="px-2.5 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-400 text-[11px]">
+                                    <span className="px-2.5 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-400 text-[11px] font-sans">
                                         Anonymous Mode (60 req/hr)
                                     </span>
                                 )}
                             </div>
 
                             {rateLimit && (
-                                <div className="flex items-center justify-between text-xs pt-1 border-t border-white/5">
+                                <div className="flex items-center justify-between text-xs pt-1 border-t border-white/5 font-sans">
                                     <span className="text-zinc-400 font-sans">API Quota Limit:</span>
-                                    <span className="text-white font-bold">
+                                    <span className="text-white font-bold font-mono">
                                         {rateLimit.remaining} / {rateLimit.limit} req/hr
                                     </span>
                                 </div>
@@ -369,12 +354,12 @@ const Header = ({ activeTab, showBackButton }) => {
 
                         {/* Description */}
                         <p className="text-zinc-300 leading-relaxed font-sans text-xs">
-                            Connecting a GitHub Personal Access Token (PAT) upgrades API rate limits from 60 to <strong className="text-white">5,000 requests/hour</strong>. Tokens are stored 100% locally in your browser and are never transmitted to third-party servers.
+                            Connecting a GitHub Personal Access Token (PAT) upgrades API rate limits from 60 to <strong className="text-white font-semibold">5,000 requests/hour</strong>. Tokens are stored 100% locally in your browser and are never transmitted to third-party servers.
                         </p>
 
                         {/* Success Banner */}
                         {localSuccess && (
-                            <div className="p-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 flex items-center gap-2 text-xs font-mono">
+                            <div className="p-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 flex items-center gap-2 text-xs font-sans">
                                 <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                                 <span>Connected Successfully! Token saved locally.</span>
                             </div>
@@ -382,21 +367,21 @@ const Header = ({ activeTab, showBackButton }) => {
 
                         {/* Error / Failure Banner */}
                         {(localError || tokenError) && !localSuccess && (
-                            <div className="p-3.5 rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-300 space-y-1.5 text-xs font-mono">
-                                <div className="flex items-center gap-2 font-bold">
+                            <div className="p-3.5 rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-300 space-y-1.5 text-xs font-sans">
+                                <div className="flex items-center gap-2 font-bold font-sans">
                                     <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />
                                     <span>{localError || tokenError}</span>
                                 </div>
                                 <p className="text-[11px] font-sans text-rose-200">
-                                    Please verify your token credentials or check the generation guide below to create a classic PAT with <code className="bg-black/30 px-1 py-0.5 rounded">public_repo</code> scopes.
+                                    Please verify your token credentials or check the generation guide below to create a classic PAT with <code className="bg-black/30 px-1 py-0.5 rounded font-mono">public_repo</code> scopes.
                                 </p>
                             </div>
                         )}
 
                         {/* Token Input Form */}
-                        <form onSubmit={handleConnectSubmit} className="space-y-3">
+                        <form onSubmit={handleConnectSubmit} className="space-y-3 font-sans">
                             <div>
-                                <label htmlFor="pat-input" className="block text-[11px] font-mono text-zinc-400 mb-1.5">
+                                <label htmlFor="pat-input" className="block text-[11px] font-sans font-medium text-zinc-400 mb-1.5">
                                     Personal Access Token (classic or fine-grained)
                                 </label>
                                 <input
@@ -405,15 +390,15 @@ const Header = ({ activeTab, showBackButton }) => {
                                     value={inputToken}
                                     onChange={(e) => setInputToken(e.target.value)}
                                     placeholder={isConnected ? "••••••••••••••••••••••••••••" : "ghp_your_personal_access_token..."}
-                                    className="w-full bg-[#0B0C0E] border border-white/15 rounded-lg p-3 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all font-mono"
+                                    className="w-full bg-[#0B0C0E] border border-white/15 rounded-lg p-3 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all font-mono"
                                 />
                             </div>
 
-                            <div className="flex items-center justify-between pt-1">
+                            <div className="flex items-center justify-between pt-1 font-sans">
                                 <button
                                     type="button"
                                     onClick={() => setShowGuide(!showGuide)}
-                                    className="text-xs font-mono text-accent hover:opacity-80 flex items-center gap-1 transition-colors"
+                                    className="text-xs font-sans font-medium text-zinc-400 hover:text-white flex items-center gap-1 transition-colors cursor-pointer"
                                 >
                                     <HelpCircle className="w-3.5 h-3.5" />
                                     <span>How to generate a token?</span>
@@ -425,16 +410,17 @@ const Header = ({ activeTab, showBackButton }) => {
                                         <button
                                             type="button"
                                             onClick={handleDisconnect}
-                                            className="px-4 py-2.5 rounded-xl border border-white/15 bg-white/[0.04] text-zinc-300 hover:text-rose-400 hover:border-rose-500/30 transition-all font-sans font-semibold text-xs active:scale-[0.98] cursor-pointer"
+                                            className="btn-saas-destructive text-xs h-[38px] px-3 gap-1.5"
                                         >
-                                            Disconnect
+                                            <Trash2 className="w-3.5 h-3.5" />
+                                            <span>Disconnect</span>
                                         </button>
                                     )}
 
                                     <button
                                         type="submit"
                                         disabled={isVerifying}
-                                        className="px-5 py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-black font-sans font-extrabold text-xs active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer shadow-md disabled:opacity-50"
+                                        className="btn-saas-primary text-xs h-[38px] px-3 gap-1.5"
                                     >
                                         {isVerifying ? (
                                             <>
@@ -443,7 +429,7 @@ const Header = ({ activeTab, showBackButton }) => {
                                             </>
                                         ) : (
                                             <>
-                                                <Check className="w-3.5 h-3.5 stroke-[3]" />
+                                                <Check className="w-3.5 h-3.5 stroke-[2.5]" />
                                                 <span>{isConnected ? 'Update Token' : 'Verify & Connect'}</span>
                                             </>
                                         )}
@@ -456,29 +442,29 @@ const Header = ({ activeTab, showBackButton }) => {
                         {showGuide && (
                             <div className="p-4 rounded-xl border border-white/10 bg-[#0B0C0E] space-y-3 font-sans text-xs animate-fadeIn">
                                 <div className="flex items-center justify-between border-b border-white/10 pb-2">
-                                    <span className="font-bold text-white font-mono flex items-center gap-1.5 text-[11px]">
-                                        <ShieldCheck className="w-3.5 h-3.5 text-accent" />
+                                    <span className="font-semibold text-white font-sans flex items-center gap-1.5 text-[11px]">
+                                        <ShieldCheck className="w-3.5 h-3.5 text-zinc-300" />
                                         Step-by-Step GitHub PAT Setup Guide
                                     </span>
                                     <a
                                         href="https://github.com/settings/tokens/new?scopes=public_repo,read:user&description=ExploreGit"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="text-accent hover:underline flex items-center gap-1 font-mono text-[11px]"
+                                        className="text-white hover:underline flex items-center gap-1 font-sans text-[11px]"
                                     >
                                         <span>Open GitHub Setup ↗</span>
                                         <ExternalLink className="w-3 h-3" />
                                     </a>
                                 </div>
 
-                                <ol className="space-y-2 list-decimal list-inside text-zinc-300 leading-relaxed">
+                                <ol className="space-y-2 list-decimal list-inside text-zinc-300 leading-relaxed font-sans">
                                     <li>
                                         Navigate to{' '}
                                         <a
                                             href="https://github.com/settings/tokens/new?scopes=public_repo,read:user&description=ExploreGit"
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="text-accent underline font-mono"
+                                            className="text-white underline font-sans"
                                         >
                                             GitHub Settings → Personal access tokens → Tokens (classic)
                                         </a>.
@@ -486,12 +472,12 @@ const Header = ({ activeTab, showBackButton }) => {
                                     <li>Set Note to <code className="bg-white/10 px-1 py-0.5 rounded font-mono text-white">ExploreGit</code>.</li>
                                     <li>
                                         Select recommended scopes:
-                                        <ul className="list-disc list-inside ml-4 mt-1 space-y-1 font-mono text-[11px] text-zinc-400">
-                                            <li><strong className="text-white">public_repo</strong> — Access public repositories and momentum signals</li>
-                                            <li><strong className="text-white">read:user</strong> — Read user profile status &amp; verify credentials</li>
+                                        <ul className="list-disc list-inside ml-4 mt-1 space-y-1 font-sans text-[11px] text-zinc-400">
+                                            <li><strong className="text-white font-medium">public_repo</strong> — Access public repositories and momentum signals</li>
+                                            <li><strong className="text-white font-medium">read:user</strong> — Read user profile status &amp; verify credentials</li>
                                         </ul>
                                     </li>
-                                    <li>Scroll to the bottom and click <strong className="text-white">Generate token</strong>.</li>
+                                    <li>Scroll to the bottom and click <strong className="text-white font-medium">Generate token</strong>.</li>
                                     <li>Copy your token (<code className="bg-white/10 px-1 py-0.5 rounded font-mono text-white">ghp_...</code>) and paste it into the field above.</li>
                                 </ol>
                             </div>

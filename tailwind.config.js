@@ -7,58 +7,58 @@ export default {
   theme: {
     extend: {
       colors: {
-        foreground: 'var(--foreground, #FFFFFF)',
-        primary: 'var(--primary, var(--accent))',
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
+        primary: 'var(--primary, #FFFFFF)',
         accent: {
-          DEFAULT: 'var(--accent)',
-          hover: 'var(--accent-hover)',
-          muted: 'var(--accent-muted)',
-          subtle: 'var(--accent-subtle)',
-          border: 'var(--accent-border)',
+          DEFAULT: 'var(--accent, #FFFFFF)',
+          hover: 'var(--accent-hover, #F4F4F5)',
+          bright: 'var(--accent-bright, #FFFFFF)',
+          muted: 'var(--accent-muted, rgba(255, 255, 255, 0.12))',
+          border: 'var(--accent-border, rgba(255, 255, 255, 0.20))',
         },
-        // Unify all emerald and green references to the single accent token oklch(62.7% .194 149.214)
-        emerald: {
-          50: 'oklch(62.7% 0.194 149.214 / 0.05)',
-          100: 'oklch(62.7% 0.194 149.214 / 0.1)',
-          200: 'oklch(62.7% 0.194 149.214 / 0.2)',
-          300: 'var(--accent)',
-          400: 'var(--accent)',
-          500: 'var(--accent)',
-          600: 'var(--accent)',
-          700: 'var(--accent)',
-          800: 'oklch(40% 0.14 149.214)',
-          900: 'oklch(30% 0.10 149.214)',
-          950: 'oklch(20% 0.06 149.214)',
-          DEFAULT: 'var(--accent)',
+        magenta: {
+          DEFAULT: '#FFFFFF',
+          hover: '#F4F4F5',
+          bright: '#FFFFFF',
+          muted: 'rgba(255, 255, 255, 0.12)',
+          border: 'rgba(255, 255, 255, 0.20)',
         },
-        green: {
-          50: 'oklch(62.7% 0.194 149.214 / 0.05)',
-          100: 'oklch(62.7% 0.194 149.214 / 0.1)',
-          200: 'oklch(62.7% 0.194 149.214 / 0.2)',
-          300: 'var(--accent)',
-          400: 'var(--accent)',
-          500: 'var(--accent)',
-          600: 'var(--accent)',
-          700: 'var(--accent)',
-          800: 'oklch(40% 0.14 149.214)',
-          900: 'oklch(30% 0.10 149.214)',
-          DEFAULT: 'var(--accent)',
+        orange: {
+          DEFAULT: 'var(--orange)',
+          hover: 'var(--orange-hover)',
+          muted: 'var(--orange-muted)',
         },
-        // Clean modern SaaS flat neutrals
-        canvas: '#0A0A0C',
+        blue: {
+          DEFAULT: 'var(--blue)',
+          hover: 'var(--blue-hover)',
+          bright: 'var(--blue-bright)',
+          muted: 'var(--blue-muted)',
+        },
         surface: {
-          DEFAULT: '#121215',
-          elevated: '#16161A',
+          1: 'var(--surface-1)',
+          2: 'var(--surface-2)',
+          3: 'var(--surface-3)',
+          4: 'var(--surface-4)',
+          5: 'var(--surface-5)',
+          DEFAULT: 'var(--surface-2)',
+          elevated: 'var(--surface-3)',
+        },
+        canvas: 'var(--background)',
+        trigray: {
+          700: 'var(--surface-4)',
+          800: 'var(--surface-3)',
+          900: 'var(--surface-2)',
         },
         // Retain legacy github tokens for dashboard/other pages
         github: {
-          bg: '#0D1117',
-          card: '#161B22',
-          border: '#30363D',
-          text: '#F0F6FC',
-          'text-muted': '#8B949E',
-          accent: 'var(--accent)',
-          purple: '#7C3AED',
+          bg: 'var(--surface-2)',
+          card: 'var(--surface-3)',
+          border: 'var(--border)',
+          text: 'var(--text-primary)',
+          'text-muted': 'var(--text-secondary)',
+          accent: '#FFFFFF',
+          purple: '#A1A1AA',
         },
       },
       borderRadius: {
@@ -81,31 +81,51 @@ export default {
         none: 'none',
       },
       fontFamily: {
+        // ── Body / UI — Inter ────────────────────────────────────
         sans: [
-          'Space Grotesk',
+          'Inter',
           'system-ui',
           '-apple-system',
           'Segoe UI',
           'sans-serif',
         ],
+        body: [
+          'Inter',
+          'system-ui',
+          '-apple-system',
+          'sans-serif',
+        ],
+        // ── Headings / Display — Neue Machina ───────────────────
         heading: [
           'Neue Machina',
           'Space Grotesk',
+          'system-ui',
           'sans-serif',
         ],
         space: [
+          'Neue Machina',
           'Space Grotesk',
+          'system-ui',
           'sans-serif',
         ],
-        jakarta: [
-          'Space Grotesk',
+        // ── Accent Highlight — Neue Machina ─────────────────────
+        highlight: [
+          'Neue Machina',
           'sans-serif',
         ],
+        // Legacy alias: syne → highlight (Neue Machina)
         syne: [
           'Neue Machina',
           'Space Grotesk',
           'sans-serif',
         ],
+        // Legacy alias: jakarta → body (Inter)
+        jakarta: [
+          'Inter',
+          'system-ui',
+          'sans-serif',
+        ],
+        // ── Monospace — Geist Mono stack ─────────────────────────
         mono: [
           'Geist Mono',
           'JetBrains Mono',

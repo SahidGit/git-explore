@@ -5,7 +5,7 @@ import { Github } from 'lucide-react';
 const Footer = () => {
     return (
         <footer className="border-t border-b border-white/10 bg-[#0A0A0B]" aria-label="Site footer">
-            <div className="mx-auto w-full max-w-[1280px] min-[1280px]:border-x border-white/10 px-4 sm:px-8 py-4 sm:py-5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-sans">
+            <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-8 py-4 sm:py-5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-sans">
                 {/* Website Minimal Logo */}
                 <Link
                     to="/"
@@ -16,13 +16,19 @@ const Footer = () => {
                     <span>ExploreGit</span>
                 </Link>
 
-                {/* Only the four required sub-footer links */}
-                <nav className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-[#94A3B8]" aria-label="Footer navigation">
+                {/* Footer links */}
+                <nav className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-zinc-400" aria-label="Footer navigation">
                     <Link to="/company" className="hover:text-white transition-colors">
                         Company &amp; Vision
                     </Link>
+                    <Link to="/docs" className="hover:text-white transition-colors">
+                        Documentation
+                    </Link>
                     <Link to="/terms" className="hover:text-white transition-colors">
                         Terms of Service
+                    </Link>
+                    <Link to="/privacy" className="hover:text-white transition-colors">
+                        Privacy Policy
                     </Link>
                     <Link to="/disclaimer" className="hover:text-white transition-colors">
                         Disclaimer

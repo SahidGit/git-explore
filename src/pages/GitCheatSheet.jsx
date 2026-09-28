@@ -138,7 +138,7 @@ const GitCheatSheet = () => {
                         <p className="text-xs text-zinc-500 font-mono">Try searching for keywords like &lsquo;commit&rsquo;, &lsquo;branch&rsquo;, &lsquo;checkout&rsquo;, or reset your filter.</p>
                         <button
                             onClick={() => { setSearchQuery(''); setSelectedCategory('all'); }}
-                            className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-black font-bold text-xs font-mono active:scale-[0.98] hover:bg-zinc-200 transition-all cursor-pointer shadow-none"
+                            className="btn-saas-primary mt-2 text-xs"
                         >
                             Reset Search &amp; Filters
                         </button>
@@ -204,7 +204,7 @@ const StepRowCard = ({ stepIndex, item, isCopied, onCopy }) => {
                     <span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-md bg-white/[0.06] border border-white/10 text-[11px] font-mono font-bold text-zinc-300">
                         STEP {stepIndex < 10 ? `0${stepIndex}` : stepIndex}
                     </span>
-                    <h3 className="text-sm sm:text-base font-bold text-white tracking-tight group-hover:text-white transition-colors">
+                    <h3 className="text-sm sm:text-base font-bold font-heading text-white tracking-tight group-hover:text-white transition-colors">
                         {item.title}
                     </h3>
                 </div>

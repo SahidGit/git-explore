@@ -180,7 +180,7 @@ const RepositoryDetail = ({ repo, onClose, isBookmarked, onBookmarkToggle }) => 
                                 size={20}
                                 corner={12}
                                 pillColor="rgba(255, 255, 255, 0.05)"
-                                likedColor="#ff4d6d"
+                                likedColor="#FFFFFF"
                                 idleColor="#94a3b8"
                                 label={isBookmarked ? 'Remove bookmark' : 'Bookmark repository'}
                                 className="border border-white/10 hover:border-white/25 transition-all"
@@ -232,7 +232,7 @@ const RepositoryDetail = ({ repo, onClose, isBookmarked, onBookmarkToggle }) => 
                             </div>
 
                             <div className="bg-[#0A0A0C] border border-white/[0.08] rounded-xl p-3.5 flex items-center gap-3">
-                                <div className="p-2 rounded-lg bg-rose-500/10 text-rose-400">
+                                <div className="p-2 rounded-lg bg-white/[0.06] text-zinc-300">
                                     <GitBranch className="w-4 h-4" />
                                 </div>
                                 <div>
