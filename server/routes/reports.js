@@ -33,7 +33,11 @@ router.post('/', async (req, res) => {
         }
 
         // Cloudflare Turnstile verification
-        const turnstileSecret = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY || '1x0000000000000000000000000000000AA';
+        const isProduction = process.env.NODE_ENV === 'production';
+        const turnstileSecret = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY || (!isProduction ? '1x0000000000000000000000000000000AA' : '');
+        if (isProduction && !process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY) {
+            console.warn('[reports] CLOUDFLARE_TURNSTILE_SECRET_KEY is not configured in production.');
+        }
         const clientIp = req.headers['x-forwarded-for']?.split(',')[0].trim() || req.socket.remoteAddress || '';
 
         if (cfTurnstileToken && !cfTurnstileToken.startsWith('cf_dev_') && !cfTurnstileToken.startsWith('cf_turnstile_')) {
