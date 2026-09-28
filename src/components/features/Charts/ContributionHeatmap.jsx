@@ -54,8 +54,16 @@ const ContributionHeatmap = ({ username }) => {
                         weeks.push(currentWeek);
                     }
 
+                    // Compute total contributions from API total.lastYear or sum of all daily counts
+                    const calculatedTotal =
+                        typeof contributionData.total?.lastYear === 'number'
+                            ? contributionData.total.lastYear
+                            : typeof contributionData.totalContributions === 'number'
+                            ? contributionData.totalContributions
+                            : days.reduce((sum, d) => sum + (d.count || 0), 0);
+
                     setData({
-                        totalContributions: contributionData.totalContributions || 0,
+                        totalContributions: calculatedTotal,
                         weeks: weeks,
                     });
                 } else {

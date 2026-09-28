@@ -230,9 +230,12 @@ export const getUser = async (username) => {
 };
 
 export const getUserContributions = async (username) => {
-  const response = await fetchWithRetry(
-    `https://github-contributions-api.jogruber.de/v4/${username}?y=last`
+  const response = await fetch(
+    `https://github-contributions-api.jogruber.de/v4/${encodeURIComponent(username)}?y=last`
   );
+  if (!response.ok) {
+    throw new Error(`Contributions API error (${response.status})`);
+  }
   return response.json();
 };
 
