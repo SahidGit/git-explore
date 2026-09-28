@@ -1,106 +1,118 @@
 # ExploreGit
 
-> Find open-source momentum before it becomes obvious.
+> **Raw GitHub data, structured into signal.** Discover trending repositories, inspect contributor velocity, and track open-source momentum before it becomes mainstream.
 
-ExploreGit is a privacy-conscious React app for exploring GitHub repositories, understanding their activity, and keeping a personal shortlist. It also includes a practical Git command reference and an experimental AI Newsroom for tracking models, open-weight releases, research, and infrastructure.
+[![Live App](https://img.shields.io/badge/Live_Demo-exploregit.vercel.app-10B981?style=flat&logo=vercel)](https://exploregit.vercel.app)
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?logo=react&logoColor=white)](https://react.dev)
+[![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?logo=vite&logoColor=white)](https://vitejs.dev)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-white.svg)](LICENSE)
 
-[Live app](https://exploregit.vercel.app) · [AI Newsroom](https://exploregit.vercel.app/ai-news) · [Git cheat sheet](https://exploregit.vercel.app/cheatsheet) · [Report an issue](https://github.com/SahidGit/git-explore/issues)
+ExploreGit is a privacy-first, local-first developer platform for exploring open-source repositories, analyzing code momentum, and mastering Git workflows.
 
-![React](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-5.4.21-646CFF?logo=vite&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.19-06B6D4?logo=tailwindcss&logoColor=white)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+---
 
-## What you can do
+## ⚡ Quick Start
 
-- Discover trending repositories by timeframe and language, or search GitHub directly.
-- Inspect repository details including language mix, top contributors, recent commit activity, and issue statistics.
-- Save repositories and personal notes locally in the browser—no account required.
-- Connect a GitHub personal access token for higher API rate limits; it stays in session storage and is never sent to this app's server.
-- Browse a searchable Git command cheat sheet.
-- Read the AI Newsroom: model comparisons, open-weight references, research briefs, and global AI coverage.
-
-## How it works
-
-ExploreGit calls the public GitHub REST API directly from the browser. When GitHub is unavailable or rate-limited, selected discovery and analytics views fall back to bundled sample data so the interface remains useful. The AI Newsroom reads OpenRouter's public models endpoint and similarly uses a dated local fallback snapshot when a live request cannot succeed.
-
-Your bookmarks and notes are stored in `localStorage`. Optional GitHub tokens are held only for the current browser session in `sessionStorage`.
-
-## Screens and routes
-
-| Route | Purpose |
-| --- | --- |
-| `/` | Product overview and entry point |
-| `/dashboard` | Repository discovery and analysis |
-| `/bookmarks` | Your saved repositories and notes |
-| `/profile` | GitHub profile lookup |
-| `/cheatsheet` | Git command reference |
-| `/ai-news` | AI Newsroom |
-| `/report` | Report an issue or provide feedback |
-
-## Run it locally
-
-### Prerequisites
-
-- Node.js 18 or later
-- npm 9 or later
+Get up and running locally in less than a minute:
 
 ```bash
+# 1. Clone the repository
 git clone https://github.com/SahidGit/git-explore.git
 cd git-explore
+
+# 2. Install dependencies
 npm install
+
+# 3. Start the dev server
 npm run dev
 ```
 
-Open the local URL printed by Vite (normally `http://localhost:5173`).
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-### Production preview
+---
 
-```bash
-npm run build
-npm run preview
-```
+## 🚀 Key Features
 
-## Configuration
+- **🔥 Trending Repository Discovery**: Filter trending projects by language (Python, Rust, TypeScript, Go, etc.) and timeframe (Daily, Weekly, Monthly).
+- **📊 Code Velocity & Contributor Signals**: Interactive charts showing commit momentum, active contributors, language breakdown, and issue health.
+- **🔖 Private Local Bookmarks**: Save repositories and personal notes locally. 100% offline-ready in `localStorage`—no account or login required.
+- **📖 Step-by-Step Git Cheat Sheet**: Searchable terminal commands for everyday workflows, branching, rebasing, and undoing changes with one-click copy.
+- **📰 AI Newsroom**: Real-time intelligence tracking frontier LLMs, open-weight models, pricing changes, and arXiv research papers.
+- **🛡️ Zero Telemetry & Local-First**: No tracking cookies, no cross-site analytics, and no centralized databases harvesting your activity.
 
-No environment variables are required for the default experience. To route GitHub requests through a proxy or compatible API host, create a `.env.local` file:
+---
 
-```bash
-VITE_GITHUB_API_URL=https://api.github.com
-```
+## 🔑 GitHub API Token (Optional)
 
-Leave it unset to use GitHub's public API. Authenticated requests can also be enabled by adding a GitHub personal access token through the app interface; use the minimum read-only scope necessary for the repositories you want to inspect.
+By default, public GitHub API queries without a token are rate-limited to **60 requests per hour**.
 
-## Project structure
+To raise your limit to **5,000 requests per hour**:
+1. Click **Connect Token** in the top navigation bar.
+2. Paste a GitHub Personal Access Token (classic or fine-grained with read-only access).
+3. **Security Note**: Your token is stored **only in your browser's `sessionStorage`** and is sent directly to `api.github.com`. It is **never** transmitted to any external server.
+
+---
+
+## 🗺️ Routes & Pages
+
+| Route | Page | Description |
+| :--- | :--- | :--- |
+| `/` | **Home** | Product overview, momentum preview, and feature highlights |
+| `/dashboard` | **Explorer** | Real-time trending discovery, search, and deep repo analytics |
+| `/bookmarks` | **Bookmarks** | Saved repositories and personal notes (stored locally) |
+| `/profile` | **Profile Lookup** | Deep-dive into any GitHub user's contributions and top repos |
+| `/cheatsheet` | **Git Cheat Sheet** | Interactive, searchable Git command reference |
+| `/ai-news` | **AI Newsroom** | Model index, price comparisons, and open-weight releases |
+| `/company` | **Company & Vision** | Architectural constraints and operational values |
+| `/docs` | **Documentation** | API details, rate limit status, and token verification |
+| `/report` | **Report Issue** | Bug reporting and suggestions with Cloudflare Turnstile |
+
+---
+
+## 🛠️ Project Structure
 
 ```text
-src/
-├── components/   # Reusable UI, dashboard features, charts, and newsroom sections
-├── data/         # Cheat-sheet content and resilient fallback datasets
-├── pages/        # Route-level React pages
-├── services/     # GitHub, OpenRouter, health, and browser-storage services
-├── styles/       # Global and application styles
-└── App.jsx       # Lazy-loaded route definitions
-server/           # Lightweight report and GitHub-support API
+git-explore/
+├── src/
+│   ├── components/
+│   │   ├── features/      # Dashboard, Bookmarks, and Profile components
+│   │   ├── layouts/       # Header, Footer, and Hero
+│   │   ├── newsroom/      # AI Newsroom sections and model widgets
+│   │   └── ui/            # Reusable buttons, badges, modals, and charts
+│   ├── data/              # Git cheat sheet data and fallback mock datasets
+│   ├── pages/             # Route views (Home, Dashboard, Company, etc.)
+│   ├── services/          # GitHub API, OpenRouter, and Storage services
+│   └── styles/            # Tailwind tokens and SaaS button styles
+├── server/                # Lightweight local feedback ledger service
+├── package.json
+└── vite.config.js
 ```
 
-## Technology
+---
 
-- React 18 and React Router
-- Vite
-- Tailwind CSS
-- Framer Motion
-- Chart.js / react-chartjs-2
-- GitHub REST API and OpenRouter public models API
+## 📦 Available Scripts
 
-## Contributing
+| Command | Action |
+| :--- | :--- |
+| `npm run dev` | Starts the local development server at `http://localhost:5173` |
+| `npm run build` | Builds the optimized production bundle into `/dist` |
+| `npm run preview` | Previews the production build locally |
 
-Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md), create a focused branch, and open a pull request with a clear description of the change.
+---
 
-## Deployment
+## 🤝 Contributing
 
-See [docs/deployment.md](docs/deployment.md) for deployment notes and configuration details.
+Contributions are always welcome!
+1. Fork the repo and create your feature branch: `git checkout -b feature/amazing-feature`
+2. Commit your changes: `git commit -m 'Add amazing feature'`
+3. Push to the branch: `git push origin feature/amazing-feature`
+4. Open a Pull Request.
 
-## License
+Please check [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
-Released under the [MIT License](LICENSE).
+---
+
+## 📄 License
+
+Distributed under the **MIT License**. See [LICENSE](LICENSE) for more details.
