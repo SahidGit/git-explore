@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ShieldCheck, Loader2, CheckCircle2, Lock, Info } from 'lucide-react';
+import { ShieldCheck, Loader2, CheckCircle2, Lock, Info, RefreshCw } from 'lucide-react';
 
 /**
  * Cloudflare Turnstile CAPTCHA & Bot Verification Component
@@ -14,6 +14,7 @@ const CloudflareTurnstile = ({ onVerify, onError, onExpire, siteKey }) => {
     const widgetIdRef = useRef(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isVerified, setIsVerified] = useState(false);
+    const [hasError, setHasError] = useState(false);
     const [tokenGenerated, setTokenGenerated] = useState('');
 
     const activeSiteKey =
@@ -21,62 +22,60 @@ const CloudflareTurnstile = ({ onVerify, onError, onExpire, siteKey }) => {
         import.meta.env.VITE_CLOUDFLARE_TURNSTILE_SITE_KEY ||
         '1x00000000000000000000AA';
 
+    const handleVerificationSuccess = (token) => {
+        setIsVerified(true);
+        setIsLoading(false);
+        setHasError(false);
+        setTokenGenerated(token);
+        if (onVerify) onVerify(token);
+    };
+
+    const renderWidget = () => {
+        if (!containerRef.current || !window.turnstile) return;
+
+        try {
+            if (widgetIdRef.current) {
+                try {
+                    window.turnstile.remove(widgetIdRef.current);
+                } catch (_) {}
+            }
+
+            widgetIdRef.current = window.turnstile.render(containerRef.current, {
+                sitekey: activeSiteKey,
+                theme: 'dark',
+                size: 'flexible',
+                callback: (token) => {
+                    handleVerificationSuccess(token);
+                },
+                'error-callback': (errorCode) => {
+                    console.warn('Cloudflare Turnstile challenge error:', errorCode);
+                    setIsLoading(false);
+                    setHasError(true);
+                    setIsVerified(false);
+                    setTokenGenerated('');
+                    if (onError) onError(errorCode);
+                },
+                'expired-callback': () => {
+                    setIsVerified(false);
+                    setTokenGenerated('');
+                    if (onExpire) onExpire();
+                },
+            });
+        } catch (err) {
+            console.warn('Cloudflare Turnstile render exception:', err);
+            setIsLoading(false);
+            setHasError(true);
+        }
+    };
+
+    const handleRetry = () => {
+        setHasError(false);
+        setIsLoading(true);
+        renderWidget();
+    };
+
     useEffect(() => {
         let isMounted = true;
-
-        const handleVerificationSuccess = (token) => {
-            if (!isMounted) return;
-            setIsVerified(true);
-            setIsLoading(false);
-            setTokenGenerated(token);
-            if (onVerify) onVerify(token);
-        };
-
-        const renderWidget = () => {
-            if (!containerRef.current || !window.turnstile) return;
-
-            try {
-                if (widgetIdRef.current) {
-                    try {
-                        window.turnstile.remove(widgetIdRef.current);
-                    } catch (_) {}
-                }
-
-                widgetIdRef.current = window.turnstile.render(containerRef.current, {
-                    sitekey: activeSiteKey,
-                    theme: 'dark',
-                    size: 'flexible',
-                    callback: (token) => {
-                        handleVerificationSuccess(token);
-                    },
-                    'error-callback': () => {
-                        console.warn('Cloudflare Turnstile challenge error - switching to verified session fallback.');
-                        const devToken = `cf_turnstile_verified_${Date.now()}`;
-                        handleVerificationSuccess(devToken);
-                        if (onError) onError();
-                    },
-                    'expired-callback': () => {
-                        if (isMounted) {
-                            setIsVerified(false);
-                            setTokenGenerated('');
-                            if (onExpire) onExpire();
-                        }
-                    },
-                });
-
-                // Fast fallback trigger if Turnstile takes longer than 1.5s in local testing
-                setTimeout(() => {
-                    if (isMounted && !isVerified) {
-                        setIsLoading(false);
-                    }
-                }, 1500);
-
-            } catch (err) {
-                console.warn('Cloudflare Turnstile render exception:', err);
-                const devToken = `cf_turnstile_verified_session_${Date.now()}`;
-                handleVerificationSuccess(devToken);
-            }
-        };
 
         const loadScript = () => {
             if (window.turnstile) {
@@ -95,9 +94,11 @@ const CloudflareTurnstile = ({ onVerify, onError, onExpire, siteKey }) => {
                     if (isMounted) renderWidget();
                 };
                 script.onerror = () => {
-                    console.warn('Cloudflare Turnstile script failed to load. Auto-confirming human session locally.');
-                    const offlineToken = `cf_offline_verified_${Date.now()}`;
-                    handleVerificationSuccess(offlineToken);
+                    console.warn('Cloudflare Turnstile script failed to load.');
+                    if (isMounted) {
+                        setIsLoading(false);
+                        setHasError(true);
+                    }
                 };
                 document.head.appendChild(script);
             } else {
@@ -122,13 +123,6 @@ const CloudflareTurnstile = ({ onVerify, onError, onExpire, siteKey }) => {
             }
         };
     }, [activeSiteKey]);
-
-    const handleManualVerify = () => {
-        const manualToken = `cf_verified_manual_${Date.now()}`;
-        setIsVerified(true);
-        setTokenGenerated(manualToken);
-        if (onVerify) onVerify(manualToken);
-    };
 
     return (
         <div className="rounded-xl border border-white/[0.12] bg-[#0E0E12] p-4 space-y-3 shadow-lg">
@@ -160,15 +154,15 @@ const CloudflareTurnstile = ({ onVerify, onError, onExpire, siteKey }) => {
                     className={`w-full flex justify-center ${isVerified ? 'hidden' : 'block'}`}
                 />
 
-                {/* Fallback interactive button if widget is blocked */}
-                {!isVerified && !isLoading && (
+                {/* Retry button if challenge errored */}
+                {hasError && !isVerified && !isLoading && (
                     <button
                         type="button"
-                        onClick={handleManualVerify}
-                        className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-xs font-mono text-white transition-colors cursor-pointer"
+                        onClick={handleRetry}
+                        className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-xs font-mono text-zinc-200 transition-colors cursor-pointer"
                     >
-                        <Lock className="w-3.5 h-3.5 text-emerald-400" />
-                        <span>Click to Confirm Human Session</span>
+                        <RefreshCw className="w-3.5 h-3.5 text-zinc-400" />
+                        <span>Retry Verification Challenge</span>
                     </button>
                 )}
 
