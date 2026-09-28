@@ -7,7 +7,7 @@ import gitSync from '../../assets/git-sync.png';
 export const docsContent = {
   title: 'Documentation',
   subtitle:
-    'Guides, modules, and best practices for getting the most out of ExploreGit — from first search to authenticated API workflows.',
+    'Search the GitHub registry, inspect repository health metrics, bookmark projects locally, and authenticate API requests.',
   layout: 'grid',
   cards: [
     {
@@ -16,7 +16,7 @@ export const docsContent = {
       title: 'Quick Start',
       badge: 'Start here',
       description:
-        'ExploreGit is a privacy-first layer on top of GitHub. Open Explore to browse trending repositories, use filters to narrow results, and click any repo for deep analytics — no sign-up required.',
+        'Search and inspect trending GitHub repositories without creating an account. Filter by language, activity, and star count, then select any repository to review its maintenance metrics.',
       links: [
         { label: 'Open dashboard', href: '/dashboard' },
         { label: 'Company overview', href: '/company' },
@@ -28,7 +28,7 @@ export const docsContent = {
       title: 'Explore & Discovery',
       badge: 'Core module',
       description:
-        'The Explore module queries the GitHub registry with language, star, fork, and recency filters. Sort by engagement metrics to find actively maintained projects worth evaluating for your stack.',
+        'Query the GitHub registry with language, star, fork, and update filters. Sort by engagement metrics to identify active projects and evaluate candidates for your stack.',
       links: [
         { label: 'Launch Explore', href: '/dashboard' },
         { label: 'Feature overview', href: '/features' },
@@ -40,7 +40,7 @@ export const docsContent = {
       title: 'Repository Intelligence',
       badge: 'Analytics',
       description:
-        'Open any repository to view contribution heatmaps, commit activity charts, language breakdowns, and issue trends. Use these signals to assess project health before adding a dependency.',
+        'Inspect contribution heatmaps, weekly commit activity curves, language distributions, and issue closure rates. Use these health signals to evaluate maintenance velocity before adding a dependency.',
       links: [
         { label: 'Try it live', href: '/dashboard' },
         { label: 'View changelog', href: '/changelog' },
@@ -52,7 +52,7 @@ export const docsContent = {
       title: 'Bookmarks & Collections',
       badge: 'Local-first',
       description:
-        'Save repositories from any detail view. Bookmarks persist in your browser\'s local storage — they never touch our servers. Access your collections anytime from the Bookmarks tab.',
+        'Save repositories directly from any card or detail view. All bookmarks persist in browser local storage and never transmit to remote servers. Manage saved repositories from the Bookmarks panel.',
       links: [
         { label: 'Open bookmarks', href: '/bookmarks' },
         { label: 'Privacy details', href: '/features' },
@@ -64,7 +64,7 @@ export const docsContent = {
       title: 'API & Authentication',
       badge: 'Recommended',
       description:
-        'Unauthenticated requests are limited to 60 GitHub API calls per hour. Add a Personal Access Token to unlock 5,000 requests/hour. Tokens are stored locally and sent only to GitHub.',
+        'Unauthenticated requests are limited to 60 GitHub API requests per hour. Add a personal access token to raise this threshold to 5,000 requests per hour. Tokens remain in session storage and transmit solely to GitHub.',
       links: [
         { label: 'Add your token', href: '/api' },
         {
@@ -79,7 +79,7 @@ export const docsContent = {
       title: 'Privacy & Compliance',
       badge: 'Legal',
       description:
-        'ExploreGit is an independent tool — not affiliated with GitHub, Inc. We do not store credentials on external servers. All repository content remains the property of its respective owners.',
+        'ExploreGit is an independent platform and is not affiliated with GitHub, Inc. The platform does not store credentials or queries on external servers. All repository metadata remains the property of respective owners.',
       links: [
         { label: 'API security notes', href: '/api' },
         { label: 'Changelog', href: '/changelog' },
