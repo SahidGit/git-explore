@@ -2,25 +2,21 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import { FONT_SANS } from '../../../utils/fonts';
 
-const DEFAULT_COMMIT_CURVE = [14, 22, 18, 35, 42, 28, 56, 40, 32, 48, 52, 38];
-
 const ActivityChart = ({ data }) => {
     const chartRef = useRef(null);
     const [chartData, setChartData] = useState(null);
 
     useEffect(() => {
-        let recentWeeks = Array.isArray(data) && data.length > 0 ? data.slice(-12) : null;
+        const recentWeeks = Array.isArray(data) && data.length > 0 ? data.slice(-12) : null;
+        const hasActivity = recentWeeks && recentWeeks.some((w) => w.total > 0);
 
-        let labels;
-        let commitCounts;
-
-        if (recentWeeks && recentWeeks.some(w => w.total > 0)) {
-            labels = recentWeeks.map((_, index) => `W${index + 1}`);
-            commitCounts = recentWeeks.map(week => week.total);
-        } else {
-            labels = DEFAULT_COMMIT_CURVE.map((_, index) => `W${index + 1}`);
-            commitCounts = DEFAULT_COMMIT_CURVE;
+        if (!hasActivity) {
+            setChartData(null);
+            return;
         }
+
+        const labels = recentWeeks.map((_, index) => `W${index + 1}`);
+        const commitCounts = recentWeeks.map((week) => week.total);
 
         const canvas = chartRef.current?.canvas;
         let gradient = null;
@@ -108,8 +104,9 @@ const ActivityChart = ({ data }) => {
 
     if (!chartData) {
         return (
-            <div className="h-40 flex items-center justify-center text-zinc-500 font-mono text-xs">
-                Rendering activity curve...
+            <div className="h-40 flex flex-col items-center justify-center text-zinc-500 font-sans text-xs gap-1 border border-dashed border-white/10 rounded-lg p-4">
+                <span className="text-zinc-400 font-medium">No Recent Commit Activity</span>
+                <span className="text-zinc-600 text-[11px]">GitHub statistics are computing or repository is inactive</span>
             </div>
         );
     }

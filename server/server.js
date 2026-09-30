@@ -30,7 +30,7 @@ app.use(cors({
         if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
             return callback(null, true);
         }
-        return callback(null, true);
+        return callback(new Error('Blocked by CORS policy: Origin not allowed'), false);
     },
     methods: ['GET', 'POST', 'OPTIONS'],
     credentials: true,

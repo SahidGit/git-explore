@@ -138,9 +138,19 @@ router.post('/', async (req, res) => {
     }
 });
 
-// ─── GET /api/reports — Admin overview ───────────────
+// ─── GET /api/reports — Admin overview (Protected) ───
 router.get('/', async (req, res) => {
     try {
+        const adminKey = req.headers['x-admin-key'] || req.headers['authorization']?.replace(/^Bearer\s+/i, '');
+        const configuredKey = process.env.ADMIN_API_KEY;
+
+        if (!configuredKey || !adminKey || adminKey !== configuredKey) {
+            return res.status(401).json({
+                success: false,
+                message: 'Unauthorized: Admin authentication required to access report data.',
+            });
+        }
+
         const { status, limit = '50' } = req.query;
         const limitNum = Math.max(1, Math.min(parseInt(limit, 10) || 50, 100));
         let reports = [];

@@ -208,7 +208,7 @@ const RepositoryDetail = ({ repo, onClose, isBookmarked, onBookmarkToggle }) => 
                                 size={18}
                                 corner={10}
                                 pillColor="rgba(255, 255, 255, 0.05)"
-                                likedColor="#FFFFFF"
+                                likedColor="#ff4d6d"
                                 idleColor="#94a3b8"
                                 label={isBookmarked ? 'Remove bookmark' : 'Bookmark repository'}
                                 className="border border-white/10 hover:border-white/25 transition-all p-1.5"

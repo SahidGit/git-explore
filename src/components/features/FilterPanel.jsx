@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
     Search, ChevronDown, Code, SlidersHorizontal, CalendarDays, Star, X,
-    Layers, Bot, Flame, Globe, Wrench, Cpu, Zap
+    Layers, Bot, Flame, Globe, Wrench, Cpu, Zap, Sparkles
 } from 'lucide-react';
 
 // ─── Constants ─────────────────────────────────────────
@@ -24,6 +24,14 @@ const SINCE_OPTIONS = [
 ];
 
 const PRESET_CATEGORIES = [
+    {
+        id: 'good-first-issues',
+        label: '🌱 Good First Issues',
+        shortLabel: 'Good First Issues',
+        query: 'topic:good-first-issue',
+        description: 'Beginner-friendly repositories actively seeking new open-source contributors',
+        icon: Sparkles
+    },
     {
         id: 'ai-skills',
         label: '🤖 AI Skills',

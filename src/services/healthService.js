@@ -6,14 +6,14 @@
 export const calculateRepoHealth = (repo, details, activity, issueStats) => {
     if (!repo) {
         return {
-            totalScore: 75,
-            grade: 'B',
-            color: '#06B6D4',
-            licenseScore: 15,
-            commitScore: 20,
-            issueScore: 22,
-            communityScore: 18,
-            findings: ['MIT Licensed', 'Active Commit Rhythm', 'Public GitHub Graph'],
+            totalScore: null,
+            grade: 'N/A',
+            color: '#71717A',
+            licenseScore: 0,
+            commitScore: 0,
+            issueScore: 0,
+            communityScore: 0,
+            findings: ['No repository metadata available to evaluate'],
         };
     }
 
@@ -57,24 +57,38 @@ export const calculateRepoHealth = (repo, details, activity, issueStats) => {
         findings.push('Moderate / Occasional Commit Activity');
     } else {
         commitScore = 10;
-        findings.push('Low Recent Commit Activity');
+        findings.push('Low / Inactive Recent Commits');
     }
 
     // 3. Issue Resolution Tempo (Max 25 pts)
-    const openIssues = issueStats?.open ?? repo.open_issues_count ?? 15;
-    const closedIssues = issueStats?.closed ?? Math.max(25, Math.round(openIssues * 2.5));
-    const totalIssues = openIssues + closedIssues;
-    const resolutionRatio = totalIssues > 0 ? closedIssues / totalIssues : 0.7;
+    const openIssues = typeof issueStats?.open === 'number' ? issueStats.open : (repo.open_issues_count ?? 0);
+    const hasClosedData = typeof issueStats?.closed === 'number';
+    const closedIssues = hasClosedData ? issueStats.closed : 0;
 
-    if (resolutionRatio >= 0.75) {
-        issueScore = 25;
-        findings.push('Excellent Issue Resolution Tempo (' + Math.round(resolutionRatio * 100) + '% closed)');
-    } else if (resolutionRatio >= 0.5) {
-        issueScore = 20;
-        findings.push('Good Issue Triage Rhythms (' + Math.round(resolutionRatio * 100) + '% closed)');
+    if (hasClosedData && (openIssues + closedIssues > 0)) {
+        const resolutionRatio = closedIssues / (openIssues + closedIssues);
+        if (resolutionRatio >= 0.75) {
+            issueScore = 25;
+            findings.push('Excellent Issue Resolution Tempo (' + Math.round(resolutionRatio * 100) + '% closed)');
+        } else if (resolutionRatio >= 0.5) {
+            issueScore = 20;
+            findings.push('Good Issue Triage Rhythms (' + Math.round(resolutionRatio * 100) + '% closed)');
+        } else {
+            issueScore = 14;
+            findings.push('Active Open Issues Pending Resolution');
+        }
     } else {
-        issueScore = 14;
-        findings.push('Open Issues Pending Resolution');
+        // Evaluate based on open issues backlog size when closed count is unknown
+        if (openIssues <= 10) {
+            issueScore = 22;
+            findings.push('Low Open Issue Backlog (' + openIssues + ' open)');
+        } else if (openIssues <= 50) {
+            issueScore = 18;
+            findings.push('Moderate Open Issue Backlog (' + openIssues + ' open)');
+        } else {
+            issueScore = 14;
+            findings.push('Large Issue Backlog (' + openIssues + ' open)');
+        }
     }
 
     // 4. Community & Contributor Signal (Max 25 pts)

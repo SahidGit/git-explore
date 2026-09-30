@@ -3,13 +3,12 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 export const PAGE_NAVIGATION_SEQUENCE = [
-  { key: 'features', label: 'Features Overview', path: '/features', desc: 'Discover ExploreGit core capabilities' },
-  { key: 'ai-news', label: 'AI Newsroom', path: '/ai-news', desc: 'Frontier AI models, benchmark economics & editorial dispatches' },
   { key: 'docs', label: 'Documentation', path: '/docs', desc: 'Guides for search & repository intelligence' },
+  { key: 'ai-news', label: 'AI Newsroom', path: '/ai-news', desc: 'Frontier AI models, benchmark economics & editorial dispatches' },
   { key: 'api', label: 'API Reference', path: '/api', desc: 'Unlock 5,000 req/hr with GitHub PAT' },
   { key: 'cheatsheet', label: 'Git Cheat Sheet', path: '/cheatsheet', desc: 'Master essential Git CLI commands' },
   { key: 'changelog', label: 'Changelog', path: '/changelog', desc: 'Recent feature releases & improvements' },
-  { key: 'about', label: 'About ExploreGit', path: '/about', desc: 'Independent architecture & privacy' },
+  { key: 'company', label: 'About ExploreGit', path: '/company', desc: 'Independent architecture & privacy' },
   { key: 'disclaimer', label: 'Disclaimer', path: '/disclaimer', desc: 'Third-party trademark & API notice' },
   { key: 'terms', label: 'Terms of Use', path: '/terms', desc: 'Platform usage & credential safety' },
   { key: 'report', label: 'Report an Issue', path: '/report', desc: 'Submit feedback or report a bug' },

@@ -1,7 +1,6 @@
 const STORAGE_KEYS = {
     BOOKMARKS: 'gitexplorer_bookmarks',
     NOTES: 'gitexplorer_notes',
-    THEME: 'gitexplorer_theme',
     TOKEN: 'gitexplorer_token',
 };
 
@@ -52,16 +51,24 @@ export const storageService = {
         localStorage.setItem(STORAGE_KEYS.NOTES, JSON.stringify(notes));
     },
 
-    // Token
+    // Token (Stored in sessionStorage only — never persisted beyond tab session)
     getToken: () => {
-        return localStorage.getItem(STORAGE_KEYS.TOKEN);
+        try {
+            return sessionStorage.getItem(STORAGE_KEYS.TOKEN);
+        } catch {
+            return null;
+        }
     },
 
     saveToken: (token) => {
-        if (token) {
-            localStorage.setItem(STORAGE_KEYS.TOKEN, token);
-        } else {
-            localStorage.removeItem(STORAGE_KEYS.TOKEN);
+        try {
+            if (token) {
+                sessionStorage.setItem(STORAGE_KEYS.TOKEN, token);
+            } else {
+                sessionStorage.removeItem(STORAGE_KEYS.TOKEN);
+            }
+        } catch {
+            // Storage access restricted / private browsing fallback
         }
     },
 };

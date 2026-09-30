@@ -3,12 +3,22 @@ import { Doughnut } from 'react-chartjs-2';
 import { FONT_SANS } from '../../../utils/fonts';
 
 const IssueChart = ({ open, closed, openCount, stats }) => {
-    // Resolve props flexibly
-    const finalOpen = typeof open === 'number' ? open : (typeof openCount === 'number' ? openCount : (stats?.open ?? 18));
-    const finalClosed = typeof closed === 'number' ? closed : (stats?.closed ?? Math.max(25, Math.round(finalOpen * 2.8)));
+    // Resolve props accurately
+    const finalOpen = typeof open === 'number' ? open : (typeof openCount === 'number' ? openCount : (stats?.open ?? null));
+    const finalClosed = typeof closed === 'number' ? closed : (stats?.closed ?? null);
 
-    const displayOpen = Math.max(1, finalOpen);
-    const displayClosed = Math.max(1, finalClosed);
+    if (finalOpen === null && finalClosed === null) {
+        return (
+            <div className="h-44 flex flex-col items-center justify-center text-zinc-500 font-sans text-xs gap-1 border border-dashed border-white/10 rounded-lg p-4">
+                <span className="text-zinc-400 font-medium">Issue Metrics Unavailable</span>
+                <span className="text-zinc-600 text-[11px]">Connect a PAT to inspect open and closed issue totals</span>
+            </div>
+        );
+    }
+
+    const displayOpen = Math.max(0, finalOpen ?? 0);
+    const displayClosed = Math.max(0, finalClosed ?? 0);
+    const total = displayOpen + displayClosed;
 
     const data = {
         labels: ['Open Issues', 'Closed Issues'],
