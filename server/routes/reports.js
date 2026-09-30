@@ -22,8 +22,12 @@ router.post('/', async (req, res) => {
         const { issueType, pageUrl, description, email, cfTurnstileToken } = req.body;
 
         // Field validation
-        if (!issueType) {
-            return res.status(400).json({ success: false, message: 'Validation failed: issueType is required.' });
+        const validIssueTypes = Report.schema.path('issueType').enumValues;
+        if (!issueType || !validIssueTypes.includes(typeof issueType === 'string' ? issueType.trim() : '')) {
+            return res.status(400).json({
+                success: false,
+                message: `Validation failed: "${issueType || ''}" is not a valid issue type.`,
+            });
         }
         if (!description?.trim()) {
             return res.status(400).json({ success: false, message: 'Validation failed: description is required.' });
@@ -32,33 +36,55 @@ router.post('/', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Validation failed: description exceeds 2000 characters.' });
         }
 
-        // Cloudflare Turnstile verification
-        const isProduction = process.env.NODE_ENV === 'production';
-        const turnstileSecret = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY || (!isProduction ? '1x0000000000000000000000000000000AA' : '');
-        if (isProduction && !process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY) {
-            console.warn('[reports] CLOUDFLARE_TURNSTILE_SECRET_KEY is not configured in production.');
+        // Cloudflare Turnstile verification (Strict & Fail-Closed)
+        if (!cfTurnstileToken || typeof cfTurnstileToken !== 'string' || !cfTurnstileToken.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: 'Bot verification failed: cfTurnstileToken is required.',
+            });
         }
+
+        const turnstileSecret = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY;
+        if (!turnstileSecret) {
+            console.error('[reports] CLOUDFLARE_TURNSTILE_SECRET_KEY is not configured on the server.');
+            return res.status(503).json({
+                success: false,
+                message: 'Bot verification service is not properly configured on the server.',
+            });
+        }
+
         const clientIp = req.headers['x-forwarded-for']?.split(',')[0].trim() || req.socket.remoteAddress || '';
 
-        if (cfTurnstileToken && !cfTurnstileToken.startsWith('cf_dev_') && !cfTurnstileToken.startsWith('cf_turnstile_')) {
-            try {
-                const cfRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({ secret: turnstileSecret, response: cfTurnstileToken, remoteip: clientIp }),
+        try {
+            const cfRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({
+                    secret: turnstileSecret,
+                    response: cfTurnstileToken.trim(),
+                    remoteip: clientIp,
+                }),
+                signal: AbortSignal.timeout(5000),
+            });
+            const cfResult = await cfRes.json();
+            if (!cfResult || !cfResult.success) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Cloudflare Turnstile verification failed. Please try again.',
+                    errorCodes: cfResult?.['error-codes'] || [],
                 });
-                const cfResult = await cfRes.json();
-                if (!cfResult.success) {
-                    return res.status(400).json({ success: false, message: 'Cloudflare verification failed. Please try again.' });
-                }
-            } catch (cfErr) {
-                console.warn('[reports] Cloudflare siteverify error (bypassing):', cfErr.message);
             }
+        } catch (cfErr) {
+            console.error('[reports] Cloudflare siteverify error (failing closed):', cfErr.message);
+            return res.status(503).json({
+                success: false,
+                message: 'Bot verification service is temporarily unavailable. Please try again later.',
+            });
         }
 
         const reportData = {
             id: new mongoose.Types.ObjectId().toString(),
-            issueType: sanitizeString(issueType),
+            issueType: issueType.trim(),
             pageUrl: pageUrl ? sanitizeString(pageUrl.trim()) : '',
             description: sanitizeString(description.trim()),
             email: email ? email.trim().toLowerCase() : '',
@@ -112,9 +138,19 @@ router.post('/', async (req, res) => {
     }
 });
 
-// ─── GET /api/reports — Admin overview ───────────────
+// ─── GET /api/reports — Admin overview (Protected) ───
 router.get('/', async (req, res) => {
     try {
+        const adminKey = req.headers['x-admin-key'] || req.headers['authorization']?.replace(/^Bearer\s+/i, '');
+        const configuredKey = process.env.ADMIN_API_KEY;
+
+        if (!configuredKey || !adminKey || adminKey !== configuredKey) {
+            return res.status(401).json({
+                success: false,
+                message: 'Unauthorized: Admin authentication required to access report data.',
+            });
+        }
+
         const { status, limit = '50' } = req.query;
         const limitNum = Math.max(1, Math.min(parseInt(limit, 10) || 50, 100));
         let reports = [];

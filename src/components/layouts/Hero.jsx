@@ -297,7 +297,7 @@ const Hero = ({ onExplore }) => {
               onClick={onExplore}
               className="btn-saas-primary w-full sm:w-auto"
             >
-              <span>Explore trending repositories</span>
+              <span>Explore Repositories</span>
               <ArrowRight className="w-4 h-4 transition-transform duration-150 group-hover:translate-x-1" />
             </button>
 
@@ -307,7 +307,7 @@ const Hero = ({ onExplore }) => {
               rel="noopener noreferrer"
               className="btn-saas-secondary w-full sm:w-auto"
             >
-              <Heart className="w-4 h-4 text-zinc-300 fill-zinc-300 transition-transform duration-150 group-hover:scale-110" />
+              <Heart className="w-4 h-4 text-rose-500 fill-rose-500 transition-transform duration-150 group-hover:scale-110" />
               <span>Star on GitHub</span>
             </a>
           </div>

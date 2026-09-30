@@ -9,7 +9,6 @@ import Footer from '../components/layouts/Footer';
 import BackToTop from '../components/ui/BackToTop';
 import RepoCTA from '../components/features/RepoCard/RepoCTA';
 import SEO from '../components/ui/SEO';
-import { storageService } from '../services/storageService';
 
 const Home = () => {
     const navigate = useNavigate();
@@ -20,10 +19,6 @@ const Home = () => {
 
     const handleExplore = () => {
         navigate('/dashboard');
-    };
-
-    const handleTokenSave = (token) => {
-        storageService.saveToken(token);
     };
 
     return (
@@ -47,7 +42,6 @@ const Home = () => {
 
             <Header
                 activeTab="home"
-                onTokenSave={handleTokenSave}
                 showBackButton={false}
             />
 

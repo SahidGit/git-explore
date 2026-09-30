@@ -11,7 +11,6 @@ import RepositoryDetail from '../components/features/RepoCard/RepositoryDetail';
 import TopFiveFeatured from '../components/features/RepoCard/TopFiveFeatured';
 import * as githubService from '../services/githubService';
 import { storageService } from '../services/storageService';
-import ContributionHeatmap from '../components/features/Charts/ContributionHeatmap';
 import ErrorBoundary from '../components/ui/ErrorBoundary';
 import ErrorMessage from '../components/ui/ErrorMessage';
 import BackToTop from '../components/ui/BackToTop';
@@ -165,7 +164,6 @@ const Dashboard = ({ activeTab }) => {
             />
             <Header
                 activeTab={activeTab}
-                onTokenSave={handleTokenSave}
                 showBackButton={true}
             />
 

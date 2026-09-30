@@ -111,6 +111,7 @@ const Header = ({ activeTab, showBackButton }) => {
                         : 'bg-transparent border-b border-transparent'
                 }`}
             >
+                <AnnouncementBar />
                 <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 md:px-8 py-3.5 sm:py-4 flex items-center justify-between">
 
                     {/* Left Slot: Logo and Website Name */}
@@ -354,14 +355,14 @@ const Header = ({ activeTab, showBackButton }) => {
 
                         {/* Description */}
                         <p className="text-zinc-300 leading-relaxed font-sans text-xs">
-                            Connecting a GitHub Personal Access Token (PAT) upgrades API rate limits from 60 to <strong className="text-white font-semibold">5,000 requests/hour</strong>. Tokens are stored 100% locally in your browser and are never transmitted to third-party servers.
+                            Connecting a GitHub Personal Access Token (PAT) upgrades API rate limits from 60 to <strong className="text-white font-semibold">5,000 requests/hour</strong>. Tokens are held in-memory during your session (never written to disk or storage) and are never transmitted to third-party servers.
                         </p>
 
                         {/* Success Banner */}
                         {localSuccess && (
                             <div className="p-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 flex items-center gap-2 text-xs font-sans">
                                 <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                                <span>Connected Successfully! Token saved locally.</span>
+                                <span>Connected Successfully! Token active for this session.</span>
                             </div>
                         )}
 
@@ -373,7 +374,7 @@ const Header = ({ activeTab, showBackButton }) => {
                                     <span>{localError || tokenError}</span>
                                 </div>
                                 <p className="text-[11px] font-sans text-rose-200">
-                                    Please verify your token credentials or check the generation guide below to create a classic PAT with <code className="bg-black/30 px-1 py-0.5 rounded font-mono">public_repo</code> scopes.
+                                    Please verify your token credentials or check the guide below to generate a read-only token (no scopes required).
                                 </p>
                             </div>
                         )}
@@ -447,7 +448,7 @@ const Header = ({ activeTab, showBackButton }) => {
                                         Step-by-Step GitHub PAT Setup Guide
                                     </span>
                                     <a
-                                        href="https://github.com/settings/tokens/new?scopes=public_repo,read:user&description=ExploreGit"
+                                        href="https://github.com/settings/tokens/new?description=ExploreGit"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="text-white hover:underline flex items-center gap-1 font-sans text-[11px]"
@@ -461,7 +462,7 @@ const Header = ({ activeTab, showBackButton }) => {
                                     <li>
                                         Navigate to{' '}
                                         <a
-                                            href="https://github.com/settings/tokens/new?scopes=public_repo,read:user&description=ExploreGit"
+                                            href="https://github.com/settings/tokens/new?description=ExploreGit"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="text-white underline font-sans"
@@ -471,10 +472,10 @@ const Header = ({ activeTab, showBackButton }) => {
                                     </li>
                                     <li>Set Note to <code className="bg-white/10 px-1 py-0.5 rounded font-mono text-white">ExploreGit</code>.</li>
                                     <li>
-                                        Select recommended scopes:
+                                        Select token permissions:
                                         <ul className="list-disc list-inside ml-4 mt-1 space-y-1 font-sans text-[11px] text-zinc-400">
-                                            <li><strong className="text-white font-medium">public_repo</strong> — Access public repositories and momentum signals</li>
-                                            <li><strong className="text-white font-medium">read:user</strong> — Read user profile status &amp; verify credentials</li>
+                                            <li><strong className="text-white font-medium">No scopes needed</strong> — Leave all checkboxes blank. A classic token with zero scopes grants 5,000 req/hr rate limits for all public open-source exploration safely.</li>
+                                            <li><strong className="text-white font-medium">Fine-grained token (optional)</strong> — Choose "Public Repositories (read-only)" with zero extra permissions.</li>
                                         </ul>
                                     </li>
                                     <li>Scroll to the bottom and click <strong className="text-white font-medium">Generate token</strong>.</li>

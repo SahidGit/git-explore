@@ -14,14 +14,14 @@ const FAQS = [
             'No account is required. You can search, filter, and inspect trending repositories anonymously. If you need higher API rate limits, you can connect a Personal Access Token directly from your browser.',
     },
     {
-        question: 'How is repository star velocity calculated?',
+        question: 'How are trending repositories surfaced?',
         answer:
-            'Velocity is computed from GitHub public activity metrics across 24-hour, 7-day, and 30-day windows. We prioritize sustained shipping pace and genuine developer momentum over raw vanity star counts.',
+            'ExploreGit queries GitHub’s Search API for newly created and recently updated repositories sorted by star count across daily, weekly, and monthly intervals, coupled with recent commit rhythm analysis to highlight genuine momentum.',
     },
     {
         question: 'Where is my data and token stored?',
         answer:
-            'Everything runs 100% client-side. Your access tokens, bookmarked repositories, and research notes are stored exclusively in your browser’s localStorage. Zero data is sent to external database servers.',
+            'Everything runs client-side. Your Personal Access Token is kept safely in sessionStorage (cleared upon closing the tab), while bookmarks and research notes are stored locally in your browser’s localStorage. Zero tracking or telemetry is collected.',
     },
     {
         question: 'Which languages and frameworks are supported?',

@@ -54,13 +54,13 @@ const RepoHealthScorecard = ({ repo, details, activity, issueStats }) => {
                         <div key={p.name} className="space-y-1 font-mono text-xs">
                             <div className="flex items-center justify-between text-[11px]">
                                 <span className="text-zinc-300">{p.name}</span>
-                                <span className="text-white font-bold">{p.score} / {p.max}</span>
+                                <span className="text-white font-bold">{p.score !== null ? `${p.score} / ${p.max}` : 'N/A'}</span>
                             </div>
                             <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
                                 <div
                                     className="h-full rounded-full transition-all duration-500"
                                     style={{
-                                        width: `${(p.score / p.max) * 100}%`,
+                                        width: `${p.score !== null ? (p.score / p.max) * 100 : 0}%`,
                                         backgroundColor: p.color,
                                     }}
                                 />

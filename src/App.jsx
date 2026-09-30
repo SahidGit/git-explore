@@ -1,8 +1,7 @@
 import React, { Suspense } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import PageTransition from './components/ui/PageTransition';
-import './styles/App.css';
 
 // Route-level code splitting — each page chunk loads on demand
 const Home = React.lazy(() => import('./pages/Home'));
@@ -43,6 +42,8 @@ function App() {
           <Route path="/cheatsheet" element={<PageTransition><GitCheatSheet /></PageTransition>} />
           <Route path="/ai-news" element={<PageTransition><AiNewsroom /></PageTransition>} />
           <Route path="/company" element={<PageTransition><Company /></PageTransition>} />
+          <Route path="/about" element={<Navigate to="/company" replace />} />
+          <Route path="/features" element={<Navigate to="/docs" replace />} />
 
           {/* Dynamic content InfoPage routes with high-end vision design */}
           {DYNAMIC_INFO_ROUTES.map((key) => (

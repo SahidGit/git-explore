@@ -11,7 +11,7 @@ import sahidPhoto from '../assets/team-sahid.webp';
 import valueAutonomy from '../assets/value-autonomy.png';
 import valueInclusion from '../assets/value-inclusion.png';
 import valueProfessionalism from '../assets/value-professionalism.png';
-import { storageService } from '../services/storageService';
+
 
 
 // ─── Operating Values (Flush 3-Pane Landscape Section) ───
@@ -82,8 +82,6 @@ const TEAM = [
 ];
 
 const Company = () => {
-    const handleTokenSave = (token) => storageService.saveToken(token);
-
     return (
         <div className="flex min-h-screen flex-col bg-[#0A0A0C] text-white font-sans selection:bg-white/20 selection:text-white">
             <SEO
@@ -91,7 +89,7 @@ const Company = () => {
                 description="A globally distributed, developer-first platform building where humans and agents collaborate, learn, and ship together."
                 canonical="https://exploregit.vercel.app/company"
             />
-            <Header activeTab="company" onTokenSave={handleTokenSave} showBackButton />
+            <Header activeTab="company" showBackButton />
 
             <main className="relative z-0 flex-1 overflow-hidden pt-28 sm:pt-32">
 

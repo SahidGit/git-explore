@@ -1,9 +1,11 @@
 const STORAGE_KEYS = {
     BOOKMARKS: 'gitexplorer_bookmarks',
     NOTES: 'gitexplorer_notes',
-    THEME: 'gitexplorer_theme',
     TOKEN: 'gitexplorer_token',
 };
+
+// In-memory token storage — never written to sessionStorage or localStorage to prevent XSS credential extraction
+let _inMemoryToken = null;
 
 export const storageService = {
     // Bookmarks
@@ -27,7 +29,11 @@ export const storageService = {
             newBookmarks = [...bookmarks, repo];
         }
 
-        localStorage.setItem(STORAGE_KEYS.BOOKMARKS, JSON.stringify(newBookmarks));
+        try {
+            localStorage.setItem(STORAGE_KEYS.BOOKMARKS, JSON.stringify(newBookmarks));
+        } catch {
+            // Storage access restricted
+        }
         return newBookmarks;
     },
 
@@ -47,21 +53,33 @@ export const storageService = {
     },
 
     saveNote: (repoId, note) => {
-        const notes = JSON.parse(localStorage.getItem(STORAGE_KEYS.NOTES) || '{}');
-        notes[repoId] = note;
-        localStorage.setItem(STORAGE_KEYS.NOTES, JSON.stringify(notes));
+        try {
+            const notes = JSON.parse(localStorage.getItem(STORAGE_KEYS.NOTES) || '{}');
+            notes[repoId] = note;
+            localStorage.setItem(STORAGE_KEYS.NOTES, JSON.stringify(notes));
+        } catch {
+            // Storage access restricted
+        }
     },
 
-    // Token
+    // Token (In-memory only — never written to web storage; cleared on page reload)
     getToken: () => {
-        return localStorage.getItem(STORAGE_KEYS.TOKEN);
+        return _inMemoryToken;
     },
 
     saveToken: (token) => {
-        if (token) {
-            localStorage.setItem(STORAGE_KEYS.TOKEN, token);
-        } else {
+        _inMemoryToken = token ? token.trim() : null;
+
+        // Clean any legacy persistent storage keys so no plain-text tokens remain in browser storage
+        try {
+            sessionStorage.removeItem(STORAGE_KEYS.TOKEN);
+        } catch {
+            // sessionStorage access restricted
+        }
+        try {
             localStorage.removeItem(STORAGE_KEYS.TOKEN);
+        } catch {
+            // localStorage access restricted
         }
     },
 };

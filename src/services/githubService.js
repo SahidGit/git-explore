@@ -1,4 +1,5 @@
 import { FALLBACK_TRENDING, FALLBACK_TOP_FIVE } from '../data/fallbackTrending';
+import { storageService } from './storageService';
 
 const GITHUB_API_BASE = import.meta.env.VITE_GITHUB_API_URL || 'https://api.github.com';
 const RATE_LIMIT_CACHE_KEY = 'gitexplorer_ratelimit_cache';
@@ -12,6 +13,11 @@ export const setGithubToken = (token) => {
   _authToken = token ? token.trim() : null;
 };
 
+/** Retrieve the active auth token from memory or sessionStorage */
+export const getActiveToken = () => {
+  return _authToken || storageService.getToken();
+};
+
 /** Build headers for every GitHub API request */
 const buildHeaders = () => {
   const headers = {
@@ -19,11 +25,10 @@ const buildHeaders = () => {
     'Content-Type': 'application/json',
   };
 
-  const tokenFromSession = sessionStorage.getItem('gitexplorer_token');
-  const token = _authToken || tokenFromSession;
+  const token = getActiveToken();
 
   if (token) {
-    const prefix = token.startsWith('token ') || token.startsWith('Bearer ') ? '' : 'token ';
+    const prefix = token.startsWith('token ') || token.startsWith('Bearer ') ? '' : 'Bearer ';
     headers['Authorization'] = `${prefix}${token}`;
   }
 
@@ -179,31 +184,25 @@ export const getRepositoryDetails = async (owner, repo) => {
   return { ...repoData, languages, contributors };
 };
 
-/** Generate a realistic 12-week fallback commit activity curve if GitHub API returns empty/202 */
-const generateFallbackActivity = () => {
-  const baseCurve = [14, 22, 18, 35, 42, 28, 56, 40, 32, 48, 52, 38];
-  return baseCurve.map((total, idx) => ({
-    week: Date.now() / 1000 - (12 - idx) * 604800,
-    total: Math.max(5, total + Math.floor(Math.sin(idx) * 8)),
-    days: [2, 5, 8, 12, 10, 4, 1],
-  }));
-};
-
-/** Fetch weekly commit activity with guaranteed non-empty fallback data */
+/** Fetch weekly commit activity (returns null when statistics are unavailable/computing on GitHub) */
 export const getRepositoryActivity = async (owner, repo) => {
   try {
     const response = await fetchWithRetry(`${GITHUB_API_BASE}/repos/${owner}/${repo}/stats/commit_activity`);
+    if (response.status === 202) {
+      // 202 Accepted: GitHub is currently computing statistics in the background
+      return null;
+    }
     const data = await response.json();
-    if (Array.isArray(data) && data.length > 0 && data.some(w => w.total > 0)) {
+    if (Array.isArray(data)) {
       return data;
     }
   } catch {
-    // Fallback to synthetic curve on rate limit or 202 status
+    // Request failed or rate limited — return null for distinct unavailable status
   }
-  return generateFallbackActivity();
+  return null;
 };
 
-/** Fetch open + closed issue counts with guaranteed fallbacks */
+/** Fetch open + closed issue counts without synthetic estimations */
 export const getIssueStats = async (owner, repo) => {
   try {
     const [openRes, closedRes] = await Promise.all([
@@ -212,11 +211,11 @@ export const getIssueStats = async (owner, repo) => {
     ]);
     const [openData, closedData] = await Promise.all([openRes.json(), closedRes.json()]);
     return {
-      open: openData.total_count ?? 15,
-      closed: closedData.total_count ?? 45,
+      open: typeof openData.total_count === 'number' ? openData.total_count : null,
+      closed: typeof closedData.total_count === 'number' ? closedData.total_count : null,
     };
   } catch {
-    return { open: 18, closed: 62 };
+    return { open: null, closed: null };
   }
 };
 
@@ -258,6 +257,6 @@ export const getRateLimit = async () => {
 
     return data.resources?.core;
   } catch {
-    return { limit: 60, remaining: 60, reset: Date.now() / 1000 + 3600 };
+    return null;
   }
 };

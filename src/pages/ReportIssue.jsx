@@ -105,6 +105,7 @@ const ReportIssue = () => {
   const dropdownRef = useRef(null);
 
   const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileKey, setTurnstileKey] = useState(0);
   const [status, setStatus] = useState("idle"); // 'idle' | 'loading' | 'success' | 'error'
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -173,7 +174,42 @@ const ReportIssue = () => {
     setStatus("loading");
 
     try {
-      // 1. Always record report locally first (privacy-first & zero data loss)
+      // 1. Dispatch to backend API
+      const apiBase = import.meta.env.VITE_API_URL || "";
+      const endpoint = apiBase
+        ? `${apiBase.replace(/\/$/, "")}/api/reports`
+        : "/api/reports";
+
+      let response;
+      try {
+        response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...formData,
+            cfTurnstileToken: turnstileToken,
+          }),
+        });
+      } catch (networkErr) {
+        throw new Error(
+          "Network error: Unable to reach the server. Please check your connection and try again.",
+        );
+      }
+
+      if (!response.ok) {
+        let errMessage = "Server rejected the report submission.";
+        try {
+          const errorData = await response.json();
+          if (errorData && errorData.message) {
+            errMessage = errorData.message;
+          }
+        } catch (_) {
+          errMessage = `Server error (${response.status}: ${response.statusText || "Request failed"})`;
+        }
+        throw new Error(errMessage);
+      }
+
+      // 2. On confirmed server success, record report locally in audit history
       const localReport = {
         id: `report_${Date.now()}`,
         timestamp: new Date().toISOString(),
@@ -192,23 +228,6 @@ const ReportIssue = () => {
         );
       } catch (_) {}
 
-      // 2. Attempt backend dispatch if API endpoint is configured
-      const apiBase = import.meta.env.VITE_API_URL;
-      if (apiBase) {
-        try {
-          await fetch(`${apiBase}/api/reports`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              ...formData,
-              cfTurnstileToken: turnstileToken,
-            }),
-          });
-        } catch (_) {
-          // Silently queue locally if backend is unreachable
-        }
-      }
-
       setStatus("success");
       setSuccessMessage(
         "Thank you! Your feedback has been verified and submitted successfully.",
@@ -220,11 +239,15 @@ const ReportIssue = () => {
         email: "",
       });
       setTurnstileToken("");
+      setTurnstileKey((prev) => prev + 1);
     } catch (err) {
       setStatus("error");
       setErrorMessage(
         err.message || "An error occurred while submitting your report.",
       );
+      // Keep form inputs intact (do NOT reset formData) so the user can review and retry
+      setTurnstileToken("");
+      setTurnstileKey((prev) => prev + 1);
     }
   };
 
@@ -239,6 +262,7 @@ const ReportIssue = () => {
       email: "",
     });
     setTurnstileToken("");
+    setTurnstileKey((prev) => prev + 1);
   };
 
   return (
@@ -537,11 +561,10 @@ const ReportIssue = () => {
                     {/* Cloudflare Turnstile Bot Verification */}
                     <div className="space-y-2">
                       <CloudflareTurnstile
+                        key={turnstileKey}
                         onVerify={(token) => setTurnstileToken(token)}
                         onExpire={() => setTurnstileToken("")}
-                        onError={() =>
-                          setTurnstileToken(`cf_fallback_${Date.now()}`)
-                        }
+                        onError={() => setTurnstileToken("")}
                       />
                     </div>
 

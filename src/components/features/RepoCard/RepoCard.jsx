@@ -116,7 +116,7 @@ const RepoCard = ({ repo, onRepoClick, onBookmarkToggle, isBookmarked }) => {
                                 size={18}
                                 corner={10}
                                 pillColor="rgba(255, 255, 255, 0.05)"
-                                likedColor="#FFFFFF"
+                                likedColor="#ff4d6d"
                                 idleColor="#71717A"
                                 label={isBookmarked ? `Remove ${repo.name} from bookmarks` : `Bookmark ${repo.name}`}
                                 className="border border-white/10 hover:border-white/25 transition-all"
