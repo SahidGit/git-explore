@@ -18,7 +18,7 @@ export const calculateRepoHealth = (repo, details, activity, issueStats) => {
     }
 
     let licenseScore = 0;
-    let commitScore = 0;
+    let commitScore = null;
     let issueScore = 0;
     let communityScore = 0;
     const findings = [];
@@ -42,22 +42,28 @@ export const calculateRepoHealth = (repo, details, activity, issueStats) => {
     }
 
     // 2. Commit & Release Rhythm (Max 25 pts)
-    const weeks = Array.isArray(activity) ? activity.slice(-12) : [];
-    const totalRecentCommits = weeks.reduce((sum, w) => sum + (w.total || 0), 0);
-    const activeWeeksCount = weeks.filter((w) => w.total > 0).length;
+    const isActivityAvailable = Array.isArray(activity);
 
-    if (activeWeeksCount >= 8 || totalRecentCommits > 100) {
-        commitScore = 25;
-        findings.push('High Commit Velocity (' + totalRecentCommits + ' commits / 12 wks)');
-    } else if (activeWeeksCount >= 4 || totalRecentCommits > 30) {
-        commitScore = 20;
-        findings.push('Steady Commit Activity');
-    } else if (totalRecentCommits > 0) {
-        commitScore = 14;
-        findings.push('Moderate / Occasional Commit Activity');
+    if (isActivityAvailable) {
+        const weeks = activity.slice(-12);
+        const totalRecentCommits = weeks.reduce((sum, w) => sum + (w.total || 0), 0);
+        const activeWeeksCount = weeks.filter((w) => w.total > 0).length;
+
+        if (activeWeeksCount >= 8 || totalRecentCommits > 100) {
+            commitScore = 25;
+            findings.push('High Commit Velocity (' + totalRecentCommits + ' commits / 12 wks)');
+        } else if (activeWeeksCount >= 4 || totalRecentCommits > 30) {
+            commitScore = 20;
+            findings.push('Steady Commit Activity');
+        } else if (totalRecentCommits > 0) {
+            commitScore = 14;
+            findings.push('Moderate / Occasional Commit Activity');
+        } else {
+            commitScore = 10;
+            findings.push('Low / Inactive Recent Commits');
+        }
     } else {
-        commitScore = 10;
-        findings.push('Low / Inactive Recent Commits');
+        findings.push('Commit Rhythm: Currently computing / unavailable on GitHub');
     }
 
     // 3. Issue Resolution Tempo (Max 25 pts)
@@ -114,7 +120,16 @@ export const calculateRepoHealth = (repo, details, activity, issueStats) => {
         findings.push('Distributed Maintainer Base (' + contribCount + '+ contributors)');
     }
 
-    const totalScore = licenseScore + commitScore + issueScore + communityScore;
+    const scoredPillars = [
+        { score: licenseScore, max: 25 },
+        commitScore !== null ? { score: commitScore, max: 25 } : null,
+        { score: issueScore, max: 25 },
+        { score: communityScore, max: 25 },
+    ].filter(Boolean);
+
+    const maxScore = scoredPillars.reduce((sum, p) => sum + p.max, 0);
+    const earnedScore = scoredPillars.reduce((sum, p) => sum + p.score, 0);
+    const totalScore = maxScore > 0 ? Math.round((earnedScore / maxScore) * 100) : 0;
 
     let grade = 'B';
     let color = '#06B6D4'; // Cyan

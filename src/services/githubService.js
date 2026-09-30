@@ -184,22 +184,22 @@ export const getRepositoryDetails = async (owner, repo) => {
   return { ...repoData, languages, contributors };
 };
 
-/** Fetch weekly commit activity (returns empty array if stats are still computing on GitHub) */
+/** Fetch weekly commit activity (returns null when statistics are unavailable/computing on GitHub) */
 export const getRepositoryActivity = async (owner, repo) => {
   try {
     const response = await fetchWithRetry(`${GITHUB_API_BASE}/repos/${owner}/${repo}/stats/commit_activity`);
     if (response.status === 202) {
-      // 202 Accepted: GitHub is currently computing statistics in background
-      return [];
+      // 202 Accepted: GitHub is currently computing statistics in the background
+      return null;
     }
     const data = await response.json();
     if (Array.isArray(data)) {
       return data;
     }
   } catch {
-    // Non-blocking catch — return empty array
+    // Request failed or rate limited — return null for distinct unavailable status
   }
-  return [];
+  return null;
 };
 
 /** Fetch open + closed issue counts without synthetic estimations */
