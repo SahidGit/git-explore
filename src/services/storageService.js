@@ -4,6 +4,9 @@ const STORAGE_KEYS = {
     TOKEN: 'gitexplorer_token',
 };
 
+// In-memory token storage — never written to sessionStorage or localStorage to prevent XSS credential extraction
+let _inMemoryToken = null;
+
 export const storageService = {
     // Bookmarks
     getBookmarks: () => {
@@ -26,7 +29,11 @@ export const storageService = {
             newBookmarks = [...bookmarks, repo];
         }
 
-        localStorage.setItem(STORAGE_KEYS.BOOKMARKS, JSON.stringify(newBookmarks));
+        try {
+            localStorage.setItem(STORAGE_KEYS.BOOKMARKS, JSON.stringify(newBookmarks));
+        } catch {
+            // Storage access restricted
+        }
         return newBookmarks;
     },
 
@@ -46,56 +53,29 @@ export const storageService = {
     },
 
     saveNote: (repoId, note) => {
-        const notes = JSON.parse(localStorage.getItem(STORAGE_KEYS.NOTES) || '{}');
-        notes[repoId] = note;
-        localStorage.setItem(STORAGE_KEYS.NOTES, JSON.stringify(notes));
+        try {
+            const notes = JSON.parse(localStorage.getItem(STORAGE_KEYS.NOTES) || '{}');
+            notes[repoId] = note;
+            localStorage.setItem(STORAGE_KEYS.NOTES, JSON.stringify(notes));
+        } catch {
+            // Storage access restricted
+        }
     },
 
-    // Token (Stored in sessionStorage only — never persisted beyond tab session)
+    // Token (In-memory only — never written to web storage; cleared on page reload)
     getToken: () => {
-        try {
-            const sessionToken = sessionStorage.getItem(STORAGE_KEYS.TOKEN);
-            if (sessionToken) return sessionToken;
-        } catch {
-            // sessionStorage restricted
-        }
-
-        // Migrate legacy localStorage token if present, then clear from localStorage
-        try {
-            const legacyToken = localStorage.getItem(STORAGE_KEYS.TOKEN);
-            if (legacyToken) {
-                try {
-                    sessionStorage.setItem(STORAGE_KEYS.TOKEN, legacyToken);
-                } catch {
-                    // sessionStorage restricted
-                }
-                try {
-                    localStorage.removeItem(STORAGE_KEYS.TOKEN);
-                } catch {
-                    // localStorage restricted
-                }
-                return legacyToken;
-            }
-        } catch {
-            // localStorage restricted
-        }
-
-        return null;
+        return _inMemoryToken;
     },
 
     saveToken: (token) => {
-        // 1. Session storage update
-        try {
-            if (token) {
-                sessionStorage.setItem(STORAGE_KEYS.TOKEN, token);
-            } else {
-                sessionStorage.removeItem(STORAGE_KEYS.TOKEN);
-            }
-        } catch {
-            // Storage access restricted / private browsing fallback
-        }
+        _inMemoryToken = token ? token.trim() : null;
 
-        // 2. Isolate legacy localStorage cleanup so access restrictions cannot prevent sessionStorage cleanup
+        // Clean any legacy persistent storage keys so no plain-text tokens remain in browser storage
+        try {
+            sessionStorage.removeItem(STORAGE_KEYS.TOKEN);
+        } catch {
+            // sessionStorage access restricted
+        }
         try {
             localStorage.removeItem(STORAGE_KEYS.TOKEN);
         } catch {

@@ -355,14 +355,14 @@ const Header = ({ activeTab, showBackButton }) => {
 
                         {/* Description */}
                         <p className="text-zinc-300 leading-relaxed font-sans text-xs">
-                            Connecting a GitHub Personal Access Token (PAT) upgrades API rate limits from 60 to <strong className="text-white font-semibold">5,000 requests/hour</strong>. Tokens are stored 100% locally in your browser and are never transmitted to third-party servers.
+                            Connecting a GitHub Personal Access Token (PAT) upgrades API rate limits from 60 to <strong className="text-white font-semibold">5,000 requests/hour</strong>. Tokens are held in-memory during your session (never written to disk or storage) and are never transmitted to third-party servers.
                         </p>
 
                         {/* Success Banner */}
                         {localSuccess && (
                             <div className="p-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 flex items-center gap-2 text-xs font-sans">
                                 <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                                <span>Connected Successfully! Token saved locally.</span>
+                                <span>Connected Successfully! Token active for this session.</span>
                             </div>
                         )}
 

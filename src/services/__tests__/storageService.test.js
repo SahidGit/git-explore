@@ -7,34 +7,32 @@ describe('storageService', () => {
     localStorage.clear();
   });
 
-  describe('token management (sessionStorage)', () => {
-    it('saves and retrieves token from sessionStorage', () => {
+  describe('token management (in-memory only)', () => {
+    it('saves and retrieves token in-memory', () => {
+      storageService.saveToken(null);
       expect(storageService.getToken()).toBeNull();
       storageService.saveToken('ghp_test12345');
       expect(storageService.getToken()).toBe('ghp_test12345');
+      // Verify nothing is written to web storage
+      expect(sessionStorage.getItem('gitexplorer_token')).toBeNull();
+      expect(localStorage.getItem('gitexplorer_token')).toBeNull();
     });
 
-    it('clears token on null or empty save', () => {
+    it('clears in-memory token on null or empty save', () => {
       storageService.saveToken('ghp_test12345');
       storageService.saveToken(null);
       expect(storageService.getToken()).toBeNull();
     });
 
-    it('migrates legacy localStorage token to sessionStorage and cleans up localStorage', () => {
+    it('purges legacy localStorage and sessionStorage tokens during saveToken', () => {
       localStorage.setItem('gitexplorer_token', 'ghp_legacy_token');
+      sessionStorage.setItem('gitexplorer_token', 'ghp_session_token');
+
+      storageService.saveToken('ghp_new_in_memory_token');
+
+      expect(storageService.getToken()).toBe('ghp_new_in_memory_token');
+      expect(localStorage.getItem('gitexplorer_token')).toBeNull();
       expect(sessionStorage.getItem('gitexplorer_token')).toBeNull();
-
-      const token = storageService.getToken();
-      expect(token).toBe('ghp_legacy_token');
-      expect(sessionStorage.getItem('gitexplorer_token')).toBe('ghp_legacy_token');
-      expect(localStorage.getItem('gitexplorer_token')).toBeNull();
-    });
-
-    it('purges legacy localStorage token during saveToken', () => {
-      localStorage.setItem('gitexplorer_token', 'ghp_legacy_token');
-      storageService.saveToken('ghp_new_session_token');
-      expect(localStorage.getItem('gitexplorer_token')).toBeNull();
-      expect(sessionStorage.getItem('gitexplorer_token')).toBe('ghp_new_session_token');
     });
   });
 
