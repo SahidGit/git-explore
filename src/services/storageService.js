@@ -54,13 +54,37 @@ export const storageService = {
     // Token (Stored in sessionStorage only — never persisted beyond tab session)
     getToken: () => {
         try {
-            return sessionStorage.getItem(STORAGE_KEYS.TOKEN);
+            const sessionToken = sessionStorage.getItem(STORAGE_KEYS.TOKEN);
+            if (sessionToken) return sessionToken;
         } catch {
-            return null;
+            // sessionStorage restricted
         }
+
+        // Migrate legacy localStorage token if present, then clear from localStorage
+        try {
+            const legacyToken = localStorage.getItem(STORAGE_KEYS.TOKEN);
+            if (legacyToken) {
+                try {
+                    sessionStorage.setItem(STORAGE_KEYS.TOKEN, legacyToken);
+                } catch {
+                    // sessionStorage restricted
+                }
+                try {
+                    localStorage.removeItem(STORAGE_KEYS.TOKEN);
+                } catch {
+                    // localStorage restricted
+                }
+                return legacyToken;
+            }
+        } catch {
+            // localStorage restricted
+        }
+
+        return null;
     },
 
     saveToken: (token) => {
+        // 1. Session storage update
         try {
             if (token) {
                 sessionStorage.setItem(STORAGE_KEYS.TOKEN, token);
@@ -69,6 +93,13 @@ export const storageService = {
             }
         } catch {
             // Storage access restricted / private browsing fallback
+        }
+
+        // 2. Isolate legacy localStorage cleanup so access restrictions cannot prevent sessionStorage cleanup
+        try {
+            localStorage.removeItem(STORAGE_KEYS.TOKEN);
+        } catch {
+            // localStorage access restricted
         }
     },
 };

@@ -19,6 +19,23 @@ describe('storageService', () => {
       storageService.saveToken(null);
       expect(storageService.getToken()).toBeNull();
     });
+
+    it('migrates legacy localStorage token to sessionStorage and cleans up localStorage', () => {
+      localStorage.setItem('gitexplorer_token', 'ghp_legacy_token');
+      expect(sessionStorage.getItem('gitexplorer_token')).toBeNull();
+
+      const token = storageService.getToken();
+      expect(token).toBe('ghp_legacy_token');
+      expect(sessionStorage.getItem('gitexplorer_token')).toBe('ghp_legacy_token');
+      expect(localStorage.getItem('gitexplorer_token')).toBeNull();
+    });
+
+    it('purges legacy localStorage token during saveToken', () => {
+      localStorage.setItem('gitexplorer_token', 'ghp_legacy_token');
+      storageService.saveToken('ghp_new_session_token');
+      expect(localStorage.getItem('gitexplorer_token')).toBeNull();
+      expect(sessionStorage.getItem('gitexplorer_token')).toBe('ghp_new_session_token');
+    });
   });
 
   describe('bookmarks management (localStorage)', () => {
