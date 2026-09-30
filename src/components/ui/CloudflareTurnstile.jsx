@@ -22,15 +22,15 @@ const CloudflareTurnstile = ({ onVerify, onError, onExpire, siteKey }) => {
         import.meta.env.VITE_CLOUDFLARE_TURNSTILE_SITE_KEY ||
         '1x00000000000000000000AA';
 
-    const handleVerificationSuccess = (token) => {
+    const handleVerificationSuccess = React.useCallback((token) => {
         setIsVerified(true);
         setIsLoading(false);
         setHasError(false);
         setTokenGenerated(token);
         if (onVerify) onVerify(token);
-    };
+    }, [onVerify]);
 
-    const renderWidget = () => {
+    const renderWidget = React.useCallback(() => {
         if (!containerRef.current || !window.turnstile) return;
 
         try {
@@ -66,7 +66,7 @@ const CloudflareTurnstile = ({ onVerify, onError, onExpire, siteKey }) => {
             setIsLoading(false);
             setHasError(true);
         }
-    };
+    }, [activeSiteKey, handleVerificationSuccess, onError, onExpire]);
 
     const handleRetry = () => {
         setHasError(false);
@@ -122,7 +122,7 @@ const CloudflareTurnstile = ({ onVerify, onError, onExpire, siteKey }) => {
                 } catch (_) {}
             }
         };
-    }, [activeSiteKey]);
+    }, [renderWidget]);
 
     return (
         <div className="rounded-xl border border-white/[0.12] bg-[#0E0E12] p-4 space-y-3 shadow-lg">

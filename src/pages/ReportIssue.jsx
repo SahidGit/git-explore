@@ -105,6 +105,7 @@ const ReportIssue = () => {
   const dropdownRef = useRef(null);
 
   const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileKey, setTurnstileKey] = useState(0);
   const [status, setStatus] = useState("idle"); // 'idle' | 'loading' | 'success' | 'error'
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -238,6 +239,7 @@ const ReportIssue = () => {
         email: "",
       });
       setTurnstileToken("");
+      setTurnstileKey((prev) => prev + 1);
     } catch (err) {
       setStatus("error");
       setErrorMessage(
@@ -245,6 +247,7 @@ const ReportIssue = () => {
       );
       // Keep form inputs intact (do NOT reset formData) so the user can review and retry
       setTurnstileToken("");
+      setTurnstileKey((prev) => prev + 1);
     }
   };
 
@@ -259,6 +262,7 @@ const ReportIssue = () => {
       email: "",
     });
     setTurnstileToken("");
+    setTurnstileKey((prev) => prev + 1);
   };
 
   return (
@@ -557,11 +561,10 @@ const ReportIssue = () => {
                     {/* Cloudflare Turnstile Bot Verification */}
                     <div className="space-y-2">
                       <CloudflareTurnstile
+                        key={turnstileKey}
                         onVerify={(token) => setTurnstileToken(token)}
                         onExpire={() => setTurnstileToken("")}
-                        onError={() =>
-                          setTurnstileToken(`cf_fallback_${Date.now()}`)
-                        }
+                        onError={() => setTurnstileToken("")}
                       />
                     </div>
 
