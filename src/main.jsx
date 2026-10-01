@@ -8,6 +8,7 @@ import App from './App.jsx'
 import ErrorBoundary from './components/ui/ErrorBoundary.jsx'
 import { AuthProvider } from './context/AuthContext.jsx';
 
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ErrorBoundary>

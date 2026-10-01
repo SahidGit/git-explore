@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, ArrowRight } from 'lucide-react';
 
 const FAQS = [
     {
@@ -111,10 +111,10 @@ const FAQ = () => {
                         <div>
                             <Link
                                 to="/docs"
-                                className="btn-saas-secondary text-xs h-[38px] px-4 gap-2"
+                                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-white text-black text-xs font-semibold hover:bg-zinc-200 active:scale-[0.98] transition-all cursor-pointer shadow-sm"
                             >
                                 <span>Documentation</span>
-                                <span>&rarr;</span>
+                                <ArrowRight className="w-3.5 h-3.5" />
                             </Link>
                         </div>
                     </div>

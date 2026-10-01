@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import SEO from '../components/ui/SEO';
 import Header from '../components/layouts/Header';
-import Footer from '../components/layouts/Footer';
+import { SubFooter } from '../components/layouts/Footer';
 import FilterPanel from '../components/features/FilterPanel';
 import RepositoryList from '../components/features/RepoCard/RepositoryList';
 import BookmarksPanel from '../components/features/BookmarksPanel';
@@ -37,13 +37,11 @@ const Dashboard = ({ activeTab }) => {
     useEffect(() => {
         const q = searchParams.get('query') || '';
         const lang = searchParams.get('language') || '';
-        if (q || lang) {
-            setFilters(prev => ({
-                ...prev,
-                query: q || prev.query,
-                language: lang || prev.language
-            }));
-        }
+        setFilters(prev => ({
+            ...prev,
+            query: q,
+            language: lang
+        }));
     }, [searchParams]);
 
     const [page, setPage] = useState(1);
@@ -253,7 +251,7 @@ const Dashboard = ({ activeTab }) => {
             )}
 
             <BackToTop />
-            <Footer />
+            <SubFooter />
         </div>
     );
 };

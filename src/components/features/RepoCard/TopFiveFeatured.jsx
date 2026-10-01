@@ -283,8 +283,11 @@ const TopFiveFeatured = ({
                                             <img
                                                 src={repo.owner?.avatar_url}
                                                 alt={repo.owner?.login || ''}
-                                                className="w-6 h-6 rounded-lg border border-white/10 flex-shrink-0 bg-[#0A0A0C]"
+                                                width={24}
+                                                height={24}
                                                 loading="lazy"
+                                                decoding="async"
+                                                className="w-6 h-6 rounded-lg border border-white/10 flex-shrink-0 bg-[#0A0A0C]"
                                                 onError={(e) => { e.target.src = 'https://github.com/github.png'; }}
                                             />
                                         ) : (

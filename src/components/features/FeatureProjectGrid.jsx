@@ -48,7 +48,10 @@ const FeatureProjectCard = ({ card }) => (
         <img
           src={card.image}
           alt=""
+          width={1280}
+          height={720}
           loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover grayscale contrast-125 opacity-80 transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-95 group-hover:grayscale-0"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#121215] via-black/20 to-transparent pointer-events-none" />

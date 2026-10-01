@@ -7,6 +7,7 @@ const { securityHeaders } = require('./middleware/security');
 const { rateLimit } = require('./middleware/rateLimit');
 const reportsRouter = require('./routes/reports');
 const githubRouter = require('./routes/github');
+const modelsRouter = require('./routes/models');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -87,6 +88,9 @@ app.use('/reports', reportsRouter);
 
 app.use('/api/github', githubRouter);
 app.use('/github', githubRouter);
+
+app.use('/api/models', modelsRouter);
+app.use('/models', modelsRouter);
 
 // ─── Start (Only when executed directly) ──────────────
 if (process.env.NODE_ENV !== 'test' && require.main === module) {

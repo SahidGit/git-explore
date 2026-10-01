@@ -110,10 +110,20 @@ const ModelIntelligenceTable = () => {
           </span>
         </div>
 
-        {/* Loading Spinner */}
+        {/* Loading State with Four-Dot Animation */}
         {dataState.loading && (
-          <div className="py-16 text-center font-mono text-xs text-[#F8F3EA]/60">
-            <div className="inline-block w-8 h-8 rounded-full border-2 border-white/20 border-t-[#FF5A1F] animate-spin mb-3" />
+          <div
+            role="status"
+            aria-label="Loading"
+            className="py-16 text-center font-mono text-xs text-[#F8F3EA]/60 flex flex-col items-center justify-center gap-3"
+          >
+            <div className="four-dot-loader text-[#FF5A1F]">
+              <span className="dot" aria-hidden="true" />
+              <span className="dot" aria-hidden="true" />
+              <span className="dot" aria-hidden="true" />
+              <span className="dot" aria-hidden="true" />
+              <span className="sr-only">Loading</span>
+            </div>
             <p>Querying OpenRouter API endpoints...</p>
           </div>
         )}

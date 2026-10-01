@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import DOMPurify from 'dompurify';
 import Header from '../components/layouts/Header';
-import Footer from '../components/layouts/Footer';
+import { SubFooter } from '../components/layouts/Footer';
 import SEO from '../components/ui/SEO';
 import FeatureProjectGrid from '../components/features/FeatureProjectGrid';
 import visionBg from '../assets/vision-mission-bg.avif';
@@ -136,6 +136,10 @@ const InfoPage = ({ contentKey: propContentKey }) => {
             <img
               src={visionBg}
               alt=""
+              width={2796}
+              height={1572}
+              loading="lazy"
+              decoding="async"
               className="size-full object-cover object-center grayscale contrast-125 opacity-25"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0C]/90 via-[#0A0A0C]/65 to-[#0A0A0C]" />
@@ -329,7 +333,7 @@ const InfoPage = ({ contentKey: propContentKey }) => {
         </section>
       </main>
 
-      <Footer />
+      <SubFooter />
     </div>
   );
 };

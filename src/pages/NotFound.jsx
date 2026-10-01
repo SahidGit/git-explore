@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/layouts/Header';
-import Footer from '../components/layouts/Footer';
+import { SubFooter } from '../components/layouts/Footer';
 import SEO from '../components/ui/SEO';
 import { Home, Terminal, Search } from 'lucide-react';
 
@@ -90,7 +90,7 @@ const NotFound = () => {
 
             </main>
 
-            <Footer />
+            <SubFooter />
         </div>
     );
 };

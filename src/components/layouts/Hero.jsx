@@ -13,8 +13,7 @@ import {
   Code2,
 } from "lucide-react";
 
-import heroMid from "../../assets/hero-mid.png";
-import heroBot from "../../assets/hero-bot.png";
+import { getMonthlyTopRepositories } from "../../services/githubService";
 
 // ─── Ecosystem Categories Data ─────────────────────────
 const ECOSYSTEM_CATEGORIES = [
@@ -64,105 +63,184 @@ const ECOSYSTEM_CATEGORIES = [
 
 // ─── Quick Filter Chips Data ───────────────────────────
 const QUICK_FILTER_CHIPS = [
-  { id: "ai", label: "AI", type: "topic", query: "topic:ai" },
-  { id: "python", label: "Python", type: "lang", query: "language:python" },
-  { id: "rust", label: "Rust", type: "lang", query: "language:rust" },
+  { id: "ai", label: "AI", type: "topic", query: "topic:ai", color: "#A97BFF" },
+  { id: "python", label: "Python", type: "lang", query: "language:python", color: "#3572A5" },
+  { id: "rust", label: "Rust", type: "lang", query: "language:rust", color: "#DEA584" },
   {
     id: "typescript",
     label: "TypeScript",
     type: "lang",
     query: "language:typescript",
+    color: "#3178C6",
   },
-  { id: "go", label: "Go", type: "lang", query: "language:go" },
+  { id: "go", label: "Go", type: "lang", query: "language:go", color: "#00ADD8" },
   {
     id: "today",
     label: "Today",
     type: "timeframe",
     query: "created:>2026-08-16",
+    color: "#F05138",
   },
   {
     id: "this-week",
     label: "This Week",
     type: "timeframe",
     query: "created:>2026-08-10",
+    color: "#89E051",
   },
   {
     id: "this-month",
     label: "This Month",
     type: "timeframe",
     query: "created:>2026-07-17",
+    color: "#198CE7",
   },
 ];
 
-// ─── Comprehensive Mock Repos for Discovery ─────────────
+// ─── High-Signal Developer Repositories for Discovery ─────────────
 const DISCOVERY_REPOS = [
   {
-    name: "deepseek-ai/DeepSeek-V3",
-    desc: "Official repository for DeepSeek-V3 open source model and architecture specs",
-    stars: "62.4k",
+    name: "vllm-project/vllm",
+    desc: "High-throughput LLM serving engine with PagedAttention and CUDA/ROCm kernel optimization.",
+    stars: "38.6k",
     lang: "Python",
     langColor: "#3572a5",
-    delta: "+12.5k this week",
-    timeframe: "This Week",
-    tags: ["ai", "python", "deepseek", "llm"],
+    delta: "+1.4k today",
+    timeframe: "Today",
+    tags: ["ai", "python", "today", "llm-serving"],
   },
   {
     name: "astral-sh/uv",
-    desc: "An extremely fast Python package and project manager written in Rust",
-    stars: "45.2k",
+    desc: "Fast Python package installer and resolver in Rust with global disk-space deduplication.",
+    stars: "41.2k",
     lang: "Rust",
     langColor: "#dea584",
     delta: "+4.2k this week",
     timeframe: "This Week",
-    tags: ["rust", "python", "cli"],
+    tags: ["rust", "python", "package-manager", "cli"],
   },
   {
     name: "ollama/ollama",
-    desc: "Get up and running with Llama 3.3, DeepSeek, and other LLMs locally",
-    stars: "106.1k",
+    desc: "Local runtime for quantised GGUF model execution with an OpenAI-compatible HTTP API.",
+    stars: "112.5k",
     lang: "Go",
     langColor: "#00add8",
-    delta: "+5.8k today",
+    delta: "+1.2k today",
     timeframe: "Today",
     tags: ["ai", "go", "today", "ollama"],
   },
   {
-    name: "shadcn-ui/ui",
-    desc: "Beautifully designed components that you can copy and paste into your apps",
-    stars: "74.8k",
-    lang: "TypeScript",
-    langColor: "#3178c6",
-    delta: "+3.1k this month",
-    timeframe: "This Month",
-    tags: ["typescript", "ui", "this month"],
-  },
-  {
-    name: "vllm-project/vllm",
-    desc: "High-throughput and memory-efficient LLM serving engine",
-    stars: "31.5k",
-    lang: "Python",
-    langColor: "#3572a5",
-    delta: "+2.9k today",
+    name: "biomejs/biome",
+    desc: "Unified toolchain for JS/TS formatting and linting with sub-millisecond AST parser.",
+    stars: "16.8k",
+    lang: "Rust",
+    langColor: "#dea584",
+    delta: "+380 today",
     timeframe: "Today",
-    tags: ["ai", "python", "today"],
+    tags: ["typescript", "rust", "linter", "formatter"],
   },
   {
-    name: "ghostty-org/ghostty",
-    desc: "Fast, feature-rich, cross-platform terminal emulator",
-    stars: "28.9k",
-    lang: "Zig",
-    langColor: "#ec915c",
-    delta: "+8.4k this month",
+    name: "paradedb/paradedb",
+    desc: "PostgreSQL search engine extension embedding Tantivy BM25 indexing into Postgres WAL.",
+    stars: "9.4k",
+    lang: "Rust",
+    langColor: "#dea584",
+    delta: "+2.1k this month",
     timeframe: "This Month",
-    tags: ["rust", "terminal", "this month"],
+    tags: ["rust", "postgres", "search", "this month"],
+  },
+  {
+    name: "tauri-apps/tauri",
+    desc: "Cross-platform application runtime using native webview renderers and a Rust core.",
+    stars: "84.1k",
+    lang: "Rust",
+    langColor: "#dea584",
+    delta: "+4.6k this month",
+    timeframe: "This Month",
+    tags: ["rust", "typescript", "desktop", "this month"],
   },
 ];
+
+const getLangColor = (lang) => {
+  const map = {
+    Python: "#3572a5",
+    Rust: "#dea584",
+    TypeScript: "#3178c6",
+    JavaScript: "#f7df1e",
+    Go: "#00add8",
+    C: "#555555",
+    "C++": "#f34b7d",
+    Java: "#b07219",
+    PHP: "#4F5D95",
+    Ruby: "#701516",
+    Swift: "#F05138",
+    Kotlin: "#A97BFF",
+  };
+  return map[lang] || "#A1A1AA";
+};
 
 const Hero = ({ onExplore }) => {
   const navigate = useNavigate();
   const [scrollY, setScrollY] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeChip, setActiveChip] = useState(null);
+  const [repos, setRepos] = useState(DISCOVERY_REPOS);
+  const [isLiveOnline, setIsLiveOnline] = useState(false);
+
+  const inputRef = React.useRef(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    if (typeof navigator !== "undefined" && navigator.onLine) {
+      getMonthlyTopRepositories(6)
+        .then((items) => {
+          if (!isMounted || !items || !items.length) return;
+          const formatted = items.slice(0, 6).map((item) => {
+            const starsNum = item.stargazers_count || 0;
+            const starsFormatted =
+              starsNum >= 1000 ? `${(starsNum / 1000).toFixed(1)}k` : `${starsNum}`;
+            const langName = item.language || "Markdown";
+            const topics = Array.isArray(item.topics) ? item.topics : [];
+            const tags = [
+              langName.toLowerCase(),
+              ...topics,
+              "this month",
+              "monthly",
+            ];
+
+            return {
+              name: item.full_name || item.name,
+              desc: item.description || "High momentum open-source project on GitHub.",
+              stars: starsFormatted,
+              lang: langName,
+              langColor: getLangColor(langName),
+              delta: `+${(item.forks_count || 320) >= 1000 ? `${((item.forks_count || 320) / 1000).toFixed(1)}k` : item.forks_count || 320} forks`,
+              timeframe: "This Month",
+              tags,
+            };
+          });
+          setRepos(formatted);
+          setIsLiveOnline(true);
+        })
+        .catch(() => {
+          // Keep DISCOVERY_REPOS fallback safely
+        });
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   useEffect(() => {
     let ticking = false;
@@ -186,31 +264,27 @@ const Hero = ({ onExplore }) => {
   };
 
   const handleChipClick = (chip) => {
-    if (activeChip?.id === chip.id) {
-      setActiveChip(null);
+    if (chip.type === "lang") {
+      navigate(`/dashboard?language=${encodeURIComponent(chip.id)}&query=${encodeURIComponent(chip.query)}`);
+    } else if (chip.query) {
+      navigate(`/dashboard?query=${encodeURIComponent(chip.query)}`);
     } else {
-      setActiveChip(chip);
+      navigate("/dashboard");
     }
   };
 
   const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    const combinedQuery = [
-      searchQuery.trim(),
-      activeChip ? activeChip.query : "",
-    ]
-      .filter(Boolean)
-      .join(" ");
-
-    if (combinedQuery) {
-      navigate(`/dashboard?query=${encodeURIComponent(combinedQuery)}`);
+    e?.preventDefault?.();
+    const rawQuery = searchQuery.trim();
+    if (rawQuery) {
+      navigate(`/dashboard?query=${encodeURIComponent(rawQuery)}`);
     } else {
       onExplore();
     }
   };
 
   const filteredRepos = useMemo(() => {
-    return DISCOVERY_REPOS.filter((repo) => {
+    return repos.filter((repo) => {
       const matchesText =
         searchQuery === "" ||
         repo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -222,24 +296,16 @@ const Hero = ({ onExplore }) => {
       if (!activeChip) return true;
 
       const chipId = activeChip.id;
-      if (chipId === "ai") return repo.tags.includes("ai");
-      if (chipId === "python") return repo.lang.toLowerCase() === "python";
-      if (chipId === "rust")
-        return repo.lang.toLowerCase() === "rust" || repo.tags.includes("rust");
-      if (chipId === "typescript")
-        return repo.lang.toLowerCase() === "typescript";
-      if (chipId === "go") return repo.lang.toLowerCase() === "go";
-      if (chipId === "today")
-        return repo.timeframe === "Today" || repo.tags.includes("today");
-      if (chipId === "this-week") return repo.timeframe === "This Week";
-      if (chipId === "this-month")
-        return (
-          repo.timeframe === "This Month" || repo.tags.includes("this month")
-        );
+      if (chipId === "ai") return repo.tags?.some((t) => t.includes("ai") || t.includes("llm") || t.includes("model"));
+      if (chipId === "python") return repo.lang?.toLowerCase() === "python";
+      if (chipId === "rust") return repo.lang?.toLowerCase() === "rust" || repo.tags?.includes("rust");
+      if (chipId === "typescript") return repo.lang?.toLowerCase() === "typescript" || repo.tags?.includes("typescript");
+      if (chipId === "go") return repo.lang?.toLowerCase() === "go";
+      if (chipId === "today" || chipId === "this-week" || chipId === "this-month") return true;
 
       return true;
     });
-  }, [searchQuery, activeChip]);
+  }, [searchQuery, activeChip, repos]);
 
   return (
     <section
@@ -250,7 +316,7 @@ const Hero = ({ onExplore }) => {
       <div
         className="absolute inset-0 w-full h-[140%] -top-12 bg-cover bg-center sm:bg-top pointer-events-none opacity-100 transition-transform duration-75 ease-out will-change-transform"
         style={{
-          backgroundImage: `url(${heroMid})`,
+          backgroundImage: 'url(/hero-mid.png)',
           transform: `translate3d(0, ${Math.min(scrollY * 0.35, 300)}px, 0)`,
         }}
         aria-hidden="true"
@@ -260,7 +326,7 @@ const Hero = ({ onExplore }) => {
       <div
         className="absolute inset-0 w-full h-full bg-cover bg-bottom pointer-events-none opacity-100 transition-transform duration-75 ease-out will-change-transform"
         style={{
-          backgroundImage: `url(${heroBot})`,
+          backgroundImage: 'url(/hero-bot.png)',
           transform: `translate3d(0, ${Math.min(scrollY * 0.15, 150)}px, 0)`,
         }}
         aria-hidden="true"
@@ -276,26 +342,33 @@ const Hero = ({ onExplore }) => {
       />
 
       {/* Main Container Frame - Boundless & Spacious */}
-      <div className="mx-auto w-full max-w-[1280px] relative z-10 px-4 sm:px-6 pt-4 sm:pt-6 pb-12 sm:pb-16">
-        <div className="mx-auto flex w-full max-w-[840px] flex-col items-center gap-5 sm:gap-6 text-center">
-          {/* Main Headline */}
-          <div className="space-y-3 sm:space-y-4 py-1 sm:py-2">
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight leading-[1.15] sm:leading-[1.1] font-heading drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
-              Understand open-source momentum before you start digging.
-            </h1>
-
-            <p className="text-sm sm:text-base font-sans text-zinc-300 leading-relaxed font-normal max-w-2xl mx-auto px-2 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
-              ExploreGit surfaces repository star velocity, active contributors,
-              and code health signals in a fast, local-first developer
-              interface.
-            </p>
+      <div className="mx-auto w-full max-w-[1280px] relative z-10 px-4 sm:px-6 pt-6 sm:pt-10 pb-12 sm:pb-16">
+        <div className="mx-auto flex w-full max-w-[960px] flex-col items-center gap-5 sm:gap-6 text-center">
+          {/* Top Overline / Kicker */}
+          <div className="pt-2">
+            <span className="font-mono text-xs sm:text-[13px] uppercase tracking-[0.22em] font-bold text-zinc-300 select-none">
+              TRENDING GITHUB REPOSITORIES TODAY
+            </span>
           </div>
 
+          {/* Main Headline */}
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight leading-[1.1] sm:leading-[1.06] font-heading drop-shadow-[0_4px_20px_rgba(0,0,0,0.85)] max-w-3xl">
+            Discover what developers
+            <br className="hidden sm:inline" /> are building right now
+          </h1>
+
+          {/* Direct Product Description */}
+          <p className="text-xs sm:text-[13px] font-mono text-[#a1a6b0] font-normal leading-relaxed max-w-2xl px-2">
+            ExploreGit tracks star velocity across GitHub repositories,
+            aggregates trending languages daily, and keeps an eye on contributor
+            activity. Free and open source.
+          </p>
+
           {/* Primary CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto pt-2 px-4 sm:px-0">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full sm:w-auto pt-2 px-4 sm:px-0">
             <button
               onClick={onExplore}
-              className="btn-saas-primary w-full sm:w-auto"
+              className="w-full sm:w-auto h-[42px] px-6 rounded-full bg-white text-zinc-950 hover:bg-zinc-100 font-sans font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-200 ease-out active:scale-95 shadow-xs cursor-pointer select-none"
             >
               <span>Explore Repositories</span>
               <ArrowRight className="w-4 h-4 transition-transform duration-150 group-hover:translate-x-1" />
@@ -305,61 +378,55 @@ const Hero = ({ onExplore }) => {
               href="https://github.com/SahidGit/git-explore"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-saas-secondary w-full sm:w-auto"
+              className="w-full sm:w-auto h-[42px] px-6 rounded-full bg-white/[0.05] hover:bg-white/[0.10] border border-white/20 hover:border-white/30 text-white font-sans font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-200 ease-out active:scale-95 shadow-xs cursor-pointer select-none"
             >
               <Heart className="w-4 h-4 text-rose-500 fill-rose-500 transition-transform duration-150 group-hover:scale-110" />
               <span>Star on GitHub</span>
             </a>
           </div>
-
-          {/* Sub metadata label */}
-          <div className="mt-2 flex flex-wrap items-center justify-center gap-3 text-xs font-sans text-zinc-400">
-            <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              Open source &bull; MIT licensed
-            </span>
-            <span className="text-zinc-600">&bull;</span>
-            <span>Zero telemetry</span>
-            <span className="text-zinc-600">&bull;</span>
-            <span>100% Local-first</span>
-          </div>
         </div>
 
-        {/* ── Seamless Trending Repos Live Signal Module ── */}
-        <div className="w-full max-w-4xl mx-auto mt-8 sm:mt-12 relative">
-          <div className="rounded-2xl bg-[#0E0F12]/90 backdrop-blur-xl shadow-2xl overflow-hidden">
+        {/* ── Seamless Trending Repos Live Signal Module with ⌘K Search Bar ── */}
+        <div className="w-full max-w-3xl mx-auto mt-8 sm:mt-10 relative">
+          <div className="rounded-2xl bg-[#0E0F12]/90 backdrop-blur-xl shadow-2xl border border-white/15 overflow-hidden">
             {/* Search Input Bar */}
-            <div className="p-4 sm:p-5 bg-[#121318]/60 space-y-3.5">
+            <div className="p-3.5 sm:p-4 bg-[#121318]/70 space-y-3.5">
               <form onSubmit={handleSearchSubmit} className="relative w-full">
                 <label htmlFor="hero-repo-search" className="sr-only">
-                  Search repositories, topics, or languages…
+                  Search repositories, topics, tags…
                 </label>
                 <div className="relative flex items-center">
-                  <Search className="absolute left-3.5 w-4 h-4 text-emerald-400 pointer-events-none" />
+                  <Search className="absolute left-4 w-4 h-4 text-zinc-400 pointer-events-none" />
                   <input
+                    ref={inputRef}
                     id="hero-repo-search"
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search repositories, topics, or languages…"
-                    className="w-full pl-10 pr-24 py-2.5 sm:py-3 bg-black/50 border border-white/10 rounded-xl font-sans text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all"
+                    placeholder="Search repositories, topics, tags…"
+                    className="w-full pl-11 pr-28 py-3 bg-black/60 border border-white/15 rounded-xl font-sans text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-white/40 focus:ring-2 focus:ring-white/10 transition-all shadow-inner"
                   />
-                  {searchQuery && (
+                  <div className="absolute right-2.5 flex items-center gap-2">
+                    {searchQuery && (
+                      <button
+                        type="button"
+                        onClick={() => setSearchQuery("")}
+                        aria-label="Clear search input"
+                        className="p-1 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                    <kbd className="hidden sm:inline-flex items-center gap-0.5 px-2 py-1 text-[11px] font-mono font-semibold text-zinc-400 bg-white/[0.08] border border-white/15 rounded-md shadow-xs select-none">
+                      ⌘K
+                    </kbd>
                     <button
-                      type="button"
-                      onClick={() => setSearchQuery("")}
-                      aria-label="Clear search input"
-                      className="absolute right-20 p-1 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                      type="submit"
+                      className="btn-saas-primary text-xs h-[32px] px-3.5 rounded-lg cursor-pointer"
                     >
-                      <X className="w-4 h-4" />
+                      Search
                     </button>
-                  )}
-                  <button
-                    type="submit"
-                    className="btn-saas-primary absolute right-2 text-xs h-[32px] px-3.5 rounded-lg"
-                  >
-                    Filter
-                  </button>
+                  </div>
                 </div>
               </form>
 
@@ -378,13 +445,17 @@ const Hero = ({ onExplore }) => {
                       onClick={() => handleChipClick(chip)}
                       aria-pressed={isSelected}
                       aria-label={`Filter by ${chip.label}`}
-                      className={`px-3.5 py-1 rounded-full text-xs font-sans transition-all shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-95 shadow-none border-0 ${
+                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-sans font-medium transition-all shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-95 shadow-none border ${
                         isSelected
-                          ? "bg-white text-black font-medium"
-                          : "bg-white/[0.08] text-zinc-300 hover:bg-white/[0.14] hover:text-white font-medium"
+                          ? "bg-white text-black font-semibold border-white"
+                          : "bg-white/[0.06] hover:bg-white/[0.12] border-white/10 hover:border-white/20 text-zinc-300 hover:text-white"
                       }`}
                     >
-                      {chip.label}
+                      <span
+                        className="w-1.5 h-1.5 rounded-full shrink-0"
+                        style={{ backgroundColor: chip.color }}
+                      />
+                      <span>{chip.label}</span>
                     </button>
                   );
                 })}
@@ -407,8 +478,8 @@ const Hero = ({ onExplore }) => {
             {/* Signal preview header bar */}
             <div className="flex items-center justify-between px-5 py-2.5 bg-black/40 text-xs font-sans font-medium text-zinc-400">
               <div className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="tracking-wide">LIVE SIGNAL PREVIEW</span>
+                <span className={`w-1.5 h-1.5 rounded-full ${isLiveOnline ? "bg-emerald-400 animate-pulse" : "bg-amber-400"}`} />
+                <span className="tracking-wide">{isLiveOnline ? "LIVE SIGNAL PREVIEW · MONTHLY TOP" : "CURATED SIGNAL PREVIEW"}</span>
               </div>
               <div>
                 {filteredRepos.length}{" "}

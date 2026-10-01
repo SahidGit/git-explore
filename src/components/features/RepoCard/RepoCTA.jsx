@@ -17,6 +17,8 @@ const RepoCTA = () => {
                 <img
                     src={footerBg}
                     alt=""
+                    width={1672}
+                    height={941}
                     className="w-full h-full object-cover object-center"
                     loading="lazy"
                     decoding="async"

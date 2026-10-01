@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/layouts/Header';
 import Hero from '../components/layouts/Hero';
-import DashboardPreview from '../components/features/DashboardPreview';
-import FeatureGrid from '../components/features/FeatureGrid';
-import FAQ from '../components/ui/FAQ';
-import Footer from '../components/layouts/Footer';
-import BackToTop from '../components/ui/BackToTop';
-import RepoCTA from '../components/features/RepoCard/RepoCTA';
 import SEO from '../components/ui/SEO';
+
+// Lazy-load below-the-fold components
+const DashboardPreview = lazy(() => import('../components/features/DashboardPreview'));
+const FeatureGrid = lazy(() => import('../components/features/FeatureGrid'));
+const FAQ = lazy(() => import('../components/ui/FAQ'));
+const RepoCTA = lazy(() => import('../components/features/RepoCard/RepoCTA'));
+const Footer = lazy(() => import('../components/layouts/Footer'));
+const BackToTop = lazy(() => import('../components/ui/BackToTop'));
 
 const Home = () => {
     const navigate = useNavigate();
@@ -47,14 +49,18 @@ const Home = () => {
 
             <main className="flex-1">
                 <Hero onExplore={handleExplore} />
-                <DashboardPreview />
-                <FeatureGrid />
-                <FAQ />
-                <RepoCTA />
+                <Suspense fallback={<div className="min-h-[400px]" />}>
+                    <DashboardPreview />
+                    <FeatureGrid />
+                    <FAQ />
+                    <RepoCTA />
+                </Suspense>
             </main>
 
-            <BackToTop />
-            <Footer />
+            <Suspense fallback={null}>
+                <BackToTop />
+                <Footer />
+            </Suspense>
         </div>
     );
 };
