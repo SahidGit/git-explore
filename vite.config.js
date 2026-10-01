@@ -16,9 +16,22 @@ export default defineConfig({
   },
 
   build: {
-    sourcemap: false,
+    sourcemap: true,
+    minify: 'esbuild',
+    cssMinify: true,
+    target: 'es2020',
+    cssCodeSplit: true,
+    modulePreload: {
+      polyfill: false,
+    },
     rollupOptions: {
       output: {
+        compact: true,
+        generatedCode: {
+          preset: 'es2015',
+          constBindings: true,
+          objectShorthand: true,
+        },
         manualChunks: {
           // Core runtime — always needed
           vendor: ['react', 'react-dom'],

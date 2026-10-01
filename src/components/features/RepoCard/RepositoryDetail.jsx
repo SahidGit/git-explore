@@ -165,8 +165,11 @@ const RepositoryDetail = ({ repo, onClose, isBookmarked, onBookmarkToggle }) => 
                             <img
                                 src={repo.owner?.avatar_url}
                                 alt={repo.owner?.login}
-                                className="w-8 h-8 rounded-lg border border-white/10 flex-shrink-0 bg-[#0A0A0C] object-cover shadow-sm"
+                                width={32}
+                                height={32}
                                 loading="lazy"
+                                decoding="async"
+                                className="w-8 h-8 rounded-lg border border-white/10 flex-shrink-0 bg-[#0A0A0C] object-cover shadow-sm"
                                 onError={(e) => { e.target.src = 'https://github.com/github.png'; }}
                             />
                             <div className="min-w-0">
@@ -433,8 +436,11 @@ const RepositoryDetail = ({ repo, onClose, isBookmarked, onBookmarkToggle }) => 
                                                     <img
                                                         src={c.avatar_url}
                                                         alt={c.login}
-                                                        className="w-6 h-6 rounded-md border border-white/10 object-cover shrink-0"
+                                                        width={24}
+                                                        height={24}
                                                         loading="lazy"
+                                                        decoding="async"
+                                                        className="w-6 h-6 rounded-md border border-white/10 object-cover shrink-0"
                                                     />
                                                     <div className="min-w-0">
                                                         <p className="text-xs font-mono font-semibold text-white truncate group-hover:text-emerald-400 transition-colors">

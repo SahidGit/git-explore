@@ -1,8 +1,8 @@
-import gitImage1 from '../../assets/git-image1.png';
-import gitImage2 from '../../assets/git-image2.png';
-import gitImage3 from '../../assets/git-image3.png';
-import gitImage4 from '../../assets/git-image4.png';
-import gitSync from '../../assets/git-sync.png';
+import gitImage1 from '../../assets/doc-quick-start.webp';
+import gitImage2 from '../../assets/doc-explore-discovery.webp';
+import gitImage3 from '../../assets/doc-deepseek-lens.webp';
+import gitImage4 from '../../assets/doc-auth-ratelimit.webp';
+import gitSync from '../../assets/doc-bookmarks-storage.webp';
 
 export const docsContent = {
   title: 'Documentation',

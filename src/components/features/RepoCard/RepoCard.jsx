@@ -73,7 +73,10 @@ const RepoCard = ({ repo, onRepoClick, onBookmarkToggle, isBookmarked }) => {
                             <img
                                 src={avatarUrl}
                                 alt={ownerLogin}
+                                width={28}
+                                height={28}
                                 loading="lazy"
+                                decoding="async"
                                 onError={(e) => { e.target.src = 'https://github.com/github.png'; }}
                                 className="w-7 h-7 rounded-md border border-white/[0.08] flex-shrink-0 bg-[#0A0A0C]"
                             />

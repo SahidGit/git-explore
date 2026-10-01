@@ -3,7 +3,9 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/avif" href="/favicon.avif" />
+  <link rel="icon" type="image/webp" href="/favicon.webp" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ExploreGit — The Open-Source Intelligence Layer</title>
   <meta name="description"
@@ -16,8 +18,9 @@
   <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
   <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
 
-  <!-- Font Preloads -->
+  <!-- Preload only the hero image and the main font -->
   <link rel="preload" href="/NeueMachina-Regular.otf" as="font" type="font/otf" crossorigin />
+  <link rel="preload" href="/hero-mid.png" as="image" type="image/png" fetchpriority="high" />
   <link
     rel="preload"
     as="style"

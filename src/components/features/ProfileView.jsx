@@ -284,6 +284,10 @@ const ProfileView = ({ filters, onFilterChange }) => {
                                         <img
                                             src={OWNER_PROFILE.avatar}
                                             alt={OWNER_PROFILE.name}
+                                            width={56}
+                                            height={56}
+                                            loading="lazy"
+                                            decoding="async"
                                             className="w-14 h-14 rounded-full border-2 border-blue-500/30 shadow-lg bg-[#0A0A0C] flex-shrink-0"
                                         />
                                         <div>
@@ -338,6 +342,10 @@ const ProfileView = ({ filters, onFilterChange }) => {
                                             <img
                                                 src={profile.avatar}
                                                 alt={profile.name}
+                                                width={40}
+                                                height={40}
+                                                loading="lazy"
+                                                decoding="async"
                                                 className="w-10 h-10 rounded-full border border-white/10 flex-shrink-0 bg-[#0A0A0C]"
                                             />
                                             <div className="min-w-0 flex-1">

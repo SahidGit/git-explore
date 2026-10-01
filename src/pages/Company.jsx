@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from '../components/layouts/Header';
-import Footer from '../components/layouts/Footer';
+import { SubFooter } from '../components/layouts/Footer';
 import BackToTop from '../components/ui/BackToTop';
 import SEO from '../components/ui/SEO';
 import {
@@ -8,9 +8,9 @@ import {
     ShieldCheck, Cpu, GitBranch, Zap, ArrowUpRight
 } from 'lucide-react';
 import sahidPhoto from '../assets/team-sahid.webp';
-import valueAutonomy from '../assets/value-autonomy.png';
-import valueInclusion from '../assets/value-inclusion.png';
-import valueProfessionalism from '../assets/value-professionalism.png';
+import valueAutonomy from '../assets/value-autonomy.webp';
+import valueInclusion from '../assets/value-inclusion.webp';
+import valueProfessionalism from '../assets/value-professionalism.webp';
 
 
 
@@ -129,8 +129,11 @@ const Company = () => {
                                     <img
                                         src={val.image}
                                         alt={val.title}
+                                        width={1086}
+                                        height={1222}
                                         className="size-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                                         loading="lazy"
+                                        decoding="async"
                                     />
                                 </picture>
                                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/15 via-black/10 to-black/75 group-hover:from-black/10 group-hover:to-black/65 transition-all duration-500" />
@@ -185,8 +188,11 @@ const Company = () => {
                                             <img
                                                 src={member.avatar}
                                                 alt={member.name}
+                                                width={180}
+                                                height={180}
                                                 className="size-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                                                 loading="lazy"
+                                                decoding="async"
                                             />
                                         </div>
                                         <div className="leading-6">
@@ -215,7 +221,7 @@ const Company = () => {
             </main>
 
             <BackToTop />
-            <Footer />
+            <SubFooter />
         </div>
     );
 };

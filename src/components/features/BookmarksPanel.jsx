@@ -61,7 +61,10 @@ const BookmarkCard = ({ repo, onRepoClick, onRemove }) => {
                     <img
                         src={repo.owner?.avatar_url}
                         alt={repo.owner?.login}
+                        width={28}
+                        height={28}
                         loading="lazy"
+                        decoding="async"
                         className="w-7 h-7 rounded-md border border-white/[0.08] flex-shrink-0 bg-[#0A0A0C]"
                     />
                     <div className="min-w-0">

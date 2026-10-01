@@ -1,538 +1,312 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-    Search, SlidersHorizontal, ShieldCheck, Activity,
-    Bookmark, FileText, Download, Terminal, Sparkles,
-    ArrowRight, CheckCircle2, Star, GitFork, GitBranch,
-    Copy, Layers, Cpu, Flame, ExternalLink, Zap,
-    ChevronLeft, ChevronRight, Check
+    Search, ShieldCheck, Bookmark, Terminal,
+    ArrowRight, Check, Zap, Copy, ExternalLink,
+    FileText, Sparkles, Activity, Shield, Wifi, WifiOff,
+    Edit3, MessageSquare, Globe2, Layers, Cpu
 } from 'lucide-react';
 
-const BENTO_STEPS = [
+const TerminalVisual = () => {
+    const [copied, setCopied] = useState(false);
+    const handleCopy = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        navigator.clipboard.writeText('git rebase -i HEAD~3');
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+    };
+
+    return (
+        <div className="w-full h-full flex flex-col justify-center space-y-2 p-3 rounded-2xl bg-black/40 border border-white/[0.06] relative overflow-hidden">
+            <div className="absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-[#3178C6]/15 to-transparent pointer-events-none" />
+
+            {/* Language Tags */}
+            <div className="relative z-10 flex items-center justify-center gap-2 text-[10px] font-mono text-zinc-400">
+                <span className="text-[#3572A5]">Python</span>
+                <span>•</span>
+                <span className="text-[#DEA584]">Rust</span>
+                <span>•</span>
+                <span className="text-[#3178C6]">TS</span>
+                <span>•</span>
+                <span className="text-[#00ADD8]">Go</span>
+            </div>
+
+            {/* Terminal Command Simulation */}
+            <div className="relative z-10 bg-black/60 border border-white/10 rounded-xl p-2 font-mono text-[11px]">
+                <div className="flex items-center justify-between text-[9px] text-zinc-400 border-b border-white/10 pb-1 mb-1">
+                    <span className="text-[#93C5FD] font-semibold">COMMAND</span>
+                    <button
+                        type="button"
+                        onClick={handleCopy}
+                        className="text-[#93C5FD] hover:text-white transition-colors flex items-center gap-1 cursor-pointer font-bold"
+                    >
+                        {copied ? <Check className="w-2.5 h-2.5 text-emerald-400" /> : <Copy className="w-2.5 h-2.5" />}
+                        <span>{copied ? 'COPIED' : 'COPY'}</span>
+                    </button>
+                </div>
+                <div className="text-white font-medium flex items-center gap-1.5 truncate">
+                    <span className="text-[#93C5FD] font-bold">$</span>
+                    <span className="truncate">git rebase -i HEAD~3</span>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const FEATURE_CARDS = [
     {
-        id: 'step-filter-search',
-        stepNumber: '01',
+        id: 'discovery',
+        langName: 'Python',
+        langColor: '#3572A5',
         category: 'DISCOVERY ENGINE',
-        tabLabel: 'Filter & Search',
-        title: 'Multi-Dimensional Filters & Velocity Search',
-        headline: 'Find high-momentum repositories before they go mainstream.',
-        desc: 'Filter raw GitHub projects across daily/weekly star velocity, commit cadence, active programming languages, and topic tags. Discover breaking open-source codebases with zero authentication required.',
-        primaryLink: '/dashboard',
-        primaryText: 'Explore Velocity Filters',
+        title: 'Velocity discovery',
+        desc: 'Calculates daily star velocity, fork growth, and issue churn before projects hit mainstream feeds.',
+        punchline: 'Algorithmic momentum indexing',
+        link: '/dashboard',
+        linkText: 'Explore Filters',
+        icon: Zap,
         theme: {
-            name: 'blue',
-            accentColor: 'text-sky-400',
-            borderColor: 'border-sky-500/30 hover:border-sky-400/60',
-            activeBorder: 'border-sky-400/80 ring-2 ring-sky-400/20',
-            bgGlow: 'before:bg-gradient-to-r before:from-sky-500/0 before:via-sky-400/80 before:to-sky-500/0',
-            badgeBg: 'bg-sky-500/10 text-sky-400 border-sky-500/30',
-            iconBg: 'bg-sky-500/15 border-sky-400/30 text-sky-300 shadow-sky-500/20',
-            activeTab: 'bg-sky-500/20 text-sky-200 border-sky-400/50 shadow-lg shadow-sky-500/10',
-            glowRadial: 'rgba(56, 189, 248, 0.15)',
+            cardBg: 'bg-[#0E0F12]',
+            accentColor: '#3572A5',
+            borderColor: 'border-white/[0.08] hover:border-[#3572A5]/50',
+            badgeBg: 'bg-[#3572A5]/15 text-[#60A5FA] border-[#3572A5]/30',
+            titleColor: 'text-white group-hover:text-[#60A5FA]',
+            iconColor: 'text-[#60A5FA]',
+            glowColor: 'from-[#3572A5]/10',
         },
-        icon: Search,
-        stats: [
-            { label: 'VELOCITY SIGNAL', value: '+12.5k★ / wk', highlight: true },
-            { label: 'UPDATE WINDOW', value: 'Real-time Sync' },
-            { label: 'SEARCH COVERAGE', value: '100M+ Repos' },
-        ],
         renderVisual: () => (
-            <div className="w-full space-y-3.5 font-sans text-xs">
-                {/* Search Bar Input Simulation */}
-                <div className="flex items-center justify-between bg-black/70 border border-sky-500/35 rounded-xl px-3.5 py-2.5 shadow-inner">
-                    <div className="flex items-center gap-2.5 text-zinc-200 min-w-0">
-                        <Search className="w-4 h-4 text-sky-400 shrink-0 animate-pulse" />
-                        <span className="font-mono text-xs text-white truncate">topic:ai language:python stars:&gt;5000</span>
+            <div className="w-full h-full flex flex-col justify-center items-center p-3 rounded-2xl bg-black/40 border border-white/[0.06] relative overflow-hidden">
+                {/* Subtle top glow */}
+                <div className="absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-[#3572A5]/15 to-transparent pointer-events-none" />
+                
+                {/* Minimal Toggle Pill Mockup */}
+                <div className="relative z-10 w-full max-w-[200px] py-2 px-3.5 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-between">
+                    <span className="text-white font-medium text-xs font-sans tracking-tight">Signal Feed</span>
+                    <div className="w-8 h-4.5 rounded-full bg-[#3572A5]/40 p-0.5 flex items-center justify-end border border-[#3572A5]/50">
+                        <div className="w-3.5 h-3.5 rounded-full bg-white shadow-xs" />
                     </div>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 font-bold border border-sky-500/30 shrink-0">
-                        48 MATCHES
-                    </span>
                 </div>
 
-                {/* Filter Tag Chips */}
-                <div className="flex flex-wrap items-center gap-2 pt-0.5">
-                    <span className="px-3 py-1 rounded-lg bg-sky-500/20 text-sky-200 border border-sky-400/40 font-mono text-xs font-bold flex items-center gap-1.5 shadow-sm">
-                        <Zap className="w-3.5 h-3.5 text-sky-400" />
-                        +12.5k★ / wk
+                <div className="relative z-10 flex items-center gap-1.5 mt-2.5">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#3572A5]/20 text-[#60A5FA] font-semibold border border-[#3572A5]/30">
+                        +14.2k★ / wk
                     </span>
-                    <span className="px-2.5 py-1 rounded-lg bg-white/[0.06] border border-white/10 text-zinc-200 font-mono text-xs">
-                        This Week
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/5 text-zinc-400 border border-white/10">
+                        Zero Auth
                     </span>
-                    <span className="px-2.5 py-1 rounded-lg bg-white/[0.06] border border-white/10 text-zinc-200 font-mono text-xs flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-blue-400" /> Python
-                    </span>
-                    <span className="px-2.5 py-1 rounded-lg bg-white/[0.06] border border-white/10 text-zinc-200 font-mono text-xs flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-orange-400" /> Rust
-                    </span>
-                </div>
-
-                {/* Quick Result Row */}
-                <div className="flex items-center justify-between p-3 rounded-xl bg-white/[0.03] border border-white/[0.08] text-xs font-mono">
-                    <div className="flex items-center gap-2 min-w-0">
-                        <div className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                        <span className="text-white font-semibold truncate">deepseek-ai / DeepSeek-V3</span>
-                    </div>
-                    <span className="text-sky-400 font-bold shrink-0">98% Velocity Match</span>
                 </div>
             </div>
         ),
     },
     {
-        id: 'step-profile-health',
-        stepNumber: '02',
-        category: 'DEEP DIVE INSPECTOR',
-        tabLabel: 'Repo Health & Activity',
-        title: 'Profile, Repo Health & Activity Rhythm',
-        headline: 'Automated 4-pillar audits and contributor commit heatmaps.',
-        desc: 'Inspect automated code quality, license compliance, security posture, and issue resolution velocity. Visualize 53-week contributor commit heatmaps to verify active maintainer rhythms.',
-        primaryLink: '/dashboard',
-        primaryText: 'Inspect Health Scorecard',
+        id: 'health',
+        langName: 'Go',
+        langColor: '#00ADD8',
+        category: 'REPO INSPECTOR',
+        title: 'Health & cadence',
+        desc: 'Evaluates license compliance, commit rhythm, maintainer responsiveness, and CI health scores.',
+        punchline: 'Automated 4-pillar audits',
+        link: '/dashboard',
+        linkText: 'View Scorecard',
+        icon: Edit3,
         theme: {
-            name: 'red',
-            accentColor: 'text-red-400',
-            borderColor: 'border-red-500/30 hover:border-red-400/60',
-            activeBorder: 'border-red-400/80 ring-2 ring-red-400/20',
-            bgGlow: 'before:bg-gradient-to-r before:from-red-500/0 before:via-red-400/80 before:to-red-500/0',
-            badgeBg: 'bg-red-500/10 text-red-400 border-red-500/30',
-            iconBg: 'bg-red-500/15 border-red-400/30 text-red-300 shadow-red-500/20',
-            activeTab: 'bg-red-500/20 text-red-200 border-red-400/50 shadow-lg shadow-red-500/10',
-            glowRadial: 'rgba(239, 68, 68, 0.18)',
+            cardBg: 'bg-[#0E0F12]',
+            accentColor: '#00ADD8',
+            borderColor: 'border-white/[0.08] hover:border-[#00ADD8]/50',
+            badgeBg: 'bg-[#00ADD8]/15 text-[#38BDF8] border-[#00ADD8]/30',
+            titleColor: 'text-white group-hover:text-[#38BDF8]',
+            iconColor: 'text-[#38BDF8]',
+            glowColor: 'from-[#00ADD8]/10',
         },
-        icon: ShieldCheck,
-        stats: [
-            { label: 'HEALTH INDEX', value: 'Grade A+ (98%)', highlight: true },
-            { label: 'LICENSE VERIFIED', value: 'MIT Permissive' },
-            { label: 'RESOLUTION RATE', value: '94% Issues Closed' },
-        ],
         renderVisual: () => (
-            <div className="w-full space-y-3 font-sans text-xs">
-                {/* Health Score Pill Header */}
-                <div className="flex items-center justify-between border-b border-white/[0.08] pb-2.5">
-                    <div className="flex items-center gap-2 min-w-0">
-                        <span className="w-2.5 h-2.5 rounded-full bg-red-400 animate-pulse" />
-                        <span className="text-white font-mono font-bold text-xs truncate">Automated Security &amp; Health Index</span>
-                    </div>
-                    <span className="px-2.5 py-0.5 rounded-full bg-red-500/20 border border-red-500/40 text-red-300 font-mono font-extrabold text-xs shadow-sm">
-                        GRADE A+ 98%
+            <div className="w-full h-full flex flex-col justify-center space-y-2 p-3 rounded-2xl bg-black/40 border border-white/[0.06] relative overflow-hidden">
+                <div className="absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-[#00ADD8]/15 to-transparent pointer-events-none" />
+
+                {/* Input Simulation Bar */}
+                <div className="relative z-10 flex items-center justify-between gap-1.5 bg-black/50 border border-white/10 rounded-xl px-2.5 py-1.5">
+                    <span className="text-zinc-400 text-[10px] font-mono truncate">Inspect repository...</span>
+                    <span className="text-[9px] font-mono px-2 py-0.5 rounded-md bg-[#00ADD8]/20 text-[#38BDF8] font-bold border border-[#00ADD8]/40 shrink-0">
+                        Audit ⌘+K
                     </span>
                 </div>
 
-                {/* Simulated 53-Week Mini Heatmap Grid */}
-                <div className="space-y-1.5 p-3 rounded-xl bg-black/60 border border-red-500/20">
-                    <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400">
-                        <span>Contributor Rhythm</span>
-                        <span className="text-red-400 font-semibold">1,420 commits / yr</span>
-                    </div>
-                    <div className="flex gap-1 overflow-hidden py-1">
-                        {[...Array(18)].map((_, colIdx) => (
-                            <div key={colIdx} className="flex flex-col gap-1">
-                                {[...Array(4)].map((_, rowIdx) => {
-                                    const intensity = (colIdx * 3 + rowIdx * 7) % 5;
-                                    const colors = [
-                                        'bg-white/[0.04]',
-                                        'bg-red-950/60',
-                                        'bg-red-800/80',
-                                        'bg-red-600',
-                                        'bg-red-400'
-                                    ];
-                                    return (
-                                        <span
-                                            key={rowIdx}
-                                            className={`w-2.5 h-2.5 rounded-[2px] ${colors[intensity]} transition-colors`}
-                                        />
-                                    );
-                                })}
-                            </div>
-                        ))}
-                    </div>
+                {/* Score Strip */}
+                <div className="relative z-10 flex items-center justify-between text-[10px] font-mono border-b border-white/10 pb-1 text-zinc-300 px-1">
+                    <span className="truncate">Grade A+ (98%)</span>
+                    <span className="text-[#38BDF8] font-bold">1,420 commits/yr</span>
                 </div>
 
-                {/* Metric Summary Strip */}
-                <div className="grid grid-cols-3 divide-x divide-white/10 border-t border-white/[0.08] pt-2 text-center font-mono text-[11px]">
-                    <div>
-                        <span className="text-zinc-500 block text-[10px]">License</span>
-                        <span className="text-red-300 font-bold">MIT Verified</span>
-                    </div>
-                    <div>
-                        <span className="text-zinc-500 block text-[10px]">Issues</span>
-                        <span className="text-red-300 font-bold">94% Closed</span>
-                    </div>
-                    <div>
-                        <span className="text-zinc-500 block text-[10px]">Cadence</span>
-                        <span className="text-red-300 font-bold">Daily Push</span>
-                    </div>
+                {/* Mini Activity Row */}
+                <div className="relative z-10 flex items-center justify-between gap-1 overflow-hidden px-1">
+                    {[...Array(12)].map((_, colIdx) => (
+                        <div key={colIdx} className="flex flex-col gap-1">
+                            {[...Array(2)].map((_, rowIdx) => {
+                                const intensity = (colIdx * 3 + rowIdx * 5) % 4;
+                                const opacities = ['bg-white/5', 'bg-[#00ADD8]/20', 'bg-[#00ADD8]/50', 'bg-[#00ADD8]'];
+                                return (
+                                    <span key={rowIdx} className={`w-2 h-2 rounded-[2px] ${opacities[intensity]}`} />
+                                );
+                            })}
+                        </div>
+                    ))}
                 </div>
             </div>
         ),
     },
     {
-        id: 'step-bookmarks-notes',
-        stepNumber: '03',
-        category: 'LOCAL-FIRST WORKSPACE',
-        tabLabel: 'Bookmarks & Notes',
-        title: 'Bookmarks, Local Notes & CSV/JSON Export',
-        headline: 'Save stacks privately with zero cloud vendor lock-in.',
-        desc: 'Save project bookmarks directly in browser storage, write private architecture notes for your team or workflow, and export clean research logs to JSON or CSV with 1 click.',
-        primaryLink: '/bookmarks',
-        primaryText: 'Manage Saved Bookmarks',
-        theme: {
-            name: 'yellow',
-            accentColor: 'text-amber-400',
-            borderColor: 'border-amber-500/30 hover:border-amber-400/60',
-            activeBorder: 'border-amber-400/80 ring-2 ring-amber-400/20',
-            bgGlow: 'before:bg-gradient-to-r before:from-amber-500/0 before:via-amber-400/80 before:to-amber-500/0',
-            badgeBg: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
-            iconBg: 'bg-amber-500/15 border-amber-400/30 text-amber-300 shadow-amber-500/20',
-            activeTab: 'bg-amber-500/20 text-amber-200 border-amber-400/50 shadow-lg shadow-amber-500/10',
-            glowRadial: 'rgba(245, 158, 11, 0.15)',
-        },
+        id: 'bookmarks',
+        langName: 'Rust',
+        langColor: '#DEA584',
+        category: 'LOCAL WORKSPACE',
+        title: 'Private workspace',
+        desc: 'Save project bookmarks and write architecture research notes stored 100% locally in your browser.',
+        punchline: 'Zero telemetry, device-only',
+        link: '/bookmarks',
+        linkText: 'Open Bookmarks',
         icon: Bookmark,
-        stats: [
-            { label: 'STORAGE MODE', value: '100% Local-First', highlight: true },
-            { label: 'TELEMETRY', value: 'Zero Tracking' },
-            { label: 'EXPORT FORMATS', value: 'JSON & CSV' },
-        ],
+        theme: {
+            cardBg: 'bg-[#0E0F12]',
+            accentColor: '#DEA584',
+            borderColor: 'border-white/[0.08] hover:border-[#DEA584]/50',
+            badgeBg: 'bg-[#DEA584]/15 text-[#DEA584] border-[#DEA584]/30',
+            titleColor: 'text-white group-hover:text-[#DEA584]',
+            iconColor: 'text-[#DEA584]',
+            glowColor: 'from-[#DEA584]/10',
+        },
         renderVisual: () => (
-            <div className="w-full space-y-3 font-sans text-xs">
-                {/* Bookmarked Item Row */}
-                <div className="flex items-center justify-between bg-black/70 border border-amber-500/30 rounded-xl p-3 shadow-inner">
-                    <div className="flex items-center gap-2.5 min-w-0">
-                        <div className="p-1.5 rounded-lg bg-amber-400/20 text-amber-400">
-                            <Bookmark className="w-4 h-4 fill-amber-400" />
-                        </div>
-                        <div className="min-w-0">
-                            <p className="font-mono text-xs font-bold text-white truncate">vllm-project / vllm</p>
-                            <p className="font-mono text-[10px] text-zinc-400 truncate">★ 34.2k • Python / C++</p>
-                        </div>
+            <div className="w-full h-full flex flex-col justify-center space-y-2.5 p-3 rounded-2xl bg-black/40 border border-white/[0.06] relative overflow-hidden">
+                <div className="absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-[#DEA584]/15 to-transparent pointer-events-none" />
+
+                {/* Mode Selector Dock */}
+                <div className="relative z-10 py-1.5 px-3 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-around">
+                    <div className="flex flex-col items-center gap-1 opacity-60">
+                        <Activity className="w-3.5 h-3.5 text-white" />
+                        <span className="text-[9px] font-sans text-zinc-300">Explore</span>
                     </div>
-                    <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-amber-400/15 text-amber-300 border border-amber-400/35 font-bold shrink-0">
-                        BOOKMARKED
-                    </span>
+                    <div className="flex flex-col items-center gap-1 px-2.5 py-1 rounded-lg bg-[#DEA584] text-zinc-950 shadow-xs">
+                        <Bookmark className="w-3.5 h-3.5 fill-zinc-950" />
+                        <span className="text-[9px] font-sans font-bold">Saved</span>
+                    </div>
+                    <div className="flex flex-col items-center gap-1 opacity-60">
+                        <FileText className="w-3.5 h-3.5 text-white" />
+                        <span className="text-[9px] font-sans text-zinc-300">Notes</span>
+                    </div>
                 </div>
 
-                {/* Local Private Note Box */}
-                <div className="bg-[#090A0D] border border-white/[0.08] rounded-xl p-3 space-y-1.5">
-                    <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400">
-                        <span className="flex items-center gap-1.5 text-amber-400 font-semibold">
-                            <FileText className="w-3.5 h-3.5" /> Local Developer Note
-                        </span>
-                        <span className="text-[10px] text-zinc-500">Device Stored</span>
-                    </div>
-                    <p className="text-xs font-mono text-zinc-300 italic truncate">
-                        "Evaluating PagedAttention kernel for production inference throughput."
-                    </p>
-                </div>
-
-                {/* Export Options Bar */}
-                <div className="flex items-center justify-between pt-1 border-t border-white/[0.08] text-xs font-mono">
-                    <span className="text-zinc-400">Export Research:</span>
-                    <span className="inline-flex items-center gap-1 text-amber-300 font-bold hover:underline cursor-pointer">
-                        <Download className="w-3.5 h-3.5" />
-                        Download JSON / CSV
-                    </span>
+                <div className="relative z-10 flex items-center justify-between text-[10px] font-mono text-zinc-400 px-1">
+                    <span className="truncate">astral-sh/uv</span>
+                    <span className="text-[#DEA584] font-semibold">★ 41.2k</span>
                 </div>
             </div>
         ),
     },
     {
-        id: 'step-cheatsheet-newsroom',
-        stepNumber: '04',
-        category: 'DEVELOPER INTELLIGENCE',
-        tabLabel: 'Git Cheat Sheet & AI News',
-        title: 'Git Cheat Sheet & Frontier AI Newsroom',
-        headline: 'Interactive Git recipes and real-time open AI model telemetry.',
-        desc: 'Master complex Git branch workflows, rebasing, and emergency undo commands with 1-click copy. Stay informed on frontier open-weight AI models, pricing per million tokens, and arXiv paper links.',
-        primaryLink: '/cheatsheet',
-        secondaryLink: '/ai-news',
-        primaryText: 'Interactive Git Cheatsheet',
-        secondaryText: 'AI Newsroom',
-        theme: {
-            name: 'pink',
-            accentColor: 'text-pink-400',
-            borderColor: 'border-pink-500/30 hover:border-pink-400/60',
-            activeBorder: 'border-pink-400/80 ring-2 ring-pink-400/20',
-            bgGlow: 'before:bg-gradient-to-r before:from-pink-500/0 before:via-pink-400/80 before:to-pink-500/0',
-            badgeBg: 'bg-pink-500/10 text-pink-400 border-pink-500/30',
-            iconBg: 'bg-pink-500/15 border-pink-400/30 text-pink-300 shadow-pink-500/20',
-            activeTab: 'bg-pink-500/20 text-pink-200 border-pink-400/50 shadow-lg shadow-pink-500/10',
-            glowRadial: 'rgba(236, 72, 153, 0.15)',
-        },
+        id: 'cheatsheet',
+        langName: 'TypeScript',
+        langColor: '#3178C6',
+        category: 'DEVELOPER INTEL',
+        title: 'Git workflows & AI radar',
+        desc: 'Interactive Git commands with 1-click execution alongside real-time frontier AI model context & pricing.',
+        punchline: '40+ Commands, daily model specs',
+        link: '/cheatsheet',
+        linkText: 'Open Cheatsheet',
         icon: Terminal,
-        stats: [
-            { label: 'GIT RECIPES', value: '40+ Commands', highlight: true },
-            { label: 'AI NEWSROOM', value: 'Live Model Radar' },
-            { label: 'INTELLIGENCE', value: 'arXiv & Benchmark Specs' },
-        ],
-        renderVisual: () => (
-            <div className="w-full space-y-3 font-sans text-xs">
-                {/* Terminal Git Command Simulation */}
-                <div className="bg-black/70 border border-pink-500/30 rounded-xl p-3 font-mono text-xs space-y-2 shadow-inner">
-                    <div className="flex items-center justify-between text-[10px] text-zinc-400 border-b border-white/10 pb-1.5">
-                        <span className="flex items-center gap-1.5 text-zinc-300">
-                            <Terminal className="w-3.5 h-3.5 text-pink-400" />
-                            <span>GIT COMMAND RECIPE</span>
-                        </span>
-                        <span className="text-pink-400 font-bold flex items-center gap-1">
-                            <Copy className="w-3 h-3" /> 1-Click Copy
-                        </span>
-                    </div>
-                    <div className="text-zinc-200 flex items-center gap-2 truncate">
-                        <span className="text-pink-400 font-bold">$</span>
-                        <span className="text-white font-bold">git rebase -i HEAD~3</span>
-                    </div>
-                </div>
-
-                {/* AI Newsroom Headline Strip */}
-                <div className="bg-[#090A0D] border border-white/[0.08] rounded-xl p-2.5 flex items-center justify-between font-mono text-xs">
-                    <div className="flex items-center gap-2 min-w-0">
-                        <span className="p-1 rounded-lg bg-pink-500/20 text-pink-400 shrink-0">
-                            <Sparkles className="w-3.5 h-3.5" />
-                        </span>
-                        <span className="text-zinc-200 truncate font-semibold">DeepSeek-V3 Specs &amp; Token Pricing</span>
-                    </div>
-                    <span className="px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-300 font-extrabold shrink-0 text-[11px] border border-pink-500/30">
-                        $0.14 / M
-                    </span>
-                </div>
-
-                {/* Quick Link Footer */}
-                <div className="flex items-center justify-between pt-1 border-t border-white/[0.08] text-xs font-mono">
-                    <span className="text-zinc-400">Editorial Intel:</span>
-                    <span className="text-pink-400 font-bold flex items-center gap-1">
-                        <span>Live Paper Links</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                    </span>
-                </div>
-            </div>
-        ),
+        theme: {
+            cardBg: 'bg-[#0E0F12]',
+            accentColor: '#3178C6',
+            borderColor: 'border-white/[0.08] hover:border-[#3178C6]/50',
+            badgeBg: 'bg-[#3178C6]/15 text-[#93C5FD] border-[#3178C6]/30',
+            titleColor: 'text-white group-hover:text-[#93C5FD]',
+            iconColor: 'text-[#93C5FD]',
+            glowColor: 'from-[#3178C6]/10',
+        },
+        renderVisual: TerminalVisual,
     },
 ];
 
 const FeatureGrid = () => {
-    const [activeIndex, setActiveIndex] = useState(0);
-    const activeStep = BENTO_STEPS[activeIndex];
-    const ActiveIcon = activeStep.icon;
-    const activeTheme = activeStep.theme;
-
-    const handlePrev = () => {
-        setActiveIndex((prev) => (prev === 0 ? BENTO_STEPS.length - 1 : prev - 1));
-    };
-
-    const handleNext = () => {
-        setActiveIndex((prev) => (prev === BENTO_STEPS.length - 1 ? 0 : prev + 1));
-    };
-
     return (
-        <section className="border-b border-white/10 bg-[#08090C] overflow-hidden py-16 sm:py-24 relative" aria-label="ExploreGit Capabilities & Bento Feature Showcase">
-            {/* Dynamic Ambient Background Glow based on active card */}
-            <div 
-                className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 h-80 pointer-events-none mix-blend-screen opacity-40 transition-all duration-700 blur-3xl"
-                style={{
-                    background: `radial-gradient(circle, ${activeTheme.glowRadial} 0%, rgba(15, 23, 42, 0.05) 70%, transparent 100%)`
-                }}
-                aria-hidden="true"
-            />
-
+        <section className="border-b border-white/10 bg-[#0A0A0C] py-16 sm:py-24 relative overflow-hidden" aria-label="ExploreGit Capabilities & Features">
             <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 relative z-10">
                 
                 {/* Section Title & Header */}
-                <div className="mx-auto max-w-3xl text-center mb-10 sm:mb-12 space-y-3.5">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-xs font-mono text-zinc-300 uppercase tracking-wider shadow-sm">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                        <span>Interactive Feature Radar</span>
-                    </div>
+                <div className="mx-auto max-w-3xl text-center mb-10 sm:mb-14 space-y-2.5">
+                    <p className="font-mono text-[11px] sm:text-xs font-semibold tracking-widest text-zinc-400 uppercase">
+                        What's inside
+                    </p>
 
-                    <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight font-heading">
+                    <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight font-heading leading-tight">
                         Structured signal from raw GitHub data.
                     </h2>
                     
-                    <p className="text-xs sm:text-base font-sans text-[#94A3B8] leading-relaxed max-w-2xl mx-auto">
-                        Explore core capabilities in 4 easy steps. Switch through the interactive bento carousel below to discover each tool.
+                    <p className="text-xs sm:text-base font-sans text-zinc-400 leading-relaxed max-w-xl mx-auto pt-1">
+                        High-density tooling designed for developer velocity, embedded in a local-first interface.
                     </p>
                 </div>
 
-                {/* ── Carousel Step Tabs & Navigation Controls ── */}
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
-                    {/* Step selector pills */}
-                    <div className="flex items-center gap-2 overflow-x-auto no-scrollbar w-full sm:w-auto p-1 rounded-2xl bg-[#0F1015] border border-white/[0.08]">
-                        {BENTO_STEPS.map((step, idx) => {
-                            const isCurrent = activeIndex === idx;
-                            const StepIcon = step.icon;
-                            return (
-                                <button
-                                    key={step.id}
-                                    type="button"
-                                    onClick={() => setActiveIndex(idx)}
-                                    className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono transition-all duration-200 cursor-pointer whitespace-nowrap border ${
-                                        isCurrent
-                                            ? `${step.theme.activeTab} font-bold scale-[1.02]`
-                                            : 'bg-transparent text-zinc-400 hover:text-white hover:bg-white/[0.05] border-transparent font-medium'
-                                    }`}
-                                >
-                                    <span className="opacity-70 font-semibold">{step.stepNumber}</span>
-                                    <StepIcon className="w-3.5 h-3.5" />
-                                    <span>{step.tabLabel}</span>
-                                </button>
-                            );
-                        })}
-                    </div>
+                {/* ── 4-Card Minimal Showcase Grid with Trending Language Color Accents ── */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 items-stretch">
+                    {FEATURE_CARDS.map((card) => {
+                        const CardIcon = card.icon;
+                        const VisualComponent = card.renderVisual;
+                        const theme = card.theme;
 
-                    {/* Left / Right Carousel Controls */}
-                    <div className="flex items-center gap-2 self-end sm:self-auto">
-                        <button
-                            type="button"
-                            onClick={handlePrev}
-                            className="p-2.5 rounded-xl bg-[#0F1015] hover:bg-white/[0.1] text-zinc-300 hover:text-white border border-white/[0.1] transition-all cursor-pointer active:scale-95 shadow-sm"
-                            aria-label="Previous step"
-                        >
-                            <ChevronLeft className="w-4 h-4" />
-                        </button>
-                        <span className="text-xs font-mono text-zinc-400 px-2">
-                            {activeIndex + 1} / {BENTO_STEPS.length}
-                        </span>
-                        <button
-                            type="button"
-                            onClick={handleNext}
-                            className="p-2.5 rounded-xl bg-[#0F1015] hover:bg-white/[0.1] text-zinc-300 hover:text-white border border-white/[0.1] transition-all cursor-pointer active:scale-95 shadow-sm"
-                            aria-label="Next step"
-                        >
-                            <ChevronRight className="w-4 h-4" />
-                        </button>
-                    </div>
-                </div>
+                        return (
+                            <div
+                                key={card.id}
+                                className={`group relative flex flex-col justify-between rounded-2xl ${theme.cardBg} border ${theme.borderColor} p-4 sm:p-5 transition-all duration-300 hover:-translate-y-1 shadow-lg overflow-hidden`}
+                            >
+                                {/* Top Glow Accent from Language Palette */}
+                                <div className={`absolute top-0 inset-x-0 h-24 bg-gradient-to-b ${theme.glowColor} to-transparent pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity`} />
 
-                {/* ── Main Featured Bento Stage ── */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch mb-8">
-                    
-                    {/* Left: Main Spotlight Bento Card */}
-                    <div className={`lg:col-span-8 flex flex-col justify-between rounded-2xl border ${activeTheme.borderColor} bg-[#101116]/95 backdrop-blur-xl p-6 sm:p-8 shadow-2xl relative overflow-hidden transition-all duration-300 before:absolute before:inset-x-0 before:top-0 before:h-[2px] ${activeTheme.bgGlow}`}>
-                        
-                        <div>
-                            {/* Card Top Pill Badge */}
-                            <div className="flex items-center justify-between mb-6">
-                                <div className="flex items-center gap-3">
-                                    <div className={`w-10 h-10 rounded-xl ${activeTheme.iconBg} border flex items-center justify-center shadow-lg transition-transform duration-300 hover:scale-110`}>
-                                        <ActiveIcon className="w-5 h-5" />
-                                    </div>
-                                    <div>
-                                        <span className={`text-xs font-mono font-bold tracking-wider ${activeTheme.accentColor}`}>
-                                            {activeStep.category}
-                                        </span>
-                                        <h3 className="text-lg sm:text-2xl font-extrabold text-white font-heading tracking-tight">
-                                            {activeStep.title}
-                                        </h3>
-                                    </div>
+                                {/* Top Visual Showcase Container */}
+                                <div className="h-32 sm:h-36 w-full mb-4 relative z-10">
+                                    <VisualComponent />
                                 </div>
 
-                                <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-white/[0.06] border border-white/15 text-zinc-300">
-                                    STEP {activeStep.stepNumber}
-                                </span>
-                            </div>
-
-                            {/* Headline & Description */}
-                            <p className="text-sm sm:text-base text-zinc-200 font-medium leading-relaxed mb-3">
-                                {activeStep.headline}
-                            </p>
-                            <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed font-normal mb-6 max-w-2xl">
-                                {activeStep.desc}
-                            </p>
-
-                            {/* Interactive Visual Stage */}
-                            <div className="p-4 sm:p-5 rounded-2xl bg-[#090A0E] border border-white/[0.08] shadow-inner mb-6">
-                                {activeStep.renderVisual()}
-                            </div>
-                        </div>
-
-                        {/* Action Footer Bar */}
-                        <div className="pt-4 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-4">
-                            <div className="flex flex-wrap items-center gap-4 text-xs font-sans">
-                                <Link
-                                    to={activeStep.primaryLink}
-                                    aria-label={activeStep.primaryText}
-                                    className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-black font-bold font-sans hover:bg-zinc-200 active:scale-95 transition-all shadow-md`}
-                                >
-                                    <span>{activeStep.primaryText}</span>
-                                    <ArrowRight className="w-4 h-4" />
-                                </Link>
-
-                                {activeStep.secondaryLink && (
-                                    <Link
-                                        to={activeStep.secondaryLink}
-                                        aria-label={activeStep.secondaryText}
-                                        className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] text-zinc-300 hover:text-white border border-white/10 font-semibold text-xs transition-all"
-                                    >
-                                        <span>{activeStep.secondaryText}</span>
-                                        <ExternalLink className="w-3.5 h-3.5" />
-                                    </Link>
-                                )}
-                            </div>
-
-                            <span className="text-xs font-mono text-zinc-500 hidden sm:inline">
-                                Step {activeStep.stepNumber} of 04
-                            </span>
-                        </div>
-                    </div>
-
-                    {/* Right: Companion Bento KPI & Quick Peek Stack */}
-                    <div className="lg:col-span-4 flex flex-col justify-between gap-4">
-                        
-                        {/* KPI Highlights Box */}
-                        <div className="p-5 sm:p-6 rounded-2xl bg-[#101116]/90 border border-white/[0.08] shadow-xl space-y-4">
-                            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-zinc-400 font-bold border-b border-white/[0.06] pb-3">
-                                <Activity className="w-4 h-4 text-emerald-400" />
-                                <span>Capability Highlights</span>
-                            </div>
-
-                            <div className="space-y-3">
-                                {activeStep.stats.map((stat, sIdx) => (
-                                    <div key={sIdx} className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/[0.05] font-mono text-xs">
-                                        <span className="text-zinc-400 text-[11px]">{stat.label}</span>
-                                        <span className={`font-bold ${stat.highlight ? activeTheme.accentColor : 'text-white'}`}>
-                                            {stat.value}
-                                        </span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Bento Step Deck (Clickable miniature previews) */}
-                        <div className="p-4 sm:p-5 rounded-2xl bg-[#0C0D11] border border-white/[0.08] shadow-xl space-y-2.5">
-                            <span className="text-[11px] font-mono text-zinc-400 font-bold uppercase tracking-wider block">
-                                Quick Step Switcher
-                            </span>
-
-                            <div className="grid grid-cols-2 gap-2">
-                                {BENTO_STEPS.map((step, idx) => {
-                                    const isSelected = activeIndex === idx;
-                                    const SIcon = step.icon;
-                                    return (
-                                        <button
-                                            key={step.id}
-                                            type="button"
-                                            onClick={() => setActiveIndex(idx)}
-                                            className={`p-3 rounded-xl border text-left transition-all duration-200 cursor-pointer flex flex-col justify-between gap-2 ${
-                                                isSelected
-                                                    ? `${step.theme.activeBorder} bg-white/[0.06] shadow-md`
-                                                    : 'border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/20'
-                                            }`}
-                                        >
-                                            <div className="flex items-center justify-between">
-                                                <SIcon className={`w-3.5 h-3.5 ${step.theme.accentColor}`} />
-                                                <span className="text-[10px] font-mono text-zinc-500 font-bold">
-                                                    {step.stepNumber}
-                                                </span>
+                                {/* Content Details */}
+                                <div className="flex-1 flex flex-col justify-between space-y-3 relative z-10">
+                                    <div>
+                                        {/* Language Pill & Icon Header */}
+                                        <div className="flex items-center justify-between gap-2 mb-2">
+                                            <div className="flex items-center gap-2">
+                                                <div className={`w-6 h-6 rounded-lg ${theme.badgeBg} border flex items-center justify-center shrink-0`}>
+                                                    <CardIcon className={`w-3.5 h-3.5 ${theme.iconColor}`} />
+                                                </div>
+                                                <h3 className={`font-sans text-sm sm:text-base font-bold ${theme.titleColor} tracking-tight transition-colors`}>
+                                                    {card.title}
+                                                </h3>
                                             </div>
-                                            <p className={`text-xs font-sans font-semibold truncate ${isSelected ? 'text-white' : 'text-zinc-400'}`}>
-                                                {step.tabLabel}
-                                            </p>
-                                        </button>
-                                    );
-                                })}
+                                            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/[0.05] border border-white/10 text-zinc-400">
+                                                {card.langName}
+                                            </span>
+                                        </div>
+
+                                        {/* Description */}
+                                        <p className="text-xs font-sans text-zinc-400 leading-relaxed">
+                                            {card.desc}
+                                        </p>
+                                    </div>
+
+                                    {/* Footer Info & Action */}
+                                    <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between gap-2 mt-auto">
+                                        <span className="font-sans text-[11px] text-zinc-300 font-medium truncate">
+                                            {card.punchline}
+                                        </span>
+
+                                        <Link
+                                            to={card.link}
+                                            aria-label={card.linkText}
+                                            className="inline-flex items-center gap-1 text-[11px] font-sans font-semibold text-zinc-300 hover:text-white transition-colors shrink-0 group-hover:translate-x-0.5"
+                                        >
+                                            <ArrowRight className="w-3.5 h-3.5" />
+                                        </Link>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-
-                    </div>
-
+                        );
+                    })}
                 </div>
 
             </div>
@@ -541,3 +315,4 @@ const FeatureGrid = () => {
 };
 
 export default FeatureGrid;
+

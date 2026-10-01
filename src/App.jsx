@@ -10,13 +10,24 @@ const ReportIssue = React.lazy(() => import('./pages/ReportIssue'));
 const GitCheatSheet = React.lazy(() => import('./pages/GitCheatSheet'));
 const AiNewsroom = React.lazy(() => import('./pages/AiNewsroom'));
 const Company = React.lazy(() => import('./pages/Company'));
+const TrendingLanguages = React.lazy(() => import('./pages/TrendingLanguages'));
 const InfoPage = React.lazy(() => import('./pages/InfoPage'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 
-/** Minimal page skeleton shown during route-level chunk loading */
+/** Minimal page loader shown during route-level chunk loading */
 const PageLoader = () => (
-  <div className="min-h-screen bg-[#0A0A0C] flex items-center justify-center">
-    <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+  <div
+    role="status"
+    aria-label="Loading"
+    className="min-h-screen bg-[#0A0A0C] flex items-center justify-center"
+  >
+    <div className="four-dot-loader text-white">
+      <span className="dot" aria-hidden="true" />
+      <span className="dot" aria-hidden="true" />
+      <span className="dot" aria-hidden="true" />
+      <span className="dot" aria-hidden="true" />
+      <span className="sr-only">Loading</span>
+    </div>
   </div>
 );
 
@@ -38,6 +49,8 @@ function App() {
           <Route path="/profile" element={<PageTransition><Dashboard activeTab="profile" /></PageTransition>} />
 
           {/* Dedicated full-page routes */}
+          <Route path="/languages" element={<PageTransition><TrendingLanguages /></PageTransition>} />
+          <Route path="/trending-languages" element={<Navigate to="/languages" replace />} />
           <Route path="/report" element={<PageTransition><ReportIssue /></PageTransition>} />
           <Route path="/cheatsheet" element={<PageTransition><GitCheatSheet /></PageTransition>} />
           <Route path="/ai-news" element={<PageTransition><AiNewsroom /></PageTransition>} />

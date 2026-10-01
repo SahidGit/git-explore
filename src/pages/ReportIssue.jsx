@@ -17,7 +17,7 @@ import {
   Check,
 } from "lucide-react";
 import Header from "../components/layouts/Header";
-import Footer from "../components/layouts/Footer";
+import { SubFooter } from "../components/layouts/Footer";
 import BackToTop from "../components/ui/BackToTop";
 import SEO from "../components/ui/SEO";
 import PageNavigation from "../components/ui/PageNavigation";
@@ -283,9 +283,9 @@ const ReportIssue = () => {
               <div>
                 <Link
                   to="/"
-                  className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-white transition-colors"
+                  className="inline-flex items-center gap-2 text-xs font-sans font-medium text-zinc-400 hover:text-white transition-colors group"
                 >
-                  <ArrowLeft className="w-3.5 h-3.5" />
+                  <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
                   <span>Back to ExploreGit</span>
                 </Link>
               </div>
@@ -610,7 +610,7 @@ const ReportIssue = () => {
       </main>
 
       <BackToTop />
-      <Footer />
+      <SubFooter hideReportButton={true} />
     </div>
   );
 };

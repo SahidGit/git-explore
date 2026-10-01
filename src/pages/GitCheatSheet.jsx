@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/layouts/Header';
-import Footer from '../components/layouts/Footer';
+import { SubFooter } from '../components/layouts/Footer';
 import BackToTop from '../components/ui/BackToTop';
 import SEO from '../components/ui/SEO';
 import PageNavigation from '../components/ui/PageNavigation';
@@ -188,7 +188,7 @@ const GitCheatSheet = () => {
             </main>
 
             <BackToTop />
-            <Footer />
+            <SubFooter />
         </div>
     );
 };

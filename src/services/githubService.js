@@ -140,15 +140,32 @@ export const getTrendingRepositories = async (language = '', since = 'daily', pa
   }
 };
 
-export const getMonthlyTopRepositories = async () => {
+export const getMonthlyTopRepositories = async (perPage = 6) => {
+  const cacheKey = `exploregit_monthly_top_${perPage}`;
+  try {
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (Date.now() - parsed.timestamp < 15 * 60 * 1000 && Array.isArray(parsed.data) && parsed.data.length > 0) {
+        return parsed.data;
+      }
+    }
+  } catch {}
+
   try {
     const date = new Date();
     date.setDate(date.getDate() - 30);
     const query = `created:>${date.toISOString().split('T')[0]}`;
-    const data = await searchRepositories({ query, sort: 'stars', order: 'desc', page: 1, perPage: 5 });
-    return data.items?.length ? data.items : FALLBACK_TOP_FIVE;
+    const data = await searchRepositories({ query, sort: 'stars', order: 'desc', page: 1, perPage });
+    if (data.items?.length) {
+      try {
+        localStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), data: data.items }));
+      } catch {}
+      return data.items;
+    }
+    return FALLBACK_TOP_FIVE.slice(0, perPage);
   } catch {
-    return FALLBACK_TOP_FIVE;
+    return FALLBACK_TOP_FIVE.slice(0, perPage);
   }
 };
 
@@ -260,3 +277,89 @@ export const getRateLimit = async () => {
     return null;
   }
 };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Live Language Momentum & Aggregations
+// ─────────────────────────────────────────────────────────────────────────────
+
+const LANG_CACHE_PREFIX = 'gitexplore_lang_chart_';
+const LANG_CACHE_TTL = 15 * 60 * 1000; // 15 minutes cache
+
+/**
+ * Dynamically queries GitHub Search API to aggregate real repository counts and star metrics per language
+ */
+export const getLiveLanguageRankings = async (timeframe = 'today') => {
+  const cacheKey = `${LANG_CACHE_PREFIX}${timeframe}`;
+  try {
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      const { data, ts } = JSON.parse(cached);
+      if (Date.now() - ts < LANG_CACHE_TTL && Array.isArray(data) && data.length > 0) {
+        return { data, isLive: true, fromCache: true, lastUpdated: new Date(ts).toISOString() };
+      }
+    }
+  } catch {
+    // ignore parse error
+  }
+
+  // Calculate timeframe date query
+  const date = new Date();
+  if (timeframe === 'today') date.setDate(date.getDate() - 1);
+  else if (timeframe === '7d') date.setDate(date.getDate() - 7);
+  else if (timeframe === '30d') date.setDate(date.getDate() - 30);
+  else if (timeframe === '365d') date.setFullYear(date.getFullYear() - 1);
+
+  const dateStr = date.toISOString().split('T')[0];
+
+  try {
+    // Fetch top high-velocity repositories created or pushed in this timeframe
+    const response = await fetchWithRetry(
+      `${GITHUB_API_BASE}/search/repositories?q=created:>${dateStr}+stars:>50&sort=stars&order=desc&per_page=100`
+    );
+    const result = await response.json();
+    const items = result.items || [];
+
+    // Aggregate by language
+    const langStats = {};
+    for (const repo of items) {
+      const lang = repo.language;
+      if (!lang) continue;
+      if (!langStats[lang]) {
+        langStats[lang] = {
+          totalStars: 0,
+          repoCount: 0,
+          topRepos: [],
+        };
+      }
+      langStats[lang].totalStars += repo.stargazers_count || 0;
+      langStats[lang].repoCount += 1;
+      if (langStats[lang].topRepos.length < 3) {
+        langStats[lang].topRepos.push({
+          fullName: repo.full_name,
+          name: repo.name,
+          stars: repo.stargazers_count >= 1000 ? `${(repo.stargazers_count / 1000).toFixed(1)}k` : `${repo.stargazers_count}`,
+          desc: repo.description || 'No description provided.',
+          link: `/dashboard?query=${encodeURIComponent(repo.full_name)}`,
+        });
+      }
+    }
+
+    const payload = {
+      langStats,
+      totalIndexed: items.length,
+      timestamp: Date.now(),
+    };
+
+    try {
+      localStorage.setItem(cacheKey, JSON.stringify({ data: payload, ts: Date.now() }));
+    } catch {
+      // localStorage quota
+    }
+
+    return { data: payload, isLive: true, fromCache: false, lastUpdated: new Date().toISOString() };
+  } catch (err) {
+    // If rate limited or offline, return fallback
+    return { data: null, isLive: false, error: err.message };
+  }
+};
+
