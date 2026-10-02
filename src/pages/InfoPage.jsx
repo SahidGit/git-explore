@@ -166,7 +166,7 @@ const InfoPage = ({ contentKey: propContentKey }) => {
           <div className="mx-auto w-full max-w-[1280px] border-white/10 min-[1280px]:border-x px-6 py-12 md:px-20">
             {!pageData && (
               <div className="py-20 text-center max-w-md mx-auto">
-                <div className="w-12 h-12 rounded-lg bg-white/[0.04] border border-white/10 flex items-center justify-center mx-auto mb-4 text-zinc-400">
+                <div className="w-10 h-10 rounded-lg border border-white/15 flex items-center justify-center mx-auto mb-4 text-zinc-400">
                   <Terminal className="w-5 h-5" />
                 </div>
                 <h1 className="text-xl font-bold text-white mb-2 font-heading">Module Not Found</h1>
@@ -175,7 +175,7 @@ const InfoPage = ({ contentKey: propContentKey }) => {
                 </p>
                 <Link
                   to="/docs"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white text-black text-xs font-sans font-semibold hover:bg-zinc-200 active:scale-[0.98] transition-all shadow-lg cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-white text-[#121215] text-xs font-sans font-semibold hover:bg-neutral-100 active:bg-neutral-200 transition-all shadow-[0_0_0_1px_rgb(0_0_0/0.06),0_1px_2px_-1px_rgb(0_0_0/0.06),0_2px_4px_rgb(0_0_0/0.04)] cursor-pointer"
                 >
                   Go to Documentation
                 </Link>
@@ -199,8 +199,8 @@ const InfoPage = ({ contentKey: propContentKey }) => {
                   <div className="mt-8 p-6 sm:p-8 rounded-lg bg-[#12141A] border border-white/15 shadow-sm space-y-6 font-sans">
                     <div className="flex items-center justify-between border-b border-white/10 pb-4">
                       <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center text-white">
-                          <Key className="w-4 h-4" />
+                        <div className="w-8 h-8 rounded-lg border border-white/15 flex items-center justify-center text-white">
+                          <Key className="w-4 h-4 text-white" />
                         </div>
                         <div>
                           <h3 className="text-base font-bold text-white">Live Token Connection &amp; API Tester</h3>

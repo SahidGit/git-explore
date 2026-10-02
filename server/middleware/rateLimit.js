@@ -2,6 +2,9 @@
  * In-memory IP-based rate limiter with automated memory cleanup.
  * Limits each IP to MAX_REQUESTS_PER_WINDOW requests within RATE_LIMIT_WINDOW_MS.
  */
+const logger = require('../services/logger');
+const { renderErrorHtml } = require('../utils/renderErrorHtml');
+
 const rateLimitMap = new Map();
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 const MAX_REQUESTS_PER_WINDOW = 120;
@@ -42,9 +45,30 @@ const rateLimit = (req, res, next) => {
     } else {
         record.count += 1;
         if (record.count > MAX_REQUESTS_PER_WINDOW) {
-            return res.status(429).json({
+            logger.warn(`Rate limit exceeded for IP ${clientIp} on ${req.method} ${req.originalUrl}`);
+
+            res.status(429);
+            res.setHeader('Retry-After', Math.ceil((record.resetTime - now) / 1000));
+
+            const isApiRequest =
+                req.originalUrl.startsWith('/api/') ||
+                req.originalUrl.startsWith('/reports') ||
+                req.originalUrl.startsWith('/github') ||
+                req.originalUrl.startsWith('/models') ||
+                req.xhr;
+
+            if (req.accepts('html') && !isApiRequest) {
+                res.setHeader('Content-Type', 'text/html; charset=utf-8');
+                return res.send(renderErrorHtml(429, 'Too many requests. Please try again after 15 minutes.'));
+            }
+
+            return res.json({
                 success: false,
+                status: 429,
+                error: 'RateLimitError',
                 message: 'Too many requests. Please try again after 15 minutes.',
+                retryAfterSeconds: Math.ceil((record.resetTime - now) / 1000),
+                timestamp: new Date().toISOString()
             });
         }
     }

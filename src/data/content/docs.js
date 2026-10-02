@@ -31,7 +31,7 @@ export const docsContent = {
         'Query the GitHub registry with language, star, fork, and update filters. Sort by engagement metrics to identify active projects and evaluate candidates for your stack.',
       links: [
         { label: 'Launch Explore', href: '/dashboard' },
-        { label: 'Feature overview', href: '/features' },
+        { label: 'Feature overview', href: '/docs' },
       ],
     },
     {
@@ -55,7 +55,7 @@ export const docsContent = {
         'Save repositories directly from any card or detail view. All bookmarks persist in browser local storage and never transmit to remote servers. Manage saved repositories from the Bookmarks panel.',
       links: [
         { label: 'Open bookmarks', href: '/bookmarks' },
-        { label: 'Privacy details', href: '/features' },
+        { label: 'Privacy details', href: '/privacy' },
       ],
     },
     {

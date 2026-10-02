@@ -272,7 +272,7 @@ const ReportIssue = () => {
         description="Report incorrect data, broken links, or request new features for ExploreGit."
         canonical="https://exploregit.vercel.app/report"
       />
-      <Header onSearchClick={() => {}} showBackButton />
+      <Header showBackButton={true} />
 
       <main className="relative z-0 flex-1 overflow-hidden pt-28 sm:pt-32">
         {/* ── Section 1: Hero & Form Container (Entire.io Frame Style) ── */}

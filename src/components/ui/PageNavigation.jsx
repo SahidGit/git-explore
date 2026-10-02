@@ -39,7 +39,7 @@ const PageNavigation = ({ currentKey }) => {
         to={prevPage.path}
         className="group flex items-start gap-3.5 p-4 sm:p-5 rounded-lg bg-[#121216] border border-white/10 hover:border-white/25 hover:bg-white/[0.04] transition-all duration-300 shadow-sm"
       >
-        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white/[0.06] border border-white/10 group-hover:border-white/20 group-hover:bg-white/10 transition-colors flex-shrink-0 mt-0.5">
+        <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-white/10 group-hover:border-white/20 transition-colors flex-shrink-0 mt-0.5">
           <ArrowLeft className="w-4 h-4 text-zinc-400 group-hover:text-white group-hover:-translate-x-0.5 transition-all" />
         </div>
         <div className="space-y-1 overflow-hidden">
@@ -71,7 +71,7 @@ const PageNavigation = ({ currentKey }) => {
             {nextPage.desc}
           </p>
         </div>
-        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white/[0.06] border border-white/10 group-hover:border-white/20 group-hover:bg-white/10 transition-colors flex-shrink-0 mt-0.5 order-2 sm:order-2">
+        <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-white/10 group-hover:border-white/20 transition-colors flex-shrink-0 mt-0.5 order-2 sm:order-2">
           <ArrowRight className="w-4 h-4 text-zinc-300 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
         </div>
       </Link>

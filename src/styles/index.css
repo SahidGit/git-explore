@@ -353,30 +353,30 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 42px;
-  padding: 0 16px;
+  height: 44px;
+  padding: 10px 16px;
   gap: 8px;
-  border-radius: 9px;
+  border-radius: 8px;
   font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;
-  line-height: 1;
+  line-height: 24px;
   text-decoration: none;
   cursor: pointer;
   white-space: nowrap;
   user-select: none;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: none;
   background-color: #FFFFFF;
-  color: #0A0A0C;
-  box-shadow: none;
-  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease, color 0.15s ease;
+  color: #333333;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06), 0 2px 4px rgb(0 0 0 / 0.04);
+  transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1), transform 0.1s ease;
 }
 
 .btn-saas:hover,
 .btn-saas-primary:hover,
 .btn-primary-cta:hover {
   background-color: #F4F4F5;
-  border-color: rgba(255, 255, 255, 0.3);
+  color: #121215;
 }
 
 .btn-saas:active,
@@ -399,36 +399,36 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 42px;
-  padding: 0 16px;
+  height: 44px;
+  padding: 10px 16px;
   gap: 8px;
-  border-radius: 9px;
+  border-radius: 8px;
   font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;
-  line-height: 1;
+  line-height: 24px;
   text-decoration: none;
   cursor: pointer;
   white-space: nowrap;
   user-select: none;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  background-color: rgba(255, 255, 255, 0.04);
-  color: #FFFFFF;
+  background-color: transparent;
+  color: #F3F4F6;
   box-shadow: none;
-  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease, color 0.15s ease;
+  transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.15s cubic-bezier(0.4, 0, 0.2, 1), transform 0.1s ease;
 }
 
 .btn-saas-secondary:hover,
 .btn-secondary-outline:hover {
   background-color: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.3);
   color: #FFFFFF;
 }
 
 .btn-saas-secondary:active,
 .btn-secondary-outline:active {
-  transform: scale(0.98);
   background-color: rgba(255, 255, 255, 0.12);
+  transform: scale(0.98);
 }
 
 .btn-saas-secondary:focus-visible,

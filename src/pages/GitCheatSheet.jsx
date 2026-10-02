@@ -59,7 +59,7 @@ const GitCheatSheet = () => {
                 title="Git Cheat Sheet · Step-by-Step Commands"
                 description="One-click copyable Git commands for beginners and developers. Step-by-step setup, staging, branching, remotes, and undoing changes."
             />
-            <Header activeTab="cheatsheet" onSearchClick={() => {}} />
+            <Header activeTab="cheatsheet" showBackButton={true} />
 
             <main className="relative z-0 flex-1 overflow-hidden pt-28 sm:pt-32">
 
@@ -228,10 +228,10 @@ const StepRowCard = ({ stepIndex, item, isCopied, onCopy }) => {
                 <button
                     onClick={onCopy}
                     aria-label={`Copy command ${item.command}`}
-                    className={`absolute right-3 top-1/2 -translate-y-1/2 px-3.5 py-1.5 rounded-xl border text-xs font-mono font-bold transition-all duration-200 flex items-center gap-1.5 shadow-none active:scale-[0.98] cursor-pointer ${
+                    className={`absolute right-3 top-1/2 -translate-y-1/2 px-3 py-1 rounded-lg border text-xs font-mono font-medium transition-all duration-200 flex items-center gap-1.5 shadow-none active:scale-[0.98] cursor-pointer ${
                         isCopied
-                            ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
-                            : 'bg-white/10 border-white/20 text-white hover:bg-white/20'
+                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                            : 'bg-transparent border-white/15 text-white/90 hover:text-white hover:bg-white/[0.08] hover:border-white/30'
                     }`}
                 >
                     {isCopied ? (

@@ -347,7 +347,7 @@ const RepositoryDetail = ({ repo, onClose, isBookmarked, onBookmarkToggle }) => 
                                         <button
                                             type="button"
                                             onClick={handleCopyClone}
-                                            className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-mono font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 shrink-0 cursor-pointer shadow-none"
+                                            className="px-3 py-1 rounded-lg bg-transparent hover:bg-white/[0.08] border border-white/15 hover:border-white/30 text-white/90 hover:text-white font-mono font-medium text-xs flex items-center gap-1.5 transition-all active:scale-95 shrink-0 cursor-pointer shadow-none"
                                         >
                                             {copiedClone ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                                             <span>{copiedClone ? 'Copied' : 'Copy'}</span>
@@ -538,7 +538,7 @@ const RepositoryDetail = ({ repo, onClose, isBookmarked, onBookmarkToggle }) => 
                             href={repo.html_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-sans font-semibold text-xs active:scale-[0.98] transition-all cursor-pointer shadow-none"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-[#121215] font-sans font-semibold text-xs hover:bg-neutral-100 active:bg-neutral-200 shadow-[0_0_0_1px_rgb(0_0_0/0.06),0_1px_2px_-1px_rgb(0_0_0/0.06),0_2px_4px_rgb(0_0_0/0.04)] active:scale-[0.98] transition-all cursor-pointer"
                         >
                             <span>Open on GitHub</span>
                             <ExternalLink className="w-3.5 h-3.5 text-zinc-300" />

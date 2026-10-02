@@ -1,10 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const { securityHeaders } = require('./middleware/security');
 const { rateLimit } = require('./middleware/rateLimit');
+const { notFoundHandler } = require('./middleware/notFoundHandler');
+const { errorHandler } = require('./middleware/errorHandler');
+const logger = require('./services/logger');
+
 const reportsRouter = require('./routes/reports');
 const githubRouter = require('./routes/github');
 const modelsRouter = require('./routes/models');
@@ -40,6 +45,14 @@ app.use(cors({
 app.use(express.json({ limit: '20kb' }));
 app.use(rateLimit);
 
+// ─── Static Asset Serving ─────────────────────────────
+const distPath = path.resolve(__dirname, '../dist');
+app.use(express.static(distPath, {
+    index: false, // Defer to notFoundHandler for SPA and 404 status handling
+    maxAge: '1d',
+    etag: true
+}));
+
 // ─── MongoDB Cached Connection (Serverless-Safe) ──────
 let cachedPromise = null;
 const connectDB = async () => {
@@ -49,7 +62,7 @@ const connectDB = async () => {
         serverSelectionTimeoutMS: 5000,
     }).catch((err) => {
         cachedPromise = null;
-        console.warn('⚠ MongoDB unavailable (reports will use disk store):', err.message);
+        logger.warn('MongoDB unavailable (reports will use disk store)', { error: err.message });
     });
     return cachedPromise;
 };
@@ -58,7 +71,7 @@ const connectDB = async () => {
 if (require.main === module) {
     connectDB().then(() => {
         if (mongoose.connection.readyState === 1) {
-            console.log('✓ MongoDB connected');
+            logger.info('MongoDB connected successfully');
         }
     });
 }
@@ -92,10 +105,16 @@ app.use('/github', githubRouter);
 app.use('/api/models', modelsRouter);
 app.use('/models', modelsRouter);
 
+// ─── Catch-All 404 & SPA Routing Middleware ───────────
+app.use(notFoundHandler);
+
+// ─── Centralized Error Handling Middleware ────────────
+app.use(errorHandler);
+
 // ─── Start (Only when executed directly) ──────────────
 if (process.env.NODE_ENV !== 'test' && require.main === module) {
     app.listen(PORT, () => {
-        console.log(`✓ GitExplorer API running on http://localhost:${PORT}`);
+        logger.info(`GitExplorer API & Server running on http://localhost:${PORT}`);
     });
 }
 

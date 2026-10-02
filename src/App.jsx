@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import PageTransition from './components/ui/PageTransition';
 
@@ -13,6 +13,7 @@ const Company = React.lazy(() => import('./pages/Company'));
 const TrendingLanguages = React.lazy(() => import('./pages/TrendingLanguages'));
 const InfoPage = React.lazy(() => import('./pages/InfoPage'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
+const ErrorPage = React.lazy(() => import('./pages/ErrorPage'));
 
 /** Minimal page loader shown during route-level chunk loading */
 const PageLoader = () => (
@@ -50,13 +51,10 @@ function App() {
 
           {/* Dedicated full-page routes */}
           <Route path="/languages" element={<PageTransition><TrendingLanguages /></PageTransition>} />
-          <Route path="/trending-languages" element={<Navigate to="/languages" replace />} />
           <Route path="/report" element={<PageTransition><ReportIssue /></PageTransition>} />
           <Route path="/cheatsheet" element={<PageTransition><GitCheatSheet /></PageTransition>} />
           <Route path="/ai-news" element={<PageTransition><AiNewsroom /></PageTransition>} />
           <Route path="/company" element={<PageTransition><Company /></PageTransition>} />
-          <Route path="/about" element={<Navigate to="/company" replace />} />
-          <Route path="/features" element={<Navigate to="/docs" replace />} />
 
           {/* Dynamic content InfoPage routes with high-end vision design */}
           {DYNAMIC_INFO_ROUTES.map((key) => (
@@ -67,6 +65,9 @@ function App() {
             />
           ))}
 
+          <Route path="/500" element={<PageTransition><ErrorPage /></PageTransition>} />
+          <Route path="/error" element={<PageTransition><ErrorPage /></PageTransition>} />
+          <Route path="/404" element={<PageTransition><NotFound /></PageTransition>} />
           <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
         </Routes>
       </AnimatePresence>
