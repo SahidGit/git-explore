@@ -16,7 +16,7 @@ import Header from '../components/layouts/Header';
 import { SubFooter } from '../components/layouts/Footer';
 import SEO from '../components/ui/SEO';
 import FeatureProjectGrid from '../components/features/FeatureProjectGrid';
-import visionBg from '../assets/vision-mission-bg.avif';
+import visionBg from '../assets/company/vision-mission-bg.avif';
 import { docsContent } from '../data/content/docs';
 import { termsContent } from '../data/content/terms';
 import { apiContent } from '../data/content/api';
@@ -54,7 +54,7 @@ const InfoPage = ({ contentKey: propContentKey }) => {
   };
 
   const pageData = contentMap[contentKey] || contentMap.docs;
-  const isGridLayout = pageData?.layout === 'grid' && Array.isArray(pageData?.cards);
+  const hasCards = Array.isArray(pageData?.cards) && pageData.cards.length > 0;
   const sanitizedContent = pageData?.content ? DOMPurify.sanitize(pageData.content) : '';
 
   const handleSaveToken = async (e) => {
@@ -146,15 +146,15 @@ const InfoPage = ({ contentKey: propContentKey }) => {
           </div>
 
           <div className="mx-auto w-full max-w-[1280px] border-white/10 min-[1280px]:border-x px-6 py-12 md:px-20 relative z-10">
-            <div className="mx-auto flex w-full max-w-[720px] flex-col gap-3 font-sans">
-              <span className="text-xs uppercase tracking-wider text-zinc-400 font-mono font-semibold">
+            <div className="mx-auto flex w-full max-w-[800px] flex-col gap-3 font-sans text-center items-center">
+              <p className="text-xs uppercase tracking-wider text-emerald-400 font-mono font-semibold">
                 &lt;MODULE_{contentKey.toUpperCase()} /&gt;
-              </span>
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight font-heading">
+              </p>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight font-heading">
                 {pageData?.title || 'Documentation'}
               </h1>
               {pageData?.subtitle && (
-                <p className="text-sm md:text-base text-zinc-300 leading-relaxed font-normal">
+                <p className="text-sm md:text-base text-zinc-300 leading-relaxed font-normal max-w-2xl">
                   {pageData.subtitle}
                 </p>
               )}
@@ -183,13 +183,29 @@ const InfoPage = ({ contentKey: propContentKey }) => {
             )}
 
             {pageData && (
-              <div className="mx-auto max-w-[900px]">
-                {isGridLayout ? (
-                  <FeatureProjectGrid cards={pageData.cards} />
-                ) : (
-                  <div className="rounded-lg border border-white/10 bg-[#121215] p-6 sm:p-10 shadow-sm mb-8">
+              <div className="mx-auto max-w-[1100px] space-y-12">
+                {hasCards && (
+                  <section aria-label="Documentation Modules">
+                    <div className="mb-6 flex flex-col gap-1">
+                      <p className="text-xs font-mono font-semibold uppercase tracking-wider text-emerald-400">
+                        Platform Architecture
+                      </p>
+                      <h2 className="text-2xl font-bold font-heading text-white tracking-tight">
+                        Core Documentation Modules
+                      </h2>
+                    </div>
+                    <FeatureProjectGrid cards={pageData.cards} />
+                  </section>
+                )}
+
+                {sanitizedContent && (
+                  <div className="rounded-2xl border border-white/10 bg-[#121215] p-5 sm:p-7 md:p-8 shadow-sm">
                     <div
-                      className="prose prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-white prose-p:text-zinc-300 prose-p:leading-relaxed prose-a:text-white prose-a:underline hover:prose-a:text-zinc-300 prose-code:text-zinc-200 prose-code:font-mono prose-code:bg-white/10 prose-code:px-2 prose-code:py-1 prose-code:rounded-md prose-blockquote:border-l-2 prose-blockquote:border-white/40 prose-blockquote:pl-4 prose-blockquote:text-zinc-300 prose-blockquote:bg-white/[0.02] prose-blockquote:py-1"
+                      className={
+                        contentKey === 'docs'
+                          ? 'text-zinc-300 leading-relaxed font-sans'
+                          : 'prose prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-white prose-p:text-zinc-300 prose-p:leading-relaxed prose-a:text-white prose-a:underline hover:prose-a:text-zinc-300 prose-code:text-zinc-200 prose-code:font-mono prose-code:bg-white/10 prose-code:px-2 prose-code:py-1 prose-code:rounded-md prose-blockquote:border-l-2 prose-blockquote:border-white/40 prose-blockquote:pl-4 prose-blockquote:text-zinc-300 prose-blockquote:bg-white/[0.02] prose-blockquote:py-1'
+                      }
                       dangerouslySetInnerHTML={{ __html: sanitizedContent }}
                     />
                   </div>
