@@ -1,0 +1,171 @@
+{
+  "cli_version": "0.11.3",
+  "checkpoint_id": "bc074e28f6a5",
+  "session_id": "a0d4017e-0816-4900-ab3a-daf88741f512",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-02T19:36:23.9453668Z",
+  "branch": "refactor/audit-improvements-and-test-suite",
+  "checkpoints_count": 9,
+  "save_step_count": 9,
+  "files_touched": [
+    "README.md",
+    "server/middleware/errorHandler.js",
+    "server/middleware/notFoundHandler.js",
+    "server/middleware/rateLimit.js",
+    "server/server.js",
+    "server/services/logger.js",
+    "server/utils/httpErrors.js",
+    "server/utils/renderErrorHtml.js",
+    "src/App.jsx",
+    "src/components/features/Charts/ContributionHeatmap.jsx",
+    "src/components/features/RepoCard/RepositoryDetail.jsx",
+    "src/components/layouts/Header.jsx",
+    "src/components/newsroom/ModelIntelligenceTable.jsx",
+    "src/components/ui/ErrorBoundary.jsx",
+    "src/components/ui/ErrorMessage.jsx",
+    "src/components/ui/PageNavigation.jsx",
+    "src/data/content/docs.js",
+    "src/pages/ErrorPage.jsx",
+    "src/pages/GitCheatSheet.jsx",
+    "src/pages/InfoPage.jsx",
+    "src/pages/NotFound.jsx",
+    "src/pages/ReportIssue.jsx",
+    "src/pages/TrendingLanguages.jsx",
+    "src/styles/index.css"
+  ],
+  "agent": "Antigravity",
+  "model": "",
+  "turn_id": "236b2f973d45",
+  "session_metrics": {
+    "turn_count": 9
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-10-02T19:36:23.6478149Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 5895,
+    "human_removed": 1841,
+    "total_committed": 643,
+    "total_lines_changed": 7736,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 1624,
+      "user_lines_removed": 1767,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "src/App.jsx": 79,
+        "src/components/layouts/Header.jsx": 610,
+        "src/components/ui/ErrorBoundary.jsx": 17,
+        "src/pages/ErrorPage.jsx": 35,
+        "src/pages/GitCheatSheet.jsx": 264,
+        "src/pages/ReportIssue.jsx": 618,
+        "src/pages/TrendingLanguages.jsx": 1
+      },
+      "user_removed_per_file": {
+        "src/App.jsx": 77,
+        "src/components/layouts/Header.jsx": 564,
+        "src/components/ui/ErrorBoundary.jsx": 243,
+        "src/pages/GitCheatSheet.jsx": 264,
+        "src/pages/ReportIssue.jsx": 618,
+        "src/pages/TrendingLanguages.jsx": 1
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 33,
+      "user_lines_removed": 107,
+      "agent_lines_added": 1624,
+      "agent_lines_removed": 1767,
+      "user_added_per_file": {
+        "src/App.jsx": 2,
+        "src/components/ui/ErrorMessage.jsx": 13,
+        "src/pages/NotFound.jsx": 18
+      },
+      "user_removed_per_file": {
+        "src/components/ui/ErrorMessage.jsx": 31,
+        "src/pages/NotFound.jsx": 76
+      }
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1657,
+      "agent_lines_removed": 1874
+    },
+    {
+      "checkpoint_number": 4,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1662,
+      "agent_lines_removed": 1874
+    },
+    {
+      "checkpoint_number": 5,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1748,
+      "agent_lines_removed": 1963
+    },
+    {
+      "checkpoint_number": 6,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1826,
+      "agent_lines_removed": 2034
+    },
+    {
+      "checkpoint_number": 7,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2304,
+      "agent_lines_removed": 2038
+    },
+    {
+      "checkpoint_number": 8,
+      "user_lines_added": 1509,
+      "user_lines_removed": 1509,
+      "agent_lines_added": 2304,
+      "agent_lines_removed": 2038,
+      "user_added_per_file": {
+        "src/components/features/Charts/ContributionHeatmap.jsx": 258,
+        "src/components/features/RepoCard/RepositoryDetail.jsx": 558,
+        "src/components/layouts/Header.jsx": 1,
+        "src/components/newsroom/ModelIntelligenceTable.jsx": 262,
+        "src/components/ui/PageNavigation.jsx": 82,
+        "src/pages/GitCheatSheet.jsx": 3,
+        "src/pages/InfoPage.jsx": 342,
+        "src/pages/TrendingLanguages.jsx": 3
+      },
+      "user_removed_per_file": {
+        "src/components/features/Charts/ContributionHeatmap.jsx": 258,
+        "src/components/features/RepoCard/RepositoryDetail.jsx": 558,
+        "src/components/layouts/Header.jsx": 1,
+        "src/components/newsroom/ModelIntelligenceTable.jsx": 262,
+        "src/components/ui/PageNavigation.jsx": 82,
+        "src/pages/GitCheatSheet.jsx": 3,
+        "src/pages/InfoPage.jsx": 342,
+        "src/pages/TrendingLanguages.jsx": 3
+      }
+    },
+    {
+      "checkpoint_number": 9,
+      "user_lines_added": 596,
+      "user_lines_removed": 596,
+      "agent_lines_added": 3809,
+      "agent_lines_removed": 3543,
+      "user_added_per_file": {
+        "src/styles/index.css": 596
+      },
+      "user_removed_per_file": {
+        "src/styles/index.css": 596
+      }
+    }
+  ]
+}

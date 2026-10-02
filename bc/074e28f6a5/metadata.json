@@ -1,0 +1,41 @@
+{
+  "cli_version": "0.11.3",
+  "checkpoint_id": "bc074e28f6a5",
+  "strategy": "manual-commit",
+  "branch": "refactor/audit-improvements-and-test-suite",
+  "checkpoints_count": 9,
+  "files_touched": [
+    "README.md",
+    "server/middleware/errorHandler.js",
+    "server/middleware/notFoundHandler.js",
+    "server/middleware/rateLimit.js",
+    "server/server.js",
+    "server/services/logger.js",
+    "server/utils/httpErrors.js",
+    "server/utils/renderErrorHtml.js",
+    "src/App.jsx",
+    "src/components/features/Charts/ContributionHeatmap.jsx",
+    "src/components/features/RepoCard/RepositoryDetail.jsx",
+    "src/components/layouts/Header.jsx",
+    "src/components/newsroom/ModelIntelligenceTable.jsx",
+    "src/components/ui/ErrorBoundary.jsx",
+    "src/components/ui/ErrorMessage.jsx",
+    "src/components/ui/PageNavigation.jsx",
+    "src/data/content/docs.js",
+    "src/pages/ErrorPage.jsx",
+    "src/pages/GitCheatSheet.jsx",
+    "src/pages/InfoPage.jsx",
+    "src/pages/NotFound.jsx",
+    "src/pages/ReportIssue.jsx",
+    "src/pages/TrendingLanguages.jsx",
+    "src/styles/index.css"
+  ],
+  "sessions": [
+    {
+      "metadata": "/bc/074e28f6a5/0/metadata.json",
+      "transcript": "/bc/074e28f6a5/0/full.jsonl",
+      "content_hash": "/bc/074e28f6a5/0/content_hash.txt",
+      "prompt": "/bc/074e28f6a5/0/prompt.txt"
+    }
+  ]
+}
