@@ -52,6 +52,7 @@ function App() {
           {/* Dedicated full-page routes */}
           <Route path="/languages" element={<PageTransition><TrendingLanguages /></PageTransition>} />
           <Route path="/report" element={<PageTransition><ReportIssue /></PageTransition>} />
+          <Route path="/report-issue" element={<PageTransition><ReportIssue /></PageTransition>} />
           <Route path="/cheatsheet" element={<PageTransition><GitCheatSheet /></PageTransition>} />
           <Route path="/ai-news" element={<PageTransition><AiNewsroom /></PageTransition>} />
           <Route path="/company" element={<PageTransition><Company /></PageTransition>} />

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import footerBg from '../../../assets/footer-bg.webp';
+import footerBg from '../../../assets/backgrounds/footer-bg.webp';
 
 const RepoCTA = () => {
     return (

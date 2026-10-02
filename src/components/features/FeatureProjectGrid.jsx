@@ -52,22 +52,17 @@ const FeatureProjectCard = ({ card }) => (
           height={720}
           loading="lazy"
           decoding="async"
-          className="w-full h-full object-cover grayscale contrast-125 opacity-80 transition-transform duration-700 ease-out group-hover:scale-105 group-hover:opacity-95 group-hover:grayscale-0"
+          className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#121215] via-black/20 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#121215]/20 via-transparent to-transparent pointer-events-none" />
       </div>
     )}
 
     <div className="flex flex-col flex-1 p-6 sm:p-7">
-      <div className="flex items-center justify-between gap-2 mb-3">
+      <div className="mb-3">
         <h3 className="text-xl font-bold text-white tracking-tight leading-snug font-heading group-hover:text-zinc-200">
           {card.title}
         </h3>
-        {card.badge && (
-          <span className="inline-flex shrink-0 items-center px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-white/[0.06] border border-white/10 text-emerald-400">
-            {card.badge}
-          </span>
-        )}
       </div>
 
       <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed mb-6 flex-1 font-normal">
