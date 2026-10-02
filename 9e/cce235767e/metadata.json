@@ -1,0 +1,25 @@
+{
+  "cli_version": "0.11.3",
+  "checkpoint_id": "9ecce235767e",
+  "strategy": "manual-commit",
+  "branch": "refactor/audit-improvements-and-test-suite",
+  "checkpoints_count": 5,
+  "files_touched": [
+    ".gitignore",
+    "src/App.jsx",
+    "src/components/features/FeatureProjectGrid.jsx",
+    "src/components/features/RepoCard/RepoCTA.jsx",
+    "src/data/content/docs.js",
+    "src/main.jsx",
+    "src/pages/Company.jsx",
+    "src/pages/InfoPage.jsx"
+  ],
+  "sessions": [
+    {
+      "metadata": "/9e/cce235767e/0/metadata.json",
+      "transcript": "/9e/cce235767e/0/full.jsonl",
+      "content_hash": "/9e/cce235767e/0/content_hash.txt",
+      "prompt": "/9e/cce235767e/0/prompt.txt"
+    }
+  ]
+}

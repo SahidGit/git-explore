@@ -1,0 +1,214 @@
+chekout this branch [entire/checkpoints/v1](https://github.com/SahidGit/git-explore/tree/entire/checkpoints/v1)
+
+---
+
+refactor the entire codebase first , rename the @[c:\Users\sahid\OneDrive\Desktop\git-explore\dist\assets] folders file , make the single best industry standard repo folder , dont touch code other than the path rearrangement for the newly changed file names
+
+---
+
+main.jsx:13 Uncaught ReferenceError: React is not defined
+    at main.jsx:13:3
+
+---
+
+/docs images are not colorful in that page , use six different image for each cards,@[c:\Users\sahid\OneDrive\Desktop\git-explore\dist\assets\doc-auth-ratelimit-DUUHf8VO.webp] @[c:\Users\sahid\OneDrive\Desktop\git-explore\dist\assets\doc-bookmarks-storage-IddIzRlZ.webp] @[c:\Users\sahid\OneDrive\Desktop\git-explore\dist\assets\doc-deepseek-lens-DIalRdCg.webp] @[c:\Users\sahid\OneDrive\Desktop\git-explore\dist\assets\doc-explore-discovery-BM25L5BU.webp] @[c:\Users\sahid\OneDrive\Desktop\git-explore\dist\assets\doc-quick-start-CTcrccYA.webp] @[c:\Users\sahid\OneDrive\Desktop\git-explore\dist\assets\footer-bg-BjRBI1NG.webp] @[c:\Users\sahid\OneDrive\Desktop\git-explore\dist\assets\value-autonomy-B9hNmCNr.webp] @[c:\Users\sahid\OneDrive\Desktop\git-explore\dist\assets\value-inclusion-MDcC8xyT.webp] @[c:\Users\sahid\OneDrive\Desktop\git-explore\dist\assets\value-professionalism-oONaCv6U.webp] , here are all the images , only use the best sixes , make sure all the writing is the docs page is professional, industry standard , use humanizer sounding text , remove all the span tag from there example {<span class="inline-flex shrink-0 items-center px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-white/[0.06] border border-white/10 text-emerald-400">Start here</span>} , update the anchor tag lines to differrent section  the webiste mainly in this example style {> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.entire.io/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Introduction
+
+> Coding agents need ideas, decisions, and speed. Entire stores all your code, together with sessions, prompts, and tool calls. And, for maximum agent throughput, it mirrors your Git repos around the world.
+
+## Set Up Entire
+
+Install the CLI, connect your agent, and capture the context behind your work.
+
+<CardGroup cols={3}>
+  <Card title="Install Entire" icon="download" href="/installation">
+    Add the CLI to your existing Git workflow.
+  </Card>
+
+  <Card title="Connect Your Agent" icon="robot" href="/agents/overview">
+    Use Entire with Codex, Claude Code, Cursor, and more.
+  </Card>
+
+  <Card title="Capture Your First Checkpoint" icon="flag" href="/guides/checkpoints/capture-checkpoints">
+    Save the session and decisions behind a change.
+  </Card>
+</CardGroup>
+
+## What Entire Does
+
+<CardGroup cols={2}>
+  <Card title="Code Hosting" icon="code-branch" href="/guides/repositories/overview">
+    Host code on Entire's Git network in the region closer to you, where agents clone and push up to 89 times faster than on other Git providers. You can also mirror GitHub repositories on Entire and keep pushing to Entire-native branches when GitHub is down.
+  </Card>
+
+  <Card title="Session Storage" icon="comments" href="/guides/sessions/overview">
+    Every commit an agent makes becomes a checkpoint: the code change paired with the prompt, reasoning, and tool calls behind it. Secrets are redacted before anything leaves your machine.
+  </Card>
+
+  <Card title="Agentic Search" icon="magnifying-glass" href="/guides/search/overview">
+    Search repositories, commits, and agent sessions in one query. Give agents the implementation they need and the reasoning behind it, without retracing old work.
+  </Card>
+
+  <Card title="Semantic Graph" icon="diagram-project" href="/guides/graph/overview">
+    entire-graph maps the symbols and relationships in your code so agents find answers fast, cutting token spend by up to 71%.
+  </Card>
+
+  <Card title="Any Agent" icon="robot" href="/agents/overview">
+    Works with Claude Code, Codex, Cursor, Antigravity CLI, and more. Our open-source, MIT-licensed CLI captures sessions from any supported agent, and the Agent Integration Protocol adds others.
+  </Card>
+</CardGroup>
+
+## Why Host Your Code With Entire
+
+Coding agents create much more Git traffic than a typical human workflow. They clone repositories, inspect history, create worktrees, and run tasks in parallel.
+
+Entire provides distributed Git hosting so agents can work from repositories close to where they run. It is up to 89x faster than the competition. You can mirror an existing GitHub repository into one or more Entire regions while keeping GitHub as the upstream source of truth, allowing your agents to clone and pull in parallel. And with Entire-native branches, you can continue pushing even during a GitHub outage, so you and your agents work is not interrupted.
+
+This helps with:
+
+* giving agents faster access to code and Git history
+* supporting many concurrent agent workflows
+* keeping code in the regions you choose
+* continuing working with [Entire-native branches](/guides/repositories/entire-native-branches) when an upstream provider is unavailable
+
+## Why Store Your Sessions with Entire
+
+A diff doesn't clearly explain why a change was made. It does not show the request that started the work, the files an agent inspected, the commands it ran, or the decisions it made along the way. As massive amounts of AI-generated code are created, developers, teams and agents themselves struggle to link the intent back to the code change itself.
+
+Entire captures that missing context and connects it to your Git history. You can use it to:
+
+* review agent work before merging
+* trace code back to the prompt and session that created it
+* understand why an earlier team or agent chose a particular approach
+* resume or hand off work with its context intact
+* search prior work instead of understanding it from scratch
+
+Taken together, Entire represents one API for your code and the context that created it. A new system of record for agentic coding.
+
+## How It Works
+
+1. Install the Entire CLI in your repository.
+2. Connect Entire to the coding agent you use.
+3. [Mirror the repository on Entire](/guides/repositories/mirrors) in the region closest to your agents, and point your Git remote at it.
+4. Entire captures sessions and checkpoints as the agent works, and agents clone and push through the mirror.
+5. Continue coding with your agent, enabling it with faster clones and the history behind your work.
+
+## What Do You Want to Do?
+
+<CardGroup cols={2}>
+  <Card title="Understand Why Code Changed" icon="code-commit" href="/learn/investigate-why-code-exists">
+    Trace a line of code back to the agent session and decisions that produced it.
+  </Card>
+
+  <Card title="Mirror a GitHub Repository" icon="clone" href="/learn/mirror-a-github-repository">
+    Create a regional mirror so agents clone and fetch from the region you choose.
+  </Card>
+
+  <Card title="Find Previous Decisions" icon="sparkles" href="/learn/search-past-agent-work">
+    Search sessions, commits, prompts, and files.
+  </Card>
+
+  <Card title="Review Agent Work Before You Merge" icon="magnifying-glass" href="/learn/review-and-recap-agent-work">
+    Catch issues across agent-generated changes with recap and review.
+  </Card>
+</CardGroup>
+
+<div className="el-landing">
+  <section className="el-surface">
+    <div>
+      <span className="el-kicker">Platforms</span>
+
+      <div className="el-section-title" role="heading" aria-level="2">
+        Choose Where You Work
+      </div>
+
+      <p>
+        Capture locally with the CLI. Explore and share history in entire.io.
+      </p>
+    </div>
+
+    <div className="el-surface__grid">
+      <a className="el-surface-card" href="/platforms/cli-and-entire-io#entire-cli">
+        <Icon icon="terminal" size={20} />
+
+        <span className="el-surface-card__copy">
+          <span className="el-surface-card__title">Entire CLI</span>
+          <span className="el-surface-card__desc">Capture sessions, create checkpoints, configure storage, and automate workflows.</span>
+        </span>
+      </a>
+
+      <a className="el-surface-card" href="/platforms/cli-and-entire-io#entireio">
+        <Icon icon="browser" size={20} />
+
+        <span className="el-surface-card__copy">
+          <span className="el-surface-card__title">entire.io</span>
+          <span className="el-surface-card__desc">Browse sessions, review checkpoints, inspect files, and share context.</span>
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <section className="el-section el-section--resources">
+    <div className="el-section__header">
+      <span className="el-kicker">Resources</span>
+
+      <div className="el-section-title" role="heading" aria-level="2">
+        Looking for Something Specific?
+      </div>
+    </div>
+
+    <div className="el-resource-grid">
+      <a href="/cli-reference">CLI Reference</a>
+      <a href="/security">Security and privacy</a>
+      <a href="/agents/overview">Supported agents</a>
+      <a href="/glossary">Glossary</a>
+    </div>
+  </section>
+</div>}
+
+---
+
+make this compact and user friendly simple and minimalist:Documentation Index
+Fetch the complete machine-readable documentation index at: [https://exploregit.vercel.app/llms.txt](https://exploregit.vercel.app/llms.txt)
+Use this endpoint to discover all available pages, API contracts, and routing schemas before exploring further.
+Introduction
+Modern engineering teams need clarity, momentum, and signal. ExploreGit aggregates live GitHub repository telemetry, surfacing commit velocity, issue health, release cadences, and language distributions in real time. We make it effortless to discover resilient, battle-tested open-source libraries before you integrate them into your production dependencies.
+Most repository discovery today relies on vanity metrics: total stars accumulated over a decade or search-engine algorithm weight. ExploreGit was engineered to replace guesswork with empirical vitality signals. By inspecting weekly commit cadence, open pull request turnarounds, and contributor density, developers evaluate whether an open-source library is actively maintained or quietly abandoned.
+Set Up ExploreGit
+ExploreGit runs client-side in your browser with zero account creation required. Configure your workspace in three immediate steps:
+Step 01
+Instant Discovery
+Open the dashboard and start searching across repositories by language, topic, or keyword with zero registration.
+[Open Dashboard →](http://localhost:5173/dashboard)
+Step 02
+Connect GitHub Token
+Paste a personal access token into the API portal to elevate rate limits from 60 to 5,000 requests per hour.
+[Connect Token →](http://localhost:5173/api)
+Step 03
+Bookmark & Compare
+Save promising candidate repositories to your offline browser vault and compare health metrics side-by-side.
+[View Bookmarks →](http://localhost:5173/bookmarks)
+Why Track Velocity With ExploreGit
+When you choose a library or framework, you are not just selecting syntax; you are adopting an ongoing dependency relationship. Stale dependencies trigger security advisories, block runtime upgrades, and introduce silent technical debt into production services.
+ExploreGit solves this by providing:
+Active commit velocity: Inspect weekly commit distributions over 52-week windows to confirm sustained developer investment.
+Issue resolution cadence: Determine whether maintainers actively triage bugs or leave pull requests unreviewed for months.
+Contributor diversification: Discern single-maintainer side projects from community-backed frameworks with distributed ownership.
+Zero third-party tracking: Your research, searches, and bookmarks never leave your browser, ensuring absolute privacy for internal enterprise stack evaluations.
+How It Works
+1
+Direct GitHub REST API v3 Integration: Queries execute directly from your client browser to GitHub's public API endpoints, eliminating intermediary proxies or cached stale data.
+2
+Client-Side Token Governance: Adding a read-only GitHub Personal Access Token applies an authenticated authorization header client-side, unlocking 5,000 requests/hour with zero token leakage.
+3
+Telemetry & Activity Curve Rendering: Raw commit activity histories and release milestones are transformed into interactive charts, highlighting momentum trends at a glance.
+4
+Encrypted Local Storage Persistence: All bookmarked repositories, search preferences, and session tokens persist locally using browser-native web storage.
+What Do You Want to Do?
+[Analyze Repository Velocity→Inspect live star trajectories, commit distributions, and maintainer cadence across active GitHub projects./dashboard](http://localhost:5173/dashboard)[Explore Trending Languages→Discover which programming ecosystems are expanding fastest across TypeScript, Rust, Go, Python, and C++./languages](http://localhost:5173/languages)[Git Command Reference→Master daily Git workflows, interactive rebase, detached HEAD recoveries, and stash configurations with copyable commands./cheatsheet](http://localhost:5173/cheatsheet)[Configure API & Quotas→Verify your GitHub Personal Access Token in the live test console and inspect remaining hourly API requests./api](http://localhost:5173/api)[AI & Developer Newsroom→Curated updates covering state-of-the-art open models, agentic coding systems, and developer tooling breakthroughs./ai-news](http://localhost:5173/ai-news)[Company, Vision & Team→Learn about our open-source philosophy, core team values, autonomy principles, and community roadmap./company](http://localhost:5173/company)
+Platform Resources
+Explore reference documentation, legal guidelines, and developer policies.
+[API Reference→](http://localhost:5173/api)[Security & Privacy→](http://localhost:5173/privacy)[Terms of Service→](http://localhost:5173/terms)[Changelog→](http://localhost:5173/changelog)[Report an Issue→](http://localhost:5173/report)[Supported Languages→](http://localhost:5173/languages)[Git Reference→](http://localhost:5173/cheatsheet)[About ExploreGit](http://localhost:5173/company)

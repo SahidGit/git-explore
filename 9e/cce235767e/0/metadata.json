@@ -1,0 +1,68 @@
+{
+  "cli_version": "0.11.3",
+  "checkpoint_id": "9ecce235767e",
+  "session_id": "e7b6b29b-38f3-4681-a96d-40d5c1338c0a",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-02T20:24:08.6182846Z",
+  "branch": "refactor/audit-improvements-and-test-suite",
+  "checkpoints_count": 5,
+  "files_touched": [
+    ".gitignore",
+    "src/App.jsx",
+    "src/components/features/FeatureProjectGrid.jsx",
+    "src/components/features/RepoCard/RepoCTA.jsx",
+    "src/data/content/docs.js",
+    "src/main.jsx",
+    "src/pages/Company.jsx",
+    "src/pages/InfoPage.jsx"
+  ],
+  "agent": "Antigravity",
+  "model": "",
+  "turn_id": "58c7a160677c",
+  "checkpoint_transcript_start": 83,
+  "transcript_lines_at_start": 83,
+  "session_metrics": {
+    "turn_count": 5
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-10-02T20:24:08.5277709Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 1022,
+    "total_committed": 0,
+    "total_lines_changed": 1022,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 1206,
+      "user_lines_removed": 1022,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".gitignore": 65,
+        "src/App.jsx": 79,
+        "src/components/features/FeatureProjectGrid.jsx": 100,
+        "src/components/features/RepoCard/RepoCTA.jsx": 90,
+        "src/data/content/docs.js": 260,
+        "src/main.jsx": 25,
+        "src/pages/Company.jsx": 229,
+        "src/pages/InfoPage.jsx": 358
+      },
+      "user_removed_per_file": {
+        ".gitignore": 64,
+        "src/App.jsx": 78,
+        "src/components/features/FeatureProjectGrid.jsx": 105,
+        "src/components/features/RepoCard/RepoCTA.jsx": 90,
+        "src/data/content/docs.js": 89,
+        "src/main.jsx": 25,
+        "src/pages/Company.jsx": 229,
+        "src/pages/InfoPage.jsx": 342
+      }
+    }
+  ]
+}
