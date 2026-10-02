@@ -1,0 +1,138 @@
+{
+  "cli_version": "0.11.3",
+  "checkpoint_id": "bc074e28f6a5",
+  "session_id": "e7b6b29b-38f3-4681-a96d-40d5c1338c0a",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-02T19:36:25.9200126Z",
+  "branch": "refactor/audit-improvements-and-test-suite",
+  "checkpoints_count": 5,
+  "save_step_count": 5,
+  "files_touched": [
+    "README.md",
+    "server/middleware/rateLimit.js",
+    "server/server.js",
+    "src/App.jsx",
+    "src/components/features/Charts/ContributionHeatmap.jsx",
+    "src/components/features/RepoCard/RepositoryDetail.jsx",
+    "src/components/layouts/Header.jsx",
+    "src/components/newsroom/ModelIntelligenceTable.jsx",
+    "src/components/ui/ErrorBoundary.jsx",
+    "src/components/ui/ErrorMessage.jsx",
+    "src/components/ui/PageNavigation.jsx",
+    "src/data/content/docs.js",
+    "src/pages/GitCheatSheet.jsx",
+    "src/pages/InfoPage.jsx",
+    "src/pages/NotFound.jsx",
+    "src/pages/ReportIssue.jsx",
+    "src/pages/TrendingLanguages.jsx",
+    "src/styles/index.css"
+  ],
+  "agent": "Antigravity",
+  "model": "",
+  "turn_id": "5d7ac527bdf8",
+  "session_metrics": {
+    "turn_count": 5
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-10-02T19:36:25.0761188Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 3757,
+    "human_removed": 4139,
+    "total_committed": 0,
+    "total_lines_changed": 7896,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 4405,
+      "user_lines_removed": 4139,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "README.md": 78,
+        "server/middleware/errorHandler.js": 72,
+        "server/middleware/notFoundHandler.js": 85,
+        "server/middleware/rateLimit.js": 25,
+        "server/server.js": 22,
+        "server/services/logger.js": 52,
+        "server/utils/httpErrors.js": 67,
+        "server/utils/renderErrorHtml.js": 155,
+        "src/App.jsx": 78,
+        "src/components/features/Charts/ContributionHeatmap.jsx": 258,
+        "src/components/features/RepoCard/RepositoryDetail.jsx": 558,
+        "src/components/layouts/Header.jsx": 610,
+        "src/components/newsroom/ModelIntelligenceTable.jsx": 262,
+        "src/components/ui/ErrorBoundary.jsx": 22,
+        "src/components/ui/ErrorMessage.jsx": 13,
+        "src/components/ui/PageNavigation.jsx": 82,
+        "src/data/content/docs.js": 89,
+        "src/pages/ErrorPage.jsx": 35,
+        "src/pages/GitCheatSheet.jsx": 264,
+        "src/pages/InfoPage.jsx": 342,
+        "src/pages/NotFound.jsx": 18,
+        "src/pages/ReportIssue.jsx": 618,
+        "src/pages/TrendingLanguages.jsx": 4,
+        "src/styles/index.css": 596
+      },
+      "user_removed_per_file": {
+        "README.md": 71,
+        "server/middleware/rateLimit.js": 1,
+        "server/server.js": 3,
+        "src/App.jsx": 77,
+        "src/components/features/Charts/ContributionHeatmap.jsx": 258,
+        "src/components/features/RepoCard/RepositoryDetail.jsx": 558,
+        "src/components/layouts/Header.jsx": 564,
+        "src/components/newsroom/ModelIntelligenceTable.jsx": 262,
+        "src/components/ui/ErrorBoundary.jsx": 243,
+        "src/components/ui/ErrorMessage.jsx": 31,
+        "src/components/ui/PageNavigation.jsx": 82,
+        "src/data/content/docs.js": 89,
+        "src/pages/GitCheatSheet.jsx": 264,
+        "src/pages/InfoPage.jsx": 342,
+        "src/pages/NotFound.jsx": 76,
+        "src/pages/ReportIssue.jsx": 618,
+        "src/pages/TrendingLanguages.jsx": 4,
+        "src/styles/index.css": 596
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 4405,
+      "agent_lines_removed": 4139
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 4405,
+      "agent_lines_removed": 4139
+    },
+    {
+      "checkpoint_number": 4,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 4405,
+      "agent_lines_removed": 4139
+    },
+    {
+      "checkpoint_number": 5,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 4405,
+      "agent_lines_removed": 4139
+    },
+    {
+      "checkpoint_number": 6,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 4405,
+      "agent_lines_removed": 4139
+    }
+  ]
+}
