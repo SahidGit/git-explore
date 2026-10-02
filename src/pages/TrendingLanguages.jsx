@@ -168,7 +168,7 @@ const TrendingLanguages = () => {
         canonical="https://exploregit.vercel.app/languages"
       />
 
-      <Header activeTab="languages" theme={chartTheme} showBackButton={false} />
+      <Header activeTab="languages" theme={chartTheme} showBackButton={true} />
 
       <main className="flex-1 pt-24 pb-20 sm:pt-32 sm:pb-28">
         <div className="mx-auto w-full max-w-5xl px-4 sm:px-6 md:px-8">
@@ -748,10 +748,10 @@ const TrendingLanguages = () => {
               <button
                 type="button"
                 onClick={() => setSelectedLanguage(null)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer border ${
                   isLight
-                    ? 'bg-zinc-100 hover:bg-zinc-200 text-zinc-800'
-                    : 'bg-white/10 hover:bg-white/20 text-white'
+                    ? 'bg-zinc-100 hover:bg-zinc-200 text-zinc-900 border-black/10'
+                    : 'bg-transparent hover:bg-white/[0.08] text-white/90 hover:text-white border-white/15 hover:border-white/30'
                 }`}
               >
                 Close

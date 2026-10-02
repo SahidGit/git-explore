@@ -1,40 +1,35 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import SEO from '../components/ui/SEO';
 
-const NotFound = () => {
-    React.useEffect(() => {
-        try {
-            window.scrollTo(0, 0);
-        } catch {
-            // ignore
-        }
-    }, []);
+const ErrorPage = () => {
+    const handleReload = () => {
+        window.location.href = '/';
+    };
 
     return (
         <div className="flex min-h-dvh min-h-screen items-center justify-center bg-[#101012] text-white font-sans selection:bg-white/20 selection:text-white">
             <SEO
-                title="404 · Page Not Found · ExploreGit"
-                description="The page you are looking for doesn't exist or has been moved."
-                canonical="https://exploregit.vercel.app/404"
+                title="500 · Something Went Wrong · ExploreGit"
+                description="An unexpected error occurred. Please try refreshing the page."
             />
             <div className="space-y-4 px-4 text-center">
-                <h1 className="font-mono text-6xl font-bold text-default text-white">404</h1>
-                <h2 className="text-2xl font-semibold text-default text-white">Page not found</h2>
+                <h1 className="font-mono text-6xl font-bold text-default text-white">500</h1>
+                <h2 className="text-2xl font-semibold text-default text-white">Something went wrong</h2>
                 <p className="max-w-md text-muted text-neutral-400 text-sm sm:text-base leading-relaxed mx-auto">
-                    The page you are looking for doesn't exist or has been moved.
+                    An unexpected error occurred. Please try refreshing the page.
                 </p>
                 <div className="pt-4">
-                    <Link
-                        to="/"
+                    <button
+                        type="button"
+                        onClick={handleReload}
                         className="inline-block rounded bg-neutral-900 px-6 py-3 font-normal text-white transition-colors hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-900 hover:dark:bg-neutral-200 cursor-pointer shadow-sm active:scale-95"
                     >
-                        Home
-                    </Link>
+                        Refresh
+                    </button>
                 </div>
             </div>
         </div>
     );
 };
 
-export default NotFound;
+export default ErrorPage;

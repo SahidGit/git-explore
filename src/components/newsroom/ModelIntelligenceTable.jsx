@@ -68,7 +68,7 @@ const ModelIntelligenceTable = () => {
             <button
               onClick={loadModels}
               disabled={dataState.loading}
-              className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all active:scale-95 cursor-pointer disabled:opacity-50 border border-white/20"
+              className="p-1.5 rounded-lg bg-transparent hover:bg-white/[0.08] text-white/90 hover:text-white transition-all active:scale-95 cursor-pointer disabled:opacity-50 border border-white/15 hover:border-white/30"
               title="Refresh OpenRouter data"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${dataState.loading ? 'animate-spin' : ''}`} />

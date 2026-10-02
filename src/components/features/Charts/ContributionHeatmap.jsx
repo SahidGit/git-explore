@@ -166,10 +166,10 @@ const ContributionHeatmap = ({ username }) => {
                                 href={user.html_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition-colors border border-white/10"
+                                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-transparent hover:bg-white/[0.08] text-white/90 hover:text-white text-xs font-medium transition-colors border border-white/15 hover:border-white/30"
                             >
                                 <ExternalLink className="w-3.5 h-3.5" />
-                                View on GitHub ↗
+                                <span>View on GitHub ↗</span>
                             </a>
                         </div>
                     </div>
