@@ -160,7 +160,7 @@ const PillDropdown = ({ id, label, options, value, onChange, disabled = false, i
                             )}
                             <span className="truncate">{opt.label}</span>
                             {value === opt.value && (
-                                <span className="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
+                                <span className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0" />
                             )}
                         </button>
                     ))}

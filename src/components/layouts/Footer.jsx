@@ -1,14 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { AlertCircle, ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
+import { ReportIssueIcon } from '../ui/Icons';
 
 const LEARN_MORE_LINKS = [
     { label: 'Company & Vision', to: '/company' },
+    { label: 'Hidden Gems & Tools', to: '/gems' },
     { label: 'Documentation', to: '/docs' },
     { label: 'API Reference', to: '/api' },
     { label: 'Changelog', to: '/changelog' },
-    { label: 'Terms of Service', to: '/terms' },
+];
+
+const RESOURCE_LINKS = [
     { label: 'Privacy Policy', to: '/privacy' },
+    { label: 'Terms of Service', to: '/terms' },
     { label: 'Disclaimer', to: '/disclaimer' },
 ];
 
@@ -66,7 +71,7 @@ export const SubFooter = ({
                             : 'bg-white/[0.06] hover:bg-white/[0.12] border-white/15 hover:border-white/25 text-white'
                     }`}
                 >
-                    <AlertCircle className="w-3.5 h-3.5 text-amber-500 shrink-0 group-hover:scale-110 transition-transform" />
+                    <ReportIssueIcon className="w-4 h-4 shrink-0 group-hover:scale-110 transition-transform" size={16} />
                     <span>Report an Issue</span>
                 </Link>
             ) : <div className="shrink-0" />}
@@ -93,36 +98,60 @@ export const MainFooter = ({ theme = 'dark' }) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 lg:gap-12 items-start">
             <div className="md:col-span-5 space-y-3">
-                <h4 className={`text-[11px] font-mono uppercase tracking-widest font-bold ${isLight ? 'text-zinc-900' : 'text-zinc-400'}`}>
+                <h4 className={`font-gilroy text-sm sm:text-base font-bold tracking-tight ${isLight ? 'text-zinc-950' : 'text-white'}`}>
                     About ExploreGit
                 </h4>
-                <p className={`text-xs leading-relaxed max-w-sm ${isLight ? 'text-zinc-600' : 'text-zinc-400'}`}>
-                    An open-source telemetry client tracking repository velocity, contributor momentum, and community health signals via GitHub REST API v3.
+                <p className={`text-xs leading-relaxed max-w-md ${isLight ? 'text-zinc-600' : 'text-zinc-400'}`}>
+                    At ExploreGit, we believe evaluating <a href="https://opensource.guide" target="_blank" rel="noopener noreferrer" className="text-[#4397E0] hover:underline underline-offset-2">open source</a> should be transparent and based on real maintainer vitality rather than vanity stars. We help developers discover thriving repositories, inspect commit velocity, and master <a href="https://docs.github.com/en/get-started/using-github/github-flow" target="_blank" rel="noopener noreferrer" className="text-[#4397E0] hover:underline underline-offset-2">Git workflows</a>—powered directly by the official <a href="https://docs.github.com/en/rest" target="_blank" rel="noopener noreferrer" className="text-[#4397E0] hover:underline underline-offset-2">GitHub REST API</a> with zero data tracking.
                 </p>
                 <div className="flex items-center gap-2 font-mono text-[11px] text-zinc-500 pt-1">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span>GitHub REST API v3 Live</span>
+                    <span className="w-2 h-2 rounded-full bg-[#4397E0] animate-pulse" />
+                    <span>Live GitHub REST API v3 Integration</span>
                 </div>
             </div>
 
-            <div className="md:col-span-7 space-y-3">
-                <h4 className={`text-[11px] font-mono uppercase tracking-widest font-bold ${isLight ? 'text-zinc-900' : 'text-zinc-400'}`}>
-                    Resources &amp; Documentation
-                </h4>
-                <nav className="grid grid-cols-2 sm:grid-cols-3 gap-y-2.5 gap-x-4 text-xs sm:text-[13px] font-medium" aria-label="Learn more navigation">
-                    {LEARN_MORE_LINKS.map(({ label, to }) => (
-                        <Link
-                            key={to}
-                            to={to}
-                            className={`transition-colors duration-150 flex items-center gap-1 group py-0.5 ${
-                                isLight ? 'text-zinc-600 hover:text-black' : 'text-zinc-400 hover:text-white'
-                            }`}
-                        >
-                            <span>{label}</span>
-                            <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-zinc-400" />
-                        </Link>
-                    ))}
-                </nav>
+            <div className="md:col-span-7 grid grid-cols-2 sm:grid-cols-2 gap-8 sm:gap-12">
+                {/* Learn More Column */}
+                <div className="space-y-3">
+                    <h4 className={`font-gilroy text-sm sm:text-base font-bold tracking-tight ${isLight ? 'text-zinc-950' : 'text-white'}`}>
+                        Learn More
+                    </h4>
+                    <nav className="flex flex-col space-y-2 text-xs sm:text-[13px] font-medium" aria-label="Learn more navigation">
+                        {LEARN_MORE_LINKS.map(({ label, to }) => (
+                            <Link
+                                key={to}
+                                to={to}
+                                className={`transition-colors duration-150 flex items-center gap-1 group py-0.5 w-fit ${
+                                    isLight ? 'text-zinc-600 hover:text-black' : 'text-zinc-400 hover:text-white'
+                                }`}
+                            >
+                                <span>{label}</span>
+                                <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-zinc-400" />
+                            </Link>
+                        ))}
+                    </nav>
+                </div>
+
+                {/* Resources Column */}
+                <div className="space-y-3">
+                    <h4 className={`font-gilroy text-sm sm:text-base font-bold tracking-tight ${isLight ? 'text-zinc-950' : 'text-white'}`}>
+                        Resources
+                    </h4>
+                    <nav className="flex flex-col space-y-2 text-xs sm:text-[13px] font-medium" aria-label="Resources legal navigation">
+                        {RESOURCE_LINKS.map(({ label, to }) => (
+                            <Link
+                                key={to}
+                                to={to}
+                                className={`transition-colors duration-150 flex items-center gap-1 group py-0.5 w-fit ${
+                                    isLight ? 'text-zinc-600 hover:text-black' : 'text-zinc-400 hover:text-white'
+                                }`}
+                            >
+                                <span>{label}</span>
+                                <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-zinc-400" />
+                            </Link>
+                        ))}
+                    </nav>
+                </div>
             </div>
         </div>
     );

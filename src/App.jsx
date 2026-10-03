@@ -11,6 +11,7 @@ const GitCheatSheet = React.lazy(() => import('./pages/GitCheatSheet'));
 const AiNewsroom = React.lazy(() => import('./pages/AiNewsroom'));
 const Company = React.lazy(() => import('./pages/Company'));
 const TrendingLanguages = React.lazy(() => import('./pages/TrendingLanguages'));
+const Gems = React.lazy(() => import('./pages/Gems'));
 const InfoPage = React.lazy(() => import('./pages/InfoPage'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 const ErrorPage = React.lazy(() => import('./pages/ErrorPage'));
@@ -51,6 +52,8 @@ function App() {
 
           {/* Dedicated full-page routes */}
           <Route path="/languages" element={<PageTransition><TrendingLanguages /></PageTransition>} />
+          <Route path="/gems" element={<PageTransition><Gems /></PageTransition>} />
+          <Route path="/hidden-gems" element={<PageTransition><Gems /></PageTransition>} />
           <Route path="/report" element={<PageTransition><ReportIssue /></PageTransition>} />
           <Route path="/report-issue" element={<PageTransition><ReportIssue /></PageTransition>} />
           <Route path="/cheatsheet" element={<PageTransition><GitCheatSheet /></PageTransition>} />

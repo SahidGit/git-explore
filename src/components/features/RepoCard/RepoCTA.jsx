@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import footerBg from '../../../assets/backgrounds/footer-bg.webp';
+import { DiscoveryRadarIcon } from '../../ui/Icons';
 
 const RepoCTA = () => {
     return (
@@ -50,10 +51,15 @@ const RepoCTA = () => {
 
             {/* ── Content ── */}
             <div className="mx-auto w-full max-w-[1280px] relative z-10 grid place-items-center py-24 sm:py-32 px-6 text-center">
-                <div className="relative w-full max-w-2xl space-y-5">
+                <div className="relative w-full max-w-2xl space-y-5 flex flex-col items-center">
+                    {/* Discovery Radar Icon Badge */}
+                    <div className="w-16 h-16 rounded-2xl bg-white/[0.04] border border-white/10 shadow-lg shadow-purple-950/20 backdrop-blur-md flex items-center justify-center p-2 transition-transform duration-300 hover:scale-105">
+                        <DiscoveryRadarIcon size={48} className="w-12 h-12 drop-shadow-[0_2px_8px_rgba(193,158,219,0.3)]" />
+                    </div>
+
                     {/* Eyebrow */}
                     <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.07] border border-white/15 text-[11px] font-sans font-semibold text-zinc-300 uppercase tracking-widest">
-                        <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#C19EDB] animate-pulse" />
                         Open Source · MIT Licensed
                     </span>
 

@@ -1,313 +1,192 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Plus, Minus } from 'lucide-react';
 import {
-    Search, ShieldCheck, Bookmark, Terminal,
-    ArrowRight, Check, Zap, Copy, ExternalLink,
-    FileText, Sparkles, Activity, Shield, Wifi, WifiOff,
-    Edit3, MessageSquare, Globe2, Layers, Cpu
-} from 'lucide-react';
+    SearchRepoIcon,
+    PrivacyBadgeIcon,
+    LanguageOverviewIcon,
+    AiNewsIntelIcon,
+    ReportIssueIcon,
+    GemsNavIcon
+} from '../ui/Icons';
 
-const TerminalVisual = () => {
-    const [copied, setCopied] = useState(false);
-    const handleCopy = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        navigator.clipboard.writeText('git rebase -i HEAD~3');
-        setCopied(true);
-        setTimeout(() => setCopied(false), 1500);
-    };
-
-    return (
-        <div className="w-full h-full flex flex-col justify-center space-y-2 p-3 rounded-2xl bg-black/40 border border-white/[0.06] relative overflow-hidden">
-            <div className="absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-[#3178C6]/15 to-transparent pointer-events-none" />
-
-            {/* Language Tags */}
-            <div className="relative z-10 flex items-center justify-center gap-2 text-[10px] font-mono text-zinc-400">
-                <span className="text-[#3572A5]">Python</span>
-                <span>•</span>
-                <span className="text-[#DEA584]">Rust</span>
-                <span>•</span>
-                <span className="text-[#3178C6]">TS</span>
-                <span>•</span>
-                <span className="text-[#00ADD8]">Go</span>
-            </div>
-
-            {/* Terminal Command Simulation */}
-            <div className="relative z-10 bg-black/60 border border-white/10 rounded-xl p-2 font-mono text-[11px]">
-                <div className="flex items-center justify-between text-[9px] text-zinc-400 border-b border-white/10 pb-1 mb-1">
-                    <span className="text-[#93C5FD] font-semibold">COMMAND</span>
-                    <button
-                        type="button"
-                        onClick={handleCopy}
-                        className="text-[#93C5FD] hover:text-white transition-colors flex items-center gap-1 cursor-pointer font-bold"
-                    >
-                        {copied ? <Check className="w-2.5 h-2.5 text-emerald-400" /> : <Copy className="w-2.5 h-2.5" />}
-                        <span>{copied ? 'COPIED' : 'COPY'}</span>
-                    </button>
-                </div>
-                <div className="text-white font-medium flex items-center gap-1.5 truncate">
-                    <span className="text-[#93C5FD] font-bold">$</span>
-                    <span className="truncate">git rebase -i HEAD~3</span>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-const FEATURE_CARDS = [
+const CHIP_FEATURES = [
     {
-        id: 'discovery',
-        langName: 'Python',
-        langColor: '#3572A5',
-        category: 'DISCOVERY ENGINE',
-        title: 'Velocity discovery',
-        desc: 'Calculates daily star velocity, fork growth, and issue churn before projects hit mainstream feeds.',
-        punchline: 'Algorithmic momentum indexing',
-        link: '/dashboard',
-        linkText: 'Explore Filters',
-        icon: Zap,
-        theme: {
-            cardBg: 'bg-[#0E0F12]',
-            accentColor: '#3572A5',
-            borderColor: 'border-white/[0.08] hover:border-[#3572A5]/50',
-            badgeBg: 'bg-[#3572A5]/15 text-[#60A5FA] border-[#3572A5]/30',
-            titleColor: 'text-white group-hover:text-[#60A5FA]',
-            iconColor: 'text-[#60A5FA]',
-            glowColor: 'from-[#3572A5]/10',
-        },
-        renderVisual: () => (
-            <div className="w-full h-full flex flex-col justify-center items-center p-3 rounded-2xl bg-black/40 border border-white/[0.06] relative overflow-hidden">
-                {/* Subtle top glow */}
-                <div className="absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-[#3572A5]/15 to-transparent pointer-events-none" />
-                
-                {/* Minimal Toggle Pill Mockup */}
-                <div className="relative z-10 w-full max-w-[200px] py-2 px-3.5 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-between">
-                    <span className="text-white font-medium text-xs font-sans tracking-tight">Signal Feed</span>
-                    <div className="w-8 h-4.5 rounded-full bg-[#3572A5]/40 p-0.5 flex items-center justify-end border border-[#3572A5]/50">
-                        <div className="w-3.5 h-3.5 rounded-full bg-white shadow-xs" />
-                    </div>
-                </div>
-
-                <div className="relative z-10 flex items-center gap-1.5 mt-2.5">
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#3572A5]/20 text-[#60A5FA] font-semibold border border-[#3572A5]/30">
-                        +14.2k★ / wk
-                    </span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/5 text-zinc-400 border border-white/10">
-                        Zero Auth
-                    </span>
-                </div>
-            </div>
-        ),
+        id: 'search',
+        name: 'Search Repositories',
+        description: 'Search and filter open-source repositories by star velocity, language, and topics. Inspect contributor momentum and repository health metrics in real time.',
+        icon: SearchRepoIcon,
+        buttons: [
+            {
+                label: 'Explore Repositories',
+                to: '/dashboard',
+                style: { backgroundColor: '#4397E0', color: '#FFFFFF' },
+            }
+        ]
     },
     {
-        id: 'health',
-        langName: 'Go',
-        langColor: '#00ADD8',
-        category: 'REPO INSPECTOR',
-        title: 'Health & cadence',
-        desc: 'Evaluates license compliance, commit rhythm, maintainer responsiveness, and CI health scores.',
-        punchline: 'Automated 4-pillar audits',
-        link: '/dashboard',
-        linkText: 'View Scorecard',
-        icon: Edit3,
-        theme: {
-            cardBg: 'bg-[#0E0F12]',
-            accentColor: '#00ADD8',
-            borderColor: 'border-white/[0.08] hover:border-[#00ADD8]/50',
-            badgeBg: 'bg-[#00ADD8]/15 text-[#38BDF8] border-[#00ADD8]/30',
-            titleColor: 'text-white group-hover:text-[#38BDF8]',
-            iconColor: 'text-[#38BDF8]',
-            glowColor: 'from-[#00ADD8]/10',
-        },
-        renderVisual: () => (
-            <div className="w-full h-full flex flex-col justify-center space-y-2 p-3 rounded-2xl bg-black/40 border border-white/[0.06] relative overflow-hidden">
-                <div className="absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-[#00ADD8]/15 to-transparent pointer-events-none" />
-
-                {/* Input Simulation Bar */}
-                <div className="relative z-10 flex items-center justify-between gap-1.5 bg-black/50 border border-white/10 rounded-xl px-2.5 py-1.5">
-                    <span className="text-zinc-400 text-[10px] font-mono truncate">Inspect repository...</span>
-                    <span className="text-[9px] font-mono px-2 py-0.5 rounded-md bg-[#00ADD8]/20 text-[#38BDF8] font-bold border border-[#00ADD8]/40 shrink-0">
-                        Audit ⌘+K
-                    </span>
-                </div>
-
-                {/* Score Strip */}
-                <div className="relative z-10 flex items-center justify-between text-[10px] font-mono border-b border-white/10 pb-1 text-zinc-300 px-1">
-                    <span className="truncate">Grade A+ (98%)</span>
-                    <span className="text-[#38BDF8] font-bold">1,420 commits/yr</span>
-                </div>
-
-                {/* Mini Activity Row */}
-                <div className="relative z-10 flex items-center justify-between gap-1 overflow-hidden px-1">
-                    {[...Array(12)].map((_, colIdx) => (
-                        <div key={colIdx} className="flex flex-col gap-1">
-                            {[...Array(2)].map((_, rowIdx) => {
-                                const intensity = (colIdx * 3 + rowIdx * 5) % 4;
-                                const opacities = ['bg-white/5', 'bg-[#00ADD8]/20', 'bg-[#00ADD8]/50', 'bg-[#00ADD8]'];
-                                return (
-                                    <span key={rowIdx} className={`w-2 h-2 rounded-[2px] ${opacities[intensity]}`} />
-                                );
-                            })}
-                        </div>
-                    ))}
-                </div>
-            </div>
-        ),
+        id: 'gems',
+        name: 'Hidden Gems & Tools',
+        description: 'Discover under-the-radar open-source repositories with high momentum (<2.5k stars) alongside timeless legendary developer software, utilities, and direct store links.',
+        icon: GemsNavIcon,
+        buttons: [
+            {
+                label: 'Explore Software Gems',
+                to: '/gems',
+                style: { backgroundColor: '#FA6423', color: '#FFFFFF' },
+            }
+        ]
     },
     {
         id: 'bookmarks',
-        langName: 'Rust',
-        langColor: '#DEA584',
-        category: 'LOCAL WORKSPACE',
-        title: 'Private workspace',
-        desc: 'Save project bookmarks and write architecture research notes stored 100% locally in your browser.',
-        punchline: 'Zero telemetry, device-only',
-        link: '/bookmarks',
-        linkText: 'Open Bookmarks',
-        icon: Bookmark,
-        theme: {
-            cardBg: 'bg-[#0E0F12]',
-            accentColor: '#DEA584',
-            borderColor: 'border-white/[0.08] hover:border-[#DEA584]/50',
-            badgeBg: 'bg-[#DEA584]/15 text-[#DEA584] border-[#DEA584]/30',
-            titleColor: 'text-white group-hover:text-[#DEA584]',
-            iconColor: 'text-[#DEA584]',
-            glowColor: 'from-[#DEA584]/10',
-        },
-        renderVisual: () => (
-            <div className="w-full h-full flex flex-col justify-center space-y-2.5 p-3 rounded-2xl bg-black/40 border border-white/[0.06] relative overflow-hidden">
-                <div className="absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-[#DEA584]/15 to-transparent pointer-events-none" />
-
-                {/* Mode Selector Dock */}
-                <div className="relative z-10 py-1.5 px-3 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-around">
-                    <div className="flex flex-col items-center gap-1 opacity-60">
-                        <Activity className="w-3.5 h-3.5 text-white" />
-                        <span className="text-[9px] font-sans text-zinc-300">Explore</span>
-                    </div>
-                    <div className="flex flex-col items-center gap-1 px-2.5 py-1 rounded-lg bg-[#DEA584] text-zinc-950 shadow-xs">
-                        <Bookmark className="w-3.5 h-3.5 fill-zinc-950" />
-                        <span className="text-[9px] font-sans font-bold">Saved</span>
-                    </div>
-                    <div className="flex flex-col items-center gap-1 opacity-60">
-                        <FileText className="w-3.5 h-3.5 text-white" />
-                        <span className="text-[9px] font-sans text-zinc-300">Notes</span>
-                    </div>
-                </div>
-
-                <div className="relative z-10 flex items-center justify-between text-[10px] font-mono text-zinc-400 px-1">
-                    <span className="truncate">astral-sh/uv</span>
-                    <span className="text-[#DEA584] font-semibold">★ 41.2k</span>
-                </div>
-            </div>
-        ),
+        name: 'Saved Bookmarks',
+        description: 'Free, private architecture research notes and project bookmarks stored 100% locally on your device with zero cloud telemetry or data tracking.',
+        icon: PrivacyBadgeIcon,
+        buttons: [
+            {
+                label: 'Open Saved Bookmarks',
+                to: '/bookmarks',
+                style: { backgroundColor: '#9F6EB8', color: '#FFFFFF' },
+            }
+        ]
     },
     {
-        id: 'cheatsheet',
-        langName: 'TypeScript',
-        langColor: '#3178C6',
-        category: 'DEVELOPER INTEL',
-        title: 'Git workflows & AI radar',
-        desc: 'Interactive Git commands with 1-click execution alongside real-time frontier AI model context & pricing.',
-        punchline: '40+ Commands, daily model specs',
-        link: '/cheatsheet',
-        linkText: 'Open Cheatsheet',
-        icon: Terminal,
-        theme: {
-            cardBg: 'bg-[#0E0F12]',
-            accentColor: '#3178C6',
-            borderColor: 'border-white/[0.08] hover:border-[#3178C6]/50',
-            badgeBg: 'bg-[#3178C6]/15 text-[#93C5FD] border-[#3178C6]/30',
-            titleColor: 'text-white group-hover:text-[#93C5FD]',
-            iconColor: 'text-[#93C5FD]',
-            glowColor: 'from-[#3178C6]/10',
-        },
-        renderVisual: TerminalVisual,
+        id: 'languages',
+        name: 'Language Overview',
+        description: 'Track language ecosystem market share, star growth velocity, and commit cadence across Python, Rust, Go, TypeScript, and more.',
+        icon: LanguageOverviewIcon,
+        buttons: [
+            {
+                label: 'View Language Radar',
+                to: '/languages',
+                style: { backgroundColor: '#FFC95C', color: '#3B1E03' },
+            }
+        ]
     },
+    {
+        id: 'ainews',
+        name: 'AI News & Git Intel',
+        description: 'Automated daily AI ecosystem intelligence covering frontier model updates alongside 40+ interactive, one-click Git terminal commands.',
+        icon: AiNewsIntelIcon,
+        buttons: [
+            {
+                label: 'Explore AI News',
+                to: '/ai-news',
+                style: { backgroundColor: '#75B6EB', color: '#072642' },
+            },
+            {
+                label: 'Git Cheatsheet',
+                to: '/cheatsheet',
+                style: { backgroundColor: '#EADAFD', color: '#3B134E' },
+            }
+        ]
+    },
+    {
+        id: 'report',
+        name: 'Report & Feedback',
+        description: 'Submit telemetry feedback, report data discrepancies, or request new model features directly to the open-source maintenance ledger.',
+        icon: ReportIssueIcon,
+        buttons: [
+            {
+                label: 'Report an Issue',
+                to: '/report',
+                style: { backgroundColor: '#FFC95C', color: '#3B1E03' },
+            }
+        ]
+    }
 ];
 
 const FeatureGrid = () => {
-    return (
-        <section className="border-b border-white/10 bg-[#0A0A0C] py-16 sm:py-24 relative overflow-hidden" aria-label="ExploreGit Capabilities & Features">
-            <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 relative z-10">
-                
-                {/* Section Title & Header */}
-                <div className="mx-auto max-w-3xl text-center mb-10 sm:mb-14 space-y-2.5">
-                    <p className="font-mono text-[11px] sm:text-xs font-semibold tracking-widest text-zinc-400 uppercase">
-                        What's inside
-                    </p>
+    const [selectedId, setSelectedId] = useState(null);
+    const activeFeature = CHIP_FEATURES.find((item) => item.id === selectedId);
 
-                    <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight font-heading leading-tight">
-                        Structured signal from raw GitHub data.
-                    </h2>
-                    
-                    <p className="text-xs sm:text-base font-sans text-zinc-400 leading-relaxed max-w-xl mx-auto pt-1">
-                        High-density tooling designed for developer velocity, embedded in a local-first interface.
+    const handleToggle = (id) => {
+        setSelectedId((prev) => (prev === id ? null : id));
+    };
+
+    return (
+        <section className="border-b border-white/10 bg-[#0A0A0C] py-14 sm:py-20 relative font-gilroy" aria-label="ExploreGit Features">
+            <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6">
+                
+                {/* Section Title & Subheading */}
+                <div className="mx-auto max-w-2xl text-center mb-8 sm:mb-10 space-y-2 font-gilroy">
+                    <p className="font-mono text-[11px] sm:text-xs font-semibold tracking-widest text-zinc-400 uppercase">
+                        Core Capabilities
                     </p>
+                    <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight font-gilroy">
+                        Discover more from ExploreGit.
+                    </h2>
                 </div>
 
-                {/* ── 4-Card Minimal Showcase Grid with Trending Language Color Accents ── */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 items-stretch">
-                    {FEATURE_CARDS.map((card) => {
-                        const CardIcon = card.icon;
-                        const VisualComponent = card.renderVisual;
-                        const theme = card.theme;
+                {/* DuckDuckGo Pill Chips Container */}
+                <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3.5 mb-6 font-gilroy">
+                    {CHIP_FEATURES.map((chip) => {
+                        const Icon = chip.icon;
+                        const isSelected = chip.id === selectedId;
 
                         return (
-                            <div
-                                key={card.id}
-                                className={`group relative flex flex-col justify-between rounded-2xl ${theme.cardBg} border ${theme.borderColor} p-4 sm:p-5 transition-all duration-300 hover:-translate-y-1 shadow-lg overflow-hidden`}
+                            <button
+                                key={chip.id}
+                                type="button"
+                                onClick={() => handleToggle(chip.id)}
+                                aria-expanded={isSelected}
+                                className={`group flex items-center gap-3 px-4 py-2.5 rounded-full transition-all cursor-pointer border text-left font-gilroy ${
+                                    isSelected
+                                        ? 'bg-[#18191E] border-white/35 text-white shadow-lg'
+                                        : 'bg-[#101114] border-white/10 hover:border-white/20 text-zinc-300 hover:text-white'
+                                }`}
                             >
-                                {/* Top Glow Accent from Language Palette */}
-                                <div className={`absolute top-0 inset-x-0 h-24 bg-gradient-to-b ${theme.glowColor} to-transparent pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity`} />
-
-                                {/* Top Visual Showcase Container */}
-                                <div className="h-32 sm:h-36 w-full mb-4 relative z-10">
-                                    <VisualComponent />
-                                </div>
-
-                                {/* Content Details */}
-                                <div className="flex-1 flex flex-col justify-between space-y-3 relative z-10">
-                                    <div>
-                                        {/* Language Pill & Icon Header */}
-                                        <div className="flex items-center justify-between gap-2 mb-2">
-                                            <div className="flex items-center gap-2">
-                                                <div className={`w-6 h-6 rounded-lg ${theme.badgeBg} border flex items-center justify-center shrink-0`}>
-                                                    <CardIcon className={`w-3.5 h-3.5 ${theme.iconColor}`} />
-                                                </div>
-                                                <h3 className={`font-sans text-sm sm:text-base font-bold ${theme.titleColor} tracking-tight transition-colors`}>
-                                                    {card.title}
-                                                </h3>
-                                            </div>
-                                            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/[0.05] border border-white/10 text-zinc-400">
-                                                {card.langName}
-                                            </span>
-                                        </div>
-
-                                        {/* Description */}
-                                        <p className="text-xs font-sans text-zinc-400 leading-relaxed">
-                                            {card.desc}
-                                        </p>
-                                    </div>
-
-                                    {/* Footer Info & Action */}
-                                    <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between gap-2 mt-auto">
-                                        <span className="font-sans text-[11px] text-zinc-300 font-medium truncate">
-                                            {card.punchline}
-                                        </span>
-
-                                        <Link
-                                            to={card.link}
-                                            aria-label={card.linkText}
-                                            className="inline-flex items-center gap-1 text-[11px] font-sans font-semibold text-zinc-300 hover:text-white transition-colors shrink-0 group-hover:translate-x-0.5"
-                                        >
-                                            <ArrowRight className="w-3.5 h-3.5" />
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
+                                <Icon className="w-6 h-6 shrink-0" />
+                                <span className="font-gilroy text-xs sm:text-sm font-semibold tracking-tight whitespace-nowrap">
+                                    {chip.name}
+                                </span>
+                                <span className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-xs transition-colors ${
+                                    isSelected ? 'bg-white text-black font-bold' : 'bg-white/10 text-zinc-400 group-hover:bg-white/15 group-hover:text-white'
+                                }`}>
+                                    {isSelected ? <Minus className="w-3 h-3" /> : <Plus className="w-3 h-3" />}
+                                </span>
+                            </button>
                         );
                     })}
                 </div>
+
+                {/* DuckDuckGo Popover Card (Only open when a chip is clicked) */}
+                {activeFeature && (
+                    <div 
+                        key={activeFeature.id}
+                        className="w-full max-w-xl mx-auto mt-4 rounded-3xl bg-[#131418] border border-white/15 p-6 sm:p-7 text-left shadow-2xl animate-popInFast font-gilroy"
+                    >
+                        <div className="flex items-center gap-2.5 mb-2 font-gilroy">
+                            {React.createElement(activeFeature.icon, { className: "w-6 h-6 shrink-0" })}
+                            <h5 className="text-lg sm:text-xl font-bold text-white font-gilroy tracking-tight">
+                                {activeFeature.name}
+                            </h5>
+                        </div>
+
+                        <p className="text-xs sm:text-sm text-zinc-300 font-gilroy leading-relaxed mb-5">
+                            {activeFeature.description}
+                        </p>
+
+                        {/* Color Coded Tablet Pill Buttons */}
+                        <div className="flex flex-wrap items-center gap-3">
+                            {activeFeature.buttons.map((btn, idx) => (
+                                <Link
+                                    key={idx}
+                                    to={btn.to}
+                                    style={btn.style}
+                                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-gilroy font-bold text-xs sm:text-sm hover:opacity-95 transition-all active:scale-95 shadow-sm cursor-pointer"
+                                >
+                                    <span>{btn.label}</span>
+                                    <span className="shrink-0" aria-hidden="true">
+                                        <svg fill="none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" width="14" height="14" color="currentColor">
+                                            <path fill="currentColor" d="M3.191 12.809c.244.244.64.244.884 0l7.675-7.675v6.233c0 .345.28.625.625.625s.625-.28.625-.625V4.75C13 3.784 12.216 3 11.25 3H4.633c-.345 0-.625.28-.625.625s.28.625.625.625h6.233l-7.675 7.675c-.244.244-.244.64 0 .884" />
+                                        </svg>
+                                    </span>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
             </div>
         </section>

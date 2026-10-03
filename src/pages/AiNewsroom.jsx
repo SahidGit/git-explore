@@ -1,62 +1,60 @@
-import React, { useEffect } from 'react';
-import SEO from '../components/ui/SEO';
-import NewsroomNav from '../components/newsroom/NewsroomNav';
-import HeroEditorial from '../components/newsroom/HeroEditorial';
-import LeadStoryGrid from '../components/newsroom/LeadStoryGrid';
-import ModelIntelligenceTable from '../components/newsroom/ModelIntelligenceTable';
-import OpenWeightStrip from '../components/newsroom/OpenWeightStrip';
-import GlobalAiAtlas from '../components/newsroom/GlobalAiAtlas';
-import CapitalInfrastructure from '../components/newsroom/CapitalInfrastructure';
-import WorthReadingResearch from '../components/newsroom/WorthReadingResearch';
-import VisualCultureGallery from '../components/newsroom/VisualCultureGallery';
-import NewsroomFooter from '../components/newsroom/NewsroomFooter';
-import BackToTop from '../components/ui/BackToTop';
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { ArrowLeft, Radio } from "lucide-react";
+import SEO from "../components/ui/SEO";
 
 const AiNewsroom = () => {
   useEffect(() => {
-    window.scrollTo(0, 0);
+    try {
+      window.scrollTo(0, 0);
+    } catch {
+      // ignore
+    }
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F8F3EA] text-[#101010] selection:bg-[#FF5A1F] selection:text-black font-sans">
+    <div className="flex min-h-dvh min-h-screen items-center justify-center bg-[#101012] text-white font-libron selection:bg-white/20 selection:text-white px-4">
       <SEO
-        title="AI Newsroom — Experimental Frontier AI Intelligence & Model Benchmarks"
-        description="A high-end editorial magazine covering frontier AI models, open-source weight momentum, Sakana AI, Sarvam AI, Project Stargate, and arXiv research."
+        title="AI Newsroom · Coming Soon · ExploreGit"
+        description="Our automated AI developer newsroom and daily ecosystem tracker are currently under construction."
         canonical="https://exploregit.vercel.app/ai-news"
       />
+      <div className="w-full max-w-lg mx-auto text-center space-y-5 font-libron">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.04] text-zinc-400 font-libron text-xs uppercase tracking-widest">
+          <Radio className="w-3.5 h-3.5 text-[#C19EDB] animate-pulse" />
+          <span>Under Construction</span>
+        </div>
 
-      {/* 1. Sticky Navigation */}
-      <NewsroomNav />
+        <h1 className="font-libron text-5xl sm:text-6xl font-bold text-white tracking-tight">
+          AI / NEWS
+        </h1>
 
-      {/* 2. Hero Editorial Story */}
-      <HeroEditorial />
+        <h2 className="text-xl sm:text-2xl font-semibold text-zinc-200 font-libron">
+          Coming Soon
+        </h2>
 
-      {/* 3. Lead Story Grid */}
-      <LeadStoryGrid />
+        <p className="max-w-md text-zinc-400 text-sm sm:text-base leading-relaxed mx-auto font-libron">
+          We are rebuilding the AI Newsroom into a lightweight, automated daily
+          developer digest covering open-source model releases, agentic tools,
+          and ecosystem breakthroughs.
+        </p>
 
-      {/* 4. Model Intelligence Section (OpenRouter API + Fallback + Table + Visualizer) */}
-      <ModelIntelligenceTable />
-
-      {/* 5. Open Weight / Open Source Strip */}
-      <OpenWeightStrip />
-
-      {/* 6. Global AI Atlas */}
-      <GlobalAiAtlas />
-
-      {/* 7. Capital & Infrastructure Section */}
-      <CapitalInfrastructure />
-
-      {/* 8. Worth Reading Research Section */}
-      <WorthReadingResearch />
-
-      {/* 9. Visual Culture / Image Reference Gallery */}
-      <VisualCultureGallery />
-
-      {/* 10. Newsroom Footer */}
-      <NewsroomFooter />
-
-      {/* Floating Back to Top Button */}
-      <BackToTop />
+        <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3 font-libron">
+          <Link
+            to="/"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-white px-6 py-2.5 text-sm font-semibold text-[#121215] transition-all hover:bg-neutral-100 shadow-sm active:scale-95 cursor-pointer font-libron"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Return to Home</span>
+          </Link>
+          <Link
+            to="/dashboard"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-white/[0.06] border border-white/10 px-6 py-2.5 text-sm font-medium text-zinc-300 transition-all hover:bg-white/10 hover:text-white active:scale-95 cursor-pointer font-libron"
+          >
+            <span>Explore Repositories</span>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };

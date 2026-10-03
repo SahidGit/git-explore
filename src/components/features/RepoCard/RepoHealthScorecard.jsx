@@ -6,10 +6,10 @@ const RepoHealthScorecard = ({ repo, details, activity, issueStats }) => {
     const health = calculateRepoHealth(repo, details, activity, issueStats);
 
     const pillars = [
-        { name: 'License & Security', score: health.licenseScore, max: 25, color: '#10B981' },
+        { name: 'License & Security', score: health.licenseScore, max: 25, color: '#4397E0' },
         { name: 'Commit Rhythm', score: health.commitScore, max: 25, color: '#6366F1' },
-        { name: 'Issue Resolution', score: health.issueScore, max: 25, color: '#EC4899' },
-        { name: 'Community Signal', score: health.communityScore, max: 25, color: '#F59E0B' },
+        { name: 'Issue Resolution', score: health.issueScore, max: 25, color: '#C19EDB' },
+        { name: 'Community Signal', score: health.communityScore, max: 25, color: '#FFC95C' },
     ];
 
     return (
@@ -17,7 +17,7 @@ const RepoHealthScorecard = ({ repo, details, activity, issueStats }) => {
             {/* Header */}
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
                 <div className="flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                    <ShieldCheck className="w-4 h-4 text-blue-400" />
                     <h3 className="text-xs sm:text-sm font-mono font-bold uppercase tracking-wider text-white">
                         Open Source Health &amp; Security Scorecard
                     </h3>
@@ -81,7 +81,7 @@ const RepoHealthScorecard = ({ repo, details, activity, issueStats }) => {
                             key={idx}
                             className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono text-zinc-300"
                         >
-                            <CheckCircle2 className="w-3 h-3 text-emerald-400 shrink-0" />
+                            <CheckCircle2 className="w-3 h-3 text-blue-400 shrink-0" />
                             <span>{finding}</span>
                         </div>
                     ))}

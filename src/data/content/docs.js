@@ -82,10 +82,10 @@ export const docsContent = {
     <!-- Compact Documentation Index Bar -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 py-2.5 rounded-xl border border-white/10 bg-white/[0.02] text-xs font-mono mb-8">
       <div class="flex items-center gap-2">
-        <div class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></div>
+        <div class="w-2 h-2 rounded-full bg-[#4397E0] shrink-0"></div>
         <span class="text-white font-semibold">Documentation Index:</span>
         <span class="text-zinc-400 hidden sm:inline">Machine-readable index available at</span>
-        <a href="https://exploregit.vercel.app/llms.txt" target="_blank" rel="noopener noreferrer" class="text-emerald-400 hover:underline">
+        <a href="https://exploregit.vercel.app/llms.txt" target="_blank" rel="noopener noreferrer" class="text-[#4397E0] hover:underline">
           llms.txt
         </a>
       </div>
@@ -108,7 +108,7 @@ export const docsContent = {
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3 font-sans text-xs">
         <div class="p-4 rounded-xl border border-white/10 bg-[#0E0E12] flex flex-col justify-between gap-3">
           <div class="space-y-1">
-            <div class="font-mono text-[10px] text-emerald-400 font-bold uppercase">01 / Discover</div>
+            <div class="font-mono text-[10px] text-[#4397E0] font-bold uppercase">01 / Discover</div>
             <div class="font-semibold text-white">Instant Exploration</div>
             <p class="text-zinc-400 leading-relaxed text-[11px]">
               Search repositories by language, topic, or keyword with zero registration.
@@ -121,7 +121,7 @@ export const docsContent = {
 
         <div class="p-4 rounded-xl border border-white/10 bg-[#0E0E12] flex flex-col justify-between gap-3">
           <div class="space-y-1">
-            <div class="font-mono text-[10px] text-emerald-400 font-bold uppercase">02 / Authenticate</div>
+            <div class="font-mono text-[10px] text-[#4397E0] font-bold uppercase">02 / Authenticate</div>
             <div class="font-semibold text-white">5,000 Req/Hr Quota</div>
             <p class="text-zinc-400 leading-relaxed text-[11px]">
               Connect a personal access token for higher limits. Stored only in browser session.
@@ -134,7 +134,7 @@ export const docsContent = {
 
         <div class="p-4 rounded-xl border border-white/10 bg-[#0E0E12] flex flex-col justify-between gap-3">
           <div class="space-y-1">
-            <div class="font-mono text-[10px] text-emerald-400 font-bold uppercase">03 / Curate</div>
+            <div class="font-mono text-[10px] text-[#4397E0] font-bold uppercase">03 / Curate</div>
             <div class="font-semibold text-white">Private Local Vault</div>
             <p class="text-zinc-400 leading-relaxed text-[11px]">
               Save candidate stacks to your offline storage. Zero third-party telemetry.
@@ -153,19 +153,19 @@ export const docsContent = {
         <h3 class="text-base font-bold font-heading text-white tracking-tight">Why Velocity Matters</h3>
         <ul class="space-y-2 text-xs text-zinc-300 font-sans">
           <li class="flex items-start gap-2">
-            <span class="text-emerald-400 font-mono mt-0.5">&bull;</span>
+            <span class="text-zinc-500 font-mono mt-0.5">&bull;</span>
             <div><strong class="text-white">Active commit cadence:</strong> 52-week curves verify sustained developer investment.</div>
           </li>
           <li class="flex items-start gap-2">
-            <span class="text-emerald-400 font-mono mt-0.5">&bull;</span>
+            <span class="text-zinc-500 font-mono mt-0.5">&bull;</span>
             <div><strong class="text-white">Issue turnaround:</strong> Differentiate responsive teams from abandoned issue trackers.</div>
           </li>
           <li class="flex items-start gap-2">
-            <span class="text-emerald-400 font-mono mt-0.5">&bull;</span>
+            <span class="text-zinc-500 font-mono mt-0.5">&bull;</span>
             <div><strong class="text-white">Contributor diversity:</strong> Detect single-maintainer risks early.</div>
           </li>
           <li class="flex items-start gap-2">
-            <span class="text-emerald-400 font-mono mt-0.5">&bull;</span>
+            <span class="text-zinc-500 font-mono mt-0.5">&bull;</span>
             <div><strong class="text-white">Zero tracking:</strong> Stacks and search queries remain private on your machine.</div>
           </li>
         </ul>
@@ -199,42 +199,42 @@ export const docsContent = {
       <h3 class="text-base font-bold font-heading text-white tracking-tight">Explore the Platform</h3>
       <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 font-sans text-xs">
         <a href="/dashboard" class="p-3 rounded-lg border border-white/10 bg-[#0E0E12] hover:border-white/20 transition-all group">
-          <div class="font-semibold text-white group-hover:text-emerald-400 transition-colors flex items-center justify-between">
+          <div class="font-semibold text-white group-hover:text-[#4397E0] transition-colors flex items-center justify-between">
             Explore Repositories <span class="font-mono text-[10px] text-zinc-500">&rarr;</span>
           </div>
           <p class="text-[11px] text-zinc-400 mt-1">Live search &amp; health metrics</p>
         </a>
 
         <a href="/languages" class="p-3 rounded-lg border border-white/10 bg-[#0E0E12] hover:border-white/20 transition-all group">
-          <div class="font-semibold text-white group-hover:text-emerald-400 transition-colors flex items-center justify-between">
+          <div class="font-semibold text-white group-hover:text-[#FFC95C] transition-colors flex items-center justify-between">
             Trending Stacks <span class="font-mono text-[10px] text-zinc-500">&rarr;</span>
           </div>
           <p class="text-[11px] text-zinc-400 mt-1">Fast-growing ecosystems</p>
         </a>
 
         <a href="/cheatsheet" class="p-3 rounded-lg border border-white/10 bg-[#0E0E12] hover:border-white/20 transition-all group">
-          <div class="font-semibold text-white group-hover:text-emerald-400 transition-colors flex items-center justify-between">
+          <div class="font-semibold text-white group-hover:text-[#4397E0] transition-colors flex items-center justify-between">
             Git Cheat Sheet <span class="font-mono text-[10px] text-zinc-500">&rarr;</span>
           </div>
           <p class="text-[11px] text-zinc-400 mt-1">Essential workflows &amp; tips</p>
         </a>
 
         <a href="/api" class="p-3 rounded-lg border border-white/10 bg-[#0E0E12] hover:border-white/20 transition-all group">
-          <div class="font-semibold text-white group-hover:text-emerald-400 transition-colors flex items-center justify-between">
+          <div class="font-semibold text-white group-hover:text-[#4397E0] transition-colors flex items-center justify-between">
             API Quotas &amp; PAT <span class="font-mono text-[10px] text-zinc-500">&rarr;</span>
           </div>
           <p class="text-[11px] text-zinc-400 mt-1">Rate limit test console</p>
         </a>
 
         <a href="/ai-news" class="p-3 rounded-lg border border-white/10 bg-[#0E0E12] hover:border-white/20 transition-all group">
-          <div class="font-semibold text-white group-hover:text-emerald-400 transition-colors flex items-center justify-between">
+          <div class="font-semibold text-white group-hover:text-[#C19EDB] transition-colors flex items-center justify-between">
             AI Newsroom <span class="font-mono text-[10px] text-zinc-500">&rarr;</span>
           </div>
           <p class="text-[11px] text-zinc-400 mt-1">Open model breakthroughs</p>
         </a>
 
         <a href="/company" class="p-3 rounded-lg border border-white/10 bg-[#0E0E12] hover:border-white/20 transition-all group">
-          <div class="font-semibold text-white group-hover:text-emerald-400 transition-colors flex items-center justify-between">
+          <div class="font-semibold text-white group-hover:text-[#FFC95C] transition-colors flex items-center justify-between">
             Company &amp; Team <span class="font-mono text-[10px] text-zinc-500">&rarr;</span>
           </div>
           <p class="text-[11px] text-zinc-400 mt-1">Open-source philosophy</p>

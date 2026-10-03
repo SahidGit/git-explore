@@ -1,14 +1,8 @@
+@import './fonts.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@font-face {
-  font-family: 'Neue Machina';
-  src: url('/NeueMachina-Regular.otf') format('opentype');
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
 
 @layer base {
   :root {
@@ -178,7 +172,7 @@
     --accent-muted: rgba(255, 255, 255, 0.12);
     --accent-subtle: rgba(255, 255, 255, 0.06);
     --accent-border: rgba(255, 255, 255, 0.20);
-    --accent-emerald: var(--green);
+    --accent-emerald: #4397E0;
     --accent-indigo: var(--blue);
     --primary: #FFFFFF;
     --border-hairline: var(--border-subtle);
@@ -221,7 +215,7 @@
   }
 
   /* ── Heading Hierarchy: Neue Machina ───────────────────────
-   * All structural headings use Neue Machina (public/NeueMachina-Regular.otf).
+   * All structural headings use Neue Machina (src/assets/fonts/neue-machina/).
    */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
@@ -234,6 +228,16 @@
   .font-space {
     font-family: var(--font-heading) !important;
     letter-spacing: -0.02em;
+  }
+
+  /* Libron font utility */
+  .font-libron {
+    font-family: 'Libron', Georgia, serif !important;
+  }
+
+  /* Gilroy font utility */
+  .font-gilroy {
+    font-family: 'Gilroy', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
   }
 
   /* Neue Machina accent — use ONLY for key brand phrases and highlights */
@@ -304,10 +308,22 @@
   50%       { opacity: 0.9; }
 }
 
+@keyframes popInFast {
+  0% {
+    opacity: 0;
+    transform: translateY(4px) scale(0.985);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 /* ─── Utility & Component Classes ───────────────────── */
 
 .animate-marquee { animation: marquee 40s linear infinite; }
 .animate-fadeInUp { animation: fadeInUp 0.7s ease-out forwards; }
+.animate-popInFast { animation: popInFast 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 .animate-terminalBlink { animation: terminalBlink 1s step-start infinite; }
 .animate-glowPulse { animation: glowPulse 3s ease-in-out infinite; }
 
@@ -586,6 +602,50 @@
 
 .four-dot-loader .dot:nth-child(4) {
   animation-delay: 0.6s;
+}
+
+/* =====================================================
+   MASTHEAD ANNOUNCEMENT BAR
+   ===================================================== */
+.masthead-bar {
+  background-color: #0E0E10;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  font-size: 11px;
+  line-height: 1.4;
+  padding: 6px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  position: relative;
+  z-index: 50;
+  user-select: none;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+.masthead-bar .live-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: rgba(193, 158, 219, 0.1);
+  border: 1px solid rgba(193, 158, 219, 0.25);
+  color: #C19EDB;
+  font-weight: 600;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 9999px;
+}
+
+.masthead-date-lang {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #A1A1AA;
+  font-size: 11px;
+  white-space: nowrap;
 }
 
 @media (prefers-reduced-motion: reduce) {

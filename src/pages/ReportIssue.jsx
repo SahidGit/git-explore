@@ -11,6 +11,9 @@ import {
   Link2,
   HelpCircle,
   ShieldCheck,
+  ShieldAlert,
+  Sparkles,
+  AlertTriangle,
   RefreshCw,
   Home,
   ChevronDown,
@@ -23,6 +26,7 @@ import SEO from "../components/ui/SEO";
 import PageNavigation from "../components/ui/PageNavigation";
 import CloudflareTurnstile from "../components/ui/CloudflareTurnstile";
 import { Link, useNavigate } from "react-router-dom";
+import { ReportIssueIcon } from "../components/ui/Icons";
 
 const ISSUE_TYPES = [
   {
@@ -30,6 +34,28 @@ const ISSUE_TYPES = [
     label: "Select an issue or correction category *",
     disabled: true,
   },
+  // --- Gems & Open Source Tools ---
+  {
+    value: "Gems / Tools: Broken Website or Download Link",
+    label: "Gems / Tools: Broken Website or Download Link",
+    icon: Link2,
+  },
+  {
+    value: "Gems / Tools: Inaccurate Info, Specs, or Wrong Store Link",
+    label: "Gems / Tools: Inaccurate Info, Specs, or Wrong Store Link",
+    icon: FileText,
+  },
+  {
+    value: "Gems / Tools: Malicious, Misleading, or Security Concern",
+    label: "Gems / Tools: Malicious, Misleading, or Security Concern",
+    icon: ShieldAlert,
+  },
+  {
+    value: "Gems / Tools: Suggest New Open-Source Tool / Gem",
+    label: "Gems / Tools: Suggest New Open-Source Tool / Gem",
+    icon: Sparkles,
+  },
+  // --- AI Newsroom ---
   {
     value: "AI Newsroom: Inaccurate Model Pricing / Specs",
     label: "AI Newsroom: Inaccurate Model Pricing / Specs",
@@ -45,35 +71,42 @@ const ISSUE_TYPES = [
     label: "AI Newsroom: Missing Model / Lab Suggestion",
     icon: Lightbulb,
   },
+  // --- Security & Privacy ---
+  {
+    value: "Security & Privacy: Vulnerability or Data Concern",
+    label: "Security & Privacy: Vulnerability or Data Concern",
+    icon: AlertTriangle,
+  },
+  // --- ExploreGit Core Platform ---
   {
     value: "ExploreGit: Repository Search / Filter Bug",
     label: "ExploreGit: Repository Search / Filter Bug",
     icon: Bug,
   },
   {
-    value: "GitHub API & Token Rate Limit Issue",
-    label: "GitHub API & Token Rate Limit Issue",
+    value: "ExploreGit: GitHub API & PAT Rate Limit Issue",
+    label: "ExploreGit: GitHub API & PAT Rate Limit Issue",
     icon: HelpCircle,
   },
   {
-    value: "Local Bookmarks & Export Bug",
-    label: "Local Bookmarks & Export Bug",
+    value: "ExploreGit: Local Bookmarks & Export Bug",
+    label: "ExploreGit: Local Bookmarks & Export Bug",
     icon: Bug,
   },
   {
-    value: "UI Layout / Responsive Glitch",
-    label: "UI Layout / Responsive Glitch",
+    value: "ExploreGit: UI Layout / Responsive Glitch",
+    label: "ExploreGit: UI Layout / Responsive Glitch",
     icon: Bug,
-  },
-  {
-    value: "Feature Request / Platform Idea",
-    label: "Feature Request / Platform Idea",
-    icon: Lightbulb,
   },
   {
     value: "Documentation or Typo Correction",
     label: "Documentation or Typo Correction",
     icon: FileText,
+  },
+  {
+    value: "Feature Request / Platform Idea",
+    label: "Feature Request / Platform Idea",
+    icon: Lightbulb,
   },
   {
     value: "Other / General Feedback",
@@ -302,22 +335,27 @@ const ReportIssue = () => {
                   aria-hidden="true"
                 />
 
-                {/* Header with BETA tag */}
+                {/* Header with BETA tag and Showcase SVG */}
                 <div className="text-center sm:text-left mb-8 pb-6 border-b border-white/[0.06] relative z-10">
-                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 mb-2.5">
-                    <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-heading">
-                      Report an Issue / Suggestion
-                    </h1>
-                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/20 text-xs font-sans font-semibold text-amber-400 uppercase tracking-wider">
-                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                      Beta
-                    </span>
+                  <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 mb-3">
+                    <div className="p-2 rounded-2xl bg-amber-400/10 border border-amber-400/20 shrink-0">
+                      <ReportIssueIcon className="w-10 h-10" size={40} />
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
+                        <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-heading">
+                          Report an Issue / Suggestion
+                        </h1>
+                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/20 text-xs font-sans font-semibold text-amber-400 uppercase tracking-wider">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                          Beta
+                        </span>
+                      </div>
+                      <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed max-w-xl font-sans font-normal">
+                        Report incorrect telemetry data, broken arXiv links, model price discrepancies, or feature suggestions for ExploreGit &amp; AI Newsroom.
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-sm sm:text-base text-zinc-300 leading-relaxed max-w-xl font-sans font-normal">
-                    Report incorrect data, broken arXiv links, model price
-                    discrepancies, or feature suggestions for ExploreGit &amp;
-                    AI Newsroom.
-                  </p>
                 </div>
 
                 {/* Error Feedback Message */}
@@ -332,13 +370,13 @@ const ReportIssue = () => {
                 {status === "success" ? (
                   <div className="p-8 sm:p-12 rounded-2xl bg-white/[0.02] border border-white/[0.08] backdrop-blur-md text-center space-y-6 animate-fadeInUp shadow-2xl">
                     {/* Minimal SVG Stroke Icon */}
-                    <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto text-emerald-400">
+                    <div className="w-12 h-12 rounded-full bg-[#4397E0]/10 border border-[#4397E0]/20 flex items-center justify-center mx-auto text-[#4397E0]">
                       <CheckCircle2 className="w-6 h-6 stroke-[1.75]" />
                     </div>
 
                     <div className="space-y-3">
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-mono text-xs font-semibold tracking-wider uppercase">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white font-mono text-xs font-semibold tracking-wider uppercase">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#4397E0]" />
                         <span>SUBMISSION VERIFIED</span>
                       </div>
 
@@ -441,7 +479,7 @@ const ReportIssue = () => {
                                     {IconComponent && <IconComponent className="w-3.5 h-3.5 text-zinc-500 shrink-0" />}
                                     <span className="truncate">{type.label}</span>
                                   </span>
-                                  {isSelected && <Check className="w-4 h-4 text-emerald-400 shrink-0 ml-2" />}
+                                  {isSelected && <Check className="w-4 h-4 text-[#4397E0] shrink-0 ml-2" />}
                                 </button>
                               );
                             })}
@@ -522,7 +560,7 @@ const ReportIssue = () => {
                                 ? "text-amber-400 font-bold"
                                 : currentLength >= MAX_CHARS
                                   ? "text-rose-400 font-bold"
-                                  : "text-emerald-400"
+                                  : "text-zinc-400"
                           }
                         >
                           {!isDescriptionValid && currentLength > 0

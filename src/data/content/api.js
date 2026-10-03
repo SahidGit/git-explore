@@ -68,7 +68,7 @@ export const apiContent = {
         <h2 class="text-lg font-bold font-space text-white tracking-tight">API Authorization Headers</h2>
         <div class="rounded-xl border border-white/10 bg-[#0B0C0E] p-4 font-mono text-xs text-zinc-300 overflow-x-auto leading-relaxed space-y-2">
           <div class="text-zinc-500">// Example Authenticated Curl Request</div>
-          <div class="text-emerald-400">curl <span class="text-zinc-300">-H</span> <span class="text-sky-300">&quot;Authorization: Bearer ghp_your_token_here&quot;</span> \\</div>
+          <div class="text-[#4397E0]">curl <span class="text-zinc-300">-H</span> <span class="text-sky-300">&quot;Authorization: Bearer ghp_your_token_here&quot;</span> \\</div>
           <div class="text-zinc-400 ml-4">-H <span class="text-sky-300">&quot;Accept: application/vnd.github.v3+json&quot;</span> \\</div>
           <div class="text-zinc-400 ml-4">https://api.github.com/user</div>
         </div>

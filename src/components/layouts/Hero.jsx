@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 
 import { getMonthlyTopRepositories } from "../../services/githubService";
+import heroMidImg from "../../assets/images/hero-mid.png";
+import heroBotImg from "../../assets/images/hero-bot.png";
 
 // ─── Ecosystem Categories Data ─────────────────────────
 const ECOSYSTEM_CATEGORIES = [
@@ -35,7 +37,7 @@ const ECOSYSTEM_CATEGORIES = [
     id: "open-models",
     name: "Open Models",
     badge: "LLM",
-    color: "#10B981",
+    color: "#C19EDB",
     query: "topic:open-source-llm",
   },
   {
@@ -63,7 +65,7 @@ const ECOSYSTEM_CATEGORIES = [
 
 // ─── Quick Filter Chips Data ───────────────────────────
 const QUICK_FILTER_CHIPS = [
-  { id: "ai", label: "AI", type: "topic", query: "topic:ai", color: "#A97BFF" },
+  { id: "ai", label: "AI", type: "topic", query: "topic:ai", color: "#C19EDB" },
   { id: "python", label: "Python", type: "lang", query: "language:python", color: "#3572A5" },
   { id: "rust", label: "Rust", type: "lang", query: "language:rust", color: "#DEA584" },
   {
@@ -86,7 +88,7 @@ const QUICK_FILTER_CHIPS = [
     label: "This Week",
     type: "timeframe",
     query: "created:>2026-08-10",
-    color: "#89E051",
+    color: "#4397E0",
   },
   {
     id: "this-month",
@@ -316,7 +318,7 @@ const Hero = ({ onExplore }) => {
       <div
         className="absolute inset-0 w-full h-[140%] -top-12 bg-cover bg-center sm:bg-top pointer-events-none opacity-100 transition-transform duration-75 ease-out will-change-transform"
         style={{
-          backgroundImage: 'url(/hero-mid.png)',
+          backgroundImage: `url(${heroMidImg})`,
           transform: `translate3d(0, ${Math.min(scrollY * 0.35, 300)}px, 0)`,
         }}
         aria-hidden="true"
@@ -326,7 +328,7 @@ const Hero = ({ onExplore }) => {
       <div
         className="absolute inset-0 w-full h-full bg-cover bg-bottom pointer-events-none opacity-100 transition-transform duration-75 ease-out will-change-transform"
         style={{
-          backgroundImage: 'url(/hero-bot.png)',
+          backgroundImage: `url(${heroBotImg})`,
           transform: `translate3d(0, ${Math.min(scrollY * 0.15, 150)}px, 0)`,
         }}
         aria-hidden="true"
@@ -433,7 +435,7 @@ const Hero = ({ onExplore }) => {
               {/* Quick Filter Chips (Clean Borderless Pills) */}
               <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-0.5 no-scrollbar flex-wrap sm:flex-nowrap">
                 <span className="text-xs font-sans text-zinc-400 uppercase tracking-wider shrink-0 flex items-center gap-1.5 mr-1 font-semibold">
-                  <Filter className="w-3.5 h-3.5 text-emerald-400" />
+                  <Filter className="w-3.5 h-3.5 text-zinc-400" />
                   <span>Quick:</span>
                 </span>
                 {QUICK_FILTER_CHIPS.map((chip) => {
@@ -478,7 +480,7 @@ const Hero = ({ onExplore }) => {
             {/* Signal preview header bar */}
             <div className="flex items-center justify-between px-5 py-2.5 bg-black/40 text-xs font-sans font-medium text-zinc-400">
               <div className="flex items-center gap-2">
-                <span className={`w-1.5 h-1.5 rounded-full ${isLiveOnline ? "bg-emerald-400 animate-pulse" : "bg-amber-400"}`} />
+                <span className={`w-1.5 h-1.5 rounded-full ${isLiveOnline ? "bg-blue-400 animate-pulse" : "bg-zinc-400"}`} />
                 <span className="tracking-wide">{isLiveOnline ? "LIVE SIGNAL PREVIEW · MONTHLY TOP" : "CURATED SIGNAL PREVIEW"}</span>
               </div>
               <div>
@@ -510,10 +512,10 @@ const Hero = ({ onExplore }) => {
                         );
                       }
                     }}
-                    className="grid grid-cols-12 gap-3 items-center px-4 py-3 rounded-xl hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emerald-400 transition-colors cursor-pointer group"
+                    className="grid grid-cols-12 gap-3 items-center px-4 py-3 rounded-xl hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 transition-colors cursor-pointer group"
                   >
                     <div className="col-span-12 sm:col-span-6 text-left">
-                      <p className="text-xs sm:text-sm font-sans text-white font-medium group-hover:text-emerald-400 transition-colors truncate">
+                      <p className="text-xs sm:text-sm font-sans text-white font-medium group-hover:text-blue-400 transition-colors truncate">
                         {repo.name}
                       </p>
                       <p className="text-xs font-sans text-zinc-400 truncate mt-0.5">
@@ -531,8 +533,8 @@ const Hero = ({ onExplore }) => {
                       />
                       {repo.lang}
                     </div>
-                    <div className="col-span-4 sm:col-span-2 flex items-center gap-1 text-xs font-sans text-emerald-400 font-medium justify-end sm:justify-start">
-                      <TrendingUp className="w-3.5 h-3.5 shrink-0" />
+                    <div className="col-span-4 sm:col-span-2 flex items-center gap-1 text-xs font-sans text-zinc-300 font-medium justify-end sm:justify-start">
+                      <TrendingUp className="w-3.5 h-3.5 shrink-0 text-blue-400" />
                       <span className="truncate">{repo.delta}</span>
                     </div>
                   </div>
@@ -548,7 +550,7 @@ const Hero = ({ onExplore }) => {
                       setSearchQuery("");
                       setActiveChip(null);
                     }}
-                    className="text-xs font-sans text-emerald-400 hover:underline"
+                    className="text-xs font-sans text-blue-400 hover:underline"
                   >
                     Clear search query and filters
                   </button>
@@ -575,7 +577,7 @@ const Hero = ({ onExplore }) => {
                   handleCategoryClick(cat);
                 }
               }}
-              className="flex items-center justify-center gap-2 border-b sm:border-b-0 border-white/10 py-3.5 sm:py-4 px-4 cursor-pointer hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 active:scale-[0.98] transition-all select-none group"
+              className="flex items-center justify-center gap-2 border-b sm:border-b-0 border-white/10 py-3.5 sm:py-4 px-4 cursor-pointer hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.98] transition-all select-none group"
             >
               <span
                 className="w-2 h-2 rounded-full shrink-0"

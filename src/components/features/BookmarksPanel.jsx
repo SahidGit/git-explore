@@ -3,6 +3,7 @@ import { Search, Trash2, Download, X, Star, GitFork, FileText } from 'lucide-rea
 import { storageService } from '../../services/storageService';
 import { formatNumber } from '../../utils/formatters';
 import { Link } from 'react-router-dom';
+import { BookmarksNavIcon } from '../ui/Icons';
 
 // ─── Language color map (mini) ────────────────────────
 const LANG_COLORS = {
@@ -24,7 +25,7 @@ const EmptyBookmarks = () => (
                 <span className="ml-1 text-[10px] text-zinc-600">~ /bookmarks</span>
             </div>
             <p className="text-zinc-500 mb-1.5">
-                <span className="text-emerald-400/70">❯</span>{' '}
+                <span className="text-blue-400/70">❯</span>{' '}
                 <span className="text-zinc-400">exploregit bookmarks --list</span>
             </p>
             <p className="text-zinc-600">0 records found in local storage.</p>
@@ -175,7 +176,10 @@ const BookmarksPanel = ({ onRepoSelect, onBookmarkToggle }) => {
             {/* ── Header ── */}
             <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
                 <div className="flex items-center gap-3">
-                    <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight font-heading">Saved Repositories</h1>
+                    <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight font-heading flex items-center gap-3">
+                        <BookmarksNavIcon className="w-8 h-8 sm:w-9 sm:h-9 shrink-0" size={36} />
+                        <span>Saved Bookmarks</span>
+                    </h1>
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full border border-white/[0.08] bg-white/[0.04] font-mono text-xs text-zinc-400">
                         {bookmarks.length}
                     </span>

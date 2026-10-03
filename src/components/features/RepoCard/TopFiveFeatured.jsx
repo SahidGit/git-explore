@@ -3,6 +3,7 @@ import { Flame, Star, ChevronRight, Award, Trophy, Sparkles, Medal, Crown, Trend
 import { formatNumber } from '../../../utils/formatters';
 import { SkeletonTopFive } from '../../ui/SkeletonLoader';
 import * as githubService from '../../../services/githubService';
+import { TrendingLeaderboardIcon } from '../../ui/Icons';
 
 const LANG_COLORS = {
     JavaScript:  '#F7DF1E',
@@ -178,8 +179,8 @@ const TopFiveFeatured = ({
             {/* Header Bar */}
             <div className="flex flex-wrap items-center justify-between gap-4 mb-6 border-b border-white/[0.07] pb-4 relative z-10">
                 <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500/20 via-orange-500/15 to-transparent border border-amber-400/25 flex items-center justify-center text-amber-300 shadow-sm shadow-amber-500/10">
-                        <Flame className="w-5 h-5 text-amber-400 animate-pulse" />
+                    <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-orange-500/15 via-amber-500/10 to-transparent border border-orange-400/25 flex items-center justify-center shadow-sm shadow-orange-500/10 shrink-0">
+                        <TrendingLeaderboardIcon className="w-6 h-6 shrink-0" size={24} />
                     </div>
                     <div>
                         <div className="flex items-center gap-2.5">
@@ -187,7 +188,7 @@ const TopFiveFeatured = ({
                                 Trending Leaderboard
                             </h2>
                             <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/[0.06] border border-white/10 text-xs font-sans text-zinc-200 font-semibold">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
                                 {timeRange === 'weekly' ? 'This Week' : currentMonthYear}
                             </span>
                         </div>

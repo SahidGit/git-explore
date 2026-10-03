@@ -129,7 +129,7 @@ const CloudflareTurnstile = ({ onVerify, onError, onExpire, siteKey }) => {
             {/* Header row */}
             <div className="flex items-center justify-between border-b border-white/[0.06] pb-2.5">
                 <div className="flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                    <ShieldCheck className="w-4 h-4 text-[#4397E0]" />
                     <span className="text-xs font-mono font-bold text-zinc-200">
                         Cloudflare Bot Verification
                     </span>
@@ -168,12 +168,12 @@ const CloudflareTurnstile = ({ onVerify, onError, onExpire, siteKey }) => {
 
                 {/* Verified state banner */}
                 {isVerified && (
-                    <div className="w-full flex items-center justify-between p-2.5 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-emerald-400 font-mono text-xs">
+                    <div className="w-full flex items-center justify-between p-2.5 bg-white/10 border border-white/20 rounded-lg text-white font-mono text-xs">
                         <div className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                            <CheckCircle2 className="w-4 h-4 text-[#4397E0]" />
                             <span className="font-bold">Bot challenge verified. Human session confirmed.</span>
                         </div>
-                        <span className="text-[9px] bg-emerald-500/20 px-1.5 py-0.5 rounded text-emerald-300">
+                        <span className="text-[9px] bg-[#4397E0]/20 px-1.5 py-0.5 rounded text-[#4397E0] font-bold">
                             SECURE
                         </span>
                     </div>

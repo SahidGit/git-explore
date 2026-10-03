@@ -6,7 +6,71 @@ import {
     Compass, BarChart2, Bookmark, Terminal, Sparkles, UserCheck
 } from 'lucide-react';
 import AnnouncementBar from '../ui/AnnouncementBar';
+import TokenAlertBanner from '../ui/TokenAlertBanner';
 import { useAuth } from '../../context/AuthContext';
+import {
+    BookmarksNavIcon,
+    ProfileNavIcon,
+    LanguagesNavIcon,
+    GitCheatSheetNavIcon,
+    GemsNavIcon,
+    AiNewsIntelIcon,
+    ReportIssueIcon
+} from '../ui/Icons';
+
+/**
+ * Calculate dynamic percentage and color classes for rate limit quotas.
+ * Transitions: Green (>60%) -> Blue (31-60%) -> Yellow (16-30%) -> Red (6-15%) -> Darker Red (<=5%)
+ */
+export const getQuotaColorInfo = (remaining, limit) => {
+    const lim = limit && limit > 0 ? limit : 60;
+    const rem = remaining !== undefined && remaining !== null ? Math.max(0, remaining) : lim;
+    const percentage = Math.max(0, Math.min(100, Math.round((rem / lim) * 100)));
+
+    if (percentage <= 5) {
+        return {
+            percentage,
+            barClass: 'bg-red-800 shadow-[0_0_12px_rgba(153,27,27,0.85)] animate-pulse',
+            dotClass: 'bg-red-700 shadow-[0_0_8px_rgba(185,28,28,0.8)]',
+            textColor: 'text-red-400',
+            level: 'darker-red',
+        };
+    }
+    if (percentage <= 15) {
+        return {
+            percentage,
+            barClass: 'bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]',
+            dotClass: 'bg-rose-500',
+            textColor: 'text-rose-400',
+            level: 'red',
+        };
+    }
+    if (percentage <= 35) {
+        return {
+            percentage,
+            barClass: 'bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.5)]',
+            dotClass: 'bg-amber-400',
+            textColor: 'text-amber-400',
+            level: 'yellow',
+        };
+    }
+    if (percentage <= 60) {
+        return {
+            percentage,
+            barClass: 'bg-sky-500 shadow-[0_0_10px_rgba(14,165,233,0.5)]',
+            dotClass: 'bg-sky-500',
+            textColor: 'text-sky-400',
+            level: 'blue',
+        };
+    }
+    return {
+        percentage,
+        barClass: 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]',
+        dotClass: 'bg-emerald-500',
+        textColor: 'text-emerald-400',
+        level: 'green',
+    };
+};
 
 const Header = ({ activeTab, showBackButton, theme = 'dark' }) => {
     const location = useLocation();
@@ -29,6 +93,12 @@ const Header = ({ activeTab, showBackButton, theme = 'dark' }) => {
     const [localSuccess, setLocalSuccess] = useState(false);
     const [showGuide, setShowGuide] = useState(false);
 
+    const modalCardRef = React.useRef(null);
+    const guideRef = React.useRef(null);
+    const guideToggleRef = React.useRef(null);
+
+    const quotaInfo = getQuotaColorInfo(rateLimit?.remaining, rateLimit?.limit);
+
     const isLight = theme === 'light';
     const isHomePage = location.pathname === '/';
     const shouldShowBackButton = showBackButton !== undefined ? showBackButton : !isHomePage;
@@ -48,10 +118,49 @@ const Header = ({ activeTab, showBackButton, theme = 'dark' }) => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    // Close "how to generate token" window when clicking anywhere outside it
+    React.useEffect(() => {
+        if (!showGuide) return;
+
+        const handleClickOutsideGuide = (e) => {
+            if (
+                guideRef.current &&
+                !guideRef.current.contains(e.target) &&
+                guideToggleRef.current &&
+                !guideToggleRef.current.contains(e.target)
+            ) {
+                setShowGuide(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutsideGuide);
+        document.addEventListener('touchstart', handleClickOutsideGuide);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutsideGuide);
+            document.removeEventListener('touchstart', handleClickOutsideGuide);
+        };
+    }, [showGuide]);
+
+    // Handle Escape key to close modal/guide
+    React.useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                if (showGuide) {
+                    setShowGuide(false);
+                } else if (showTokenModal) {
+                    setShowTokenModal(false);
+                }
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [showGuide, showTokenModal]);
+
     const handleOpenModal = () => {
         setLocalError('');
         setLocalSuccess(false);
         setInputToken('');
+        setShowGuide(false);
         refreshRateLimit();
         setShowTokenModal(true);
     };
@@ -91,10 +200,10 @@ const Header = ({ activeTab, showBackButton, theme = 'dark' }) => {
     const navLinks = [
         { label: 'Dashboard', to: '/dashboard', tab: 'dashboard' },
         { label: 'Languages', to: '/languages', tab: 'languages' },
+        { label: 'Gems', to: '/gems', tab: 'gems' },
         { label: 'Bookmarks', to: '/bookmarks', tab: 'bookmarks' },
         { label: 'Profile', to: '/profile', tab: 'profile' },
         { label: 'Git Cheat Sheet', to: '/cheatsheet', tab: 'cheatsheet' },
-        { label: 'AI Newsroom', to: '/ai-news', tab: 'ai-news' },
     ];
 
     // Structured mobile navigation categorized by developer use-cases
@@ -107,8 +216,16 @@ const Header = ({ activeTab, showBackButton, theme = 'dark' }) => {
                     to: '/dashboard',
                     tab: 'dashboard',
                     tag: 'Live Feed',
-                    tagStyle: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+                    tagStyle: 'bg-[#4397E0]/10 text-[#4397E0] border-[#4397E0]/20',
                     icon: Compass,
+                },
+                {
+                    label: 'Hidden Gems & Tools',
+                    to: '/gems',
+                    tab: 'gems',
+                    tag: 'Curated',
+                    tagStyle: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+                    icon: GemsNavIcon,
                 },
                 {
                     label: 'Trending Languages',
@@ -116,7 +233,7 @@ const Header = ({ activeTab, showBackButton, theme = 'dark' }) => {
                     tab: 'languages',
                     tag: 'Analytics',
                     tagStyle: 'bg-sky-500/10 text-sky-400 border-sky-500/20',
-                    icon: BarChart2,
+                    icon: LanguagesNavIcon,
                 },
                 {
                     label: 'Saved Bookmarks',
@@ -124,7 +241,7 @@ const Header = ({ activeTab, showBackButton, theme = 'dark' }) => {
                     tab: 'bookmarks',
                     tag: 'Saved',
                     tagStyle: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-                    icon: Bookmark,
+                    icon: BookmarksNavIcon,
                 },
             ],
         },
@@ -137,15 +254,7 @@ const Header = ({ activeTab, showBackButton, theme = 'dark' }) => {
                     tab: 'profile',
                     tag: isConnected && user ? `@${user.login}` : 'Heatmap & Stats',
                     tagStyle: 'bg-purple-500/15 text-purple-300 border-purple-500/30',
-                    icon: isConnected && user ? UserCheck : User,
-                },
-                {
-                    label: 'AI Newsroom',
-                    to: '/ai-news',
-                    tab: 'ai-news',
-                    tag: 'Frontier AI',
-                    tagStyle: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
-                    icon: Sparkles,
+                    icon: ProfileNavIcon,
                 },
                 {
                     label: 'Git Cheat Sheet',
@@ -153,7 +262,15 @@ const Header = ({ activeTab, showBackButton, theme = 'dark' }) => {
                     tab: 'cheatsheet',
                     tag: 'Reference',
                     tagStyle: 'bg-zinc-500/15 text-zinc-300 border-zinc-500/25',
-                    icon: Terminal,
+                    icon: GitCheatSheetNavIcon,
+                },
+                {
+                    label: 'AI Newsroom',
+                    to: '/ai-news',
+                    tab: 'ai-news',
+                    tag: 'BETA',
+                    tagStyle: 'bg-amber-400/10 text-amber-400 border-amber-400/20',
+                    icon: AiNewsIntelIcon,
                 },
             ],
         },
@@ -178,6 +295,7 @@ const Header = ({ activeTab, showBackButton, theme = 'dark' }) => {
 
     return (
         <>
+            <TokenAlertBanner onOpenTokenModal={handleOpenModal} />
             {/* Sticky / Fixed Top Navbar with Glassmorphism on Scroll */}
             <header
                 className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ease-in-out ${
@@ -276,36 +394,60 @@ const Header = ({ activeTab, showBackButton, theme = 'dark' }) => {
                                 id="connect-token-btn"
                                 onClick={handleOpenModal}
                                 aria-label="Manage GitHub Token"
-                                className={`hidden sm:flex items-center justify-center rounded-lg font-medium transition-colors duration-150 cursor-pointer h-8 text-sm px-3 gap-2 border focus:outline-2 focus:-outline-offset-2 focus-visible:outline-focus [text-shadow:none] ${
+                                className={`hidden sm:flex items-center justify-center rounded-lg font-medium transition-colors duration-150 cursor-pointer h-8 text-sm px-3 gap-2 border focus:outline-2 focus:-outline-offset-2 focus-visible:outline-focus [text-shadow:none] relative overflow-hidden group ${
                                     isLight
                                         ? 'bg-white hover:bg-neutral-50 border-black/10 text-zinc-900 shadow-xs'
                                         : 'bg-transparent hover:bg-white/[0.08] border-white/15 hover:border-white/30 text-white shadow-xs'
                                 }`}
                             >
-                                <span className="relative flex h-2 w-2">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                                <span className="relative flex h-2 w-2 shrink-0">
+                                    <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${quotaInfo.dotClass} opacity-75`}></span>
+                                    <span className={`relative inline-flex rounded-full h-2 w-2 ${quotaInfo.dotClass}`}></span>
                                 </span>
                                 {user.avatar_url ? (
                                     <img
                                         src={user.avatar_url}
                                         alt={user.login}
-                                        className="w-4 h-4 rounded-full border border-black/10 dark:border-white/20"
+                                        className="w-4 h-4 rounded-full border border-black/10 dark:border-white/20 shrink-0"
                                     />
                                 ) : (
-                                    <User className="w-3.5 h-3.5 text-emerald-400" />
+                                    <User className="w-3.5 h-3.5 text-[#4397E0] shrink-0" />
                                 )}
-                                <span className="font-semibold text-xs font-mono">@{user.login}</span>
+                                <span className="font-semibold text-xs font-mono truncate max-w-[110px]">@{user.login}</span>
+                                {rateLimit && (
+                                    <span className={`text-xs font-mono font-bold ${quotaInfo.textColor}`}>
+                                        {quotaInfo.percentage}%
+                                    </span>
+                                )}
+                                {/* Bottom tracker line on button */}
+                                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/10 overflow-hidden">
+                                    <div
+                                        className={`h-full ${quotaInfo.barClass} transition-all duration-500 ease-out`}
+                                        style={{ width: `${quotaInfo.percentage}%` }}
+                                    />
+                                </div>
                             </button>
                         ) : (
                             <button
                                 id="connect-token-btn"
                                 onClick={handleOpenModal}
                                 aria-label="Connect GitHub Token"
-                                className="hidden sm:flex items-center justify-center rounded-lg font-medium transition-colors duration-150 cursor-pointer h-8 text-sm px-3 bg-white text-[#121215] hover:bg-neutral-100 active:bg-neutral-200 shadow-[0_0_0_1px_rgb(0_0_0/0.06),0_1px_2px_-1px_rgb(0_0_0/0.06),0_2px_4px_rgb(0_0_0/0.04)] dark:shadow-[0_0_0_1px_rgb(255_255_255/0.08),0_1px_2px_-1px_rgb(0_0_0/0.4),0_2px_4px_rgb(0_0_0/0.3)] gap-1.5 focus:outline-2 focus:-outline-offset-2 focus-visible:outline-focus [text-shadow:none]"
+                                className="hidden sm:flex items-center justify-center rounded-lg font-medium transition-colors duration-150 cursor-pointer h-8 text-sm px-3 bg-white text-[#121215] hover:bg-neutral-100 active:bg-neutral-200 shadow-[0_0_0_1px_rgb(0_0_0/0.06),0_1px_2px_-1px_rgb(0_0_0/0.06),0_2px_4px_rgb(0_0_0/0.04)] dark:shadow-[0_0_0_1px_rgb(255_255_255/0.08),0_1px_2px_-1px_rgb(0_0_0/0.4),0_2px_4px_rgb(0_0_0/0.3)] gap-1.5 focus:outline-2 focus:-outline-offset-2 focus-visible:outline-focus [text-shadow:none] relative overflow-hidden group"
                             >
-                                <Key className="w-3.5 h-3.5 text-[#121215]" />
+                                <Key className="w-3.5 h-3.5 text-[#121215] shrink-0" />
                                 <span className="font-sans text-xs">Connect Token</span>
+                                {rateLimit && (
+                                    <span className={`text-xs font-mono font-bold ${quotaInfo.textColor}`}>
+                                        {quotaInfo.percentage}%
+                                    </span>
+                                )}
+                                {/* Bottom tracker line on button */}
+                                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-black/10 overflow-hidden">
+                                    <div
+                                        className={`h-full ${quotaInfo.barClass} transition-all duration-500 ease-out`}
+                                        style={{ width: `${quotaInfo.percentage}%` }}
+                                    />
+                                </div>
                             </button>
                         )}
 
@@ -373,10 +515,21 @@ const Header = ({ activeTab, showBackButton, theme = 'dark' }) => {
                                     handleOpenModal();
                                 }}
                                 aria-label="Connect GitHub Token"
-                                className="flex items-center gap-1.5 justify-center rounded-lg bg-white px-3 h-8 text-sm font-semibold text-[#121215] hover:bg-neutral-100 active:bg-neutral-200 shadow-[0_0_0_1px_rgb(0_0_0/0.06),0_1px_2px_-1px_rgb(0_0_0/0.06),0_2px_4px_rgb(0_0_0/0.04)] cursor-pointer transition-colors"
+                                className="flex items-center gap-1.5 justify-center rounded-lg bg-white px-3 h-8 text-sm font-semibold text-[#121215] hover:bg-neutral-100 active:bg-neutral-200 shadow-[0_0_0_1px_rgb(0_0_0/0.06),0_1px_2px_-1px_rgb(0_0_0/0.06),0_2px_4px_rgb(0_0_0/0.04)] cursor-pointer transition-colors relative overflow-hidden"
                             >
                                 <Key className="w-3.5 h-3.5 text-[#121215] shrink-0" />
                                 <span>{isConnected && user ? `@${user.login}` : 'Connect'}</span>
+                                {rateLimit && (
+                                    <span className={`text-xs font-mono font-bold ${quotaInfo.textColor}`}>
+                                        {quotaInfo.percentage}%
+                                    </span>
+                                )}
+                                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-black/10 overflow-hidden">
+                                    <div
+                                        className={`h-full ${quotaInfo.barClass} transition-all duration-500 ease-out`}
+                                        style={{ width: `${quotaInfo.percentage}%` }}
+                                    />
+                                </div>
                             </button>
 
                             <button
@@ -393,29 +546,36 @@ const Header = ({ activeTab, showBackButton, theme = 'dark' }) => {
                     </div>
 
                     {/* Clean Left-Aligned Links List (Entire.io Design) */}
-                    <nav className="flex-1 overflow-y-auto px-6 py-8 flex flex-col gap-6">
+                    <nav className="flex-1 overflow-y-auto px-6 py-8 flex flex-col gap-5">
                         {[
                             { label: 'Dashboard', to: '/dashboard', tab: 'dashboard' },
-                            { label: 'Languages', to: '/languages', tab: 'languages' },
-                            { label: 'Bookmarks', to: '/bookmarks', tab: 'bookmarks' },
-                            { label: 'Profile', to: '/profile', tab: 'profile' },
-                            { label: 'Git Cheat Sheet', to: '/cheatsheet', tab: 'cheatsheet' },
-                            { label: 'AI Newsroom', to: '/ai-news', tab: 'ai-news' },
-                            { label: 'Report Issue', to: '/report', tab: 'report' },
-                        ].map(({ label, to, tab }) => {
+                            { label: 'Languages', to: '/languages', tab: 'languages', icon: LanguagesNavIcon },
+                            { label: 'Gems & Tools', to: '/gems', tab: 'gems', icon: GemsNavIcon, badge: 'NEW' },
+                            { label: 'Bookmarks', to: '/bookmarks', tab: 'bookmarks', icon: BookmarksNavIcon },
+                            { label: 'Profile', to: '/profile', tab: 'profile', icon: ProfileNavIcon },
+                            { label: 'Git Cheat Sheet', to: '/cheatsheet', tab: 'cheatsheet', icon: GitCheatSheetNavIcon },
+                            { label: 'AI Newsroom', to: '/ai-news', tab: 'ai-news', icon: AiNewsIntelIcon, badge: 'BETA' },
+                            { label: 'Report Issue', to: '/report', tab: 'report', icon: ReportIssueIcon },
+                        ].map(({ label, to, tab, icon: ItemIcon, badge }) => {
                             const isActive = isCurrentTab(tab);
                             return (
                                 <Link
                                     key={to}
                                     to={to}
                                     onClick={() => setIsMobileMenuOpen(false)}
-                                    className={`text-[17px] sm:text-lg font-bold font-sans transition-colors focus:outline-none ${
+                                    className={`text-[17px] sm:text-lg font-bold font-sans transition-colors focus:outline-none flex items-center gap-3 ${
                                         isActive
                                             ? 'text-white'
                                             : 'text-white/90 hover:text-white/60'
                                     }`}
                                 >
-                                    {label}
+                                    {ItemIcon && <ItemIcon className="w-5 h-5 shrink-0" size={20} />}
+                                    <span>{label}</span>
+                                    {badge && (
+                                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-400 border border-amber-400/20 leading-none">
+                                            {badge}
+                                        </span>
+                                    )}
                                 </Link>
                             );
                         })}
@@ -425,30 +585,45 @@ const Header = ({ activeTab, showBackButton, theme = 'dark' }) => {
 
             {/* Token Configuration Modal & Step-by-Step Generation Guide */}
             {showTokenModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xl p-4 animate-fadeIn font-sans">
-                    <div className="w-full max-w-lg bg-[#121215]/95 backdrop-blur-2xl border border-white/15 rounded-2xl p-5 sm:p-6 space-y-5 shadow-2xl font-sans text-xs max-h-[90vh] overflow-y-auto">
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xl p-4 animate-fadeIn font-sans cursor-pointer"
+                    onClick={(e) => {
+                        if (modalCardRef.current && !modalCardRef.current.contains(e.target)) {
+                            setShowTokenModal(false);
+                            setShowGuide(false);
+                        }
+                    }}
+                >
+                    <div
+                        ref={modalCardRef}
+                        onClick={(e) => e.stopPropagation()}
+                        className="w-full max-w-lg bg-[#121215]/95 backdrop-blur-2xl border border-white/15 rounded-2xl p-5 sm:p-6 space-y-5 shadow-2xl font-sans text-xs max-h-[90vh] overflow-y-auto cursor-default"
+                    >
                         
                         {/* Modal Header */}
                         <div className="flex items-center justify-between border-b border-white/10 pb-3">
                             <div className="flex items-center gap-2">
-                                <Key className="w-4 h-4 text-emerald-400" />
+                                <Key className="w-4 h-4 text-[#4397E0]" />
                                 <h3 className="text-sm font-semibold text-white tracking-tight">GitHub Token Configuration</h3>
                             </div>
                             <button
-                                onClick={() => setShowTokenModal(false)}
+                                onClick={() => {
+                                    setShowTokenModal(false);
+                                    setShowGuide(false);
+                                }}
                                 className="w-7 h-7 rounded-full bg-white/[0.06] text-zinc-400 hover:text-white flex items-center justify-center transition-all active:scale-90 cursor-pointer"
                             >
                                 <X className="w-4 h-4" />
                             </button>
                         </div>
 
-                        {/* Status Quota Card */}
-                        <div className="p-4 rounded-xl border border-white/10 bg-white/[0.02] space-y-2 font-sans">
+                        {/* Status Quota Card with Dynamic Changing Colors and Notify Alert */}
+                        <div className="p-4 rounded-xl border border-white/10 bg-white/[0.02] space-y-3 font-sans">
                             <div className="flex items-center justify-between text-xs">
                                 <span className="text-zinc-400 font-sans">Connection Status:</span>
                                 {isConnected && user ? (
-                                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-medium flex items-center gap-1.5 text-[11px] font-mono">
-                                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                                    <span className="px-2.5 py-0.5 rounded-full bg-white/10 border border-white/20 text-white font-medium flex items-center gap-1.5 text-[11px] font-mono">
+                                        <CheckCircle2 className="w-3.5 h-3.5 text-[#4397E0]" />
                                         Connected as @{user.login}
                                     </span>
                                 ) : (
@@ -458,14 +633,51 @@ const Header = ({ activeTab, showBackButton, theme = 'dark' }) => {
                                 )}
                             </div>
 
-                            {rateLimit && (
-                                <div className="flex items-center justify-between text-xs pt-1.5 border-t border-white/5 font-sans">
-                                    <span className="text-zinc-400 font-sans">API Quota Limit:</span>
-                                    <span className="text-white font-semibold font-mono">
-                                        {rateLimit.remaining} / {rateLimit.limit} req/hr
+                            {/* Under API Quota Limit: Tracking Bar with Color Transition */}
+                            <div className="space-y-2 pt-2.5 border-t border-white/5 font-sans">
+                                <div className="flex items-center justify-between text-xs font-sans">
+                                    <span className="text-zinc-400 font-sans flex items-center gap-1.5">
+                                        <span>API Quota Limit:</span>
                                     </span>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-white font-semibold font-mono">
+                                            {rateLimit
+                                                ? `${rateLimit.remaining.toLocaleString()} / ${rateLimit.limit.toLocaleString()} req/hr`
+                                                : '60 / 60 req/hr (Anonymous)'}
+                                        </span>
+                                        <span className={`text-xs font-mono font-bold ${quotaInfo.textColor}`}>
+                                            {quotaInfo.percentage}%
+                                        </span>
+                                    </div>
                                 </div>
-                            )}
+
+                                {/* Dynamic Multi-State Progress Bar */}
+                                <div className="w-full bg-white/[0.08] h-2.5 rounded-full overflow-hidden p-0.5 border border-white/10 relative">
+                                    <div
+                                        className={`h-full rounded-full transition-all duration-500 ease-out ${quotaInfo.barClass}`}
+                                        style={{ width: `${quotaInfo.percentage}%` }}
+                                    />
+                                </div>
+
+                                {/* Last 5% Darker Red Warning Notification */}
+                                {quotaInfo.percentage <= 5 && (
+                                    <div className="p-3 rounded-xl border border-red-800/60 bg-red-950/40 text-red-200 text-[11px] font-sans flex items-start gap-2.5 animate-pulse mt-1">
+                                        <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                                        <div className="space-y-0.5 leading-relaxed">
+                                            <p className="font-semibold text-red-200">
+                                                {rateLimit?.remaining === 0
+                                                    ? 'API Quota Exhausted (0% remaining)'
+                                                    : 'Critical Quota Warning: Under 5% remaining!'}
+                                            </p>
+                                            <p className="text-red-300/80 text-[11px]">
+                                                {rateLimit?.remaining === 0
+                                                    ? 'Live GitHub API queries are paused until hourly reset. Connect or generate a new GitHub Personal Access Token to get 5,000 requests/hr immediately.'
+                                                    : `Only ${rateLimit?.remaining || 0} requests left out of ${rateLimit?.limit || 60}. Connect a new PAT to prevent API interruptions.`}
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
                         {/* Description */}
@@ -475,22 +687,31 @@ const Header = ({ activeTab, showBackButton, theme = 'dark' }) => {
 
                         {/* Success Banner */}
                         {localSuccess && (
-                            <div className="p-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 flex items-center gap-2 text-xs font-sans animate-fadeIn">
-                                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                            <div className="p-3 rounded-xl border border-[#4397E0]/30 bg-[#4397E0]/10 text-[#4397E0] flex items-center gap-2 text-xs font-sans animate-fadeIn">
+                                <CheckCircle2 className="w-4 h-4 text-[#4397E0] shrink-0" />
                                 <span>Connected Successfully! Token active for this session.</span>
                             </div>
                         )}
 
                         {/* Error / Failure Banner */}
                         {(localError || tokenError) && !localSuccess && (
-                            <div className="p-3.5 rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-300 space-y-1.5 text-xs font-sans animate-fadeIn">
+                            <div className="p-3.5 rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-300 space-y-2 text-xs font-sans animate-fadeIn">
                                 <div className="flex items-center gap-2 font-semibold font-sans">
                                     <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />
                                     <span>{localError || tokenError}</span>
                                 </div>
                                 <p className="text-[11px] font-sans text-rose-200">
-                                    Please verify your token credentials or check the guide below to generate a read-only token (no scopes required).
+                                    Your token may have expired, was revoked, or lacks required access. Generate a new Personal Access Token in one click:
                                 </p>
+                                <a
+                                    href="https://github.com/settings/tokens/new?description=ExploreGit&scopes=public_repo"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-200 border border-rose-500/40 text-[11px] font-semibold transition-colors w-fit"
+                                >
+                                    <span>Generate New PAT on GitHub</span>
+                                    <ExternalLink className="w-3 h-3" />
+                                </a>
                             </div>
                         )}
 
@@ -512,6 +733,7 @@ const Header = ({ activeTab, showBackButton, theme = 'dark' }) => {
 
                             <div className="flex items-center justify-between pt-1 font-sans">
                                 <button
+                                    ref={guideToggleRef}
                                     type="button"
                                     onClick={() => setShowGuide(!showGuide)}
                                     className="text-xs font-sans font-medium text-zinc-400 hover:text-white flex items-center gap-1 transition-colors cursor-pointer active:scale-95"
@@ -556,7 +778,10 @@ const Header = ({ activeTab, showBackButton, theme = 'dark' }) => {
 
                         {/* Step-by-Step PAT Generation Guide Accordion */}
                         {showGuide && (
-                            <div className="p-4 rounded-xl border border-white/10 bg-[#0B0C0E] space-y-3 font-sans text-xs animate-fadeIn">
+                            <div
+                                ref={guideRef}
+                                className="p-4 rounded-xl border border-white/10 bg-[#0B0C0E] space-y-3 font-sans text-xs animate-fadeIn"
+                            >
                                 <div className="flex items-center justify-between border-b border-white/10 pb-2">
                                     <span className="font-semibold text-white font-sans flex items-center gap-1.5 text-[11px]">
                                         <ShieldCheck className="w-3.5 h-3.5 text-zinc-300" />

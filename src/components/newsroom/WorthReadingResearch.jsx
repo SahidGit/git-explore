@@ -33,7 +33,7 @@ const WorthReadingResearch = () => {
                 <div className="flex items-center justify-between font-mono text-[10px] text-[#101010]/70 border-b-2 border-black/15 pb-2">
                   <span className="font-bold text-[#FF5A1F] uppercase">{paper.lab}</span>
                   <span className="flex items-center gap-1 font-bold">
-                    <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                    <CheckCircle2 className="w-3 h-3 text-zinc-600" />
                     {paper.year}
                   </span>
                 </div>

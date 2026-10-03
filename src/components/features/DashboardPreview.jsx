@@ -40,32 +40,19 @@ const REPO_PRESETS = [
     authors: 482,
     openIssues: "294 (84% closed)",
     chartData: [
-      { day: "Day 1", date: "Aug 11", stars: 48200, gain: 1250, x: 50, y: 140 },
-      {
-        day: "Day 2",
-        date: "Aug 12",
-        stars: 49850,
-        gain: 1650,
-        x: 150,
-        y: 120,
-      },
-      { day: "Day 3", date: "Aug 13", stars: 51900, gain: 2050, x: 250, y: 95 },
-      {
-        day: "Day 4",
-        date: "Aug 14",
-        stars: 53600,
-        gain: 1700,
-        x: 350,
-        y: 105,
-      },
-      { day: "Day 5", date: "Aug 15", stars: 56100, gain: 2500, x: 450, y: 70 },
-      { day: "Day 6", date: "Aug 16", stars: 59300, gain: 3200, x: 550, y: 40 },
-      { day: "Day 7", date: "Aug 17", stars: 62400, gain: 3100, x: 650, y: 20 },
+      { day: "Day 1", date: "Aug 11", stars: 48200, gain: 1250 },
+      { day: "Day 2", date: "Aug 12", stars: 49850, gain: 1650 },
+      { day: "Day 3", date: "Aug 13", stars: 51900, gain: 2050 },
+      { day: "Day 4", date: "Aug 14", stars: 53600, gain: 1700 },
+      { day: "Day 5", date: "Aug 15", stars: 56100, gain: 2500 },
+      { day: "Day 6", date: "Aug 16", stars: 59300, gain: 3200 },
+      { day: "Day 7", date: "Aug 17", stars: 62400, gain: 3100 },
     ],
-    areaPath:
-      "M 50 140 C 100 130, 120 123, 150 120 C 180 117, 220 102, 250 95 C 280 88, 320 107, 350 105 C 380 103, 420 78, 450 70 C 480 62, 520 46, 550 40 C 580 34, 620 23, 650 20 L 650 160 L 50 160 Z",
-    linePath:
-      "M 50 140 C 100 130, 120 123, 150 120 C 180 117, 220 102, 250 95 C 280 88, 320 107, 350 105 C 380 103, 420 78, 450 70 C 480 62, 520 46, 550 40 C 580 34, 620 23, 650 20",
+    strokePoints:
+      "0,37 16.666666666666668,9.760058318121157 33.333333333333336,16.766109490810067 50,16.131076526320406 66.66666666666667,18.160652689901084 83.33333333333334,16.680480024517518 100,28.602259223158374 116.66666666666667,31.615460914714518 133.33333333333334,31.87831592119042 150,14.872511449668192 166.66666666666669,8.05222498383408 183.33333333333334,3 200,7.331259899043271",
+    fillPoints:
+      "0,40 0,37 16.666666666666668,9.760058318121157 33.333333333333336,16.766109490810067 50,16.131076526320406 66.66666666666667,18.160652689901084 83.33333333333334,16.680480024517518 100,28.602259223158374 116.66666666666667,31.615460914714518 133.33333333333334,31.87831592119042 150,14.872511449668192 166.66666666666669,8.05222498383408 183.33333333333334,3 200,7.331259899043271 200,40",
+    strokeColor: "#3b82f6",
     weeklyCommits: [
       { day: "Mon", count: 18, height: "45%" },
       { day: "Tue", count: 34, height: "80%" },
@@ -91,18 +78,19 @@ const REPO_PRESETS = [
     authors: 320,
     openIssues: "112 (92% closed)",
     chartData: [
-      { day: "Day 1", date: "Aug 11", stars: 70000, gain: 650, x: 50, y: 135 },
-      { day: "Day 2", date: "Aug 12", stars: 70700, gain: 700, x: 150, y: 125 },
-      { day: "Day 3", date: "Aug 13", stars: 71500, gain: 800, x: 250, y: 105 },
-      { day: "Day 4", date: "Aug 14", stars: 72300, gain: 800, x: 350, y: 85 },
-      { day: "Day 5", date: "Aug 15", stars: 73200, gain: 900, x: 450, y: 65 },
-      { day: "Day 6", date: "Aug 16", stars: 74100, gain: 900, x: 550, y: 45 },
-      { day: "Day 7", date: "Aug 17", stars: 74800, gain: 700, x: 650, y: 30 },
+      { day: "Day 1", date: "Aug 11", stars: 70000, gain: 650 },
+      { day: "Day 2", date: "Aug 12", stars: 70700, gain: 700 },
+      { day: "Day 3", date: "Aug 13", stars: 71500, gain: 800 },
+      { day: "Day 4", date: "Aug 14", stars: 72300, gain: 800 },
+      { day: "Day 5", date: "Aug 15", stars: 73200, gain: 900 },
+      { day: "Day 6", date: "Aug 16", stars: 74100, gain: 900 },
+      { day: "Day 7", date: "Aug 17", stars: 74800, gain: 700 },
     ],
-    areaPath:
-      "M 50 135 C 100 130, 120 128, 150 125 C 180 120, 220 110, 250 105 C 280 100, 320 90, 350 85 C 380 80, 420 70, 450 65 C 480 60, 520 50, 550 45 C 580 40, 620 35, 650 30 L 650 160 L 50 160 Z",
-    linePath:
-      "M 50 135 C 100 130, 120 128, 150 125 C 180 120, 220 110, 250 105 C 280 100, 320 90, 350 85 C 380 80, 420 70, 450 65 C 480 60, 520 50, 550 45 C 580 40, 620 35, 650 30",
+    strokePoints:
+      "0,34 16.666666666666668,31 33.333333333333336,27 50,23 66.66666666666667,20 83.33333333333334,18 100,15 116.66666666666667,13 133.33333333333334,10 150,8 166.66666666666669,6 183.33333333333334,4 200,3",
+    fillPoints:
+      "0,40 0,34 16.666666666666668,31 33.333333333333336,27 50,23 66.66666666666667,20 83.33333333333334,18 100,15 116.66666666666667,13 133.33333333333334,10 150,8 166.66666666666669,6 183.33333333333334,4 200,3 200,40",
+    strokeColor: "#3b82f6",
     weeklyCommits: [
       { day: "Mon", count: 12, height: "38%" },
       { day: "Tue", count: 22, height: "70%" },
@@ -128,18 +116,19 @@ const REPO_PRESETS = [
     authors: 215,
     openIssues: "180 (88% closed)",
     chartData: [
-      { day: "Day 1", date: "Aug 11", stars: 40100, gain: 700, x: 50, y: 145 },
-      { day: "Day 2", date: "Aug 12", stars: 40900, gain: 800, x: 150, y: 130 },
-      { day: "Day 3", date: "Aug 13", stars: 41800, gain: 900, x: 250, y: 110 },
-      { day: "Day 4", date: "Aug 14", stars: 42800, gain: 1000, x: 350, y: 90 },
-      { day: "Day 5", date: "Aug 15", stars: 43800, gain: 1000, x: 450, y: 65 },
-      { day: "Day 6", date: "Aug 16", stars: 44600, gain: 800, x: 550, y: 45 },
-      { day: "Day 7", date: "Aug 17", stars: 45200, gain: 600, x: 650, y: 35 },
+      { day: "Day 1", date: "Aug 11", stars: 40100, gain: 700 },
+      { day: "Day 2", date: "Aug 12", stars: 40900, gain: 800 },
+      { day: "Day 3", date: "Aug 13", stars: 41800, gain: 900 },
+      { day: "Day 4", date: "Aug 14", stars: 42800, gain: 1000 },
+      { day: "Day 5", date: "Aug 15", stars: 43800, gain: 1000 },
+      { day: "Day 6", date: "Aug 16", stars: 44600, gain: 800 },
+      { day: "Day 7", date: "Aug 17", stars: 45200, gain: 600 },
     ],
-    areaPath:
-      "M 50 145 C 100 140, 120 135, 150 130 C 180 125, 220 115, 250 110 C 280 105, 320 95, 350 90 C 380 80, 420 70, 450 65 C 480 60, 520 50, 550 45 C 580 40, 620 38, 650 35 L 650 160 L 50 160 Z",
-    linePath:
-      "M 50 145 C 100 140, 120 135, 150 130 C 180 125, 220 115, 250 110 C 280 105, 320 95, 350 90 C 380 80, 420 70, 450 65 C 480 60, 520 50, 550 45 C 580 40, 620 38, 650 35",
+    strokePoints:
+      "0,36 16.666666666666668,32 33.333333333333336,28 50,22 66.66666666666667,18 83.33333333333334,19 100,15 116.66666666666667,12 133.33333333333334,14 150,9 166.66666666666669,6 183.33333333333334,4 200,3",
+    fillPoints:
+      "0,40 0,36 16.666666666666668,32 33.333333333333336,28 50,22 66.66666666666667,18 83.33333333333334,19 100,15 116.66666666666667,12 133.33333333333334,14 150,9 166.66666666666669,6 183.33333333333334,4 200,3 200,40",
+    strokeColor: "#3b82f6",
     weeklyCommits: [
       { day: "Mon", count: 25, height: "55%" },
       { day: "Tue", count: 38, height: "84%" },
@@ -172,7 +161,7 @@ const DashboardPreview = () => {
         {/* Modern SaaS Section Header */}
         <div className="mx-auto max-w-3xl text-center mb-12 sm:mb-16 space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/[0.04] text-[11px] font-mono font-medium text-zinc-300">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
             <span>REPOSITORY INTELLIGENCE PLATFORM</span>
           </div>
 
@@ -195,7 +184,7 @@ const DashboardPreview = () => {
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-[#EC6A5E] opacity-90" />
                 <span className="w-2.5 h-2.5 rounded-full bg-[#F5BF4F] opacity-90" />
-                <span className="w-2.5 h-2.5 rounded-full bg-[#62C554] opacity-90" />
+                <span className="w-2.5 h-2.5 rounded-full bg-zinc-600 opacity-90" />
               </div>
 
               <div className="h-4 w-px bg-white/15 mx-1 hidden sm:block" />
@@ -237,7 +226,7 @@ const DashboardPreview = () => {
                     : "text-zinc-400 hover:text-white"
                 }`}
               >
-                <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
+                <TrendingUp className="w-3.5 h-3.5 text-blue-400" />
                 <span>Momentum</span>
               </button>
 
@@ -263,7 +252,7 @@ const DashboardPreview = () => {
                     : "text-zinc-400 hover:text-white"
                 }`}
               >
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
                 <span>Health</span>
               </button>
 
@@ -276,7 +265,7 @@ const DashboardPreview = () => {
                     : "text-zinc-400 hover:text-white"
                 }`}
               >
-                <Database className="w-3.5 h-3.5 text-emerald-400" />
+                <Database className="w-3.5 h-3.5 text-purple-400" />
                 <span>Sync</span>
               </button>
             </div>
@@ -292,12 +281,12 @@ const DashboardPreview = () => {
                   <div className="p-4 rounded-xl bg-[#121318] border border-white/10 space-y-1.5">
                     <div className="flex items-center justify-between text-xs text-zinc-400 font-mono">
                       <span>STAR VELOCITY</span>
-                      <TrendingUp className="w-4 h-4 text-emerald-400" />
+                      <TrendingUp className="w-4 h-4 text-blue-400" />
                     </div>
                     <div className="text-2xl font-bold font-mono text-white tracking-tight">
                       {activeRepo.weeklyVelocity}
                     </div>
-                    <div className="text-[11px] font-sans text-emerald-400 font-medium">
+                    <div className="text-[11px] font-sans text-blue-400 font-medium">
                       {activeRepo.rank}
                     </div>
                   </div>
@@ -333,7 +322,7 @@ const DashboardPreview = () => {
                   </div>
                 </div>
 
-                {/* Minimal SVG Line Chart */}
+                {/* Minimal SVG Polyline Line Chart */}
                 <div className="rounded-2xl border border-white/10 bg-[#0F1015]/95 backdrop-blur-xl p-4 sm:p-6 space-y-4 shadow-xl">
                   <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.08] pb-3.5">
                     <div className="flex items-center gap-2.5">
@@ -358,102 +347,37 @@ const DashboardPreview = () => {
                   </div>
 
                   {/* Chart Canvas */}
-                  <div className="relative w-full h-56 sm:h-72 bg-[#0A0A0C] border border-white/[0.08] rounded-xl p-3 sm:p-4 overflow-hidden shadow-inner">
-                    <svg
-                      viewBox="0 0 700 180"
-                      className="w-full h-full overflow-visible"
-                      preserveAspectRatio="none"
-                    >
-                      <defs>
-                        <linearGradient
-                          id="blueAreaGrad"
-                          x1="0"
-                          y1="0"
-                          x2="0"
-                          y2="1"
-                        >
-                          <stop
-                            offset="0%"
-                            stopColor="#3B82F6"
-                            stopOpacity="0.15"
-                          />
-                          <stop
-                            offset="100%"
-                            stopColor="#3B82F6"
-                            stopOpacity="0.0"
-                          />
-                        </linearGradient>
-                      </defs>
+                  <div className="relative w-full h-48 sm:h-64 bg-[#0A0A0C] border border-white/[0.08] rounded-xl p-3 sm:p-4 overflow-hidden shadow-inner flex flex-col justify-center">
+                    {/* Background subtle grid lines */}
+                    <div className="absolute inset-0 flex flex-col justify-between p-4 pointer-events-none opacity-20">
+                      <div className="border-b border-dashed border-white/20 w-full" />
+                      <div className="border-b border-dashed border-white/20 w-full" />
+                      <div className="border-b border-white/20 w-full" />
+                    </div>
 
-                      {/* Minimal horizontal gridlines */}
-                      <line
-                        x1="30"
-                        y1="30"
-                        x2="670"
-                        y2="30"
-                        stroke="rgba(255,255,255,0.05)"
-                      />
-                      <text
-                        x="35"
-                        y="26"
-                        fill="rgba(255,255,255,0.2)"
-                        fontSize="10"
-                        fontFamily="monospace"
+                    <div className="relative z-10 w-full h-full flex items-center">
+                      <svg
+                        viewBox="0 0 200 40"
+                        className="w-full h-full"
+                        preserveAspectRatio="none"
+                        aria-hidden="true"
                       >
-                        PEAK
-                      </text>
-
-                      <line
-                        x1="30"
-                        y1="95"
-                        x2="670"
-                        y2="95"
-                        stroke="rgba(255,255,255,0.05)"
-                      />
-
-                      <line
-                        x1="30"
-                        y1="160"
-                        x2="670"
-                        y2="160"
-                        stroke="rgba(255,255,255,0.1)"
-                      />
-                      <text
-                        x="35"
-                        y="156"
-                        fill="rgba(255,255,255,0.2)"
-                        fontSize="10"
-                        fontFamily="monospace"
-                      >
-                        BASELINE
-                      </text>
-
-                      {/* Area under line */}
-                      <path d={activeRepo.areaPath} fill="url(#blueAreaGrad)" />
-
-                      {/* Clean solid blue line */}
-                      <path
-                        d={activeRepo.linePath}
-                        fill="none"
-                        stroke="#3B82F6"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-
-                      {/* Minimal points */}
-                      {activeRepo.chartData.map((pt) => (
-                        <circle
-                          key={pt.day}
-                          cx={pt.x}
-                          cy={pt.y}
-                          r="4"
-                          fill="#0F1015"
-                          stroke="#3B82F6"
+                        <polyline
+                          fill="none"
+                          stroke={activeRepo.strokeColor || "#3b82f6"}
                           strokeWidth="2"
+                          points={activeRepo.strokePoints}
+                          strokeLinejoin="round"
+                          strokeLinecap="round"
                         />
-                      ))}
-                    </svg>
+                        <polyline
+                          fill={activeRepo.strokeColor || "#3b82f6"}
+                          fillOpacity="0.1"
+                          stroke="none"
+                          points={activeRepo.fillPoints}
+                        />
+                      </svg>
+                    </div>
                   </div>
 
                   {/* X-axis labels */}
@@ -480,7 +404,7 @@ const DashboardPreview = () => {
                   <div className="p-4 rounded-xl bg-[#121318] border border-white/10 space-y-1.5">
                     <div className="flex items-center justify-between text-xs text-zinc-400 font-mono">
                       <span>ACTIVE AUTHORS</span>
-                      <Users className="w-4 h-4 text-emerald-400" />
+                      <Users className="w-4 h-4 text-zinc-300" />
                     </div>
                     <div className="text-2xl font-bold font-mono text-white tracking-tight">
                       {activeRepo.authors} contributors
@@ -493,12 +417,12 @@ const DashboardPreview = () => {
                   <div className="p-4 rounded-xl bg-[#121318] border border-white/10 space-y-1.5">
                     <div className="flex items-center justify-between text-xs text-zinc-400 font-mono">
                       <span>COMMIT RHYTHM</span>
-                      <GitCommit className="w-4 h-4 text-emerald-400" />
+                      <GitCommit className="w-4 h-4 text-blue-400" />
                     </div>
                     <div className="text-2xl font-bold font-mono text-white tracking-tight">
                       Daily push
                     </div>
-                    <div className="text-[11px] font-sans text-emerald-400 font-medium">
+                    <div className="text-[11px] font-sans text-zinc-400">
                       1.8h avg PR review time
                     </div>
                   </div>
@@ -563,7 +487,7 @@ const DashboardPreview = () => {
                       <h3 className="text-base sm:text-lg font-bold font-mono text-white">
                         {activeRepo.fullName}
                       </h3>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20">
                         VERIFIED
                       </span>
                     </div>
@@ -572,13 +496,13 @@ const DashboardPreview = () => {
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/25 shrink-0">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                  <div className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-white/5 border border-white/10 shrink-0">
+                    <CheckCircle2 className="w-5 h-5 text-blue-400" />
                     <div>
                       <div className="text-sm font-bold font-mono text-white">
                         HEALTH SCORE: {activeRepo.healthScore}/100
                       </div>
-                      <div className="text-[10px] font-mono text-emerald-400">
+                      <div className="text-[10px] font-mono text-blue-400">
                         Enterprise Ready
                       </div>
                     </div>
@@ -590,7 +514,7 @@ const DashboardPreview = () => {
                     <span className="text-zinc-500 text-[11px] font-mono block">
                       LICENSE
                     </span>
-                    <span className="text-emerald-400 font-bold font-mono text-xs">
+                    <span className="text-white font-bold font-mono text-xs">
                       MIT Verified
                     </span>
                     <p className="text-[10px] text-zinc-400">Commercial Safe</p>
@@ -610,7 +534,7 @@ const DashboardPreview = () => {
                     <span className="text-zinc-500 text-[11px] font-mono block">
                       SECURITY AUDIT
                     </span>
-                    <span className="text-emerald-400 font-bold font-mono text-xs">
+                    <span className="text-white font-bold font-mono text-xs">
                       0 Vulnerabilities
                     </span>
                     <p className="text-[10px] text-zinc-400">
@@ -621,7 +545,7 @@ const DashboardPreview = () => {
                     <span className="text-zinc-500 text-[11px] font-mono block">
                       CI/CD PASS RATE
                     </span>
-                    <span className="text-emerald-400 font-bold font-mono text-xs">
+                    <span className="text-white font-bold font-mono text-xs">
                       99.8% Passing
                     </span>
                     <p className="text-[10px] text-zinc-400">
@@ -647,14 +571,14 @@ const DashboardPreview = () => {
                       without third-party accounts.
                     </p>
                     <div className="pt-2">
-                      <span className="inline-block px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-emerald-400 text-xs font-mono font-bold">
+                      <span className="inline-block px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-purple-300 text-xs font-mono font-bold">
                         100% Client-Side Storage
                       </span>
                     </div>
                   </div>
 
                   <div className="p-5 rounded-xl bg-[#121318] border border-white/10 space-y-3">
-                    <div className="flex items-center gap-2 text-emerald-400 font-bold font-mono text-xs">
+                    <div className="flex items-center gap-2 text-purple-400 font-bold font-mono text-xs">
                       <Database className="w-4 h-4" />
                       <span>1-Click Data Export</span>
                     </div>
@@ -664,7 +588,7 @@ const DashboardPreview = () => {
                       processing.
                     </p>
                     <div className="pt-2">
-                      <span className="inline-block px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-emerald-400 text-xs font-mono font-bold">
+                      <span className="inline-block px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-purple-300 text-xs font-mono font-bold">
                         JSON &amp; CSV Ready
                       </span>
                     </div>
@@ -676,7 +600,7 @@ const DashboardPreview = () => {
             {/* Footer Status & Launch Bar */}
             <div className="mt-7 pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono">
               <div className="flex items-center gap-2 text-zinc-400">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
                 <span>
                   GraphQL v4 Live Engine &bull; Latency 14ms &bull; Zero
                   trackers

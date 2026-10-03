@@ -4,50 +4,86 @@ import { storageService } from '../../services/storageService';
 import * as githubService from '../../services/githubService';
 import { SkeletonRateLimit } from '../ui/SkeletonLoader';
 import ContributionHeatmap from './Charts/ContributionHeatmap';
+import { ProfileNavIcon } from '../ui/Icons';
+import { useAuth } from '../../context/AuthContext';
+import { getQuotaColorInfo } from '../layouts/Header';
 
 // ─── Rate limit meter ─────────────────────────────────
-const RateLimitMeter = ({ used, limit, resetIn }) => {
-    const remaining = limit - used;
-    const pct = Math.max(0, Math.min(100, (remaining / limit) * 100));
+const RateLimitMeter = ({ remaining, limit, reset, onRefresh, isLoading, isConnected }) => {
+    const safeLimit = limit && limit > 0 ? limit : (isConnected ? 5000 : 60);
+    const safeRemaining = remaining !== undefined && remaining !== null ? Math.max(0, remaining) : safeLimit;
+    const quotaInfo = getQuotaColorInfo(safeRemaining, safeLimit);
 
-    const meterColor =
-        pct > 50 ? 'bg-emerald-500' :
-        pct > 20 ? 'bg-amber-500' :
-        'bg-red-500';
+    const getResetIn = (resetTimestamp) => {
+        if (!resetTimestamp) return null;
+        const diffMs = resetTimestamp * 1000 - Date.now();
+        if (diffMs <= 0) return 'now';
+        const diffMin = Math.ceil(diffMs / 60000);
+        if (diffMin < 60) return `${diffMin}m`;
+        return `${Math.ceil(diffMin / 60)}h`;
+    };
 
     return (
-        <div className="rounded-xl border border-white/[0.08] bg-[#121215] p-5 space-y-4">
+        <div className="rounded-xl border border-white/[0.08] bg-[#121215] p-5 space-y-4 shadow-xl">
             {/* Label row */}
             <div className="flex items-center justify-between">
-                <span className="text-[11px] font-mono uppercase tracking-widest text-zinc-500">
-                    API Rate Limit
-                </span>
+                <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-mono uppercase tracking-widest text-zinc-400">
+                        API Quota &amp; Rate Limit
+                    </span>
+                    {onRefresh && (
+                        <button
+                            type="button"
+                            onClick={onRefresh}
+                            disabled={isLoading}
+                            className="text-zinc-500 hover:text-white transition-colors p-0.5 cursor-pointer disabled:opacity-40"
+                            title="Refresh API rate limit quota"
+                        >
+                            <RefreshCw className={`w-3 h-3 ${isLoading ? 'animate-spin text-blue-400' : ''}`} />
+                        </button>
+                    )}
+                </div>
                 <span className="text-[11px] font-mono text-zinc-500">
-                    Resets in {resetIn ?? '—'}
+                    {reset ? `Resets in ${getResetIn(reset)}` : 'Hourly Window'}
                 </span>
             </div>
 
             {/* Linear meter */}
-            <div className="h-1.5 w-full rounded-full bg-white/[0.06] overflow-hidden">
+            <div className="h-2 w-full rounded-full bg-white/[0.06] overflow-hidden p-0.5 border border-white/[0.04]">
                 <div
-                    className={`h-full rounded-full transition-all duration-700 ease-out ${meterColor}`}
-                    style={{ width: `${pct}%` }}
+                    className={`h-full rounded-full transition-all duration-700 ease-out ${quotaInfo.barClass || 'bg-blue-500'}`}
+                    style={{ width: `${quotaInfo.percentage}%` }}
                     role="progressbar"
-                    aria-valuenow={remaining}
+                    aria-valuenow={safeRemaining}
                     aria-valuemin={0}
-                    aria-valuemax={limit}
-                    aria-label={`${remaining} of ${limit} requests remaining`}
+                    aria-valuemax={safeLimit}
+                    aria-label={`${safeRemaining} of ${safeLimit} requests remaining`}
                 />
             </div>
 
-            {/* Numbers */}
+            {/* Numbers & Percent */}
             <div className="flex items-baseline justify-between">
                 <span className="font-mono text-[13px] text-white font-semibold">
-                    {remaining.toLocaleString()}
-                    <span className="text-zinc-500 font-normal"> / {limit.toLocaleString()}</span>
+                    {safeRemaining.toLocaleString()}
+                    <span className="text-zinc-500 font-normal"> / {safeLimit.toLocaleString()} req/hr</span>
                 </span>
-                <span className="text-[11px] text-zinc-500">requests remaining</span>
+                <span className={`font-mono text-[12px] font-bold ${quotaInfo.textColor || 'text-zinc-400'}`}>
+                    {quotaInfo.percentage}% remaining
+                </span>
             </div>
+
+            {/* Warning messages if quota is exhausted or under 5% */}
+            {safeRemaining === 0 ? (
+                <div className="text-[11px] font-mono text-rose-400 bg-rose-500/10 border border-rose-500/20 p-2.5 rounded-lg flex items-center gap-2">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    <span>Rate limit exhausted. Connect a PAT token to unlock 5,000 req/hr.</span>
+                </div>
+            ) : quotaInfo.percentage <= 5 ? (
+                <div className="text-[11px] font-mono text-amber-300 bg-amber-500/10 border border-amber-500/20 p-2.5 rounded-lg flex items-center gap-2">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    <span>Critical quota warning: Under 5% remaining ({safeRemaining} req left).</span>
+                </div>
+            ) : null}
         </div>
     );
 };
@@ -59,7 +95,6 @@ const OWNER_PROFILE = {
     role: 'ExploreGit Founder & Lead Engineer',
     bio: 'Student x Software Engineer · Building ExploreGit',
     avatar: 'https://avatars.githubusercontent.com/u/208873568?v=4',
-    badge: 'Creator & Lead',
 };
 
 const SUGGESTED_PROFILES = [
@@ -109,10 +144,8 @@ const SUGGESTED_PROFILES = [
 
 // ─── Main ProfileView ─────────────────────────────────
 const ProfileView = ({ filters, onFilterChange }) => {
-    const [rateLimit, setRateLimit] = useState(null);
-    const [rateLimitLoading, setRateLimitLoading] = useState(false);
-    const [rateLimitError, setRateLimitError] = useState(null);
-    const [hasToken, setHasToken] = useState(false);
+    const { rateLimit, refreshRateLimit, isConnected, isVerifying, token } = useAuth();
+    const [isRefreshingRate, setIsRefreshingRate] = useState(false);
     const [usernameInput, setUsernameInput] = useState(filters?.username || '');
     const [inputFocused, setInputFocused] = useState(false);
 
@@ -123,41 +156,28 @@ const ProfileView = ({ filters, onFilterChange }) => {
         }
     }, [filters?.username]);
 
-    // Check token on mount
-    useEffect(() => {
-        setHasToken(!!storageService.getToken());
-    }, []);
-
-    // Fetch rate limit
-    const fetchRateLimit = useCallback(async () => {
-        setRateLimitLoading(true);
-        setRateLimitError(null);
+    const handleRefreshQuota = async () => {
+        setIsRefreshingRate(true);
         try {
-            const data = await githubService.getRateLimit();
-            setRateLimit(data);
-        } catch (err) {
-            setRateLimitError(err.message || 'Failed to fetch rate limit');
+            await refreshRateLimit(true);
         } finally {
-            setRateLimitLoading(false);
+            setTimeout(() => setIsRefreshingRate(false), 400);
         }
-    }, []);
-
-    useEffect(() => { fetchRateLimit(); }, [fetchRateLimit]);
-
-    // Format reset time
-    const getResetIn = (resetTimestamp) => {
-        if (!resetTimestamp) return null;
-        const diffMs = resetTimestamp * 1000 - Date.now();
-        if (diffMs <= 0) return 'now';
-        const diffMin = Math.ceil(diffMs / 60000);
-        if (diffMin < 60) return `${diffMin}m`;
-        return `${Math.ceil(diffMin / 60)}h`;
     };
 
     const triggerSearch = (usernameToSearch) => {
         const query = (usernameToSearch || usernameInput).trim();
         if (query) {
-            onFilterChange?.({ ...filters, username: query });
+            if (onFilterChange) {
+                onFilterChange({ username: query });
+            }
+        }
+    };
+
+    const handleClearSearch = () => {
+        setUsernameInput('');
+        if (onFilterChange) {
+            onFilterChange({ username: '' });
         }
     };
 
@@ -168,30 +188,29 @@ const ProfileView = ({ filters, onFilterChange }) => {
         }
     };
 
-    const handleClearSearch = () => {
-        setUsernameInput('');
-        onFilterChange?.({ ...filters, username: '' });
-    };
-
     const activeSearch = filters?.username?.trim();
 
     return (
-        <div className="max-w-5xl mx-auto space-y-6">
-
-            {/* ── Page header ── */}
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-2">
-                <div>
-                    <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight font-heading mb-1">Developer Profile</h1>
-                    <p className="text-xs sm:text-sm font-sans text-zinc-400">
-                        Analyze contribution activity, followers, and coding patterns for any GitHub user.
-                    </p>
+        <div className="space-y-6">
+            {/* Top header bar */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-white/[0.08]">
+                <div className="flex items-center gap-3">
+                    <ProfileNavIcon className="w-7 h-7 shrink-0" size={28} />
+                    <div>
+                        <h2 className="text-lg sm:text-xl font-bold font-heading text-white tracking-tight">
+                            Developer Profile &amp; Contributor Explorer
+                        </h2>
+                        <p className="text-xs text-zinc-400 font-sans mt-0.5">
+                            Search any GitHub developer to inspect real-time contribution heatmaps, star metrics, and commit cadences.
+                        </p>
+                    </div>
                 </div>
 
                 {activeSearch && (
                     <button
                         type="button"
                         onClick={handleClearSearch}
-                        className="btn-saas-secondary text-xs h-[34px] px-3 gap-1.5"
+                        className="self-start sm:self-center inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/[0.04] text-xs font-mono text-zinc-300 hover:text-white hover:bg-white/[0.08] transition-colors cursor-pointer"
                     >
                         <X className="w-3.5 h-3.5" />
                         <span>Clear Search (@{activeSearch})</span>
@@ -274,9 +293,6 @@ const ProfileView = ({ filters, onFilterChange }) => {
                                         <Sparkles className="w-3.5 h-3.5 text-blue-400" />
                                         <span>Featured Creator</span>
                                     </div>
-                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-blue-500/15 border border-blue-500/30 text-blue-400">
-                                        {OWNER_PROFILE.badge}
-                                    </span>
                                 </div>
 
                                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
@@ -346,24 +362,19 @@ const ProfileView = ({ filters, onFilterChange }) => {
                                                 height={40}
                                                 loading="lazy"
                                                 decoding="async"
-                                                className="w-10 h-10 rounded-full border border-white/10 flex-shrink-0 bg-[#0A0A0C]"
+                                                className="w-10 h-10 rounded-full border border-white/10 bg-[#0A0A0C] flex-shrink-0 group-hover:scale-105 transition-transform duration-200"
                                             />
                                             <div className="min-w-0 flex-1">
                                                 <div className="flex items-center justify-between gap-1">
-                                                    <span className="text-[12px] font-semibold text-white truncate group-hover:text-blue-300 transition-colors">
+                                                    <p className="font-mono text-xs font-semibold text-zinc-200 truncate group-hover:text-white">
                                                         {profile.name}
+                                                    </p>
+                                                    <span className="text-[10px] font-mono text-zinc-400 flex-shrink-0">
+                                                        {profile.tag}
                                                     </span>
-                                                    {profile.tag && (
-                                                        <span className="text-[9px] font-mono text-zinc-400 bg-white/5 px-1.5 py-0.5 rounded border border-white/5 flex-shrink-0">
-                                                            {profile.tag}
-                                                        </span>
-                                                    )}
                                                 </div>
-                                                <p className="text-[11px] text-zinc-400 font-mono truncate">
+                                                <p className="font-mono text-[11px] text-zinc-500 truncate">
                                                     @{profile.username}
-                                                </p>
-                                                <p className="text-[10px] text-zinc-500 truncate mt-0.5">
-                                                    {profile.role}
                                                 </p>
                                             </div>
                                         </button>
@@ -377,31 +388,14 @@ const ProfileView = ({ filters, onFilterChange }) => {
                 {/* ── Right: rate limit + token status ── */}
                 <div className="space-y-4">
                     {/* Rate limit card */}
-                    {rateLimitLoading ? (
-                        <SkeletonRateLimit />
-                    ) : rateLimitError ? (
-                        <div className="rounded-xl border border-white/[0.08] bg-[#121215] p-5">
-                            <div className="flex items-center gap-2 mb-3">
-                                <AlertCircle className="w-4 h-4 text-zinc-500" />
-                                <span className="text-[11px] font-mono uppercase tracking-widest text-zinc-500">API Rate Limit</span>
-                            </div>
-                            <p className="text-[12px] text-zinc-500 mb-3">{rateLimitError}</p>
-                            <button
-                                type="button"
-                                onClick={fetchRateLimit}
-                                className="inline-flex items-center gap-1.5 text-[12px] text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer"
-                            >
-                                <RefreshCw className="w-3.5 h-3.5" />
-                                Retry
-                            </button>
-                        </div>
-                    ) : rateLimit ? (
-                        <RateLimitMeter
-                            used={rateLimit.resources?.core?.used ?? 0}
-                            limit={rateLimit.resources?.core?.limit ?? 60}
-                            resetIn={getResetIn(rateLimit.resources?.core?.reset)}
-                        />
-                    ) : null}
+                    <RateLimitMeter
+                        remaining={rateLimit?.remaining}
+                        limit={rateLimit?.limit}
+                        reset={rateLimit?.reset}
+                        onRefresh={handleRefreshQuota}
+                        isLoading={isRefreshingRate || isVerifying}
+                        isConnected={isConnected}
+                    />
 
                     {/* Token status card */}
                     <div className="rounded-xl border border-white/[0.08] bg-[#121215] p-5">
@@ -412,14 +406,14 @@ const ProfileView = ({ filters, onFilterChange }) => {
                             </span>
                         </div>
 
-                        {hasToken ? (
+                        {isConnected ? (
                             <div className="space-y-3">
                                 <div className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
+                                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0" />
                                     <span className="text-[13px] font-medium text-white">Token Connected</span>
                                 </div>
                                 <p className="text-[12px] text-zinc-500 leading-relaxed">
-                                    Your token unlocks 5,000 requests per hour. Stored in{' '}
+                                    Your token unlocks 5,000 requests per hour. Stored client-side in{' '}
                                     <code className="font-mono text-zinc-400">sessionStorage</code> only.
                                 </p>
                             </div>
@@ -433,10 +427,10 @@ const ProfileView = ({ filters, onFilterChange }) => {
                                     Unauthenticated requests are rate limited to 60 req/hr. Connect a token in the top navigation to unlock 5,000 req/hr.
                                 </p>
                                 <a
-                                    href="https://github.com/settings/tokens/new"
+                                    href="https://github.com/settings/tokens/new?scopes=public_repo&description=ExploreGit%20Search%20Token"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1.5 text-[12px] text-zinc-400 hover:text-white transition-colors duration-200 group"
+                                    className="inline-flex items-center gap-1.5 text-[12px] text-blue-400 hover:text-blue-300 transition-colors duration-200 group"
                                 >
                                     Generate Token on GitHub
                                     <ExternalLink className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />

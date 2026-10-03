@@ -175,12 +175,12 @@ const Dashboard = ({ activeTab }) => {
                             <span>
                                 GitHub API unavailable — showing curated essential stacks.
                                 <a
-                                    href="https://github.com/settings/tokens/new"
+                                    href="https://github.com/settings/tokens/new?description=ExploreGit&scopes=public_repo"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="ml-2 underline text-amber-300 hover:text-white transition-colors"
                                 >
-                                    Connect a token to restore live data ↗
+                                    Generate and connect a PAT to restore live data ↗
                                 </a>
                             </span>
                         </div>

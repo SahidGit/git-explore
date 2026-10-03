@@ -6,27 +6,32 @@ const FAQS = [
     {
         question: 'Is ExploreGit completely free to use?',
         answer:
-            'Yes. ExploreGit is open-source and released under the MIT license. Every feature — from repository discovery to contributor velocity metrics — is accessible with no paywalls, subscriptions, or credit card requirements.',
+            'Yes. ExploreGit is open-source and released under the MIT license. Every feature — from repository discovery, Hidden Gems, and AI ecosystem intelligence to contributor heatmaps — is 100% free with no paywalls, subscriptions, or credit card requirements.',
     },
     {
-        question: 'Do I need a GitHub account to browse repositories?',
+        question: 'What is the Hidden Gems & Tools registry?',
         answer:
-            'No account is required. You can search, filter, and inspect trending repositories anonymously. If you need higher API rate limits, you can connect a Personal Access Token directly from your browser.',
+            'The Gems directory spotlights high-momentum, under-the-radar open-source repositories (<2,500 stars) alongside timeless legendary software (VLC, 7-Zip, LocalSend, ShareX, Entire.io). Each gem includes verified install commands, platform compatibility, and direct official store links.',
     },
     {
-        question: 'How are trending repositories surfaced?',
+        question: 'Do I need a GitHub account to browse repositories and gems?',
         answer:
-            'ExploreGit queries GitHub’s Search API for newly created and recently updated repositories sorted by star count across daily, weekly, and monthly intervals, coupled with recent commit rhythm analysis to highlight genuine momentum.',
+            'No account is required. You can search, filter, and inspect repositories and gems anonymously. If you need higher API rate limits (5,000 req/hr), you can connect a Personal Access Token directly from your browser in one click.',
+    },
+    {
+        question: 'How are trending repositories and gems surfaced?',
+        answer:
+            'ExploreGit continuously aggregates GitHub Search API data across daily, weekly, and monthly intervals. Algorithms analyze star velocity, fork acceleration, and recent commit cadences to surface genuine emerging open-source momentum.',
     },
     {
         question: 'Where is my data and token stored?',
         answer:
-            'Everything runs client-side. Your Personal Access Token is kept safely in sessionStorage (cleared upon closing the tab), while bookmarks and research notes are stored locally in your browser’s localStorage. Zero tracking or telemetry is collected.',
+            'Everything runs client-side. Your Personal Access Token is kept safely in sessionStorage (cleared upon closing your browser), while bookmarks, search history, and research notes reside locally in your browser’s localStorage with zero cloud tracking.',
     },
     {
-        question: 'Which languages and frameworks are supported?',
+        question: 'Which languages, platforms, and frameworks are supported?',
         answer:
-            'ExploreGit indexes all public repositories across popular programming languages including TypeScript, Python, Rust, Go, Zig, C++, and more, with dedicated ecosystem filtering.',
+            'ExploreGit indexes public repositories across TypeScript, Python, Rust, Go, Zig, C++, and more, with platform filtering across macOS, Linux, Windows, Android, and iOS across developer tools and software gems.',
     },
 ];
 

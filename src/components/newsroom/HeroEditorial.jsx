@@ -17,7 +17,7 @@ const HeroEditorial = () => {
             <span className="bg-[#FF5A1F] text-black px-2 py-0.5 font-extrabold uppercase tracking-wider text-[10px]">
               BETA
             </span>
-            <span className="flex items-center gap-1.5 text-emerald-700 font-bold bg-emerald-100 px-2 py-0.5 border border-emerald-300 text-[10px]">
+            <span className="flex items-center gap-1.5 text-black font-bold bg-[#F8F3EA] px-2 py-0.5 border border-black text-[10px]">
               <CheckCircle2 className="w-3.5 h-3.5" />
               {HERO_STORY.liveStatus}
             </span>

@@ -22,15 +22,27 @@ export const AuthProvider = ({ children }) => {
     const [isVerifying, setIsVerifying] = useState(false);
     const [tokenError, setTokenError] = useState(null);
 
-    const refreshRateLimit = useCallback(async () => {
+    const refreshRateLimit = useCallback(async (force = false) => {
         try {
-            const data = await getRateLimit();
+            const data = await getRateLimit(force);
             if (data) {
                 setRateLimit(data);
             }
         } catch {
             // Non-blocking rate limit fetch failure fallback
         }
+    }, []);
+
+    // Listen to live rate limit updates dispatched during API calls
+    useEffect(() => {
+        const handleLiveRateLimit = (e) => {
+            if (e.detail) {
+                setRateLimit(e.detail);
+            }
+        };
+
+        window.addEventListener('github-ratelimit-updated', handleLiveRateLimit);
+        return () => window.removeEventListener('github-ratelimit-updated', handleLiveRateLimit);
     }, []);
 
     // Verify token with GitHub API GET /user
@@ -69,7 +81,7 @@ export const AuthProvider = ({ children }) => {
                 setTokenState(cleanedToken);
                 storageService.saveToken(cleanedToken);
                 setGithubToken(cleanedToken);
-                await refreshRateLimit();
+                await refreshRateLimit(true);
                 return { success: true, user: userData };
             } else {
                 let errorMsg = 'Invalid or Expired Token';
@@ -123,7 +135,7 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
         setIsConnected(false);
         setTokenError(null);
-        refreshRateLimit();
+        refreshRateLimit(true);
     }, [refreshRateLimit]);
 
     return (

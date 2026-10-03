@@ -12,7 +12,7 @@ import {
   Terminal,
 } from 'lucide-react';
 import DOMPurify from 'dompurify';
-import Header from '../components/layouts/Header';
+import Header, { getQuotaColorInfo } from '../components/layouts/Header';
 import { SubFooter } from '../components/layouts/Footer';
 import SEO from '../components/ui/SEO';
 import FeatureProjectGrid from '../components/features/FeatureProjectGrid';
@@ -147,7 +147,7 @@ const InfoPage = ({ contentKey: propContentKey }) => {
 
           <div className="mx-auto w-full max-w-[1280px] border-white/10 min-[1280px]:border-x px-6 py-12 md:px-20 relative z-10">
             <div className="mx-auto flex w-full max-w-[800px] flex-col gap-3 font-sans text-center items-center">
-              <p className="text-xs uppercase tracking-wider text-emerald-400 font-mono font-semibold">
+              <p className="text-xs uppercase tracking-wider text-[#C19EDB] font-mono font-semibold">
                 &lt;MODULE_{contentKey.toUpperCase()} /&gt;
               </p>
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight font-heading">
@@ -187,7 +187,7 @@ const InfoPage = ({ contentKey: propContentKey }) => {
                 {hasCards && (
                   <section aria-label="Documentation Modules">
                     <div className="mb-6 flex flex-col gap-1">
-                      <p className="text-xs font-mono font-semibold uppercase tracking-wider text-emerald-400">
+                      <p className="text-xs font-mono font-semibold uppercase tracking-wider text-[#4397E0]">
                         Platform Architecture
                       </p>
                       <h2 className="text-2xl font-bold font-heading text-white tracking-tight">
@@ -227,35 +227,52 @@ const InfoPage = ({ contentKey: propContentKey }) => {
                       </div>
 
                       {isConnected && user && (
-                        <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-mono font-bold flex items-center gap-1.5">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                        <span className="px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white text-xs font-mono font-bold flex items-center gap-1.5">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#4397E0]" />
                           @{user.login}
                         </span>
                       )}
                     </div>
 
-                    <div className="p-4 rounded-xl border border-white/10 bg-[#0B0C0E] space-y-2 font-mono text-xs">
-                      <div className="flex items-center justify-between text-zinc-300">
-                        <span className="font-bold text-white flex items-center gap-2">
-                          <ShieldCheck className="w-4 h-4 text-indigo-400" />
-                          API Rate Limit Quota
-                        </span>
-                        <span className="text-emerald-400 font-bold">
-                          {rateLimit ? `${rateLimit.remaining} / ${rateLimit.limit} req/hr` : '60 / 60 req/hr (Anonymous)'}
-                        </span>
-                      </div>
+                    {(() => {
+                      const quotaInfo = getQuotaColorInfo(rateLimit?.remaining, rateLimit?.limit);
+                      return (
+                        <div className="p-4 rounded-xl border border-white/10 bg-[#0B0C0E] space-y-3 font-mono text-xs">
+                          <div className="flex items-center justify-between text-zinc-300">
+                            <span className="font-bold text-white flex items-center gap-2">
+                              <ShieldCheck className="w-4 h-4 text-zinc-300" />
+                              API Rate Limit Quota
+                            </span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-white font-bold">
+                                {rateLimit ? `${rateLimit.remaining.toLocaleString()} / ${rateLimit.limit.toLocaleString()} req/hr` : '60 / 60 req/hr (Anonymous)'}
+                              </span>
+                              <span className={`text-xs font-mono font-bold ${quotaInfo.textColor}`}>
+                                {quotaInfo.percentage}%
+                              </span>
+                            </div>
+                          </div>
 
-                      <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
-                        <div
-                          className="h-full bg-emerald-400 transition-all duration-300"
-                          style={{
-                            width: rateLimit
-                              ? `${Math.min(100, (rateLimit.remaining / rateLimit.limit) * 100)}%`
-                              : '100%',
-                          }}
-                        />
-                      </div>
-                    </div>
+                          <div className="w-full h-2.5 rounded-full bg-white/10 overflow-hidden p-0.5 border border-white/10">
+                            <div
+                              className={`h-full rounded-full transition-all duration-500 ease-out ${quotaInfo.barClass}`}
+                              style={{ width: `${quotaInfo.percentage}%` }}
+                            />
+                          </div>
+
+                          {quotaInfo.percentage <= 5 && (
+                            <div className="p-2.5 rounded-lg border border-red-800/60 bg-red-950/40 text-red-200 text-[11px] font-mono flex items-start gap-2 animate-pulse mt-1">
+                              <AlertTriangle className="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" />
+                              <span>
+                                {rateLimit?.remaining === 0
+                                  ? 'API Quota Exhausted. Connect a GitHub Personal Access Token to get 5,000 requests/hr immediately.'
+                                  : `Critical quota warning: Under 5% remaining (${rateLimit?.remaining || 0} req left)! Renew your token.`}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
 
                     {(localError || tokenError) && !localSuccess && (
                       <div className="p-3.5 rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-300 text-xs font-mono flex items-center gap-2">
@@ -308,7 +325,7 @@ const InfoPage = ({ contentKey: propContentKey }) => {
                     <div className="pt-2 border-t border-white/10 space-y-3 font-mono text-xs">
                       <div className="flex items-center justify-between">
                         <span className="text-zinc-300 font-bold flex items-center gap-2 font-mono">
-                          <Terminal className="w-4 h-4 text-emerald-400" />
+                          <Terminal className="w-4 h-4 text-[#4397E0]" />
                           Live API Test Console
                         </span>
                         <button
@@ -330,7 +347,7 @@ const InfoPage = ({ contentKey: propContentKey }) => {
                         <div className="p-4 rounded-xl border border-white/10 bg-[#0B0C0E] space-y-2 overflow-x-auto text-[11px] leading-relaxed">
                           <div className="flex items-center justify-between text-zinc-400 border-b border-white/10 pb-2">
                             <span className="flex items-center gap-2">
-                              <span className={`w-2 h-2 rounded-full ${testConsoleOutput.ok ? 'bg-emerald-400' : 'bg-rose-400'}`} />
+                              <span className={`w-2 h-2 rounded-full ${testConsoleOutput.ok ? 'bg-[#4397E0]' : 'bg-rose-400'}`} />
                               HTTP STATUS: {testConsoleOutput.status}
                             </span>
                             <span>{testConsoleOutput.timestamp}</span>

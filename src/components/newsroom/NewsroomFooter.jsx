@@ -41,8 +41,8 @@ const NewsroomFooter = () => {
 
           <div className="lg:col-span-5 space-y-3">
             {subscribed ? (
-              <div className="p-4 bg-emerald-500/20 border-2 border-emerald-700 font-mono text-xs text-emerald-900 font-bold flex items-center gap-2">
-                <Check className="w-5 h-5 text-emerald-700" />
+              <div className="p-4 bg-white border-2 border-black font-mono text-xs text-black font-bold flex items-center gap-2 shadow-[4px_4px_0px_#000]">
+                <Check className="w-5 h-5 text-black" />
                 <span>Early access reserved! You will receive the inaugural dispatch upon launch.</span>
               </div>
             ) : (

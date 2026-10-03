@@ -58,10 +58,10 @@ const ModelIntelligenceTable = () => {
           <div className="flex flex-wrap items-center gap-3 font-mono text-xs">
             <span className={`inline-flex items-center gap-1.5 px-3 py-1 text-[11px] font-bold border-2 ${
               dataState.isLive
-                ? 'bg-emerald-500/10 border-emerald-500 text-emerald-400'
+                ? 'bg-blue-500/10 border-blue-400 text-blue-400'
                 : 'bg-[#FF5A1F]/10 border-[#FF5A1F] text-[#FF5A1F]'
             }`}>
-              <span className={`w-2 h-2 rounded-full ${dataState.isLive ? 'bg-emerald-400' : 'bg-[#FF5A1F]'}`} />
+              <span className={`w-2 h-2 rounded-full ${dataState.isLive ? 'bg-blue-400' : 'bg-[#FF5A1F]'}`} />
               {dataState.isLive ? 'Live API Feed' : 'Verified Feb 2026 Audit'}
             </span>
 
@@ -80,7 +80,7 @@ const ModelIntelligenceTable = () => {
         <div className="flex flex-wrap items-center justify-between gap-4 bg-white/[0.02] p-3.5 border border-white/15 rounded-xl font-sans text-xs">
           <div className="flex flex-wrap gap-2 items-center">
             <span className="text-zinc-400 uppercase tracking-widest mr-2 text-[10px] flex items-center gap-1 font-bold">
-              <Filter className="w-3 h-3 text-emerald-400" /> Category Filter:
+              <Filter className="w-3 h-3 text-zinc-400" /> Category Filter:
             </span>
 
             {[
@@ -154,7 +154,7 @@ const ModelIntelligenceTable = () => {
                   >
                     <td className="p-3.5 font-bold text-white border-r border-white/10 font-syne">
                       <div className="flex items-center gap-2">
-                        <span className={`w-2.5 h-2.5 ${m.isOpenSource ? 'bg-emerald-400' : 'bg-amber-400'}`} />
+                        <span className={`w-2.5 h-2.5 ${m.isOpenSource ? 'bg-blue-400' : 'bg-amber-400'}`} />
                         <span>{m.name}</span>
                       </div>
                     </td>
@@ -163,15 +163,15 @@ const ModelIntelligenceTable = () => {
                     </td>
                     <td className="p-3.5 border-r border-white/10">
                       <span className={`inline-block px-2 py-0.5 text-[10px] font-bold border ${
-                        m.isOpenSource ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-white/10 text-zinc-300 border-white/20'
+                        m.isOpenSource ? 'bg-blue-500/20 text-blue-300 border-blue-500/40' : 'bg-white/10 text-zinc-300 border-white/20'
                       }`}>
                         {m.license}
                       </span>
                     </td>
-                    <td className="p-3.5 text-right font-mono font-bold text-emerald-400 border-r border-white/10">
+                    <td className="p-3.5 text-right font-mono font-bold text-zinc-200 border-r border-white/10">
                       ${m.inputPrice.toFixed(2)}
                     </td>
-                    <td className="p-3.5 text-right font-mono font-bold text-emerald-300 border-r border-white/10">
+                    <td className="p-3.5 text-right font-mono font-bold text-zinc-300 border-r border-white/10">
                       ${m.outputPrice.toFixed(2)}
                     </td>
                     <td className="p-3.5 text-right font-mono border-r border-white/10 text-sky-300 font-bold">
@@ -240,11 +240,11 @@ const ModelIntelligenceTable = () => {
                 <div className="space-y-1">
                   <div className="flex justify-between text-[11px]">
                     <span className="text-zinc-400">Input Cost:</span>
-                    <span className="text-emerald-400 font-bold">${m.inputPrice}/1M</span>
+                    <span className="text-zinc-200 font-bold">${m.inputPrice}/1M</span>
                   </div>
                   <div className="w-full bg-white/10 h-2 rounded-none overflow-hidden">
                     <div
-                      className="bg-emerald-400 h-full"
+                      className="bg-blue-400 h-full"
                       style={{ width: `${Math.min(100, (m.inputPrice / 5) * 100)}%` }}
                     />
                   </div>

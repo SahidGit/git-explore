@@ -11,6 +11,9 @@ let _authToken = null;
 /** Set or clear the GitHub Personal Access Token for all subsequent requests */
 export const setGithubToken = (token) => {
   _authToken = token ? token.trim() : null;
+  if (typeof sessionStorage !== 'undefined') {
+    sessionStorage.removeItem(RATE_LIMIT_CACHE_KEY);
+  }
 };
 
 /** Retrieve the active auth token from memory or sessionStorage */
@@ -35,8 +38,41 @@ const buildHeaders = () => {
   return headers;
 };
 
+/** Sync rate limit state from GitHub response headers */
+const syncRateLimitFromHeaders = (response) => {
+  try {
+    const remaining = response.headers.get('x-ratelimit-remaining');
+    const limit = response.headers.get('x-ratelimit-limit');
+    const reset = response.headers.get('x-ratelimit-reset');
+
+    if (remaining !== null && limit !== null) {
+      const data = {
+        remaining: parseInt(remaining, 10),
+        limit: parseInt(limit, 10),
+        reset: reset ? parseInt(reset, 10) : Math.floor(Date.now() / 1000) + 3600,
+      };
+
+      if (typeof sessionStorage !== 'undefined') {
+        sessionStorage.setItem(
+          RATE_LIMIT_CACHE_KEY,
+          JSON.stringify({ data, ts: Date.now() })
+        );
+      }
+
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(
+          new CustomEvent('github-ratelimit-updated', { detail: data })
+        );
+      }
+    }
+  } catch {
+    // Non-critical header sync fallback
+  }
+};
+
 /** Parse GitHub API error responses into user-actionable messages */
 const parseGithubError = async (response) => {
+  syncRateLimitFromHeaders(response);
   const status = response.status;
   const remaining = response.headers.get('x-ratelimit-remaining');
   const isRateLimited = remaining === '0';
@@ -44,11 +80,25 @@ const parseGithubError = async (response) => {
   let message = `GitHub API error (${status})`;
 
   if (status === 401) {
-    message = 'Invalid GitHub Token. Check for typos or generate a new token at github.com/settings/tokens';
+    message = 'Invalid or Expired GitHub Token. Please generate a new token at github.com/settings/tokens';
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(
+        new CustomEvent('github-token-exhausted', {
+          detail: { status: 401, type: 'expired', message },
+        })
+      );
+    }
   } else if (status === 403) {
     message = isRateLimited
-      ? 'API rate limit reached (60 req/hr). Connect a Personal Access Token in the header to unlock 5,000 req/hr.'
+      ? 'API rate limit reached. Connect or generate a Personal Access Token to unlock 5,000 req/hr.'
       : 'Access forbidden. Your token may lack the required public_repo read permission.';
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(
+        new CustomEvent('github-token-exhausted', {
+          detail: { status: 403, type: isRateLimited ? 'exhausted' : 'forbidden', message, isRateLimited },
+        })
+      );
+    }
   } else if (status === 422) {
     message = 'Invalid search query (422). Simplify your search terms and try again.';
   } else if (status === 404) {
@@ -76,6 +126,7 @@ const fetchWithRetry = async (url, options = {}, maxAttempts = 2) => {
         if (response.status < 500) throw err;
         lastError = err;
       } else {
+        syncRateLimitFromHeaders(response);
         return response;
       }
     } catch (err) {
@@ -255,22 +306,26 @@ export const getUserContributions = async (username) => {
   return response.json();
 };
 
-export const getRateLimit = async () => {
+export const getRateLimit = async (force = false) => {
   try {
-    const cached = sessionStorage.getItem(RATE_LIMIT_CACHE_KEY);
-    if (cached) {
-      const { data, ts } = JSON.parse(cached);
-      if (Date.now() - ts < RATE_LIMIT_TTL_MS) return data;
+    if (!force) {
+      const cached = sessionStorage.getItem(RATE_LIMIT_CACHE_KEY);
+      if (cached) {
+        const { data, ts } = JSON.parse(cached);
+        if (Date.now() - ts < RATE_LIMIT_TTL_MS) return data;
+      }
     }
 
     const response = await fetch(`${GITHUB_API_BASE}/rate_limit`, { headers: buildHeaders() });
     if (!response.ok) throw new Error('Failed to fetch rate limit');
     const data = await response.json();
 
-    sessionStorage.setItem(
-      RATE_LIMIT_CACHE_KEY,
-      JSON.stringify({ data: data.resources?.core, ts: Date.now() })
-    );
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.setItem(
+        RATE_LIMIT_CACHE_KEY,
+        JSON.stringify({ data: data.resources?.core, ts: Date.now() })
+      );
+    }
 
     return data.resources?.core;
   } catch {

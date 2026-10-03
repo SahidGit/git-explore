@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, X } from 'lucide-react';
+import { Radio, ArrowRight, X } from 'lucide-react';
 
 const AnnouncementBar = () => {
     const [visible, setVisible] = useState(true);
+    const [formattedDate, setFormattedDate] = useState('Saturday, 3 October 2026');
 
     useEffect(() => {
         const dismissed = sessionStorage.getItem('ai_newsroom_banner_dismissed');
         if (dismissed === 'true') {
             setVisible(false);
+        }
+
+        try {
+            const today = new Date();
+            const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            setFormattedDate(today.toLocaleDateString('en-US', options));
+        } catch {
+            // fallback stays
         }
     }, []);
 
@@ -22,31 +31,35 @@ const AnnouncementBar = () => {
     if (!visible) return null;
 
     return (
-        <div className="bg-[#0E0E10] border-b border-white/10 text-white text-[11px] sm:text-xs font-sans py-1.5 px-4 relative z-50 select-none shadow-sm">
-            <div className="mx-auto w-full max-w-[1280px] flex items-center justify-between">
-                
-                {/* Center Content Link */}
+        <div className="masthead-bar">
+            <div className="mx-auto w-full max-w-[1280px] flex items-center justify-between gap-4">
                 <Link
                     to="/ai-news"
-                    className="mx-auto flex items-center gap-2 hover:text-emerald-300 transition-colors group truncate max-w-[90%] sm:max-w-none"
+                    className="flex items-center gap-2 hover:text-[#C19EDB] transition-colors group truncate text-[11px] sm:text-xs"
                 >
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
-                    <span className="font-semibold text-white group-hover:text-emerald-300 transition-colors truncate">
-                        AI Newsroom: Open model specifications, benchmarks, and research papers
+                    <span className="live-tag">
+                        <Radio className="w-3 h-3 text-[#C19EDB] animate-pulse" />
+                        Coming Soon
                     </span>
-                    <span className="hidden sm:inline text-zinc-400 font-normal">&bull; Updated daily</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-emerald-400 group-hover:translate-x-0.5 transition-transform shrink-0" />
+                    <span className="truncate text-zinc-200 group-hover:text-white transition-colors font-medium">
+                        Ai NewsRoom — Get Every AI News Updated &nbsp;|&nbsp; Super Intelligence 2026
+                    </span>
+                    <ArrowRight className="w-3.5 h-3.5 text-zinc-400 group-hover:text-[#C19EDB] group-hover:translate-x-0.5 transition-all shrink-0 hidden sm:inline-block" />
                 </Link>
 
-                {/* Dismiss Button */}
-                <button
-                    onClick={handleDismiss}
-                    className="text-zinc-500 hover:text-white p-0.5 rounded transition-colors shrink-0 ml-2 cursor-pointer"
-                    title="Dismiss announcement"
-                    aria-label="Dismiss announcement"
-                >
-                    <X className="w-3.5 h-3.5" />
-                </button>
+                <div className="flex items-center gap-3 shrink-0">
+                    <div className="masthead-date-lang hidden md:block">
+                        <span id="today-date">{formattedDate}</span>
+                    </div>
+                    <button
+                        onClick={handleDismiss}
+                        className="text-zinc-500 hover:text-white p-0.5 rounded transition-colors cursor-pointer"
+                        title="Dismiss announcement"
+                        aria-label="Dismiss announcement"
+                    >
+                        <X className="w-3.5 h-3.5" />
+                    </button>
+                </div>
             </div>
         </div>
     );
