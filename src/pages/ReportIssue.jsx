@@ -18,102 +18,147 @@ import {
   Home,
   ChevronDown,
   Check,
+  ExternalLink,
+  ArrowUpRight,
 } from "lucide-react";
 import Header from "../components/layouts/Header";
 import { SubFooter } from "../components/layouts/Footer";
 import BackToTop from "../components/ui/BackToTop";
 import SEO from "../components/ui/SEO";
 import PageNavigation from "../components/ui/PageNavigation";
-import CloudflareTurnstile from "../components/ui/CloudflareTurnstile";
 import { Link, useNavigate } from "react-router-dom";
 import { ReportIssueIcon } from "../components/ui/Icons";
 
 const ISSUE_TYPES = [
+  // ─── 1. Platform & Repository Discovery ─────────────────────────────
   {
-    value: "",
-    label: "Select an issue or correction category *",
-    disabled: true,
-  },
-  // --- Gems & Open Source Tools ---
-  {
-    value: "Gems / Tools: Broken Website or Download Link",
-    label: "Gems / Tools: Broken Website or Download Link",
-    icon: Link2,
+    group: "Platform & Discovery",
+    value: "Search & Filtering Bug",
+    label: "Search & Filtering Bug (Query, tags, language dropdowns, sorting)",
+    icon: Bug,
+    githubLabels: "bug,discovery",
   },
   {
-    value: "Gems / Tools: Inaccurate Info, Specs, or Wrong Store Link",
-    label: "Gems / Tools: Inaccurate Info, Specs, or Wrong Store Link",
+    group: "Platform & Discovery",
+    value: "Data & Telemetry Discrepancy",
+    label: "Data & Telemetry Discrepancy (Stars, forks, trending velocity, language totals)",
     icon: FileText,
+    githubLabels: "bug,telemetry",
   },
   {
-    value: "Gems / Tools: Malicious, Misleading, or Security Concern",
-    label: "Gems / Tools: Malicious, Misleading, or Security Concern",
-    icon: ShieldAlert,
+    group: "Platform & Discovery",
+    value: "GitHub API & Rate Limits",
+    label: "GitHub API & Rate Limits (PAT authentication, 403 quota, token connection)",
+    icon: HelpCircle,
+    githubLabels: "bug,api",
+  },
+
+  // ─── 2. Curated Gems & Open-Source Tools ───────────────────────────
+  {
+    group: "Gems & Tooling",
+    value: "Gems: Broken Link or Outdated Tool",
+    label: "Gems: Broken Link or Outdated Specs (Dead repo, demo, or download link)",
+    icon: Link2,
+    githubLabels: "bug,gems",
   },
   {
-    value: "Gems / Tools: Suggest New Open-Source Tool / Gem",
-    label: "Gems / Tools: Suggest New Open-Source Tool / Gem",
+    group: "Gems & Tooling",
+    value: "Gems: Suggest New Open-Source Gem",
+    label: "Gems: Suggest New Open-Source Tool (Nominate high-signal repository)",
     icon: Sparkles,
-  },
-  // --- AI Newsroom ---
-  {
-    value: "AI Newsroom: Inaccurate Model Pricing / Specs",
-    label: "AI Newsroom: Inaccurate Model Pricing / Specs",
-    icon: FileText,
+    githubLabels: "enhancement,gems",
   },
   {
-    value: "AI Newsroom: Broken arXiv / Paper Link",
-    label: "AI Newsroom: Broken arXiv / Paper Link",
-    icon: Link2,
+    group: "Gems & Tooling",
+    value: "Gems: Malicious or Deceptive Tool",
+    label: "Gems: Malicious or Deceptive Tool (Security risk, malware, misleading license)",
+    icon: ShieldAlert,
+    githubLabels: "security,gems",
+  },
+
+  // ─── 3. User Interface & Local Storage ──────────────────────────────
+  {
+    group: "UI & Storage",
+    value: "UI, Layout or Responsive Glitch",
+    label: "UI, Layout or Responsive Glitch (Mobile rendering, dark theme, styling bug)",
+    icon: Bug,
+    githubLabels: "bug,ui",
   },
   {
-    value: "AI Newsroom: Missing Model / Lab Suggestion",
-    label: "AI Newsroom: Missing Model / Lab Suggestion",
+    group: "UI & Storage",
+    value: "Bookmarks & Storage Bug",
+    label: "Bookmarks & Storage Bug (Saved repositories, JSON/CSV export, local persistence)",
+    icon: Bug,
+    githubLabels: "bug,storage",
+  },
+
+  // ─── 4. Enhancements & Contributions ────────────────────────────────
+  {
+    group: "Feedback & Community",
+    value: "Feature Request / Enhancement",
+    label: "Feature Request / Enhancement (New intelligence metrics, view modes, filters)",
     icon: Lightbulb,
+    githubLabels: "enhancement",
   },
-  // --- Security & Privacy ---
   {
-    value: "Security & Privacy: Vulnerability or Data Concern",
-    label: "Security & Privacy: Vulnerability or Data Concern",
+    group: "Feedback & Community",
+    value: "Documentation or Typo Fix",
+    label: "Documentation or Typo Fix (Guides, cheatsheets, tooltips, README)",
+    icon: FileText,
+    githubLabels: "documentation",
+  },
+  {
+    group: "Feedback & Community",
+    value: "Security & Vulnerability Disclosure",
+    label: "Security & Vulnerability Disclosure (Responsible disclosure, token handling)",
     icon: AlertTriangle,
-  },
-  // --- ExploreGit Core Platform ---
-  {
-    value: "ExploreGit: Repository Search / Filter Bug",
-    label: "ExploreGit: Repository Search / Filter Bug",
-    icon: Bug,
+    githubLabels: "security",
   },
   {
-    value: "ExploreGit: GitHub API & PAT Rate Limit Issue",
-    label: "ExploreGit: GitHub API & PAT Rate Limit Issue",
-    icon: HelpCircle,
-  },
-  {
-    value: "ExploreGit: Local Bookmarks & Export Bug",
-    label: "ExploreGit: Local Bookmarks & Export Bug",
-    icon: Bug,
-  },
-  {
-    value: "ExploreGit: UI Layout / Responsive Glitch",
-    label: "ExploreGit: UI Layout / Responsive Glitch",
-    icon: Bug,
-  },
-  {
-    value: "Documentation or Typo Correction",
-    label: "Documentation or Typo Correction",
-    icon: FileText,
-  },
-  {
-    value: "Feature Request / Platform Idea",
-    label: "Feature Request / Platform Idea",
-    icon: Lightbulb,
-  },
-  {
+    group: "Feedback & Community",
     value: "Other / General Feedback",
-    label: "Other / General Feedback",
+    label: "Other / General Feedback (Suggestions, questions, community input)",
     icon: HelpCircle,
+    githubLabels: "feedback",
   },
 ];
+
+const GITHUB_REPO_ISSUES_URL = "https://github.com/SahidGit/git-explore/issues/new";
+
+const ISSUE_LABELS = Object.fromEntries(
+  ISSUE_TYPES.map((item) => [item.value, item.githubLabels])
+);
+
+const generateGitHubIssueUrl = ({ issueType, pageUrl, description, email }) => {
+  const firstLine = description.split("\n")[0].replace(/[#*`_]/g, "").trim();
+  const shortSummary =
+    firstLine.length > 60 ? `${firstLine.slice(0, 57)}...` : firstLine;
+  const title = `[${issueType || "Feedback"}] ${shortSummary || "Community Report"}`;
+
+  const body = `### Issue Category
+${issueType || "Not specified"}
+
+### Affected Page or Section
+${pageUrl ? pageUrl : "Not specified"}
+
+### Description
+${description}
+
+### Additional Information
+- **Reported via**: ExploreGit Web App
+- **User Agent**: ${typeof navigator !== "undefined" ? navigator.userAgent : "Web"}
+${email ? `- **Contact Email**: ${email}` : ""}
+`;
+
+  const labels = ISSUE_LABELS[issueType] || "feedback";
+  const params = new URLSearchParams({
+    title,
+    body,
+    labels,
+  });
+
+  return `${GITHUB_REPO_ISSUES_URL}?${params.toString()}`;
+};
 
 const MIN_CHARS = 20;
 const MAX_CHARS = 2000;
@@ -137,11 +182,10 @@ const ReportIssue = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const [turnstileToken, setTurnstileToken] = useState("");
-  const [turnstileKey, setTurnstileKey] = useState(0);
   const [status, setStatus] = useState("idle"); // 'idle' | 'loading' | 'success' | 'error'
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [generatedIssueUrl, setGeneratedIssueUrl] = useState("");
 
   // Close dropdown when clicking outside or pressing Escape
   useEffect(() => {
@@ -165,8 +209,7 @@ const ReportIssue = () => {
 
   const currentLength = formData.description.length;
   const isDescriptionValid = formData.description.trim().length >= MIN_CHARS;
-  const isFormValid =
-    formData.issueType !== "" && isDescriptionValid && !!turnstileToken;
+  const isFormValid = formData.issueType !== "" && isDescriptionValid;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -175,7 +218,7 @@ const ReportIssue = () => {
     if (status === "error") setErrorMessage("");
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setErrorMessage("");
     setSuccessMessage("");
@@ -196,58 +239,16 @@ const ReportIssue = () => {
       return;
     }
 
-    if (!turnstileToken) {
-      setStatus("error");
-      setErrorMessage(
-        "Please complete the Cloudflare verification challenge below to confirm human session.",
-      );
-      return;
-    }
-
-    setStatus("loading");
-
     try {
-      // 1. Dispatch to backend API
-      const apiBase = import.meta.env.VITE_API_URL || "";
-      const endpoint = apiBase
-        ? `${apiBase.replace(/\/$/, "")}/api/reports`
-        : "/api/reports";
+      const issueUrl = generateGitHubIssueUrl(formData);
+      setGeneratedIssueUrl(issueUrl);
 
-      let response;
-      try {
-        response = await fetch(endpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ...formData,
-            cfTurnstileToken: turnstileToken,
-          }),
-        });
-      } catch (networkErr) {
-        throw new Error(
-          "Network error: Unable to reach the server. Please check your connection and try again.",
-        );
-      }
-
-      if (!response.ok) {
-        let errMessage = "Server rejected the report submission.";
-        try {
-          const errorData = await response.json();
-          if (errorData && errorData.message) {
-            errMessage = errorData.message;
-          }
-        } catch (_) {
-          errMessage = `Server error (${response.status}: ${response.statusText || "Request failed"})`;
-        }
-        throw new Error(errMessage);
-      }
-
-      // 2. On confirmed server success, record report locally in audit history
+      // Record locally in browser history for private audit ledger
       const localReport = {
         id: `report_${Date.now()}`,
         timestamp: new Date().toISOString(),
         ...formData,
-        turnstileTokenVerified: true,
+        destination: "GitHub Issues",
       };
 
       try {
@@ -261,26 +262,18 @@ const ReportIssue = () => {
         );
       } catch (_) {}
 
+      // Open GitHub Issues with prefilled parameters
+      window.open(issueUrl, "_blank", "noopener,noreferrer");
+
       setStatus("success");
       setSuccessMessage(
-        "Thank you! Your feedback has been verified and submitted successfully.",
+        "We have prepared and opened your issue on GitHub in a new tab! Review the prefilled details and click 'Submit new issue' on GitHub.",
       );
-      setFormData({
-        issueType: "",
-        pageUrl: "",
-        description: "",
-        email: "",
-      });
-      setTurnstileToken("");
-      setTurnstileKey((prev) => prev + 1);
     } catch (err) {
       setStatus("error");
       setErrorMessage(
-        err.message || "An error occurred while submitting your report.",
+        err.message || "An error occurred while preparing your GitHub issue.",
       );
-      // Keep form inputs intact (do NOT reset formData) so the user can review and retry
-      setTurnstileToken("");
-      setTurnstileKey((prev) => prev + 1);
     }
   };
 
@@ -288,14 +281,13 @@ const ReportIssue = () => {
     setStatus("idle");
     setErrorMessage("");
     setSuccessMessage("");
+    setGeneratedIssueUrl("");
     setFormData({
       issueType: "",
       pageUrl: "",
       description: "",
       email: "",
     });
-    setTurnstileToken("");
-    setTurnstileKey((prev) => prev + 1);
   };
 
   return (
@@ -370,31 +362,43 @@ const ReportIssue = () => {
                 {status === "success" ? (
                   <div className="p-8 sm:p-12 rounded-2xl bg-white/[0.02] border border-white/[0.08] backdrop-blur-md text-center space-y-6 animate-fadeInUp shadow-2xl">
                     {/* Minimal SVG Stroke Icon */}
-                    <div className="w-12 h-12 rounded-full bg-[#4397E0]/10 border border-[#4397E0]/20 flex items-center justify-center mx-auto text-[#4397E0]">
+                    <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto text-emerald-400">
                       <CheckCircle2 className="w-6 h-6 stroke-[1.75]" />
                     </div>
 
                     <div className="space-y-3">
                       <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white font-mono text-xs font-semibold tracking-wider uppercase">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#4397E0]" />
-                        <span>SUBMISSION VERIFIED</span>
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                        <span>PREFILLED FOR GITHUB</span>
                       </div>
 
                       <h3 className="text-xl sm:text-2xl font-bold text-white font-heading tracking-tight">
-                        Report Submitted Successfully!
+                        Report Ready on GitHub!
                       </h3>
 
-                      <p className="text-xs sm:text-sm text-slate-400 font-mono max-w-md mx-auto leading-relaxed">
-                        {successMessage} Your feedback has been verified and
-                        logged in the local audit ledger.
+                      <p className="text-xs sm:text-sm text-slate-400 font-sans max-w-md mx-auto leading-relaxed">
+                        {successMessage}
                       </p>
                     </div>
 
                     {/* Low-profile Glass Pill Buttons */}
                     <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3 font-sans text-xs">
+                      {generatedIssueUrl && (
+                        <a
+                          href={generatedIssueUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-white text-black hover:bg-zinc-200 active:scale-[0.98] transition-all duration-200 font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-none"
+                        >
+                          <span>Open Issue on GitHub</span>
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
+                      )}
+
                       <button
+                        type="button"
                         onClick={handleReset}
-                        className="px-5 py-2.5 rounded-xl bg-white text-black hover:bg-zinc-200 active:scale-[0.98] transition-all duration-200 font-semibold flex items-center gap-2 cursor-pointer shadow-none"
+                        className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.12] text-white hover:bg-white/[0.08] hover:border-white/25 active:scale-[0.98] transition-all duration-200 font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-none"
                       >
                         <RefreshCw className="w-3.5 h-3.5" />
                         <span>Submit Another Report</span>
@@ -402,7 +406,7 @@ const ReportIssue = () => {
 
                       <Link
                         to="/dashboard"
-                        className="px-5 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.12] text-white hover:bg-white/[0.08] hover:border-white/25 active:scale-[0.98] transition-all duration-200 font-semibold flex items-center gap-2 shadow-none"
+                        className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.12] text-white hover:bg-white/[0.08] hover:border-white/25 active:scale-[0.98] transition-all duration-200 font-semibold flex items-center justify-center gap-2 shadow-none"
                       >
                         <Home className="w-3.5 h-3.5 text-zinc-400" />
                         <span>Return to Explorer</span>
@@ -410,12 +414,35 @@ const ReportIssue = () => {
                     </div>
                   </div>
                 ) : (
-                  /* Form */
-                  <form
-                    onSubmit={handleSubmit}
-                    className="space-y-6 relative z-10"
-                    noValidate
-                  >
+                  <div>
+                    {/* Direct GitHub Access Banner */}
+                    <div className="mb-6 p-4 rounded-xl bg-white/[0.03] border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-sans">
+                      <div className="flex items-center gap-2.5 text-zinc-300">
+                        <div className="p-1.5 rounded-lg bg-white/5 border border-white/10 text-amber-400 shrink-0">
+                          <Bug className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-white">Direct GitHub Issues</p>
+                          <p className="text-zinc-400 text-[11px]">Submissions are published directly to our open-source repo.</p>
+                        </div>
+                      </div>
+                      <a
+                        href="https://github.com/SahidGit/git-explore/issues/new"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium text-xs transition-all shrink-0 cursor-pointer"
+                      >
+                        <span>Blank Issue</span>
+                        <ArrowUpRight className="w-3.5 h-3.5" />
+                      </a>
+                    </div>
+
+                    {/* Form */}
+                    <form
+                      onSubmit={handleSubmit}
+                      className="space-y-6 relative z-10"
+                      noValidate
+                    >
                     {/* Issue Type (Required with Custom Styled Dropdown) */}
                     <div className="space-y-2 relative" ref={dropdownRef}>
                       <label
@@ -453,34 +480,41 @@ const ReportIssue = () => {
                         {dropdownOpen && (
                           <div
                             role="listbox"
-                            className="absolute z-50 mt-1.5 w-full bg-[#121215] rounded-xl border border-white/10 shadow-2xl py-1.5 max-h-64 overflow-y-auto animate-fadeIn backdrop-blur-xl"
+                            className="absolute z-50 mt-1.5 w-full bg-[#121215] rounded-xl border border-white/10 shadow-2xl py-1.5 max-h-72 overflow-y-auto animate-fadeIn backdrop-blur-xl divide-y divide-white/[0.04]"
                           >
-                            {ISSUE_TYPES.filter((t) => !t.disabled).map((type) => {
+                            {ISSUE_TYPES.map((type, idx) => {
                               const isSelected = formData.issueType === type.value;
                               const IconComponent = type.icon;
+                              const showGroupHeader = idx === 0 || type.group !== ISSUE_TYPES[idx - 1].group;
                               return (
-                                <button
-                                  key={type.value}
-                                  type="button"
-                                  role="option"
-                                  aria-selected={isSelected}
-                                  onClick={() => {
-                                    setFormData((prev) => ({ ...prev, issueType: type.value }));
-                                    setDropdownOpen(false);
-                                    if (status === 'error') setErrorMessage('');
-                                  }}
-                                  className={`w-full px-4 py-2.5 text-left text-xs sm:text-sm flex items-center justify-between transition-colors cursor-pointer ${
-                                    isSelected
-                                      ? 'bg-white/10 text-white font-semibold'
-                                      : 'text-zinc-300 hover:bg-white/[0.06] hover:text-white'
-                                  }`}
-                                >
-                                  <span className="flex items-center gap-2.5 truncate">
-                                    {IconComponent && <IconComponent className="w-3.5 h-3.5 text-zinc-500 shrink-0" />}
-                                    <span className="truncate">{type.label}</span>
-                                  </span>
-                                  {isSelected && <Check className="w-4 h-4 text-[#4397E0] shrink-0 ml-2" />}
-                                </button>
+                                <React.Fragment key={type.value}>
+                                  {showGroupHeader && (
+                                    <div className="px-4 pt-2.5 pb-1 text-[10px] font-mono uppercase tracking-wider text-zinc-500 font-bold bg-white/[0.01]">
+                                      {type.group}
+                                    </div>
+                                  )}
+                                  <button
+                                    type="button"
+                                    role="option"
+                                    aria-selected={isSelected}
+                                    onClick={() => {
+                                      setFormData((prev) => ({ ...prev, issueType: type.value }));
+                                      setDropdownOpen(false);
+                                      if (status === 'error') setErrorMessage('');
+                                    }}
+                                    className={`w-full px-4 py-2 text-left text-xs sm:text-sm flex items-center justify-between transition-colors cursor-pointer ${
+                                      isSelected
+                                        ? 'bg-white/10 text-white font-semibold'
+                                        : 'text-zinc-300 hover:bg-white/[0.06] hover:text-white'
+                                    }`}
+                                  >
+                                    <span className="flex items-center gap-2.5 truncate">
+                                      {IconComponent && <IconComponent className="w-3.5 h-3.5 text-zinc-400 shrink-0" />}
+                                      <span className="truncate">{type.label}</span>
+                                    </span>
+                                    {isSelected && <Check className="w-4 h-4 text-[#4397E0] shrink-0 ml-2" />}
+                                  </button>
+                                </React.Fragment>
                               );
                             })}
                           </div>
@@ -596,16 +630,6 @@ const ReportIssue = () => {
                       </p>
                     </div>
 
-                    {/* Cloudflare Turnstile Bot Verification */}
-                    <div className="space-y-2">
-                      <CloudflareTurnstile
-                        key={turnstileKey}
-                        onVerify={(token) => setTurnstileToken(token)}
-                        onExpire={() => setTurnstileToken("")}
-                        onError={() => setTurnstileToken("")}
-                      />
-                    </div>
-
                     {/* Submit Button */}
                     <button
                       type="submit"
@@ -616,27 +640,17 @@ const ReportIssue = () => {
                           : "bg-white/10 text-zinc-500 cursor-not-allowed border border-white/10"
                       }`}
                     >
-                      {status === "loading" ? (
-                        <>
-                          <Loader2 className="w-4 h-4 animate-spin text-black" />
-                          <span>Submitting Report...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Send className="w-4 h-4" />
-                          <span>
-                            {!formData.issueType
-                              ? "Select Issue Type to Submit"
-                              : !isDescriptionValid
-                                ? `Enter at least ${MIN_CHARS} characters`
-                                : !turnstileToken
-                                  ? "Verify Cloudflare Challenge to Submit"
-                                  : "Submit Report"}
-                          </span>
-                        </>
-                      )}
+                      <ExternalLink className="w-4 h-4" />
+                      <span>
+                        {!formData.issueType
+                          ? "Select Issue Type to Submit"
+                          : !isDescriptionValid
+                            ? `Enter at least ${MIN_CHARS} characters`
+                            : "Open & Submit on GitHub"}
+                      </span>
                     </button>
                   </form>
+                  </div>
                 )}
               </div>
 

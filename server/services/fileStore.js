@@ -31,8 +31,10 @@ const appendReport = async (reportData) => {
         const tempFile = `${REPORTS_FILE}.tmp.${Date.now()}`;
         await fsPromises.writeFile(tempFile, JSON.stringify(existing, null, 2), 'utf8');
         await fsPromises.rename(tempFile, REPORTS_FILE);
+        return true;
     } catch (err) {
         console.error('[fileStore] Failed to write report to disk:', err.message);
+        return false;
     }
 };
 

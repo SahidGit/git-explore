@@ -1,18 +1,31 @@
 const mongoose = require('mongoose');
 
 const VALID_ISSUE_TYPES = [
-    // 10 UI categories from ReportIssue.jsx
-    'AI Newsroom: Inaccurate Model Pricing / Specs',
-    'AI Newsroom: Broken arXiv / Paper Link',
-    'AI Newsroom: Missing Model / Lab Suggestion',
+    // 12 Standardized ExploreGit categories
+    'Search & Filtering Bug',
+    'Data & Telemetry Discrepancy',
+    'GitHub API & Rate Limits',
+    'Gems: Broken Link or Outdated Tool',
+    'Gems: Suggest New Open-Source Gem',
+    'Gems: Malicious or Deceptive Tool',
+    'UI, Layout or Responsive Glitch',
+    'Bookmarks & Storage Bug',
+    'Feature Request / Enhancement',
+    'Documentation or Typo Fix',
+    'Security & Vulnerability Disclosure',
+    'Other / General Feedback',
+
+    // Backward-compatibility aliases
     'ExploreGit: Repository Search / Filter Bug',
     'GitHub API & Token Rate Limit Issue',
     'Local Bookmarks & Export Bug',
     'UI Layout / Responsive Glitch',
     'Feature Request / Platform Idea',
     'Documentation or Typo Correction',
-    'Other / General Feedback',
-    // 5 Generic / legacy categories
+    'Gems / Tools: Broken Website or Download Link',
+    'Gems / Tools: Inaccurate Info, Specs, or Wrong Store Link',
+    'Gems / Tools: Malicious, Misleading, or Security Concern',
+    'Gems / Tools: Suggest New Open-Source Tool / Gem',
     'Bug Report',
     'Feature / Suggestion',
     'Content / Data Error',

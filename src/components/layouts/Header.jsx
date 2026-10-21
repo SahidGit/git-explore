@@ -3,12 +3,13 @@ import { Link, useLocation } from 'react-router-dom';
 import {
     Key, X, ArrowLeft, Home, AlertTriangle, AlertCircle, HelpCircle, ExternalLink,
     Check, Trash2, Loader2, ShieldCheck, User, ChevronDown, ChevronUp, CheckCircle2,
-    Compass, BarChart2, Bookmark, Terminal, Sparkles, UserCheck
+    Compass, BarChart2, Bookmark, Terminal, Sparkles, UserCheck, ArrowLeftRight
 } from 'lucide-react';
 import AnnouncementBar from '../ui/AnnouncementBar';
 import TokenAlertBanner from '../ui/TokenAlertBanner';
 import { useAuth } from '../../context/AuthContext';
 import {
+    DashboardNavIcon,
     BookmarksNavIcon,
     ProfileNavIcon,
     LanguagesNavIcon,
@@ -199,6 +200,7 @@ const Header = ({ activeTab, showBackButton, theme = 'dark' }) => {
     // Primary desktop navigation tabs
     const navLinks = [
         { label: 'Dashboard', to: '/dashboard', tab: 'dashboard' },
+        { label: 'Compare', to: '/compare', tab: 'compare' },
         { label: 'Languages', to: '/languages', tab: 'languages' },
         { label: 'Gems', to: '/gems', tab: 'gems' },
         { label: 'Bookmarks', to: '/bookmarks', tab: 'bookmarks' },
@@ -217,7 +219,15 @@ const Header = ({ activeTab, showBackButton, theme = 'dark' }) => {
                     tab: 'dashboard',
                     tag: 'Live Feed',
                     tagStyle: 'bg-[#4397E0]/10 text-[#4397E0] border-[#4397E0]/20',
-                    icon: Compass,
+                    icon: DashboardNavIcon,
+                },
+                {
+                    label: 'Repository Compare',
+                    to: '/compare',
+                    tab: 'compare',
+                    tag: 'Side-by-Side',
+                    tagStyle: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+                    icon: ArrowLeftRight,
                 },
                 {
                     label: 'Hidden Gems & Tools',
@@ -548,7 +558,7 @@ const Header = ({ activeTab, showBackButton, theme = 'dark' }) => {
                     {/* Clean Left-Aligned Links List (Entire.io Design) */}
                     <nav className="flex-1 overflow-y-auto px-6 py-8 flex flex-col gap-5">
                         {[
-                            { label: 'Dashboard', to: '/dashboard', tab: 'dashboard' },
+                            { label: 'Dashboard', to: '/dashboard', tab: 'dashboard', icon: DashboardNavIcon },
                             { label: 'Languages', to: '/languages', tab: 'languages', icon: LanguagesNavIcon },
                             { label: 'Gems & Tools', to: '/gems', tab: 'gems', icon: GemsNavIcon, badge: 'NEW' },
                             { label: 'Bookmarks', to: '/bookmarks', tab: 'bookmarks', icon: BookmarksNavIcon },

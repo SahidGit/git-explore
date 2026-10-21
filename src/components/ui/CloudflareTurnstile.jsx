@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ShieldCheck, Loader2, CheckCircle2, Lock, Info, RefreshCw } from 'lucide-react';
+import { ShieldCheck, Loader2, CheckCircle2, Lock, Info, RefreshCw, AlertTriangle } from 'lucide-react';
 
 /**
  * Cloudflare Turnstile CAPTCHA & Bot Verification Component
@@ -7,7 +7,9 @@ import { ShieldCheck, Loader2, CheckCircle2, Lock, Info, RefreshCw } from 'lucid
  * Provides client-side privacy-first bot mitigation with zero cookies,
  * zero login requirements, and full local-first fallback.
  * 
- * Public Cloudflare test sitekey: 1x00000000000000000000AA (always passes for dev/test)
+ * In development, unconfigured instances safely use Cloudflare's public test sitekey:
+ * 1x00000000000000000000AA (always passes).
+ * In production, silent fallback is disabled to prevent token rejection and security bypass.
  */
 const CloudflareTurnstile = ({ onVerify, onError, onExpire, siteKey }) => {
     const containerRef = useRef(null);
@@ -17,10 +19,11 @@ const CloudflareTurnstile = ({ onVerify, onError, onExpire, siteKey }) => {
     const [hasError, setHasError] = useState(false);
     const [tokenGenerated, setTokenGenerated] = useState('');
 
-    const activeSiteKey =
-        siteKey ||
-        import.meta.env.VITE_CLOUDFLARE_TURNSTILE_SITE_KEY ||
-        '1x00000000000000000000AA';
+    const isDev = Boolean(import.meta.env.DEV);
+    const configuredSiteKey = siteKey || import.meta.env.VITE_CLOUDFLARE_TURNSTILE_SITE_KEY;
+    // Prohibit silent fallback to test key in production
+    const activeSiteKey = configuredSiteKey || (isDev ? '1x00000000000000000000AA' : null);
+    const isMissingConfig = !activeSiteKey;
 
     const handleVerificationSuccess = React.useCallback((token) => {
         setIsVerified(true);
@@ -31,7 +34,7 @@ const CloudflareTurnstile = ({ onVerify, onError, onExpire, siteKey }) => {
     }, [onVerify]);
 
     const renderWidget = React.useCallback(() => {
-        if (!containerRef.current || !window.turnstile) return;
+        if (!containerRef.current || !window.turnstile || !activeSiteKey) return;
 
         try {
             if (widgetIdRef.current) {
@@ -69,12 +72,24 @@ const CloudflareTurnstile = ({ onVerify, onError, onExpire, siteKey }) => {
     }, [activeSiteKey, handleVerificationSuccess, onError, onExpire]);
 
     const handleRetry = () => {
+        if (isMissingConfig) return;
         setHasError(false);
         setIsLoading(true);
         renderWidget();
     };
 
     useEffect(() => {
+        if (isMissingConfig) {
+            setIsLoading(false);
+            setHasError(true);
+            if (onError) onError('MISSING_SITE_KEY');
+            return;
+        }
+
+        if (isDev && !configuredSiteKey) {
+            console.warn('[CloudflareTurnstile] No VITE_CLOUDFLARE_TURNSTILE_SITE_KEY set; using Cloudflare dev dummy test key.');
+        }
+
         let isMounted = true;
 
         const loadScript = () => {
@@ -122,7 +137,7 @@ const CloudflareTurnstile = ({ onVerify, onError, onExpire, siteKey }) => {
                 } catch (_) {}
             }
         };
-    }, [renderWidget]);
+    }, [isMissingConfig, isDev, configuredSiteKey, onError, renderWidget]);
 
     return (
         <div className="rounded-xl border border-white/[0.12] bg-[#0E0E12] p-4 space-y-3 shadow-lg">
@@ -141,42 +156,56 @@ const CloudflareTurnstile = ({ onVerify, onError, onExpire, siteKey }) => {
 
             {/* Turnstile Container / Verified State */}
             <div className="min-h-[55px] flex flex-col items-center justify-center py-1">
-                {isLoading && !isVerified && (
-                    <div className="flex items-center gap-2.5 text-xs font-mono text-zinc-400 py-2">
-                        <Loader2 className="w-4 h-4 text-zinc-400 animate-spin" />
-                        <span>Initializing Cloudflare Challenge…</span>
-                    </div>
-                )}
-
-                {/* Cloudflare turnstile mount point */}
-                <div
-                    ref={containerRef}
-                    className={`w-full flex justify-center ${isVerified ? 'hidden' : 'block'}`}
-                />
-
-                {/* Retry button if challenge errored */}
-                {hasError && !isVerified && !isLoading && (
-                    <button
-                        type="button"
-                        onClick={handleRetry}
-                        className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-xs font-mono text-zinc-200 transition-colors cursor-pointer"
-                    >
-                        <RefreshCw className="w-3.5 h-3.5 text-zinc-400" />
-                        <span>Retry Verification Challenge</span>
-                    </button>
-                )}
-
-                {/* Verified state banner */}
-                {isVerified && (
-                    <div className="w-full flex items-center justify-between p-2.5 bg-white/10 border border-white/20 rounded-lg text-white font-mono text-xs">
-                        <div className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-[#4397E0]" />
-                            <span className="font-bold">Bot challenge verified. Human session confirmed.</span>
+                {isMissingConfig ? (
+                    <div className="w-full p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg text-amber-300 font-mono text-xs flex items-start gap-2.5">
+                        <AlertTriangle className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" />
+                        <div>
+                            <p className="font-bold text-amber-200">Turnstile Site Key Unconfigured</p>
+                            <p className="text-[11px] text-zinc-400 mt-1">
+                                VITE_CLOUDFLARE_TURNSTILE_SITE_KEY is not defined in this environment. Test key fallback is disabled in production to protect bot challenge integrity.
+                            </p>
                         </div>
-                        <span className="text-[9px] bg-[#4397E0]/20 px-1.5 py-0.5 rounded text-[#4397E0] font-bold">
-                            SECURE
-                        </span>
                     </div>
+                ) : (
+                    <>
+                        {isLoading && !isVerified && (
+                            <div className="flex items-center gap-2.5 text-xs font-mono text-zinc-400 py-2">
+                                <Loader2 className="w-4 h-4 text-zinc-400 animate-spin" />
+                                <span>Initializing Cloudflare Challenge…</span>
+                            </div>
+                        )}
+
+                        {/* Cloudflare turnstile mount point */}
+                        <div
+                            ref={containerRef}
+                            className={`w-full flex justify-center ${isVerified ? 'hidden' : 'block'}`}
+                        />
+
+                        {/* Retry button if challenge errored */}
+                        {hasError && !isVerified && !isLoading && (
+                            <button
+                                type="button"
+                                onClick={handleRetry}
+                                className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-xs font-mono text-zinc-200 transition-colors cursor-pointer"
+                            >
+                                <RefreshCw className="w-3.5 h-3.5 text-zinc-400" />
+                                <span>Retry Verification Challenge</span>
+                            </button>
+                        )}
+
+                        {/* Verified state banner */}
+                        {isVerified && (
+                            <div className="w-full flex items-center justify-between p-2.5 bg-white/10 border border-white/20 rounded-lg text-white font-mono text-xs">
+                                <div className="flex items-center gap-2">
+                                    <CheckCircle2 className="w-4 h-4 text-[#4397E0]" />
+                                    <span className="font-bold">Bot challenge verified. Human session confirmed.</span>
+                                </div>
+                                <span className="text-[9px] bg-[#4397E0]/20 px-1.5 py-0.5 rounded text-[#4397E0] font-bold">
+                                    SECURE
+                                </span>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import {
+  useNavigate } from "react-router-dom";
 import {
   Github,
   ArrowRight,
@@ -11,6 +12,10 @@ import {
   Sparkles,
   Filter,
   Code2,
+  Clock,
+  Activity,
+  Info,
+  ExternalLink,
 } from "lucide-react";
 
 import { getMonthlyTopRepositories } from "../../services/githubService";
@@ -99,55 +104,144 @@ const QUICK_FILTER_CHIPS = [
   },
 ];
 
+// ─── Local Snapshot Tracking for Authentic Growth Signals ───────────
+const SNAPSHOT_STORAGE_KEY = "exploregit_repo_snapshots_v1";
+
+const formatElapsed = (ms) => {
+  const mins = Math.floor(ms / (60 * 1000));
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / (60 * 60 * 1000));
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / (24 * 60 * 60 * 1000));
+  if (days === 1) return "1 day ago";
+  return `${days} days ago`;
+};
+
+const getOrUpdateSnapshot = (repoName, currentStars) => {
+  if (!currentStars || typeof window === "undefined") {
+    return {
+      status: "none",
+      delta: null,
+      label: "Growth data not available yet",
+      explanation: "No star baseline recorded yet for this repository.",
+    };
+  }
+
+  try {
+    const raw = localStorage.getItem(SNAPSHOT_STORAGE_KEY);
+    const store = raw ? JSON.parse(raw) : {};
+    const existing = store[repoName];
+    const now = Date.now();
+
+    if (!existing) {
+      store[repoName] = {
+        firstStars: currentStars,
+        firstSeen: now,
+        lastChecked: now,
+      };
+      localStorage.setItem(SNAPSHOT_STORAGE_KEY, JSON.stringify(store));
+      return {
+        status: "baseline",
+        delta: null,
+        baselineStars: currentStars,
+        currentStars,
+        firstSeen: now,
+        lastChecked: now,
+        elapsedLabel: "First visit",
+        label: "Tracking started",
+        explanation: `Baseline established on this device (${currentStars.toLocaleString()} stars). Growth data not available yet—revisit later to view measured change.`,
+      };
+    }
+
+    const elapsedMs = Math.max(0, now - (existing.firstSeen || now));
+    const delta = currentStars - (existing.firstStars ?? currentStars);
+    store[repoName].lastChecked = now;
+    localStorage.setItem(SNAPSHOT_STORAGE_KEY, JSON.stringify(store));
+
+    const elapsedLabel = formatElapsed(elapsedMs);
+    const sign = delta > 0 ? "+" : "";
+
+    return {
+      status: delta > 0 ? "gain" : delta < 0 ? "loss" : "neutral",
+      delta,
+      baselineStars: existing.firstStars,
+      currentStars,
+      firstSeen: existing.firstSeen,
+      lastChecked: now,
+      elapsedLabel,
+      label: delta === 0 ? `±0 (${elapsedLabel})` : `${sign}${delta.toLocaleString()} (${elapsedLabel})`,
+      explanation: `${sign}${delta.toLocaleString()} stars measured since your first visit (${elapsedLabel}); checked just now.`,
+    };
+  } catch {
+    return {
+      status: "none",
+      delta: null,
+      label: "Growth data not available yet",
+      explanation: "Browser storage is disabled or unavailable.",
+    };
+  }
+};
+
 // ─── High-Signal Developer Repositories for Discovery ─────────────
 const DISCOVERY_REPOS = [
   {
     name: "vllm-project/vllm",
     desc: "High-throughput LLM serving engine with PagedAttention and CUDA/ROCm kernel optimization.",
     stars: "38.6k",
+    rawStars: 38600,
     lang: "Python",
     langColor: "#3572a5",
-    delta: "+1.4k today",
-    timeframe: "Today",
+    delta: null,
+    source: "static",
+    timeframe: "This Month",
     tags: ["ai", "python", "today", "llm-serving"],
   },
   {
     name: "astral-sh/uv",
     desc: "Fast Python package installer and resolver in Rust with global disk-space deduplication.",
     stars: "41.2k",
+    rawStars: 41200,
     lang: "Rust",
     langColor: "#dea584",
-    delta: "+4.2k this week",
-    timeframe: "This Week",
+    delta: null,
+    source: "static",
+    timeframe: "This Month",
     tags: ["rust", "python", "package-manager", "cli"],
   },
   {
     name: "ollama/ollama",
     desc: "Local runtime for quantised GGUF model execution with an OpenAI-compatible HTTP API.",
     stars: "112.5k",
+    rawStars: 112500,
     lang: "Go",
     langColor: "#00add8",
-    delta: "+1.2k today",
-    timeframe: "Today",
+    delta: null,
+    source: "static",
+    timeframe: "This Month",
     tags: ["ai", "go", "today", "ollama"],
   },
   {
     name: "biomejs/biome",
     desc: "Unified toolchain for JS/TS formatting and linting with sub-millisecond AST parser.",
     stars: "16.8k",
+    rawStars: 16800,
     lang: "Rust",
     langColor: "#dea584",
-    delta: "+380 today",
-    timeframe: "Today",
+    delta: null,
+    source: "static",
+    timeframe: "This Month",
     tags: ["typescript", "rust", "linter", "formatter"],
   },
   {
     name: "paradedb/paradedb",
     desc: "PostgreSQL search engine extension embedding Tantivy BM25 indexing into Postgres WAL.",
     stars: "9.4k",
+    rawStars: 9400,
     lang: "Rust",
     langColor: "#dea584",
-    delta: "+2.1k this month",
+    delta: null,
+    source: "static",
     timeframe: "This Month",
     tags: ["rust", "postgres", "search", "this month"],
   },
@@ -155,9 +249,11 @@ const DISCOVERY_REPOS = [
     name: "tauri-apps/tauri",
     desc: "Cross-platform application runtime using native webview renderers and a Rust core.",
     stars: "84.1k",
+    rawStars: 84100,
     lang: "Rust",
     langColor: "#dea584",
-    delta: "+4.6k this month",
+    delta: null,
+    source: "static",
     timeframe: "This Month",
     tags: ["rust", "typescript", "desktop", "this month"],
   },
@@ -186,8 +282,20 @@ const Hero = ({ onExplore }) => {
   const [scrollY, setScrollY] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeChip, setActiveChip] = useState(null);
-  const [repos, setRepos] = useState(DISCOVERY_REPOS);
-  const [isLiveOnline, setIsLiveOnline] = useState(false);
+  const [repos, setRepos] = useState(() =>
+    DISCOVERY_REPOS.map((repo) => ({
+      ...repo,
+      snapshot: getOrUpdateSnapshot(repo.name, repo.rawStars),
+    }))
+  );
+  const [sourceMeta, setSourceMeta] = useState({
+    source: "static",
+    isLive: false,
+    fromCache: false,
+    lastUpdated: null,
+    rankingRule: "Curated static developer repositories · Offline fallback",
+  });
+  const [activeSignalModal, setActiveSignalModal] = useState(null);
 
   const inputRef = React.useRef(null);
 
@@ -197,6 +305,14 @@ const Hero = ({ onExplore }) => {
       getMonthlyTopRepositories(6)
         .then((items) => {
           if (!isMounted || !items || !items.length) return;
+          const detectedSource = items.source || items[0]?.source || "live";
+          const lastUpdated = items.lastUpdated || null;
+          const rankingRule =
+            items.rankingRule ||
+            (detectedSource === "static"
+              ? "Curated static developer repositories · Offline fallback"
+              : "Ranked by current stars among repositories created this month · GitHub Search API");
+
           const formatted = items.slice(0, 6).map((item) => {
             const starsNum = item.stargazers_count || 0;
             const starsFormatted =
@@ -209,20 +325,32 @@ const Hero = ({ onExplore }) => {
               "this month",
               "monthly",
             ];
+            const itemSource = item.source || detectedSource;
+            const snapshot = getOrUpdateSnapshot(item.full_name || item.name, starsNum);
 
             return {
               name: item.full_name || item.name,
               desc: item.description || "High momentum open-source project on GitHub.",
               stars: starsFormatted,
+              rawStars: starsNum,
               lang: langName,
               langColor: getLangColor(langName),
-              delta: `+${(item.forks_count || 320) >= 1000 ? `${((item.forks_count || 320) / 1000).toFixed(1)}k` : item.forks_count || 320} forks`,
+              delta: null,
+              source: itemSource,
+              snapshot,
               timeframe: "This Month",
               tags,
             };
           });
+
           setRepos(formatted);
-          setIsLiveOnline(true);
+          setSourceMeta({
+            source: detectedSource,
+            isLive: items.isLive ?? (detectedSource !== "static"),
+            fromCache: items.fromCache ?? (detectedSource === "cached"),
+            lastUpdated,
+            rankingRule,
+          });
         })
         .catch(() => {
           // Keep DISCOVERY_REPOS fallback safely
@@ -478,14 +606,32 @@ const Hero = ({ onExplore }) => {
             </div>
 
             {/* Signal preview header bar */}
-            <div className="flex items-center justify-between px-5 py-2.5 bg-black/40 text-xs font-sans font-medium text-zinc-400">
-              <div className="flex items-center gap-2">
-                <span className={`w-1.5 h-1.5 rounded-full ${isLiveOnline ? "bg-blue-400 animate-pulse" : "bg-zinc-400"}`} />
-                <span className="tracking-wide">{isLiveOnline ? "LIVE SIGNAL PREVIEW · MONTHLY TOP" : "CURATED SIGNAL PREVIEW"}</span>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-5 py-2.5 bg-black/50 border-b border-white/[0.06] text-xs font-sans text-zinc-400">
+              <div className="flex items-center gap-2 flex-wrap">
+                {sourceMeta.source === "live" ? (
+                  <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-mono font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
+                    LIVE GITHUB DATA
+                  </div>
+                ) : sourceMeta.source === "cached" ? (
+                  <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[10px] font-mono font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                    CACHED GITHUB DATA (15M TTL)
+                  </div>
+                ) : (
+                  <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-zinc-500/10 border border-zinc-500/20 text-zinc-400 text-[10px] font-mono font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-zinc-400" />
+                    CURATED STATIC DATA
+                  </div>
+                )}
+                <span className="text-zinc-600 hidden sm:inline">•</span>
+                <span className="text-[11px] text-zinc-400 font-sans truncate max-w-[320px] sm:max-w-none">
+                  {sourceMeta.rankingRule}
+                </span>
               </div>
-              <div>
+              <div className="text-[11px] font-mono text-zinc-400 shrink-0">
                 {filteredRepos.length}{" "}
-                {filteredRepos.length === 1 ? "repository" : "repositories"}{" "}
+                {filteredRepos.length === 1 ? "repo" : "repos"}{" "}
                 matching
               </div>
             </div>
@@ -533,9 +679,49 @@ const Hero = ({ onExplore }) => {
                       />
                       {repo.lang}
                     </div>
-                    <div className="col-span-4 sm:col-span-2 flex items-center gap-1 text-xs font-sans text-zinc-300 font-medium justify-end sm:justify-start">
-                      <TrendingUp className="w-3.5 h-3.5 shrink-0 text-blue-400" />
-                      <span className="truncate">{repo.delta}</span>
+                    <div className="col-span-4 sm:col-span-2 flex items-center justify-end sm:justify-start">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveSignalModal(repo);
+                        }}
+                        title="Why this repository is trending? Click to inspect telemetry and baseline growth signal."
+                        className="group/signal flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono transition-all border hover:scale-[1.02] active:scale-[0.98] bg-white/[0.03] hover:bg-white/[0.08]"
+                        style={{
+                          borderColor:
+                            repo.snapshot?.status === "gain"
+                              ? "rgba(52, 211, 153, 0.3)"
+                              : repo.snapshot?.status === "baseline"
+                              ? "rgba(99, 102, 241, 0.3)"
+                              : "rgba(255, 255, 255, 0.1)",
+                        }}
+                      >
+                        {repo.snapshot?.status === "gain" ? (
+                          <>
+                            <TrendingUp className="w-3.5 h-3.5 shrink-0 text-emerald-400" />
+                            <span className="font-bold text-emerald-400 truncate">
+                              +{repo.snapshot.delta.toLocaleString()}
+                            </span>
+                          </>
+                        ) : repo.snapshot?.status === "baseline" ? (
+                          <>
+                            <Clock className="w-3.5 h-3.5 shrink-0 text-indigo-400" />
+                            <span className="text-indigo-300 truncate">Tracking started</span>
+                          </>
+                        ) : repo.snapshot?.status === "neutral" ? (
+                          <>
+                            <Activity className="w-3.5 h-3.5 shrink-0 text-zinc-400" />
+                            <span className="text-zinc-400 truncate">±0 baseline</span>
+                          </>
+                        ) : (
+                          <>
+                            <Info className="w-3.5 h-3.5 shrink-0 text-zinc-500" />
+                            <span className="text-zinc-500 truncate">Growth N/A</span>
+                          </>
+                        )}
+                        <Info className="w-3 h-3 text-zinc-500 group-hover/signal:text-white transition-colors shrink-0 ml-0.5" />
+                      </button>
                     </div>
                   </div>
                 ))
@@ -593,6 +779,138 @@ const Hero = ({ onExplore }) => {
           ))}
         </div>
       </div>
+      {/* ─── "Why this is trending" Signal Explanation Modal ─── */}
+      {activeSignalModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-150"
+          onClick={() => setActiveSignalModal(null)}
+        >
+          <div
+            className="relative w-full max-w-lg rounded-2xl bg-[#121216] border border-white/10 p-6 shadow-2xl text-left space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                    Trending Signal Telemetry
+                  </span>
+                  <span className="text-xs text-zinc-400 font-mono">
+                    {activeSignalModal.source === "live"
+                      ? "Live GitHub API"
+                      : activeSignalModal.source === "cached"
+                      ? "Cached GitHub API"
+                      : "Curated Static"}
+                  </span>
+                </div>
+                <h3 className="text-lg font-bold font-sans text-white mt-1.5 flex items-center gap-2">
+                  {activeSignalModal.name}
+                  <a
+                    href={`https://github.com/${activeSignalModal.name}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-zinc-400 hover:text-white transition-colors inline-flex items-center"
+                    title="Open repository on GitHub"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActiveSignalModal(null)}
+                className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
+                aria-label="Close signal analysis"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <p className="text-xs font-sans text-zinc-400 leading-relaxed">
+              {activeSignalModal.desc}
+            </p>
+
+            {/* Metrics telemetry grid */}
+            <div className="grid grid-cols-2 gap-2.5 p-3 rounded-xl bg-black/40 border border-white/5 text-xs font-mono">
+              <div>
+                <span className="text-[10px] text-zinc-500 block uppercase tracking-wider">Current Stars</span>
+                <span className="text-sm font-bold text-white flex items-center gap-1 mt-0.5">
+                  <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400/20" />
+                  {activeSignalModal.rawStars ? activeSignalModal.rawStars.toLocaleString() : activeSignalModal.stars}
+                </span>
+              </div>
+              <div>
+                <span className="text-[10px] text-zinc-500 block uppercase tracking-wider">Language</span>
+                <span className="text-sm font-semibold text-zinc-200 flex items-center gap-1.5 mt-0.5">
+                  <span className="w-2 h-2 rounded-full" style={{ backgroundColor: activeSignalModal.langColor }} />
+                  {activeSignalModal.lang}
+                </span>
+              </div>
+              <div>
+                <span className="text-[10px] text-zinc-500 block uppercase tracking-wider">Measured Growth</span>
+                <span className="text-xs font-semibold text-emerald-400 mt-0.5 block truncate">
+                  {activeSignalModal.snapshot?.delta !== null && activeSignalModal.snapshot?.delta !== undefined
+                    ? (activeSignalModal.snapshot.delta > 0
+                        ? `+${activeSignalModal.snapshot.delta.toLocaleString()} stars`
+                        : `${activeSignalModal.snapshot.delta.toLocaleString()} stars`)
+                    : "Growth data not available yet"}
+                </span>
+              </div>
+              <div>
+                <span className="text-[10px] text-zinc-500 block uppercase tracking-wider">Comparison Window</span>
+                <span className="text-xs font-medium text-zinc-300 mt-0.5 block truncate">
+                  {activeSignalModal.snapshot?.elapsedLabel === "First visit"
+                    ? "Baseline established now"
+                    : `Since first visit (${activeSignalModal.snapshot?.elapsedLabel || "recent"})`}
+                </span>
+              </div>
+            </div>
+
+            {/* Explanation box */}
+            <div className="p-3 rounded-xl bg-blue-500/5 border border-blue-500/10 space-y-1.5">
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-blue-400">
+                <Info className="w-3.5 h-3.5 shrink-0" />
+                <span>Why does this appear in the list?</span>
+              </div>
+              <p className="text-xs font-sans text-zinc-300 leading-relaxed">
+                {activeSignalModal.source !== "static"
+                  ? "Ranked by current star count among public repositories created within the last 30 days via GitHub REST API."
+                  : "Featured in our curated open-source development stack (active fallback baseline)."}
+              </p>
+              <p className="text-[11px] font-sans text-zinc-400 leading-relaxed pt-1 border-t border-white/5">
+                {activeSignalModal.snapshot?.explanation || "Snapshot baseline tracking active."}
+              </p>
+            </div>
+
+            <div className="text-[10px] font-sans text-zinc-500">
+              Transparency note: Growth values are calculated from client-side timestamped snapshots on this device. ExploreGit never fabricates star velocity or uses fork counts as substitute signals.
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setActiveSignalModal(null)}
+                className="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-xs font-medium text-white transition-colors"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const targetName = activeSignalModal.name;
+                  setActiveSignalModal(null);
+                  navigate(`/dashboard?query=${encodeURIComponent(targetName)}`);
+                }}
+                className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-xs font-medium text-white transition-colors flex items-center gap-1.5"
+              >
+                <span>Explore in Dashboard</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </section>
   );
 };

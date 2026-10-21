@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Report = require('../models/Report');
 const { appendReport, readReports } = require('../services/fileStore');
+const { connectDB } = require('../config/db');
 
 const router = express.Router();
 
@@ -53,6 +54,21 @@ router.post('/', async (req, res) => {
             });
         }
 
+        const isProduction = process.env.NODE_ENV === 'production';
+        const isTestSecret =
+            turnstileSecret === '1x0000000000000000000000000000000AA' ||
+            turnstileSecret.startsWith('1x00000000000000000000') ||
+            turnstileSecret.startsWith('2x00000000000000000000') ||
+            turnstileSecret.startsWith('3x00000000000000000000');
+
+        if (isProduction && isTestSecret) {
+            console.error('[reports] Security alert: Cloudflare Turnstile test secret key cannot be used in production.');
+            return res.status(503).json({
+                success: false,
+                message: 'Bot verification service is configured with test credentials in production. Submissions temporarily disabled.',
+            });
+        }
+
         const clientIp = req.headers['x-forwarded-for']?.split(',')[0].trim() || req.socket.remoteAddress || '';
 
         try {
@@ -95,13 +111,15 @@ router.post('/', async (req, res) => {
             updatedAt: new Date().toISOString(),
         };
 
-        // 1. Always persist to local flat-file store asynchronously
-        await appendReport(reportData);
+        // 1. Attempt MongoDB persistence first (await connection if not yet ready)
+        let isMongoSaved = false;
+        let savedReport = null;
 
-        // 2. Also persist to MongoDB if connected
-        let savedReport = reportData;
-        if (mongoose.connection.readyState === 1) {
-            try {
+        try {
+            if (mongoose.connection.readyState !== 1) {
+                await connectDB();
+            }
+            if (mongoose.connection.readyState === 1) {
                 const doc = new Report({
                     issueType: reportData.issueType,
                     pageUrl: reportData.pageUrl,
@@ -112,18 +130,32 @@ router.post('/', async (req, res) => {
                     status: 'open',
                 });
                 savedReport = await doc.save();
-            } catch (dbErr) {
-                console.warn('[reports] MongoDB save failed (report persisted to disk):', dbErr.message);
+                isMongoSaved = true;
             }
+        } catch (dbErr) {
+            console.warn('[reports] MongoDB save attempt failed:', dbErr.message);
+        }
+
+        // 2. Also attempt local flat-file storage
+        const isFileSaved = await appendReport(reportData);
+
+        // 3. Strictly require that at least one durable storage backend confirmed the save
+        if (!isMongoSaved && !isFileSaved) {
+            console.error('[reports] Persistence failure: Report could not be saved to MongoDB or disk storage.');
+            return res.status(503).json({
+                success: false,
+                message: 'Failed to record report: storage service is temporarily unavailable. Please try again later or report directly on GitHub.',
+            });
         }
 
         return res.status(201).json({
             success: true,
             message: 'Report submitted successfully.',
             data: {
-                id: savedReport._id || savedReport.id,
-                issueType: savedReport.issueType,
-                createdAt: savedReport.createdAt,
+                id: savedReport?._id?.toString() || reportData.id,
+                issueType: reportData.issueType,
+                createdAt: savedReport?.createdAt || reportData.createdAt,
+                storage: isMongoSaved ? 'database' : 'disk',
             },
         });
     } catch (err) {
@@ -154,6 +186,12 @@ router.get('/', async (req, res) => {
         const { status, limit = '50' } = req.query;
         const limitNum = Math.max(1, Math.min(parseInt(limit, 10) || 50, 100));
         let reports = [];
+
+        if (mongoose.connection.readyState !== 1) {
+            try {
+                await connectDB();
+            } catch {}
+        }
 
         if (mongoose.connection.readyState === 1) {
             try {

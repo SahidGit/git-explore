@@ -67,8 +67,7 @@ const Gems = () => {
 
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [timeframe, setTimeframe] = useState('week');
-  const [sortBy, setSortBy] = useState('velocity');
+  const [sortBy, setSortBy] = useState('featured');
   const [copiedId, setCopiedId] = useState(null);
   const [selectedGem, setSelectedGem] = useState(null);
 
@@ -141,7 +140,7 @@ const Gems = () => {
     <div className="flex min-h-screen flex-col bg-[#0A0A0C] text-white font-sans selection:bg-white/20 selection:text-white">
       <SEO
         title="Hidden Gems & Essential Software Tools · ExploreGit"
-        description="Discover underrated open-source GitHub repositories under 2,000 stars with explosive momentum, alongside timeless legendary software tools and developer utilities."
+        description="Discover underrated open-source GitHub repositories alongside timeless legendary software tools and developer utilities."
         canonical="https://exploregit.vercel.app/gems"
       />
 
@@ -173,9 +172,9 @@ const Gems = () => {
                 <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-[#FA6423]">
                   Curated Discovery & Staple Tools
                 </span>
-                <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold text-[#FFC95C]">
-                  <Flame className="w-3.5 h-3.5 text-[#FA6423]" />
-                  Live Velocity
+                <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold text-zinc-400">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  Verified Metrics
                 </span>
               </div>
 
@@ -212,36 +211,15 @@ const Gems = () => {
                 )}
               </div>
 
-              {/* Timeframe & Sort Controls */}
+              {/* Sort & Sync Controls */}
               <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-                {/* Timeframe pills */}
-                <div className="flex items-center p-1 rounded-xl bg-[#121215] border border-white/10 text-xs">
-                  {[
-                    { id: 'today', label: 'Today' },
-                    { id: 'week', label: 'This Week' },
-                    { id: 'alltime', label: 'All Time' },
-                  ].map((tf) => (
-                    <button
-                      key={tf.id}
-                      onClick={() => setTimeframe(tf.id)}
-                      className={`px-3 py-1 rounded-lg font-medium transition-all ${
-                        timeframe === tf.id
-                          ? 'bg-purple-600 text-white font-bold shadow-xs'
-                          : 'text-zinc-400 hover:text-white'
-                      }`}
-                    >
-                      {tf.label}
-                    </button>
-                  ))}
-                </div>
-
                 {/* Sort selector */}
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
                   className="bg-[#121215] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-zinc-300 font-sans focus:outline-none focus:border-purple-500/50 cursor-pointer"
                 >
-                  <option value="velocity">Sort by: High Velocity</option>
+                  <option value="featured">Sort by: Curated & Rising</option>
                   <option value="stars">Sort by: Star Count</option>
                   <option value="name">Sort by: Alphabetical</option>
                 </select>
@@ -394,17 +372,29 @@ const Gems = () => {
                       {gem.tagline}
                     </p>
 
-                    {/* Metric pills: Stars, Growth, Language (No BG, Clean Typography) */}
+                    {/* Metric pills: Stars, Forks, Status, Language */}
                     <div className="flex items-center gap-3 flex-wrap mb-4 text-xs font-mono">
-                      <span className="flex items-center gap-1 text-[#FFC95C] font-semibold">
+                      <span className="flex items-center gap-1 text-[#FFC95C] font-semibold" title="Total stars">
                         <Star className="w-3.5 h-3.5 fill-[#FFC95C]" />
                         <span>{gem.starsFormatted}</span>
                       </span>
 
-                      <span className="flex items-center gap-1 text-[#FA6423] font-semibold">
-                        <Flame className="w-3.5 h-3.5 text-[#FA6423]" />
-                        <span>{gem.growth}</span>
-                      </span>
+                      {gem.forksFormatted && (
+                        <span className="flex items-center gap-1 text-zinc-400 font-medium" title="Total forks">
+                          <GitFork className="w-3.5 h-3.5 text-zinc-400" />
+                          <span>{gem.forksFormatted}</span>
+                        </span>
+                      )}
+
+                      {gem.status && (
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-semibold border ${
+                          gem.status === 'Timeless Legend'
+                            ? 'bg-amber-500/10 text-amber-300 border-amber-500/20'
+                            : 'bg-white/[0.04] text-zinc-300 border-white/10'
+                        }`}>
+                          {gem.status}
+                        </span>
+                      )}
 
                       {gem.language && (
                         <span className="flex items-center gap-1.5 text-zinc-300">
@@ -598,8 +588,8 @@ const Gems = () => {
                     <span className="text-white font-bold text-sm">{selectedGem.starsFormatted}</span>
                   </div>
                   <div>
-                    <span className="text-zinc-500 text-[10px] uppercase block font-bold">Momentum</span>
-                    <span className="text-[#FA6423] font-bold text-sm">{selectedGem.growth}</span>
+                    <span className="text-zinc-500 text-[10px] uppercase block font-bold">Forks</span>
+                    <span className="text-zinc-300 font-bold text-sm">{selectedGem.forksFormatted || selectedGem.forks || 0}</span>
                   </div>
                   <div>
                     <span className="text-zinc-500 text-[10px] uppercase block font-bold">Language</span>

@@ -8,10 +8,11 @@ const Home = React.lazy(() => import('./pages/Home'));
 const Dashboard = React.lazy(() => import('./pages/Dashboard'));
 const ReportIssue = React.lazy(() => import('./pages/ReportIssue'));
 const GitCheatSheet = React.lazy(() => import('./pages/GitCheatSheet'));
-const AiNewsroom = React.lazy(() => import('./pages/AiNewsroom'));
+import AiNewsroom from './pages/AiNewsroom';
 const Company = React.lazy(() => import('./pages/Company'));
 const TrendingLanguages = React.lazy(() => import('./pages/TrendingLanguages'));
 const Gems = React.lazy(() => import('./pages/Gems'));
+const RepositoryCompare = React.lazy(() => import('./pages/RepositoryCompare'));
 const InfoPage = React.lazy(() => import('./pages/InfoPage'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 const ErrorPage = React.lazy(() => import('./pages/ErrorPage'));
@@ -51,6 +52,7 @@ function App() {
           <Route path="/profile" element={<PageTransition><Dashboard activeTab="profile" /></PageTransition>} />
 
           {/* Dedicated full-page routes */}
+          <Route path="/compare" element={<PageTransition><RepositoryCompare /></PageTransition>} />
           <Route path="/languages" element={<PageTransition><TrendingLanguages /></PageTransition>} />
           <Route path="/gems" element={<PageTransition><Gems /></PageTransition>} />
           <Route path="/hidden-gems" element={<PageTransition><Gems /></PageTransition>} />

@@ -194,8 +194,8 @@ const TopFiveFeatured = ({
                         </div>
                         <p className="text-xs text-zinc-400 font-sans mt-0.5">
                             {timeRange === 'weekly'
-                                ? 'Highest velocity repositories created this week'
-                                : 'Highest star growth repositories created this month'
+                                ? 'Most starred new repositories created this week'
+                                : 'Most starred new repositories created this month'
                             }
                         </p>
                     </div>
@@ -272,7 +272,11 @@ const TopFiveFeatured = ({
                                             <RankIcon className="w-3 h-3" />
                                             <span>{theme.label}</span>
                                         </span>
-                                        <div className={`flex items-center gap-1 text-xs font-mono font-bold ${theme.starColor}`}>
+                                        <div
+                                            className={`flex items-center gap-1 text-xs font-mono font-bold ${theme.starColor}`}
+                                            title="Total stars"
+                                            aria-label={`${formatNumber(repo.stargazers_count)} total stars`}
+                                        >
                                             <Star className={`w-3.5 h-3.5 ${theme.starFill}`} />
                                             <span>{formatNumber(repo.stargazers_count)}</span>
                                         </div>

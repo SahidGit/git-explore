@@ -98,7 +98,7 @@ export const MainFooter = ({ theme = 'dark' }) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 lg:gap-12 items-start">
             <div className="md:col-span-5 space-y-3">
-                <h4 className={`font-gilroy text-sm sm:text-base font-bold tracking-tight ${isLight ? 'text-zinc-950' : 'text-white'}`}>
+                <h4 className={`font-heading text-sm sm:text-base font-bold tracking-tight ${isLight ? 'text-zinc-950' : 'text-white'}`}>
                     About ExploreGit
                 </h4>
                 <p className={`text-xs leading-relaxed max-w-md ${isLight ? 'text-zinc-600' : 'text-zinc-400'}`}>
@@ -113,7 +113,7 @@ export const MainFooter = ({ theme = 'dark' }) => {
             <div className="md:col-span-7 grid grid-cols-2 sm:grid-cols-2 gap-8 sm:gap-12">
                 {/* Learn More Column */}
                 <div className="space-y-3">
-                    <h4 className={`font-gilroy text-sm sm:text-base font-bold tracking-tight ${isLight ? 'text-zinc-950' : 'text-white'}`}>
+                    <h4 className={`font-heading text-sm sm:text-base font-bold tracking-tight ${isLight ? 'text-zinc-950' : 'text-white'}`}>
                         Learn More
                     </h4>
                     <nav className="flex flex-col space-y-2 text-xs sm:text-[13px] font-medium" aria-label="Learn more navigation">
@@ -134,7 +134,7 @@ export const MainFooter = ({ theme = 'dark' }) => {
 
                 {/* Resources Column */}
                 <div className="space-y-3">
-                    <h4 className={`font-gilroy text-sm sm:text-base font-bold tracking-tight ${isLight ? 'text-zinc-950' : 'text-white'}`}>
+                    <h4 className={`font-heading text-sm sm:text-base font-bold tracking-tight ${isLight ? 'text-zinc-950' : 'text-white'}`}>
                         Resources
                     </h4>
                     <nav className="flex flex-col space-y-2 text-xs sm:text-[13px] font-medium" aria-label="Resources legal navigation">

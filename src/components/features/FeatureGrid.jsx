@@ -105,21 +105,21 @@ const FeatureGrid = () => {
     };
 
     return (
-        <section className="border-b border-white/10 bg-[#0A0A0C] py-14 sm:py-20 relative font-gilroy" aria-label="ExploreGit Features">
+        <section className="border-b border-white/10 bg-[#0A0A0C] py-14 sm:py-20 relative font-heading" aria-label="ExploreGit Features">
             <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6">
                 
                 {/* Section Title & Subheading */}
-                <div className="mx-auto max-w-2xl text-center mb-8 sm:mb-10 space-y-2 font-gilroy">
+                <div className="mx-auto max-w-2xl text-center mb-8 sm:mb-10 space-y-2 font-heading">
                     <p className="font-mono text-[11px] sm:text-xs font-semibold tracking-widest text-zinc-400 uppercase">
                         Core Capabilities
                     </p>
-                    <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight font-gilroy">
+                    <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight font-heading">
                         Discover more from ExploreGit.
                     </h2>
                 </div>
 
                 {/* DuckDuckGo Pill Chips Container */}
-                <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3.5 mb-6 font-gilroy">
+                <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3.5 mb-6 font-heading">
                     {CHIP_FEATURES.map((chip) => {
                         const Icon = chip.icon;
                         const isSelected = chip.id === selectedId;
@@ -130,14 +130,14 @@ const FeatureGrid = () => {
                                 type="button"
                                 onClick={() => handleToggle(chip.id)}
                                 aria-expanded={isSelected}
-                                className={`group flex items-center gap-3 px-4 py-2.5 rounded-full transition-all cursor-pointer border text-left font-gilroy ${
+                                className={`group flex items-center gap-3 px-4 py-2.5 rounded-full transition-all cursor-pointer border text-left font-heading ${
                                     isSelected
                                         ? 'bg-[#18191E] border-white/35 text-white shadow-lg'
                                         : 'bg-[#101114] border-white/10 hover:border-white/20 text-zinc-300 hover:text-white'
                                 }`}
                             >
                                 <Icon className="w-6 h-6 shrink-0" />
-                                <span className="font-gilroy text-xs sm:text-sm font-semibold tracking-tight whitespace-nowrap">
+                                <span className="font-heading text-xs sm:text-sm font-semibold tracking-tight whitespace-nowrap">
                                     {chip.name}
                                 </span>
                                 <span className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-xs transition-colors ${
@@ -154,16 +154,16 @@ const FeatureGrid = () => {
                 {activeFeature && (
                     <div 
                         key={activeFeature.id}
-                        className="w-full max-w-xl mx-auto mt-4 rounded-3xl bg-[#131418] border border-white/15 p-6 sm:p-7 text-left shadow-2xl animate-popInFast font-gilroy"
+                        className="w-full max-w-xl mx-auto mt-4 rounded-3xl bg-[#131418] border border-white/15 p-6 sm:p-7 text-left shadow-2xl animate-popInFast font-heading"
                     >
-                        <div className="flex items-center gap-2.5 mb-2 font-gilroy">
+                        <div className="flex items-center gap-2.5 mb-2 font-heading">
                             {React.createElement(activeFeature.icon, { className: "w-6 h-6 shrink-0" })}
-                            <h5 className="text-lg sm:text-xl font-bold text-white font-gilroy tracking-tight">
+                            <h5 className="text-lg sm:text-xl font-bold text-white font-heading tracking-tight">
                                 {activeFeature.name}
                             </h5>
                         </div>
 
-                        <p className="text-xs sm:text-sm text-zinc-300 font-gilroy leading-relaxed mb-5">
+                        <p className="text-xs sm:text-sm text-zinc-300 font-heading leading-relaxed mb-5">
                             {activeFeature.description}
                         </p>
 
@@ -174,7 +174,7 @@ const FeatureGrid = () => {
                                     key={idx}
                                     to={btn.to}
                                     style={btn.style}
-                                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-gilroy font-bold text-xs sm:text-sm hover:opacity-95 transition-all active:scale-95 shadow-sm cursor-pointer"
+                                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-heading font-bold text-xs sm:text-sm hover:opacity-95 transition-all active:scale-95 shadow-sm cursor-pointer"
                                 >
                                     <span>{btn.label}</span>
                                     <span className="shrink-0" aria-hidden="true">

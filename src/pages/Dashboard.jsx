@@ -14,6 +14,7 @@ import { storageService } from '../services/storageService';
 import ErrorBoundary from '../components/ui/ErrorBoundary';
 import ErrorMessage from '../components/ui/ErrorMessage';
 import BackToTop from '../components/ui/BackToTop';
+import { DashboardNavIcon } from '../components/ui/Icons';
 
 const Dashboard = ({ activeTab }) => {
     const [searchParams] = useSearchParams();
@@ -198,6 +199,21 @@ const Dashboard = ({ activeTab }) => {
                     <div className="min-h-[60vh]">
                         {activeTab === 'explore' && (
                             <section aria-label="Explore Repositories">
+                                {/* Explore Header */}
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                                    <div className="flex items-center gap-3">
+                                        <DashboardNavIcon className="w-8 h-8 sm:w-9 sm:h-9 shrink-0" size={36} />
+                                        <div>
+                                            <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight font-heading">
+                                                Explore Repositories
+                                            </h1>
+                                            <p className="text-xs text-zinc-400 font-sans mt-0.5">
+                                                Live momentum, star velocity, and curated stacks across GitHub.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 {/* Top 5 Hot Repositories of the Month Showcase */}
                                 <TopFiveFeatured
                                     repositories={monthlyTopRepos}

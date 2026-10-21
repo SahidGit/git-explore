@@ -16,30 +16,34 @@ const modelsRouter = require('./routes/models');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/gitexplorer';
+const { connectDB } = require('./config/db');
 
 // ─── Global Middleware ────────────────────────────────
 app.disable('x-powered-by');
 app.use(securityHeaders);
 
+const isProduction = process.env.NODE_ENV === 'production';
+
+// Strict CORS allowlist: strictly https://exploregit.vercel.app in production
 const allowedOrigins = [
-    process.env.CLIENT_ORIGIN,
     'https://exploregit.vercel.app',
-    'http://localhost:5173',
-    'http://localhost:3000',
-    'http://localhost:5000',
+    process.env.CLIENT_ORIGIN,
+    ...(!isProduction
+        ? ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:5000']
+        : []),
 ].filter(Boolean);
 
 app.use(cors({
     origin: (origin, callback) => {
+        // Allow requests with no origin (e.g. server-to-server or curl)
         if (!origin) return callback(null, true);
-        if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+        if (allowedOrigins.includes(origin)) {
             return callback(null, true);
         }
         return callback(new Error('Blocked by CORS policy: Origin not allowed'), false);
     },
     methods: ['GET', 'POST', 'OPTIONS'],
-    credentials: true,
+    credentials: false,
 }));
 
 app.use(express.json({ limit: '20kb' }));
@@ -48,24 +52,10 @@ app.use(rateLimit);
 // ─── Static Asset Serving ─────────────────────────────
 const distPath = path.resolve(__dirname, '../dist');
 app.use(express.static(distPath, {
-    index: false, // Defer to notFoundHandler for SPA and 404 status handling
+    index: false,
     maxAge: '1d',
-    etag: true
+    etag: true,
 }));
-
-// ─── MongoDB Cached Connection (Serverless-Safe) ──────
-let cachedPromise = null;
-const connectDB = async () => {
-    if (mongoose.connection.readyState === 1) return mongoose.connection;
-    if (mongoose.connection.readyState === 2 && cachedPromise) return cachedPromise;
-    cachedPromise = mongoose.connect(MONGODB_URI, {
-        serverSelectionTimeoutMS: 5000,
-    }).catch((err) => {
-        cachedPromise = null;
-        logger.warn('MongoDB unavailable (reports will use disk store)', { error: err.message });
-    });
-    return cachedPromise;
-};
 
 // Initial connection attempt when executed directly
 if (require.main === module) {

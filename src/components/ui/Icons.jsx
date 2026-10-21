@@ -356,4 +356,49 @@ export const TokenExpiryAlertIcon = ({ className = "w-8 h-8", size = 32 }) => (
   </svg>
 );
 
+export const DashboardNavIcon = ({ className = "w-8 h-8", size = 32 }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 56 56"
+    className={className}
+    width={size}
+    height={size}
+    aria-hidden="true"
+    role="img"
+  >
+    {/* Base squircle container */}
+    <rect x="6" y="6" width="44" height="44" rx="13" fill="#3B82F6" />
+    <path
+      fill="#1D4ED8"
+      fillRule="evenodd"
+      d="M19 6h18c7.18 0 13 5.82 13 13v18c0 7.18-5.82 13-13 13H19c-7.18 0-13-5.82-13-13V19c0-7.18 5.82-13 13-13Zm0 3c-5.523 0-10 4.477-10 10v18c0 5.523 4.477 10 10 10h18c5.523 0 10-4.477 10-10V19c0-5.523-4.477-10-10-10H19Z"
+      clipRule="evenodd"
+    />
+    {/* Top Header bar with terminal dots */}
+    <rect x="14" y="14" width="28" height="6" rx="2" fill="#DBEAFE" />
+    <circle cx="18" cy="17" r="1.25" fill="#1D4ED8" />
+    <circle cx="22" cy="17" r="1.25" fill="#1D4ED8" />
+    <circle cx="26" cy="17" r="1.25" fill="#1D4ED8" />
+    {/* Left card: Star Velocity / Telemetry Bars */}
+    <rect x="14" y="23" width="13" height="19" rx="3" fill="#DBEAFE" />
+    <rect x="17" y="32" width="2" height="7" rx="1" fill="#1D4ED8" />
+    <rect x="20" y="28" width="2" height="11" rx="1" fill="#1D4ED8" />
+    <rect x="23" y="25" width="2" height="14" rx="1" fill="#2563EB" />
+    {/* Right card: Repo detail & active momentum spark */}
+    <rect x="29" y="23" width="13" height="19" rx="3" fill="#93C5FD" />
+    <path
+      fill="#1E40AF"
+      d="M32 27.5a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1ZM32 31.5a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Z"
+    />
+    {/* Star badge on top of right panel */}
+    <path
+      fill="#FBBF24"
+      d="M35.5 35.5l1.05 2.13 2.35.34-1.7 1.66.4 2.34-2.1-1.1-2.1 1.1.4-2.34-1.7-1.66 2.35-.34 1.05-2.13z"
+    />
+  </svg>
+);
+
+export const DashboardIcon = DashboardNavIcon;
+
 

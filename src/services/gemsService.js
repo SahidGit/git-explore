@@ -1,7 +1,7 @@
 import { GEMS_MANIFEST, GEMS_CATEGORIES } from '../data/gemsManifest';
 import { getActiveToken } from './githubService';
 
-const GEMS_CACHE_KEY = 'exploregit_gems_cache_v1';
+const GEMS_CACHE_KEY = 'exploregit_gems_cache_v2';
 const GEMS_CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6 Hours
 
 // Language color mappings
@@ -59,8 +59,9 @@ const hydrateRepo = async (manifestItem) => {
       description: data.description || manifestItem.tagline,
       stars: data.stargazers_count || 0,
       starsFormatted: formatStars(data.stargazers_count),
-      growth: manifestItem.isLegend ? 'Timeless Legend' : `+${Math.max(12, Math.round((data.stargazers_count || 100) * 0.08))} this week`,
+      status: manifestItem.isLegend ? 'Timeless Legend' : (manifestItem.isUnderTheRadar ? 'Under the Radar' : 'Curated Gem'),
       forks: data.forks_count || 0,
+      forksFormatted: formatStars(data.forks_count),
       language: data.language || 'Multi',
       languageColor: LANG_COLORS[data.language] || '#71717A',
       topics: data.topics && data.topics.length > 0 ? data.topics.slice(0, 4) : ['open-source', 'utility'],
@@ -76,8 +77,9 @@ const hydrateRepo = async (manifestItem) => {
       description: manifestItem.tagline,
       stars: manifestItem.isLegend ? 5000 : 1500,
       starsFormatted: manifestItem.isLegend ? '50M+ Users' : '1.5k',
-      growth: manifestItem.isLegend ? 'Timeless Legend' : '+300 this week',
+      status: manifestItem.isLegend ? 'Timeless Legend' : 'Curated Gem',
       forks: 120,
+      forksFormatted: '120',
       language: 'Multi',
       languageColor: '#71717A',
       topics: ['open-source', 'tools', 'utility'],
@@ -109,8 +111,9 @@ const discoverDynamicGems = async () => {
       description: item.description || 'Community open-source utility.',
       stars: item.stargazers_count,
       starsFormatted: formatStars(item.stargazers_count),
-      growth: `+${Math.max(50, Math.round(item.stargazers_count * 0.15))} this week`,
-      forks: item.forks_count,
+      status: 'Under the Radar',
+      forks: item.forks_count || 0,
+      forksFormatted: formatStars(item.forks_count),
       language: item.language || 'Code',
       languageColor: LANG_COLORS[item.language] || '#71717A',
       topics: item.topics?.slice(0, 4) || ['rising-star', 'developer-tool'],

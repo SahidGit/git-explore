@@ -198,7 +198,19 @@ export const getMonthlyTopRepositories = async (perPage = 6) => {
     if (cached) {
       const parsed = JSON.parse(cached);
       if (Date.now() - parsed.timestamp < 15 * 60 * 1000 && Array.isArray(parsed.data) && parsed.data.length > 0) {
-        return parsed.data;
+        const list = parsed.data.map((repo) => ({
+          ...repo,
+          source: 'cached',
+          isFallback: false,
+          fetchedAt: new Date(parsed.timestamp).toISOString(),
+        }));
+        list.source = 'cached';
+        list.isLive = true;
+        list.fromCache = true;
+        list.lastUpdated = new Date(parsed.timestamp).toISOString();
+        list.rankingRule = 'Ranked by total stars among repositories created in the past 30 days (GitHub Search API)';
+        list.items = list;
+        return list;
       }
     }
   } catch {}
@@ -209,14 +221,51 @@ export const getMonthlyTopRepositories = async (perPage = 6) => {
     const query = `created:>${date.toISOString().split('T')[0]}`;
     const data = await searchRepositories({ query, sort: 'stars', order: 'desc', page: 1, perPage });
     if (data.items?.length) {
+      const nowIso = new Date().toISOString();
       try {
         localStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), data: data.items }));
       } catch {}
-      return data.items;
+      const list = data.items.map((repo) => ({
+        ...repo,
+        source: 'live',
+        isFallback: false,
+        fetchedAt: nowIso,
+      }));
+      list.source = 'live';
+      list.isLive = true;
+      list.fromCache = false;
+      list.lastUpdated = nowIso;
+      list.rankingRule = 'Ranked by total stars among repositories created in the past 30 days (GitHub Search API)';
+      list.items = list;
+      return list;
     }
-    return FALLBACK_TOP_FIVE.slice(0, perPage);
+    const fallbackList = FALLBACK_TOP_FIVE.slice(0, perPage).map((repo) => ({
+      ...repo,
+      source: 'static',
+      isFallback: true,
+      fetchedAt: null,
+    }));
+    fallbackList.source = 'static';
+    fallbackList.isLive = false;
+    fallbackList.fromCache = false;
+    fallbackList.lastUpdated = null;
+    fallbackList.rankingRule = 'Curated static developer repositories (Offline / Rate-limit fallback)';
+    fallbackList.items = fallbackList;
+    return fallbackList;
   } catch {
-    return FALLBACK_TOP_FIVE.slice(0, perPage);
+    const fallbackList = FALLBACK_TOP_FIVE.slice(0, perPage).map((repo) => ({
+      ...repo,
+      source: 'static',
+      isFallback: true,
+      fetchedAt: null,
+    }));
+    fallbackList.source = 'static';
+    fallbackList.isLive = false;
+    fallbackList.fromCache = false;
+    fallbackList.lastUpdated = null;
+    fallbackList.rankingRule = 'Curated static developer repositories (Offline / Rate-limit fallback)';
+    fallbackList.items = fallbackList;
+    return fallbackList;
   }
 };
 
@@ -417,4 +466,412 @@ export const getLiveLanguageRankings = async (timeframe = 'today') => {
     return { data: null, isLive: false, error: err.message };
   }
 };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Discovery Features: Releases, Community Profile, Good First Issues,
+// Repository Alternatives, What Changed Digest, Dependency Footprint, Compare
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Fetch latest published release for a repository.
+ * Returns null if the repository has no releases published (404).
+ */
+export const getLatestRelease = async (owner, repo) => {
+  try {
+    const res = await fetchWithRetry(`${GITHUB_API_BASE}/repos/${owner}/${repo}/releases/latest`);
+    const data = await res.json();
+    return {
+      id: data.id,
+      name: data.name || data.tag_name,
+      tagName: data.tag_name,
+      publishedAt: data.published_at,
+      htmlUrl: data.html_url,
+      body: data.body || '',
+      author: data.author ? { login: data.author.login, avatarUrl: data.author.avatar_url } : null,
+      fetchedAt: new Date().toISOString(),
+    };
+  } catch (err) {
+    // 404 means no releases published on GitHub
+    if (err.status === 404) return null;
+    throw err;
+  }
+};
+
+/**
+ * Fetch recent published releases for a repository.
+ */
+export const getRepositoryReleases = async (owner, repo, perPage = 5) => {
+  try {
+    const res = await fetchWithRetry(`${GITHUB_API_BASE}/repos/${owner}/${repo}/releases?per_page=${perPage}`);
+    const data = await res.json();
+    if (Array.isArray(data)) {
+      return data.map((r) => ({
+        id: r.id,
+        name: r.name || r.tag_name,
+        tagName: r.tag_name,
+        publishedAt: r.published_at,
+        htmlUrl: r.html_url,
+        body: r.body || '',
+        author: r.author ? { login: r.author.login, avatarUrl: r.author.avatar_url } : null,
+      }));
+    }
+    return [];
+  } catch (err) {
+    if (err.status === 404) return [];
+    throw err;
+  }
+};
+
+/**
+ * Fetch community profile signals (license, contributing, security advisory)
+ * without computing an unsupported health score.
+ */
+export const getCommunityProfile = async (owner, repo) => {
+  try {
+    const res = await fetchWithRetry(`${GITHUB_API_BASE}/repos/${owner}/${repo}/community/profile`);
+    const data = await res.json();
+    return {
+      healthPercentage: data.health_percentage ?? null,
+      files: data.files || {},
+      fetchedAt: new Date().toISOString(),
+    };
+  } catch (err) {
+    return { healthPercentage: null, files: {}, fetchedAt: new Date().toISOString() };
+  }
+};
+
+/**
+ * Fetch open issues labeled 'good first issue' or 'help wanted'.
+ */
+export const getGoodFirstIssues = async ({ owner, repo, language = '', perPage = 15 }) => {
+  let q;
+  if (owner && repo) {
+    q = `repo:${owner}/${repo} is:issue is:open label:"good first issue","help wanted"`;
+  } else {
+    q = `is:issue is:open label:"good first issue","help wanted"${language ? ` language:${language}` : ''}`;
+  }
+
+  const res = await fetchWithRetry(`${GITHUB_API_BASE}/search/issues?q=${encodeURIComponent(q)}&sort=updated&order=desc&per_page=${perPage}`);
+  const data = await res.json();
+
+  const items = Array.isArray(data.items)
+    ? data.items.map((issue) => {
+        const repoUrlParts = (issue.repository_url || '').split('/');
+        const repoFullName = repoUrlParts.length >= 2 ? `${repoUrlParts[repoUrlParts.length - 2]}/${repoUrlParts[repoUrlParts.length - 1]}` : (owner && repo ? `${owner}/${repo}` : 'GitHub Repository');
+
+        return {
+          id: issue.id,
+          number: issue.number,
+          title: issue.title,
+          htmlUrl: issue.html_url,
+          comments: issue.comments,
+          createdAt: issue.created_at,
+          updatedAt: issue.updated_at,
+          labels: (issue.labels || []).map((l) => ({ name: l.name, color: l.color })),
+          author: issue.user ? { login: issue.user.login, avatarUrl: issue.user.avatar_url } : null,
+          repoFullName,
+        };
+      })
+    : [];
+
+  return {
+    items,
+    totalCount: data.total_count ?? items.length,
+    fetchedAt: new Date().toISOString(),
+  };
+};
+
+/**
+ * Recommend similar repositories using explainable signals (shared language, overlapping topics).
+ * Never invents an opaque or synthetic similarity score.
+ */
+export const getRepositoryAlternatives = async (repo) => {
+  if (!repo) return { items: [], fetchedAt: new Date().toISOString() };
+
+  const targetLang = repo.language || '';
+  const targetTopics = Array.isArray(repo.topics) ? repo.topics : [];
+  const fullName = repo.full_name || repo.name || '';
+
+  // Formulate a targeted search query
+  let queryTerms = [];
+  if (targetLang) queryTerms.push(`language:${targetLang}`);
+  if (targetTopics.length > 0) {
+    queryTerms.push(targetTopics.slice(0, 2).map((t) => `topic:${t}`).join(' '));
+  } else {
+    queryTerms.push('stars:>500');
+  }
+
+  const query = `${queryTerms.join(' ')} stars:>100`;
+
+  try {
+    const res = await searchRepositories({ query, sort: 'stars', order: 'desc', perPage: 8 });
+    const candidates = (res.items || []).filter((item) => (item.full_name || item.name) !== fullName);
+
+    const mapped = candidates.slice(0, 4).map((item) => {
+      const itemTopics = Array.isArray(item.topics) ? item.topics : [];
+      const sharedTopics = itemTopics.filter((t) => targetTopics.includes(t));
+      const sharedLanguage = item.language && item.language === targetLang ? item.language : null;
+
+      const reasons = [];
+      if (sharedLanguage) reasons.push(`primary language ${sharedLanguage}`);
+      if (sharedTopics.length > 0) reasons.push(`shared ${sharedTopics.length === 1 ? 'topic' : 'topics'} #${sharedTopics.join(', #')}`);
+      if (reasons.length === 0) reasons.push('similar open-source development ecosystem');
+
+      return {
+        ...item,
+        matchReason: `Matched because both projects share ${reasons.join(' and ')}.`,
+        sharedTopics,
+        sharedLanguage,
+      };
+    });
+
+    return {
+      items: mapped,
+      fetchedAt: new Date().toISOString(),
+    };
+  } catch (err) {
+    return { items: [], error: err.message, fetchedAt: new Date().toISOString() };
+  }
+};
+
+/**
+ * What Changed? Digest
+ * Summarizes verifiable recent releases, merged pull requests, and commits.
+ * Never invents activity or summaries.
+ */
+export const getWhatChangedDigest = async (owner, repo, days = 30) => {
+  const sinceDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+  const sinceDateOnly = sinceDate.split('T')[0];
+
+  const [commitsRes, releasesRes, prsRes] = await Promise.allSettled([
+    fetchWithRetry(`${GITHUB_API_BASE}/repos/${owner}/${repo}/commits?since=${sinceDate}&per_page=10`),
+    fetchWithRetry(`${GITHUB_API_BASE}/repos/${owner}/${repo}/releases?per_page=5`),
+    fetchWithRetry(`${GITHUB_API_BASE}/search/issues?q=repo:${owner}/${repo}+is:pr+is:merged+merged:>${sinceDateOnly}&sort=updated&order=desc&per_page=10`),
+  ]);
+
+  let commits = [];
+  if (commitsRes.status === 'fulfilled' && commitsRes.value?.ok) {
+    const data = await commitsRes.value.json();
+    if (Array.isArray(data)) {
+      commits = data.map((c) => ({
+        sha: c.sha ? c.sha.slice(0, 7) : 'commit',
+        message: c.commit?.message ? c.commit.message.split('\n')[0] : 'Commit',
+        author: c.commit?.author?.name || c.author?.login || 'contributor',
+        date: c.commit?.author?.date || c.commit?.committer?.date,
+        htmlUrl: c.html_url,
+      }));
+    }
+  }
+
+  let releases = [];
+  if (releasesRes.status === 'fulfilled' && releasesRes.value?.ok) {
+    const data = await releasesRes.value.json();
+    if (Array.isArray(data)) {
+      releases = data
+        .filter((r) => r.published_at && new Date(r.published_at) >= new Date(sinceDate))
+        .map((r) => ({
+          id: r.id,
+          name: r.name || r.tag_name,
+          tagName: r.tag_name,
+          publishedAt: r.published_at,
+          htmlUrl: r.html_url,
+        }));
+    }
+  }
+
+  let mergedPRs = [];
+  if (prsRes.status === 'fulfilled' && prsRes.value?.ok) {
+    const data = await prsRes.value.json();
+    if (Array.isArray(data.items)) {
+      mergedPRs = data.items.map((pr) => ({
+        id: pr.id,
+        number: pr.number,
+        title: pr.title,
+        htmlUrl: pr.html_url,
+        mergedAt: pr.pull_request?.merged_at || pr.closed_at,
+        author: pr.user?.login || 'contributor',
+      }));
+    }
+  }
+
+  return {
+    days,
+    sinceDate,
+    commits,
+    releases,
+    mergedPRs,
+    fetchedAt: new Date().toISOString(),
+  };
+};
+
+/**
+ * Dependency Footprint Explorer
+ * Reads declared dependencies from supported package manifests (package.json, Cargo.toml, requirements.txt, go.mod).
+ */
+export const getDependencyFootprint = async (owner, repo) => {
+  const supportedManifests = [
+    { path: 'package.json', ecosystem: 'npm', registryUrl: (name) => `https://www.npmjs.com/package/${name}` },
+    { path: 'Cargo.toml', ecosystem: 'crates.io', registryUrl: (name) => `https://crates.io/crates/${name}` },
+    { path: 'requirements.txt', ecosystem: 'PyPI', registryUrl: (name) => `https://pypi.org/project/${name}/` },
+    { path: 'pyproject.toml', ecosystem: 'PyPI', registryUrl: (name) => `https://pypi.org/project/${name}/` },
+    { path: 'go.mod', ecosystem: 'Go', registryUrl: (name) => `https://pkg.go.dev/${name}` },
+  ];
+
+  for (const manifest of supportedManifests) {
+    try {
+      const res = await fetchWithRetry(`${GITHUB_API_BASE}/repos/${owner}/${repo}/contents/${manifest.path}`);
+      if (!res.ok) continue;
+
+      const data = await res.json();
+      if (!data.content) continue;
+
+      let rawText = '';
+      try {
+        const cleanBase64 = data.content.replace(/\s/g, '');
+        rawText = decodeURIComponent(
+          Array.prototype.map.call(atob(cleanBase64), (c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')
+        );
+      } catch {
+        rawText = atob(data.content.replace(/\s/g, ''));
+      }
+
+      const dependencies = [];
+      const devDependencies = [];
+
+      if (manifest.path === 'package.json') {
+        const pkg = JSON.parse(rawText);
+        Object.entries(pkg.dependencies || {}).forEach(([name, spec]) => {
+          dependencies.push({ name, spec: String(spec), url: manifest.registryUrl(name), type: 'runtime' });
+        });
+        Object.entries(pkg.devDependencies || {}).forEach(([name, spec]) => {
+          devDependencies.push({ name, spec: String(spec), url: manifest.registryUrl(name), type: 'dev' });
+        });
+      } else if (manifest.path === 'Cargo.toml') {
+        let currentSection = '';
+        rawText.split('\n').forEach((line) => {
+          const trimmed = line.trim();
+          if (trimmed.startsWith('[dependencies]')) {
+            currentSection = 'dependencies';
+          } else if (trimmed.startsWith('[dev-dependencies]')) {
+            currentSection = 'dev-dependencies';
+          } else if (trimmed.startsWith('[')) {
+            currentSection = '';
+          } else if (currentSection && trimmed && !trimmed.startsWith('#')) {
+            const eqIndex = trimmed.indexOf('=');
+            if (eqIndex > 0) {
+              const name = trimmed.slice(0, eqIndex).trim();
+              const spec = trimmed.slice(eqIndex + 1).trim().replace(/^["']|["']$/g, '');
+              const item = { name, spec, url: manifest.registryUrl(name), type: currentSection === 'dependencies' ? 'runtime' : 'dev' };
+              if (currentSection === 'dependencies') dependencies.push(item);
+              else devDependencies.push(item);
+            }
+          }
+        });
+      } else if (manifest.path === 'requirements.txt') {
+        rawText.split('\n').forEach((line) => {
+          const trimmed = line.trim();
+          if (!trimmed || trimmed.startsWith('#')) return;
+          const match = trimmed.match(/^([a-zA-Z0-9_.-]+)(.*)$/);
+          if (match) {
+            const name = match[1];
+            const spec = match[2]?.trim() || 'any';
+            dependencies.push({ name, spec, url: manifest.registryUrl(name), type: 'runtime' });
+          }
+        });
+      } else if (manifest.path === 'go.mod') {
+        let inRequire = false;
+        rawText.split('\n').forEach((line) => {
+          const trimmed = line.trim();
+          if (trimmed.startsWith('require (')) {
+            inRequire = true;
+          } else if (inRequire && trimmed.startsWith(')')) {
+            inRequire = false;
+          } else if (inRequire || trimmed.startsWith('require ')) {
+            const cleanLine = trimmed.replace(/^require\s+/, '');
+            const parts = cleanLine.split(/\s+/);
+            if (parts.length >= 2) {
+              dependencies.push({ name: parts[0], spec: parts[1], url: manifest.registryUrl(parts[0]), type: 'runtime' });
+            }
+          }
+        });
+      }
+
+      return {
+        manifestFound: true,
+        manifestPath: manifest.path,
+        ecosystem: manifest.ecosystem,
+        fileUrl: data.html_url || `https://github.com/${owner}/${repo}/blob/HEAD/${manifest.path}`,
+        dependencies,
+        devDependencies,
+        totalCount: dependencies.length + devDependencies.length,
+        scanTime: new Date().toISOString(),
+      };
+    } catch {
+      // Continue to next manifest
+    }
+  }
+
+  return {
+    manifestFound: false,
+    manifestPath: null,
+    ecosystem: null,
+    dependencies: [],
+    devDependencies: [],
+    totalCount: 0,
+    scanTime: new Date().toISOString(),
+    error: 'No supported package manifest detected (package.json, Cargo.toml, requirements.txt, pyproject.toml, go.mod).',
+  };
+};
+
+/**
+ * Repository Compare
+ * Fetches current metadata and latest release for 2-3 repositories side-by-side.
+ */
+export const getRepositoryCompareData = async (repoIdentifiers = []) => {
+  const promises = repoIdentifiers.map(async (identifier) => {
+    const trimmed = identifier.trim();
+    if (!trimmed) return null;
+    const parts = trimmed.split('/');
+    if (parts.length < 2) return null;
+    const [owner, repo] = parts;
+
+    try {
+      const [details, latestRelease] = await Promise.allSettled([
+        getRepositoryDetails(owner, repo),
+        getLatestRelease(owner, repo),
+      ]);
+
+      const repoData = details.status === 'fulfilled' ? details.value : null;
+      const releaseData = latestRelease.status === 'fulfilled' ? latestRelease.value : null;
+
+      if (!repoData) return { error: `Repository ${owner}/${repo} could not be loaded.` };
+
+      return {
+        id: repoData.id,
+        fullName: repoData.full_name || `${owner}/${repo}`,
+        name: repoData.name,
+        owner: repoData.owner,
+        htmlUrl: repoData.html_url,
+        description: repoData.description,
+        stars: repoData.stargazers_count,
+        forks: repoData.forks_count,
+        openIssues: repoData.open_issues_count,
+        language: repoData.language,
+        languages: repoData.languages || {},
+        updatedAt: repoData.updated_at,
+        pushedAt: repoData.pushed_at,
+        license: repoData.license,
+        archived: repoData.archived,
+        latestRelease: releaseData,
+        fetchedAt: new Date().toISOString(),
+      };
+    } catch (err) {
+      return { fullName: `${owner}/${repo}`, error: err.message };
+    }
+  });
+
+  const results = await Promise.all(promises);
+  return results.filter(Boolean);
+};
+
 

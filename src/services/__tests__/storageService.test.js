@@ -59,4 +59,54 @@ describe('storageService', () => {
       expect(storageService.getNote(202)).toBe('Great state management architecture.');
     });
   });
+
+  describe('release radar (followed releases)', () => {
+    it('toggles following releases and checks follow status', () => {
+      const sample = { id: 501, name: 'vllm-project/vllm', full_name: 'vllm-project/vllm' };
+      expect(storageService.isFollowingRelease('vllm-project/vllm')).toBe(false);
+
+      storageService.toggleFollowRelease(sample);
+      expect(storageService.isFollowingRelease('vllm-project/vllm')).toBe(true);
+      expect(storageService.getFollowedReleases()).toHaveLength(1);
+
+      // Unfollow
+      storageService.toggleFollowRelease(sample);
+      expect(storageService.isFollowingRelease('vllm-project/vllm')).toBe(false);
+      expect(storageService.getFollowedReleases()).toHaveLength(0);
+    });
+  });
+
+  describe('change watch (device-local star observation)', () => {
+    it('adds repository to change watch with initial star count', () => {
+      const sample = { id: 601, name: 'astral-sh/uv', full_name: 'astral-sh/uv', stargazers_count: 42000 };
+      storageService.addToChangeWatch(sample, 42000);
+
+      expect(storageService.isInChangeWatch('astral-sh/uv')).toBe(true);
+      const list = storageService.getChangeWatchRepos();
+      expect(list).toHaveLength(1);
+      expect(list[0].firstObservedStars).toBe(42000);
+      expect(list[0].lastCheckedStars).toBe(42000);
+    });
+
+    it('records subsequent star observation and updates delta telemetry', () => {
+      const sample = { id: 601, name: 'astral-sh/uv', full_name: 'astral-sh/uv' };
+      storageService.addToChangeWatch(sample, 42000);
+      storageService.recordChangeWatchObservation('astral-sh/uv', 42150);
+
+      const list = storageService.getChangeWatchRepos();
+      expect(list[0].firstObservedStars).toBe(42000);
+      expect(list[0].lastCheckedStars).toBe(42150);
+      expect(list[0].observations).toHaveLength(2);
+    });
+
+    it('removes repository from change watch', () => {
+      const sample = { id: 601, name: 'astral-sh/uv', full_name: 'astral-sh/uv' };
+      storageService.addToChangeWatch(sample, 42000);
+      storageService.removeFromChangeWatch('astral-sh/uv');
+
+      expect(storageService.isInChangeWatch('astral-sh/uv')).toBe(false);
+      expect(storageService.getChangeWatchRepos()).toHaveLength(0);
+    });
+  });
 });
+

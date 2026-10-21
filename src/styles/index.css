@@ -59,16 +59,19 @@
     --border-hover: oklch(28% 0 0);
     --border-strong: oklch(35% 0 0);
 
-    /* =====================================================
-       PRIMARY BRAND ACCENT
-       Clean, monochrome, high-contrast SaaS palette (White/Grey/Black)
-       ===================================================== */
+    /* Brand accent — white/monochrome palette (previously named --magenta, renamed for clarity) */
+    --primary-white: #FFFFFF;
+    --primary-white-hover: #F4F4F5;
+    --primary-white-bright: #FFFFFF;
+    --primary-white-muted: rgba(255, 255, 255, 0.12);
+    --primary-white-border: rgba(255, 255, 255, 0.20);
 
-    --magenta: #FFFFFF;
-    --magenta-hover: #F4F4F5;
-    --magenta-bright: #FFFFFF;
-    --magenta-muted: rgba(255, 255, 255, 0.12);
-    --magenta-border: rgba(255, 255, 255, 0.20);
+    /* Legacy aliases — kept for backward compatibility during migration */
+    --magenta: var(--primary-white);
+    --magenta-hover: var(--primary-white-hover);
+    --magenta-bright: var(--primary-white-bright);
+    --magenta-muted: var(--primary-white-muted);
+    --magenta-border: var(--primary-white-border);
 
     /* =====================================================
        ORANGE
@@ -131,13 +134,19 @@
     --cyan-muted: oklch(25% 0.05 205);
 
     /* =====================================================
-       PURPLE
-       Secondary technical / agent-related accent
+       ZINC-MID
+       UI chrome / agent identity / previously misnamed --purple
+       Actual value: zinc-400 grey, not purple.
        ===================================================== */
 
-    --purple: #A1A1AA;
-    --purple-hover: #E4E4E7;
-    --purple-muted: rgba(255, 255, 255, 0.1);
+    --zinc-mid: #A1A1AA;
+    --zinc-mid-hover: #E4E4E7;
+    --zinc-mid-muted: rgba(255, 255, 255, 0.1);
+
+    /* Legacy aliases — kept for backward compatibility */
+    --purple: var(--zinc-mid);
+    --purple-hover: var(--zinc-mid-hover);
+    --purple-muted: var(--zinc-mid-muted);
 
     /* =====================================================
        WHITE / BLACK CONTROLS
@@ -230,15 +239,12 @@
     letter-spacing: -0.02em;
   }
 
-  /* Libron font utility */
-  .font-libron {
-    font-family: 'Libron', Georgia, serif !important;
-  }
-
-  /* Gilroy font utility */
-  .font-gilroy {
-    font-family: 'Gilroy', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-  }
+  /* font-heading utility — Neue Machina. Apply to any heading or brand text. */
+  /* font-libron and font-gilroy utilities have been removed:
+   * - Libron: loaded in fonts.css but unused in JSX components.
+   * - Gilroy: replaced by font-heading (Neue Machina) throughout FeatureGrid and Footer.
+   * The @font-face declarations in fonts.css are retained to avoid build graph disruption.
+   */
 
   /* Neue Machina accent — use ONLY for key brand phrases and highlights */
   .font-highlight {
@@ -621,7 +627,7 @@
   position: relative;
   z-index: 50;
   user-select: none;
-  font-family: 'Outfit', sans-serif !important;
+  font-family: 'Libron', Georgia, serif;
 }
 
 .masthead-bar .live-tag {
