@@ -4,7 +4,7 @@
 
 ExploreGit is an autonomous, privacy-first developer interface for tracking open-source repository velocity, inspecting contributor momentum, comparing project architectures, and navigating Git workflows without telemetry, trackers, or account walls.
 
-[Live Application](https://exploregit.vercel.app) · [Compare](https://exploregit.vercel.app/compare) · [Documentation](https://exploregit.vercel.app/docs) · [Changelog](https://exploregit.vercel.app/changelog)
+[Live Application](https://exploregit.vercel.app) · [Documentation](https://exploregit.vercel.app/docs) · [Changelog](https://exploregit.vercel.app/changelog)
 
 ---
 
@@ -12,7 +12,6 @@ ExploreGit is an autonomous, privacy-first developer interface for tracking open
 
 Software engineers spend hours sifting through noisy search results to evaluate dependencies, track emerging libraries, or compare competing open-source projects. ExploreGit structures raw telemetry from the GitHub REST API and repository manifests into verifiable visual signals without synthetic or invented numbers:
 
-- **Repository Compare (`/compare`)**: Select 2 or 3 repositories and compare stars, forks, languages, open issues, latest releases, commit cadence, and license compatibility side-by-side with direct upstream source links.
 - **Maintenance Checklist**: Inspect verifiable adoption signals—archived status, last push, latest release, license, security policy, and contributing guide—without opaque, unsupported "health scores."
 - **Topic Collections**: Browse curated ecosystem hubs (Agentic AI, Rust Systems, Developer Tooling, Local LLMs, Web3 Infrastructure) and automated topic clusters with transparent selection criteria.
 - **Release Radar**: Follow repositories to monitor official releases, tag versions, publish dates, and changelog notes in a consolidated feed.
@@ -81,7 +80,7 @@ git-explore/
 │   │   ├── layouts/       # Header, navigation, and contextual footers
 │   │   └── ui/            # Design system, error boundaries, SEO, and charts
 │   ├── data/              # License compatibility matrix, topic collections, and Git recipes
-│   ├── pages/             # Route modules (Home, Dashboard, RepositoryCompare, Languages, Gems, etc.)
+│   ├── pages/             # Route modules (Home, Dashboard, Languages, Gems, etc.)
 │   ├── services/          # GitHub REST client, manifest parsers, and local storage managers
 │   └── styles/            # Design tokens and Tailwind utilities
 ├── public/                # Sitemap, robots.txt, icons, and static assets
@@ -92,7 +91,6 @@ git-explore/
 ### Route Index
 
 - `/` — Product overview and live signal highlights
-- `/compare` — Multi-repository side-by-side comparison matrix (2–3 repos)
 - `/dashboard` — Explorer, multi-variable filters, and integrated discovery tabs:
   - `feed` — Main repository explorer & filter engine
   - `collections` — Topic and ecosystem curated collections

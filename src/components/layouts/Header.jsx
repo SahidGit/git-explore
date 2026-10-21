@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import {
     Key, X, ArrowLeft, Home, AlertTriangle, AlertCircle, HelpCircle, ExternalLink,
     Check, Trash2, Loader2, ShieldCheck, User, ChevronDown, ChevronUp, CheckCircle2,
-    Compass, BarChart2, Bookmark, Terminal, Sparkles, UserCheck, ArrowLeftRight
+    Compass, BarChart2, Bookmark, Terminal, Sparkles, UserCheck
 } from 'lucide-react';
 import AnnouncementBar from '../ui/AnnouncementBar';
 import TokenAlertBanner from '../ui/TokenAlertBanner';
@@ -200,7 +200,6 @@ const Header = ({ activeTab, showBackButton, theme = 'dark' }) => {
     // Primary desktop navigation tabs
     const navLinks = [
         { label: 'Dashboard', to: '/dashboard', tab: 'dashboard' },
-        { label: 'Compare', to: '/compare', tab: 'compare' },
         { label: 'Languages', to: '/languages', tab: 'languages' },
         { label: 'Gems', to: '/gems', tab: 'gems' },
         { label: 'Bookmarks', to: '/bookmarks', tab: 'bookmarks' },
@@ -220,14 +219,6 @@ const Header = ({ activeTab, showBackButton, theme = 'dark' }) => {
                     tag: 'Live Feed',
                     tagStyle: 'bg-[#4397E0]/10 text-[#4397E0] border-[#4397E0]/20',
                     icon: DashboardNavIcon,
-                },
-                {
-                    label: 'Repository Compare',
-                    to: '/compare',
-                    tab: 'compare',
-                    tag: 'Side-by-Side',
-                    tagStyle: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-                    icon: ArrowLeftRight,
                 },
                 {
                     label: 'Hidden Gems & Tools',

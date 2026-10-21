@@ -8,15 +8,11 @@ export const changelogContent = {
         <div class="relative">
           <span class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-3.5 h-3.5 rounded-full bg-white border-2 border-[#0A0A0C]"></span>
           <div class="flex flex-wrap items-baseline justify-between gap-2 mb-2">
-            <h3 class="text-lg font-bold text-white tracking-tight">v2.2.0 — Repository Discovery, Compare & Data Integrity</h3>
+            <h3 class="text-lg font-bold text-white tracking-tight">v2.2.0 — Repository Discovery & Data Integrity</h3>
             <span class="font-mono text-xs text-zinc-500">October 2026</span>
           </div>
           <div class="p-4 rounded-xl bg-[#121215] border border-white/[0.06] space-y-2">
             <ul class="space-y-2 text-xs sm:text-sm text-[#A1A1AA]">
-              <li class="flex items-start gap-2">
-                <span class="text-[#4397E0] font-mono text-xs">&plus;</span>
-                <span><strong>Repository Compare (/compare)</strong>: Side-by-side metadata, cadence, and license comparison for 2–3 repositories.</span>
-              </li>
               <li class="flex items-start gap-2">
                 <span class="text-[#4397E0] font-mono text-xs">&plus;</span>
                 <span><strong>Maintenance Checklist</strong>: Verifiable adoption signals directly linked to GitHub repository roots.</span>

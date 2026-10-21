@@ -5,7 +5,6 @@ All notable changes to this project will be documented in this file.
 ## [2.2.0] - 2026-10-22
 
 ### Added
-- **Repository Compare (`/compare`)**: Side-by-side comparison matrix for 2–3 repositories comparing current stars, forks, languages, open issues, latest releases, push dates, and license compatibility with direct upstream source links.
 - **Maintenance Checklist**: Verifiable adoption signals (archived status, last push, latest release, license, security policy, and contributing guide) directly linked to GitHub repository roots.
 - **Topic Collections**: Curated ecosystem hubs (Agentic AI, Rust Systems, Developer Tooling, Local LLMs, Web3 Infrastructure) and automated topic clusters with transparent selection criteria.
 - **Release Radar**: Repository release tracker with version tags, publication dates, changelog notes, and direct links to release assets.
