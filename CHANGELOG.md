@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.3.0] - 2026-11-19
+
+### Added
+- **Automated Monthly Gems Engine**: Dependency-free evaluator (`scripts/evaluate-gems.mjs`) run on Node 20 with rate-limit budget checks, exponential backoff, and GitHub Actions cron workflow (`.github/workflows/gems-monthly.yml`).
+- **Append-Only Criteria Registry**: Strict registry (`data/criteria.mjs`, `CRITERIA_VERSION = 2`) with permanent IDs (`data/criteria-ids.json`), dynamic star-based tier derivation (`legend`, `gem`, `under-the-radar`), and human review records (`data/gem-reviews.json`) with JSON schema validation.
+- **Static Datasets & Historical Snapshots**: Zero-API client loading via precomputed `/data/gems.json` and immutable monthly historical snapshots (`/data/gems-history/YYYY-MM.json`).
+- **Curated Monthly Gems**: Added verified entries for KeePassXC, Kdenlive, Stirling-PDF, LosslessCut, and llama.cpp.
+- **Resilience & Audit Guards**: 25% publication anomaly guard, repository ownership transfer detection, and automatic reviewer redaction in public outputs.
+- **Automated Engine Test Suite**: 12 comprehensive invariant, tier-boundary, failure-resilience, and determinism tests (`tests/gems.test.mjs`).
+
+### Changed
+- **Production Telemetry & Rate-Limit Caching**: Removed all sample/mock labels in dashboard preview; implemented 24-hour local caching to prevent rate-limit exhaustion.
+- **Gems User Interface**: Added criteria inspection accordion, accessible status badges, 30-day freshness indicators, and failing criteria filter toggle.
+- **UI Styling & FAQ**: Updated FAQ question #2 with official registry copy and refreshed the Hero section "Measured Growth" telemetry card with blue accents.
+
 ## [2.2.0] - 2026-10-22
 
 ### Added

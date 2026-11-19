@@ -1,0 +1,96 @@
+name: Monthly Gems Refresh & Evaluation
+
+on:
+  schedule:
+    # Runs on the 1st of each month at 06:00 UTC
+    - cron: '0 6 1 * *'
+  workflow_dispatch:
+
+# Enforce minimal repository permissions
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  evaluate-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Repository
+        # actions/checkout v4.2.2 pinned to commit SHA
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js 20
+        # actions/setup-node v4.1.0 pinned to commit SHA
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Monthly Gems Evaluator
+        id: eval
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/evaluate-gems.mjs
+
+      - name: Run Gems Test Suite
+        if: success()
+        run: node --test tests/gems.test.mjs
+
+      - name: Handle Failure - File Audit Issue
+        if: failure()
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const fs = require('fs');
+            let anomalyReport = 'No anomaly report generated.';
+            try {
+              const files = fs.readdirSync('reports');
+              const reportFile = files.find(f => f.startsWith('gems-anomaly-') || f.startsWith('gems-eval-partial'));
+              if (reportFile) {
+                anomalyReport = fs.readFileSync(`reports/${reportFile}`, 'utf8');
+              }
+            } catch (e) {}
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[ALERT] Monthly Gems Evaluation Failed (${new Date().toISOString().slice(0, 7)})`,
+              body: `### Monthly Gems Evaluation Run Failed\n\nThe automated run on \`${new Date().toISOString()}\` exited with an error. No data was published to \`public/data/gems.json\`.\n\n#### Failure Diagnostics:\n\`\`\`json\n${anomalyReport.slice(0, 3000)}\n\`\`\`\n\nPlease check the workflow run logs for full details.`,
+              labels: ['gems', 'automated-alert']
+            });
+
+      - name: Generate Current Year-Month String
+        if: success()
+        id: date
+        run: echo "month=$(date -u +'%Y-%m')" >> $GITHUB_OUTPUT
+
+      - name: Open Pull Request on Branch Protection
+        if: success()
+        # peter-evans/create-pull-request v7.0.5 pinned to commit SHA
+        uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore(gems): monthly evaluation snapshot [${{ steps.date.outputs.month }}]"
+          branch: "gems/monthly-update-${{ steps.date.outputs.month }}"
+          delete-branch: true
+          title: "Gems Monthly Refresh (${{ steps.date.outputs.month }})"
+          body: |
+            ## Automated Monthly Gems Refresh
+            This PR was automatically created by the monthly Gems evaluation workflow.
+            
+            - **Criteria Version:** Active
+            - **Snapshot File:** `public/data/gems-history/${{ steps.date.outputs.month }}.json`
+            - **Active Dataset:** `public/data/gems.json`
+            
+            All test suites passed and the anomaly guard verified that status churn remained under the 25% threshold.
+          labels: |
+            gems
+            monthly-refresh

@@ -5,12 +5,76 @@ const GITHUB_API_BASE = import.meta.env.VITE_GITHUB_API_URL || 'https://api.gith
 const RATE_LIMIT_CACHE_KEY = 'gitexplorer_ratelimit_cache';
 const RATE_LIMIT_TTL_MS = 60_000; // Cache rate-limit for 60 seconds
 
+// ─── In-memory session cache (tab-lifetime, never serialised to storage) ────
+// Key  → { data, ts }   TTL = CACHE_ENTRY_TTL_MS
+// Also doubles as an in-flight dedup map: a pending Promise is stored instead
+// of a resolved value until the first caller resolves it, then all concurrent
+// callers receive the same Promise result without issuing duplicate requests.
+const _sessionCache = new Map();
+const CACHE_ENTRY_TTL_MS = {
+  search:    5  * 60 * 1000,  //  5 min — trending / search results
+  repoMeta:  10 * 60 * 1000,  // 10 min — repo details, languages, contributors
+  activity:  15 * 60 * 1000,  // 15 min — commit activity (rarely changes)
+  issues:    5  * 60 * 1000,  //  5 min — issue counts
+  release:   10 * 60 * 1000,  // 10 min — latest / list of releases
+  community: 30 * 60 * 1000,  // 30 min — community profile (almost static)
+  digest:    10 * 60 * 1000,  // 10 min — what-changed digest
+  deps:      30 * 60 * 1000,  // 30 min — dependency manifest (static file)
+  alts:      15 * 60 * 1000,  // 15 min — alternatives search
+};
+
+/**
+ * Thin cache helper with Promise dedup.
+ * If a live Promise for the same key exists, all callers share it (no duplicate
+ * API calls even when triggered simultaneously). Once resolved the value is
+ * stored and subsequent calls within TTL are served synchronously from memory.
+ */
+const withCache = async (bucket, key, ttl, fn) => {
+  const full = `${bucket}:${key}`;
+  const entry = _sessionCache.get(full);
+  if (entry) {
+    // In-flight promise → join it
+    if (entry instanceof Promise) return entry;
+    // Resolved value still fresh → serve from memory
+    if (Date.now() - entry.ts < ttl) return entry.data;
+  }
+  // Miss → call fn, store promise for dedup
+  const promise = fn().then(data => {
+    if (data !== null && data !== undefined) {
+      _sessionCache.set(full, { data, ts: Date.now() });
+    } else {
+      _sessionCache.delete(full);
+    }
+    return data;
+  }).catch(err => {
+    _sessionCache.delete(full); // don't cache failures
+    throw err;
+  });
+  _sessionCache.set(full, promise);
+  return promise;
+};
+
+/** Clear all in-memory cache entries */
+export const clearSessionCache = () => {
+  _sessionCache.clear();
+};
+
+/** Invalidate all cached entries for a repo (called when user forces a refresh) */
+export const invalidateRepoCache = (owner, repo) => {
+  const prefix = `${owner}/${repo}`;
+  for (const key of _sessionCache.keys()) {
+    if (key.includes(prefix)) _sessionCache.delete(key);
+  }
+};
+
+
 // Active auth token for this session
 let _authToken = null;
 
 /** Set or clear the GitHub Personal Access Token for all subsequent requests */
 export const setGithubToken = (token) => {
   _authToken = token ? token.trim() : null;
+  clearSessionCache();
   if (typeof sessionStorage !== 'undefined') {
     sessionStorage.removeItem(RATE_LIMIT_CACHE_KEY);
   }
@@ -154,8 +218,9 @@ export const searchRepositories = async ({
   sort = 'stars',
   order = 'desc',
   page = 1,
-  perPage = 30,
+  perPage = 20,          // reduced: 30 → 20 to conserve tokens per navigation
   language = '',
+  bypassCache = false,   // set true only for explicit user-triggered refresh
 }) => {
   let q = (query || '').trim() || 'stars:>1000';
 
@@ -163,9 +228,17 @@ export const searchRepositories = async ({
     q = `${q} language:${language}`;
   }
 
-  const params = new URLSearchParams({ q, sort, order, page, per_page: perPage });
-  const response = await fetchWithRetry(`${GITHUB_API_BASE}/search/repositories?${params}`);
-  return response.json();
+  const cacheKey = `${q}|${sort}|${order}|${page}|${perPage}`;
+
+  if (bypassCache) {
+    _sessionCache.delete(`search:${cacheKey}`);
+  }
+
+  return withCache('search', cacheKey, CACHE_ENTRY_TTL_MS.search, async () => {
+    const params = new URLSearchParams({ q, sort, order, page, per_page: perPage });
+    const response = await fetchWithRetry(`${GITHUB_API_BASE}/search/repositories?${params}`);
+    return response.json();
+  });
 };
 
 export const getTrendingRepositories = async (language = '', since = 'daily', page = 1) => {
@@ -286,54 +359,75 @@ export const getWeeklyTopRepositories = async () => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const getRepositoryDetails = async (owner, repo) => {
-  const [repoRes, langRes, contribRes] = await Promise.all([
-    fetchWithRetry(`${GITHUB_API_BASE}/repos/${owner}/${repo}`),
-    fetchWithRetry(`${GITHUB_API_BASE}/repos/${owner}/${repo}/languages`),
-    fetchWithRetry(`${GITHUB_API_BASE}/repos/${owner}/${repo}/contributors?per_page=10`),
-  ]);
+  return withCache('repoMeta', `${owner}/${repo}`, CACHE_ENTRY_TTL_MS.repoMeta, async () => {
+    const [repoRes, langRes, contribRes] = await Promise.all([
+      fetchWithRetry(`${GITHUB_API_BASE}/repos/${owner}/${repo}`),
+      fetchWithRetry(`${GITHUB_API_BASE}/repos/${owner}/${repo}/languages`),
+      fetchWithRetry(`${GITHUB_API_BASE}/repos/${owner}/${repo}/contributors?per_page=5`),
+    ]);
 
-  const [repoData, languages, contributors] = await Promise.all([
-    repoRes.json(),
-    langRes.json(),
-    contribRes.json(),
-  ]);
+    const [repoData, languages, contributors] = await Promise.all([
+      repoRes.json(),
+      langRes.json(),
+      contribRes.json(),
+    ]);
 
-  return { ...repoData, languages, contributors };
+    return { ...repoData, languages, contributors };
+  });
 };
 
 /** Fetch weekly commit activity (returns null when statistics are unavailable/computing on GitHub) */
 export const getRepositoryActivity = async (owner, repo) => {
-  try {
-    const response = await fetchWithRetry(`${GITHUB_API_BASE}/repos/${owner}/${repo}/stats/commit_activity`);
-    if (response.status === 202) {
-      // 202 Accepted: GitHub is currently computing statistics in the background
-      return null;
+  return withCache('activity', `${owner}/${repo}`, CACHE_ENTRY_TTL_MS.activity, async () => {
+    try {
+      const response = await fetchWithRetry(`${GITHUB_API_BASE}/repos/${owner}/${repo}/stats/commit_activity`);
+      if (response.status === 202) {
+        // 202 Accepted: GitHub is computing statistics — don't cache, return null
+        _sessionCache.delete(`activity:${owner}/${repo}`);
+        return null;
+      }
+      const data = await response.json();
+      if (Array.isArray(data)) return data;
+    } catch {
+      // Request failed or rate limited
     }
-    const data = await response.json();
-    if (Array.isArray(data)) {
-      return data;
-    }
-  } catch {
-    // Request failed or rate limited — return null for distinct unavailable status
-  }
-  return null;
+    return null;
+  });
 };
 
-/** Fetch open + closed issue counts without synthetic estimations */
-export const getIssueStats = async (owner, repo) => {
-  try {
-    const [openRes, closedRes] = await Promise.all([
-      fetchWithRetry(`${GITHUB_API_BASE}/search/issues?q=repo:${owner}/${repo}+type:issue+state:open`),
-      fetchWithRetry(`${GITHUB_API_BASE}/search/issues?q=repo:${owner}/${repo}+type:issue+state:closed`),
-    ]);
-    const [openData, closedData] = await Promise.all([openRes.json(), closedRes.json()]);
-    return {
-      open: typeof openData.total_count === 'number' ? openData.total_count : null,
-      closed: typeof closedData.total_count === 'number' ? closedData.total_count : null,
-    };
-  } catch {
-    return { open: null, closed: null };
-  }
+/**
+ * Fetch open + closed issue counts.
+ * Uses the repo details open_issues_count (already fetched in getRepositoryDetails)
+ * for the open count — avoids a separate Search API call.
+ * Only fetches closed count on demand from cache.
+ */
+export const getIssueStats = async (owner, repo, openCountFromMeta = null) => {
+  return withCache('issues', `${owner}/${repo}`, CACHE_ENTRY_TTL_MS.issues, async () => {
+    try {
+      // Use already-available open count from repo metadata when possible (saves 1 search call)
+      if (openCountFromMeta !== null && typeof openCountFromMeta === 'number') {
+        const closedRes = await fetchWithRetry(
+          `${GITHUB_API_BASE}/search/issues?q=repo:${owner}/${repo}+type:issue+state:closed&per_page=1`
+        );
+        const closedData = await closedRes.json();
+        return {
+          open: openCountFromMeta,
+          closed: typeof closedData.total_count === 'number' ? closedData.total_count : null,
+        };
+      }
+      // Fallback: single combined search query (1 request instead of 2)
+      const openRes = await fetchWithRetry(
+        `${GITHUB_API_BASE}/search/issues?q=repo:${owner}/${repo}+type:issue+state:open&per_page=1`
+      );
+      const openData = await openRes.json();
+      return {
+        open: typeof openData.total_count === 'number' ? openData.total_count : null,
+        closed: null, // skip closed count — not shown by default
+      };
+    } catch {
+      return { open: null, closed: null };
+    }
+  });
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -387,7 +481,7 @@ export const getRateLimit = async (force = false) => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const LANG_CACHE_PREFIX = 'gitexplore_lang_chart_';
-const LANG_CACHE_TTL = 15 * 60 * 1000; // 15 minutes cache
+const LANG_CACHE_TTL = 45 * 60 * 1000; // 45 minutes cache (saves repeated 100-item queries)
 
 /**
  * Dynamically queries GitHub Search API to aggregate real repository counts and star metrics per language
@@ -418,7 +512,7 @@ export const getLiveLanguageRankings = async (timeframe = 'today') => {
   try {
     // Fetch top high-velocity repositories created or pushed in this timeframe
     const response = await fetchWithRetry(
-      `${GITHUB_API_BASE}/search/repositories?q=created:>${dateStr}+stars:>50&sort=stars&order=desc&per_page=100`
+      `${GITHUB_API_BASE}/search/repositories?q=created:>${dateStr}+stars:>50&sort=stars&order=desc&per_page=50`
     );
     const result = await response.json();
     const items = result.items || [];
@@ -477,6 +571,7 @@ export const getLiveLanguageRankings = async (timeframe = 'today') => {
  * Returns null if the repository has no releases published (404).
  */
 export const getLatestRelease = async (owner, repo) => {
+  return withCache('release', `latest:${owner}/${repo}`, CACHE_ENTRY_TTL_MS.release, async () => {
   try {
     const res = await fetchWithRetry(`${GITHUB_API_BASE}/repos/${owner}/${repo}/releases/latest`);
     const data = await res.json();
@@ -495,6 +590,7 @@ export const getLatestRelease = async (owner, repo) => {
     if (err.status === 404) return null;
     throw err;
   }
+  }); // end withCache
 };
 
 /**
@@ -527,17 +623,19 @@ export const getRepositoryReleases = async (owner, repo, perPage = 5) => {
  * without computing an unsupported health score.
  */
 export const getCommunityProfile = async (owner, repo) => {
-  try {
-    const res = await fetchWithRetry(`${GITHUB_API_BASE}/repos/${owner}/${repo}/community/profile`);
-    const data = await res.json();
-    return {
-      healthPercentage: data.health_percentage ?? null,
-      files: data.files || {},
-      fetchedAt: new Date().toISOString(),
-    };
-  } catch (err) {
-    return { healthPercentage: null, files: {}, fetchedAt: new Date().toISOString() };
-  }
+  return withCache('community', `${owner}/${repo}`, CACHE_ENTRY_TTL_MS.community, async () => {
+    try {
+      const res = await fetchWithRetry(`${GITHUB_API_BASE}/repos/${owner}/${repo}/community/profile`);
+      const data = await res.json();
+      return {
+        healthPercentage: data.health_percentage ?? null,
+        files: data.files || {},
+        fetchedAt: new Date().toISOString(),
+      };
+    } catch {
+      return { healthPercentage: null, files: {}, fetchedAt: new Date().toISOString() };
+    }
+  });
 };
 
 /**
@@ -587,6 +685,8 @@ export const getGoodFirstIssues = async ({ owner, repo, language = '', perPage =
  */
 export const getRepositoryAlternatives = async (repo) => {
   if (!repo) return { items: [], fetchedAt: new Date().toISOString() };
+  const cacheRepoKey = repo.full_name || repo.name || 'unknown';
+  return withCache('alts', cacheRepoKey, CACHE_ENTRY_TTL_MS.alts, async () => {
 
   const targetLang = repo.language || '';
   const targetTopics = Array.isArray(repo.topics) ? repo.topics : [];
@@ -632,6 +732,7 @@ export const getRepositoryAlternatives = async (repo) => {
   } catch (err) {
     return { items: [], error: err.message, fetchedAt: new Date().toISOString() };
   }
+  }); // end withCache
 };
 
 /**
@@ -640,6 +741,7 @@ export const getRepositoryAlternatives = async (repo) => {
  * Never invents activity or summaries.
  */
 export const getWhatChangedDigest = async (owner, repo, days = 30) => {
+  return withCache('digest', `${owner}/${repo}/${days}`, CACHE_ENTRY_TTL_MS.digest, async () => {
   const sinceDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
   const sinceDateOnly = sinceDate.split('T')[0];
 
@@ -702,6 +804,7 @@ export const getWhatChangedDigest = async (owner, repo, days = 30) => {
     mergedPRs,
     fetchedAt: new Date().toISOString(),
   };
+  }); // end withCache
 };
 
 /**
@@ -709,6 +812,7 @@ export const getWhatChangedDigest = async (owner, repo, days = 30) => {
  * Reads declared dependencies from supported package manifests (package.json, Cargo.toml, requirements.txt, go.mod).
  */
 export const getDependencyFootprint = async (owner, repo) => {
+  return withCache('deps', `${owner}/${repo}`, CACHE_ENTRY_TTL_MS.deps, async () => {
   const supportedManifests = [
     { path: 'package.json', ecosystem: 'npm', registryUrl: (name) => `https://www.npmjs.com/package/${name}` },
     { path: 'Cargo.toml', ecosystem: 'crates.io', registryUrl: (name) => `https://crates.io/crates/${name}` },
@@ -821,6 +925,7 @@ export const getDependencyFootprint = async (owner, repo) => {
     scanTime: new Date().toISOString(),
     error: 'No supported package manifest detected (package.json, Cargo.toml, requirements.txt, pyproject.toml, go.mod).',
   };
+  }); // end withCache
 };
 
 /**

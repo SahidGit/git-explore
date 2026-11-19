@@ -1,9 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { getRepositoryActivity } from '../githubService';
+import { getRepositoryActivity, clearSessionCache } from '../githubService';
 
 describe('githubService - getRepositoryActivity', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    clearSessionCache();
   });
 
   afterEach(() => {

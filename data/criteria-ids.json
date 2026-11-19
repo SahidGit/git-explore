@@ -1,0 +1,15 @@
+[
+  "not-archived-or-disabled",
+  "not-a-fork",
+  "osi-approved-license",
+  "has-description",
+  "stars-within-tier",
+  "min-repo-age",
+  "recent-push",
+  "min-recent-contributors",
+  "tagged-release-required",
+  "readme-present",
+  "published-security-policy",
+  "issue-responsiveness",
+  "independent-audit"
+]

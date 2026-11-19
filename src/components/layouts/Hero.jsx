@@ -16,6 +16,9 @@ import {
   Activity,
   Info,
   ExternalLink,
+  Flame,
+  Calendar,
+  ChevronRight,
 } from "lucide-react";
 
 import { getMonthlyTopRepositories } from "../../services/githubService";
@@ -69,38 +72,103 @@ const ECOSYSTEM_CATEGORIES = [
 ];
 
 // ─── Quick Filter Chips Data ───────────────────────────
+const getDynamicTimeframeQuery = (daysAgo) => {
+  const d = new Date();
+  d.setDate(d.getDate() - daysAgo);
+  return `created:>${d.toISOString().split("T")[0]}`;
+};
+
 const QUICK_FILTER_CHIPS = [
-  { id: "ai", label: "AI", type: "topic", query: "topic:ai", color: "#C19EDB" },
-  { id: "python", label: "Python", type: "lang", query: "language:python", color: "#3572A5" },
-  { id: "rust", label: "Rust", type: "lang", query: "language:rust", color: "#DEA584" },
+  {
+    id: "ai",
+    label: "AI",
+    type: "topic",
+    group: "tech",
+    query: "topic:ai",
+    color: "#C084FC",
+    icon: Sparkles,
+    activeClasses: "bg-purple-500/20 text-purple-200 border-purple-500/60 shadow-[0_0_14px_rgba(168,85,247,0.35)]",
+    hoverBorder: "hover:border-purple-500/40",
+  },
+  {
+    id: "python",
+    label: "Python",
+    type: "lang",
+    group: "tech",
+    query: "language:python",
+    color: "#38BDF8",
+    icon: Code2,
+    activeClasses: "bg-blue-500/20 text-blue-200 border-blue-500/60 shadow-[0_0_14px_rgba(59,130,246,0.35)]",
+    hoverBorder: "hover:border-blue-500/40",
+  },
+  {
+    id: "rust",
+    label: "Rust",
+    type: "lang",
+    group: "tech",
+    query: "language:rust",
+    color: "#FB923C",
+    icon: Code2,
+    activeClasses: "bg-orange-500/20 text-orange-200 border-orange-500/60 shadow-[0_0_14px_rgba(249,115,22,0.35)]",
+    hoverBorder: "hover:border-orange-500/40",
+  },
   {
     id: "typescript",
     label: "TypeScript",
     type: "lang",
+    group: "tech",
     query: "language:typescript",
-    color: "#3178C6",
+    color: "#60A5FA",
+    icon: Code2,
+    activeClasses: "bg-sky-500/20 text-sky-200 border-sky-500/60 shadow-[0_0_14px_rgba(14,165,233,0.35)]",
+    hoverBorder: "hover:border-sky-500/40",
   },
-  { id: "go", label: "Go", type: "lang", query: "language:go", color: "#00ADD8" },
+  {
+    id: "go",
+    label: "Go",
+    type: "lang",
+    group: "tech",
+    query: "language:go",
+    color: "#22D3EE",
+    icon: Code2,
+    activeClasses: "bg-cyan-500/20 text-cyan-200 border-cyan-500/60 shadow-[0_0_14px_rgba(6,182,212,0.35)]",
+    hoverBorder: "hover:border-cyan-500/40",
+  },
   {
     id: "today",
     label: "Today",
     type: "timeframe",
-    query: "created:>2026-08-16",
-    color: "#F05138",
+    group: "time",
+    since: "daily",
+    query: getDynamicTimeframeQuery(1),
+    color: "#FB7185",
+    icon: Flame,
+    activeClasses: "bg-rose-500/20 text-rose-200 border-rose-500/60 shadow-[0_0_14px_rgba(244,63,94,0.35)]",
+    hoverBorder: "hover:border-rose-500/40",
   },
   {
     id: "this-week",
     label: "This Week",
     type: "timeframe",
-    query: "created:>2026-08-10",
-    color: "#4397E0",
+    group: "time",
+    since: "weekly",
+    query: getDynamicTimeframeQuery(7),
+    color: "#FBBF24",
+    icon: Clock,
+    activeClasses: "bg-amber-500/20 text-amber-200 border-amber-500/60 shadow-[0_0_14px_rgba(245,158,11,0.35)]",
+    hoverBorder: "hover:border-amber-500/40",
   },
   {
     id: "this-month",
     label: "This Month",
     type: "timeframe",
-    query: "created:>2026-07-17",
-    color: "#198CE7",
+    group: "time",
+    since: "monthly",
+    query: getDynamicTimeframeQuery(30),
+    color: "#818CF8",
+    icon: Calendar,
+    activeClasses: "bg-indigo-500/20 text-indigo-200 border-indigo-500/60 shadow-[0_0_14px_rgba(99,102,241,0.35)]",
+    hoverBorder: "hover:border-indigo-500/40",
   },
 ];
 
@@ -393,13 +461,26 @@ const Hero = ({ onExplore }) => {
     }
   };
 
-  const handleChipClick = (chip) => {
+  const navigateToChip = (chip) => {
+    if (!chip) return;
     if (chip.type === "lang") {
       navigate(`/dashboard?language=${encodeURIComponent(chip.id)}&query=${encodeURIComponent(chip.query)}`);
+    } else if (chip.type === "timeframe") {
+      navigate(`/dashboard?since=${encodeURIComponent(chip.since || "daily")}&query=${encodeURIComponent(chip.query)}`);
     } else if (chip.query) {
       navigate(`/dashboard?query=${encodeURIComponent(chip.query)}`);
     } else {
       navigate("/dashboard");
+    }
+  };
+
+  const handleChipClick = (chip) => {
+    if (activeChip?.id === chip.id) {
+      // Toggle off if already selected
+      setActiveChip(null);
+    } else {
+      // Select the chip to filter the live preview in the Hero
+      setActiveChip(chip);
     }
   };
 
@@ -408,6 +489,8 @@ const Hero = ({ onExplore }) => {
     const rawQuery = searchQuery.trim();
     if (rawQuery) {
       navigate(`/dashboard?query=${encodeURIComponent(rawQuery)}`);
+    } else if (activeChip) {
+      navigateToChip(activeChip);
     } else {
       onExplore();
     }
@@ -431,7 +514,9 @@ const Hero = ({ onExplore }) => {
       if (chipId === "rust") return repo.lang?.toLowerCase() === "rust" || repo.tags?.includes("rust");
       if (chipId === "typescript") return repo.lang?.toLowerCase() === "typescript" || repo.tags?.includes("typescript");
       if (chipId === "go") return repo.lang?.toLowerCase() === "go";
-      if (chipId === "today" || chipId === "this-week" || chipId === "this-month") return true;
+      if (chipId === "today") return repo.tags?.includes("today") || repo.timeframe?.toLowerCase() === "today";
+      if (chipId === "this-week") return repo.tags?.includes("this-week") || repo.tags?.includes("this week") || repo.timeframe?.toLowerCase() === "this week";
+      if (chipId === "this-month") return repo.tags?.includes("this-month") || repo.tags?.includes("this month") || repo.timeframe?.toLowerCase() === "this month";
 
       return true;
     });
@@ -560,48 +645,96 @@ const Hero = ({ onExplore }) => {
                 </div>
               </form>
 
-              {/* Quick Filter Chips (Clean Borderless Pills) */}
-              <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-0.5 no-scrollbar flex-wrap sm:flex-nowrap">
-                <span className="text-xs font-sans text-zinc-400 uppercase tracking-wider shrink-0 flex items-center gap-1.5 mr-1 font-semibold">
-                  <Filter className="w-3.5 h-3.5 text-zinc-400" />
-                  <span>Quick:</span>
-                </span>
-                {QUICK_FILTER_CHIPS.map((chip) => {
-                  const isSelected = activeChip?.id === chip.id;
-                  return (
-                    <button
-                      key={chip.id}
-                      type="button"
-                      onClick={() => handleChipClick(chip)}
-                      aria-pressed={isSelected}
-                      aria-label={`Filter by ${chip.label}`}
-                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-sans font-medium transition-all shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-95 shadow-none border ${
-                        isSelected
-                          ? "bg-white text-black font-semibold border-white"
-                          : "bg-white/[0.06] hover:bg-white/[0.12] border-white/10 hover:border-white/20 text-zinc-300 hover:text-white"
-                      }`}
-                    >
-                      <span
-                        className="w-1.5 h-1.5 rounded-full shrink-0"
-                        style={{ backgroundColor: chip.color }}
-                      />
-                      <span>{chip.label}</span>
-                    </button>
-                  );
-                })}
+              {/* Quick Filter Chips (Modern Single-Line Responsive Pill Strip) */}
+              <div className="relative w-full overflow-hidden pt-1 pb-1">
+                {/* Edge fade indicators for touch scroll on small devices */}
+                <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-3 bg-gradient-to-r from-[#121318] to-transparent z-10 sm:hidden" />
+                <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#121318] to-transparent z-10 sm:hidden" />
 
-                {(searchQuery || activeChip) && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSearchQuery("");
-                      setActiveChip(null);
-                    }}
-                    className="text-xs font-sans text-zinc-400 hover:text-white underline ml-auto shrink-0 transition-colors"
-                  >
-                    Reset filters
-                  </button>
-                )}
+                <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar scroll-smooth flex-nowrap py-1 px-0.5 select-none touch-pan-x">
+                  {/* Quick label pill */}
+                  <span className="text-[11px] font-sans text-zinc-400 uppercase tracking-wider shrink-0 flex items-center gap-1 font-semibold pr-1">
+                    <Filter className="w-3 h-3 text-zinc-400" />
+                    <span>Quick:</span>
+                  </span>
+
+                  {/* Modern Filter Chips */}
+                  {QUICK_FILTER_CHIPS.map((chip, index) => {
+                    const isSelected = activeChip?.id === chip.id;
+                    const Icon = chip.icon;
+                    const isFirstTimeframe = chip.group === "time" && QUICK_FILTER_CHIPS[index - 1]?.group !== "time";
+
+                    return (
+                      <React.Fragment key={chip.id}>
+                        {isFirstTimeframe && (
+                          <div className="h-3.5 w-px bg-white/15 shrink-0 mx-1" aria-hidden="true" />
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => handleChipClick(chip)}
+                          onDoubleClick={() => navigateToChip(chip)}
+                          aria-pressed={isSelected}
+                          aria-label={`Filter by ${chip.label}${isSelected ? " (Selected · Click Explore on Dashboard to view full results)" : ""}`}
+                          title={isSelected ? "Selected · Click Explore on Dashboard to view full results" : `Filter by ${chip.label}`}
+                          className={`group inline-flex items-center gap-1.5 h-7 px-2.5 rounded-full text-xs font-sans font-medium transition-all duration-200 shrink-0 cursor-pointer whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-95 border backdrop-blur-md ${
+                            isSelected
+                              ? chip.activeClasses
+                              : `bg-white/[0.04] hover:bg-white/[0.09] border-white/[0.08] ${chip.hoverBorder} text-zinc-300 hover:text-white shadow-xs`
+                          }`}
+                        >
+                          {Icon ? (
+                            <Icon
+                              className={`w-3 h-3 shrink-0 transition-transform duration-200 group-hover:scale-110 ${
+                                isSelected ? "opacity-100" : "opacity-75 group-hover:opacity-100"
+                              }`}
+                              style={{ color: chip.color }}
+                            />
+                          ) : (
+                            <span
+                              className="w-1.5 h-1.5 rounded-full shrink-0 transition-all duration-200"
+                              style={{
+                                backgroundColor: chip.color,
+                                boxShadow: isSelected ? `0 0 8px ${chip.color}` : "none",
+                              }}
+                            />
+                          )}
+                          <span>{chip.label}</span>
+                          {isSelected && (
+                            <span className="inline-flex items-center text-[10px] opacity-75 group-hover:opacity-100 ml-0.5">
+                              <ChevronRight className="w-3 h-3" />
+                            </span>
+                          )}
+                        </button>
+                      </React.Fragment>
+                    );
+                  })}
+
+                  {/* Actions: Direct Explore link & Reset button */}
+                  {(searchQuery || activeChip) && (
+                    <div className="flex items-center gap-2 ml-auto shrink-0 pl-2">
+                      {activeChip && (
+                        <button
+                          type="button"
+                          onClick={() => navigateToChip(activeChip)}
+                          className="text-[11px] font-sans font-medium text-blue-400 hover:text-blue-300 flex items-center gap-0.5 shrink-0 transition-colors cursor-pointer"
+                        >
+                          <span>Explore on Dashboard</span>
+                          <ArrowRight className="w-3 h-3" />
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSearchQuery("");
+                          setActiveChip(null);
+                        }}
+                        className="text-[11px] font-sans text-zinc-400 hover:text-white underline shrink-0 transition-colors cursor-pointer"
+                      >
+                        Reset
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -687,40 +820,38 @@ const Hero = ({ onExplore }) => {
                           setActiveSignalModal(repo);
                         }}
                         title="Why this repository is trending? Click to inspect telemetry and baseline growth signal."
-                        className="group/signal flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono transition-all border hover:scale-[1.02] active:scale-[0.98] bg-white/[0.03] hover:bg-white/[0.08]"
-                        style={{
-                          borderColor:
-                            repo.snapshot?.status === "gain"
-                              ? "rgba(52, 211, 153, 0.3)"
-                              : repo.snapshot?.status === "baseline"
-                              ? "rgba(99, 102, 241, 0.3)"
-                              : "rgba(255, 255, 255, 0.1)",
-                        }}
+                        className="group/signal flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1 rounded-md text-xs font-mono transition-colors border bg-zinc-900/90 hover:bg-zinc-800 border-zinc-700/60 hover:border-zinc-500 text-white"
                       >
                         {repo.snapshot?.status === "gain" ? (
                           <>
-                            <TrendingUp className="w-3.5 h-3.5 shrink-0 text-emerald-400" />
-                            <span className="font-bold text-emerald-400 truncate">
+                            <span className="w-1.5 h-1.5 rounded-full bg-white shrink-0" />
+                            <TrendingUp className="w-3.5 h-3.5 shrink-0 text-white" />
+                            <span className="font-semibold text-white tracking-tight">
                               +{repo.snapshot.delta.toLocaleString()}
                             </span>
                           </>
                         ) : repo.snapshot?.status === "baseline" ? (
                           <>
-                            <Clock className="w-3.5 h-3.5 shrink-0 text-indigo-400" />
-                            <span className="text-indigo-300 truncate">Tracking started</span>
+                            <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 shrink-0" />
+                            <Sparkles className="w-3.5 h-3.5 shrink-0 text-zinc-300" />
+                            <span className="font-normal text-[11px] text-zinc-300">
+                              Tracking started
+                            </span>
                           </>
                         ) : repo.snapshot?.status === "neutral" ? (
                           <>
-                            <Activity className="w-3.5 h-3.5 shrink-0 text-zinc-400" />
-                            <span className="text-zinc-400 truncate">±0 baseline</span>
+                            <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 shrink-0" />
+                            <Activity className="w-3.5 h-3.5 shrink-0 text-zinc-300" />
+                            <span className="font-normal text-[11px] text-zinc-300">±0 stars</span>
                           </>
                         ) : (
                           <>
-                            <Info className="w-3.5 h-3.5 shrink-0 text-zinc-500" />
-                            <span className="text-zinc-500 truncate">Growth N/A</span>
+                            <span className="w-1.5 h-1.5 rounded-full bg-zinc-500 shrink-0" />
+                            <Clock className="w-3.5 h-3.5 shrink-0 text-zinc-400" />
+                            <span className="text-[11px] text-zinc-400">Baseline pending</span>
                           </>
                         )}
-                        <Info className="w-3 h-3 text-zinc-500 group-hover/signal:text-white transition-colors shrink-0 ml-0.5" />
+                        <Info className="w-3 h-3 text-zinc-400 group-hover/signal:text-white transition-colors shrink-0 ml-0.5" />
                       </button>
                     </div>
                   </div>
@@ -830,41 +961,99 @@ const Hero = ({ onExplore }) => {
               {activeSignalModal.desc}
             </p>
 
-            {/* Metrics telemetry grid */}
-            <div className="grid grid-cols-2 gap-2.5 p-3 rounded-xl bg-black/40 border border-white/5 text-xs font-mono">
-              <div>
-                <span className="text-[10px] text-zinc-500 block uppercase tracking-wider">Current Stars</span>
-                <span className="text-sm font-bold text-white flex items-center gap-1 mt-0.5">
-                  <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400/20" />
+            {/* Secondary Meta Badges */}
+            <div className="grid grid-cols-2 gap-2.5 text-xs font-mono">
+              <div className="p-3 rounded-xl bg-zinc-900/90 border border-zinc-700/60 flex flex-col justify-between">
+                <span className="text-[10px] text-zinc-400 uppercase tracking-wider font-semibold">Current Stars</span>
+                <span className="text-sm sm:text-base font-bold text-white flex items-center gap-1.5 mt-1 font-mono">
+                  <Star className="w-3.5 h-3.5 text-zinc-300 fill-zinc-300/20" />
                   {activeSignalModal.rawStars ? activeSignalModal.rawStars.toLocaleString() : activeSignalModal.stars}
                 </span>
               </div>
-              <div>
-                <span className="text-[10px] text-zinc-500 block uppercase tracking-wider">Language</span>
-                <span className="text-sm font-semibold text-zinc-200 flex items-center gap-1.5 mt-0.5">
+              <div className="p-3 rounded-xl bg-zinc-900/90 border border-zinc-700/60 flex flex-col justify-between">
+                <span className="text-[10px] text-zinc-400 uppercase tracking-wider font-semibold">Language</span>
+                <span className="text-sm sm:text-base font-semibold text-white flex items-center gap-2 mt-1">
                   <span className="w-2 h-2 rounded-full" style={{ backgroundColor: activeSignalModal.langColor }} />
                   {activeSignalModal.lang}
                 </span>
               </div>
-              <div>
-                <span className="text-[10px] text-zinc-500 block uppercase tracking-wider">Measured Growth</span>
-                <span className="text-xs font-semibold text-emerald-400 mt-0.5 block truncate">
-                  {activeSignalModal.snapshot?.delta !== null && activeSignalModal.snapshot?.delta !== undefined
-                    ? (activeSignalModal.snapshot.delta > 0
-                        ? `+${activeSignalModal.snapshot.delta.toLocaleString()} stars`
-                        : `${activeSignalModal.snapshot.delta.toLocaleString()} stars`)
-                    : "Growth data not available yet"}
-                </span>
-              </div>
-              <div>
-                <span className="text-[10px] text-zinc-500 block uppercase tracking-wider">Comparison Window</span>
-                <span className="text-xs font-medium text-zinc-300 mt-0.5 block truncate">
-                  {activeSignalModal.snapshot?.elapsedLabel === "First visit"
-                    ? "Baseline established now"
-                    : `Since first visit (${activeSignalModal.snapshot?.elapsedLabel || "recent"})`}
-                </span>
-              </div>
             </div>
+
+            {/* Featured Measured Growth Telemetry Card - Minimalist Monochrome (Blue Telemetry Accent) */}
+            {(() => {
+              const status = activeSignalModal.snapshot?.status;
+              const delta = activeSignalModal.snapshot?.delta;
+              const hasGain = delta !== null && delta !== undefined && delta > 0;
+              const hasLoss = delta !== null && delta !== undefined && delta < 0;
+              const isBaseline = status === "baseline";
+              const isNeutral = status === "neutral" || delta === 0;
+
+              return (
+                <div className="p-3.5 sm:p-4 rounded-xl border border-blue-500/30 bg-blue-950/20 text-left space-y-2.5">
+                  {/* Header line */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="p-1.5 rounded-lg border border-blue-500/30 bg-blue-500/10 text-blue-400">
+                        {hasGain ? (
+                          <TrendingUp className="w-4 h-4 text-blue-400" />
+                        ) : isBaseline ? (
+                          <Sparkles className="w-4 h-4 text-blue-400" />
+                        ) : (
+                          <Activity className="w-4 h-4 text-blue-400" />
+                        )}
+                      </div>
+                      <div>
+                        <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-blue-400 block">
+                          Measured Growth
+                        </span>
+                        <span className="text-[10px] text-zinc-400 font-sans">
+                          Device-anchored star delta
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Status chip */}
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-medium border border-blue-500/30 bg-blue-950/40 text-blue-300">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0" />
+                      {hasGain
+                        ? "LIVE GAIN"
+                        : hasLoss
+                        ? "NET LOSS"
+                        : isBaseline
+                        ? "BASELINE ANCHORED"
+                        : isNeutral
+                        ? "STEADY"
+                        : "STANDBY"}
+                    </span>
+                  </div>
+
+                  {/* Metric hero number */}
+                  <div className="flex items-baseline gap-2.5 pt-0.5">
+                    <span className="text-2xl sm:text-3xl font-bold font-mono tracking-tight text-blue-400">
+                      {hasGain
+                        ? `+${delta.toLocaleString()}`
+                        : delta !== null && delta !== undefined
+                        ? `${delta.toLocaleString()}`
+                        : "Baseline Pending"}
+                    </span>
+                    <span className="text-xs font-mono text-blue-300/80 font-medium">
+                      {hasGain ? "stars gained" : isBaseline ? "initial visit recorded" : "stars delta"}
+                    </span>
+                  </div>
+
+                  {/* Comparison window footer info */}
+                  <div className="pt-2 border-t border-blue-500/20 flex items-center justify-between text-[11px] font-mono text-zinc-400">
+                    <span className="text-zinc-500">Comparison Window:</span>
+                    <span className="text-zinc-300 font-medium flex items-center gap-1.5">
+                      <Clock className="w-3 h-3 text-zinc-400 shrink-0" />
+                      {activeSignalModal.snapshot?.elapsedLabel === "First visit"
+                        ? "Baseline established just now"
+                        : `Since first visit (${activeSignalModal.snapshot?.elapsedLabel || "recent"})`}
+                    </span>
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* Explanation box */}
             <div className="p-3 rounded-xl bg-blue-500/5 border border-blue-500/10 space-y-1.5">

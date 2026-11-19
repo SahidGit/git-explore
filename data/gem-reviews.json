@@ -1,0 +1,91 @@
+{
+  "$schema": "./gem-reviews.schema.json",
+  "version": 1,
+  "updatedAt": "2026-11-01T00:00:00Z",
+  "reviews": {
+    "ripgrep": {
+      "issueResponsiveness": {
+        "verifiedAt": "2026-11-01T12:00:00Z",
+        "reviewer": "editor-sahid",
+        "notes": "Maintainer regularly triages issues and PRs within standard 48-72 hour windows."
+      }
+    },
+    "vlc": {
+      "issueResponsiveness": {
+        "verifiedAt": "2026-10-20T10:00:00Z",
+        "reviewer": "editor-sahid",
+        "notes": "VideoLAN maintains an active Bugzilla and GitLab tracker with daily triage."
+      }
+    },
+    "gh-secure": {
+      "issueResponsiveness": {
+        "verifiedAt": "2026-10-15T09:30:00Z",
+        "reviewer": "editor-sahid",
+        "notes": "GitHub Security Lab maintains responsive issue monitoring and security advisories."
+      },
+      "independentAudit": {
+        "verifiedAt": "2026-06-01T00:00:00Z",
+        "reviewer": "editor-sahid",
+        "auditUrl": "https://securitylab.github.com/research/",
+        "auditor": "GitHub Security Internal Review",
+        "notes": "Audited under GitHub Security Lab engineering and release practices."
+      }
+    },
+    "bleachbit": {
+      "issueResponsiveness": {
+        "verifiedAt": "2026-10-10T08:00:00Z",
+        "reviewer": "editor-sahid",
+        "notes": "Andrew Ziem actively answers bug reports on GitHub and community forums."
+      },
+      "independentAudit": {
+        "verifiedAt": "2026-05-15T00:00:00Z",
+        "reviewer": "editor-sahid",
+        "auditUrl": "https://www.bleachbit.org/news/security-audit-report",
+        "auditor": "Radically Open Security",
+        "notes": "Verified source code audit and secure wipe implementation."
+      }
+    },
+    "keepassxc": {
+      "issueResponsiveness": {
+        "verifiedAt": "2026-11-10T12:00:00Z",
+        "reviewer": "editor-sahid",
+        "notes": "KeePassXC development team maintains continuous issue triage and CVE responses."
+      },
+      "independentAudit": {
+        "verifiedAt": "2026-05-01T00:00:00Z",
+        "reviewer": "editor-sahid",
+        "auditUrl": "https://keepassxc.org/blog/2019-10-19-eu-fossa2/",
+        "auditor": "EU-FOSSA 2 / European Commission",
+        "notes": "Audited under the European Commission EU-FOSSA 2 initiative."
+      }
+    },
+    "kdenlive": {
+      "issueResponsiveness": {
+        "verifiedAt": "2026-11-05T00:00:00Z",
+        "reviewer": "editor-sahid",
+        "notes": "KDE e.V. Bugzilla and GitLab tracker triaged weekly."
+      }
+    },
+    "stirling-pdf": {
+      "issueResponsiveness": {
+        "verifiedAt": "2026-11-08T00:00:00Z",
+        "reviewer": "editor-sahid",
+        "notes": "Anthony Stirling and maintainers actively review PRs and issue tracker."
+      }
+    },
+    "lossless-cut": {
+      "issueResponsiveness": {
+        "verifiedAt": "2026-11-02T00:00:00Z",
+        "reviewer": "editor-sahid",
+        "notes": "Mikael Finstad maintains high response cadence on GitHub issues."
+      }
+    },
+    "llama-cpp": {
+      "issueResponsiveness": {
+        "verifiedAt": "2026-11-12T00:00:00Z",
+        "reviewer": "editor-sahid",
+        "notes": "Georgi Gerganov and ggerganov team maintain high daily commit and issue resolution pace."
+      }
+    }
+  }
+}

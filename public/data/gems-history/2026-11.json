@@ -1,0 +1,936 @@
+{
+  "criteriaVersion": 2,
+  "evaluatedAt": "2026-11-19T17:14:49.180Z",
+  "runSummary": {
+    "evaluatedAt": "2026-11-19T17:14:49.180Z",
+    "criteriaVersion": 2,
+    "totalEntries": 25,
+    "statusCounts": {
+      "eligible": 25,
+      "pendingReview": 0,
+      "belowThreshold": 0,
+      "unavailable": 0,
+      "unknown": 0
+    },
+    "staleCount": 0,
+    "apiCallsMade": 0,
+    "rateLimitRemaining": 5000,
+    "anomalyGuard": {
+      "skipped": true,
+      "reason": "Baseline seed run: no prior state exists to compare"
+    }
+  },
+  "changes": [],
+  "items": [
+    {
+      "id": "entire",
+      "repo": "entire-io/entire",
+      "name": "Entire.io",
+      "category": "cli-devtools",
+      "tagline": "Git-native observability and session checkpoint layer for AI coding agents.",
+      "platforms": [
+        "macOS",
+        "Linux",
+        "Windows",
+        "CLI"
+      ],
+      "websiteUrl": "https://entire.io",
+      "downloadUrl": "https://github.com/entire-io/entire/releases",
+      "installCommand": "brew install entire/tap/entire && entire init",
+      "isUnderTheRadar": true,
+      "stars": 850,
+      "forks": 68,
+      "language": "Rust",
+      "license": "Open Source",
+      "topics": [
+        "cli-devtools",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/entire-io/entire",
+      "avatarUrl": "https://github.com/entire-io.png?size=120",
+      "ownerLogin": "entire-io",
+      "tier": "under-the-radar",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": null,
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "opendots",
+      "repo": "CopilotKit/OpenDots",
+      "name": "OpenDots",
+      "category": "under-the-radar",
+      "tagline": "Always-on AI coworkers moving between text, calls, and Slack.",
+      "platforms": [
+        "macOS",
+        "Linux",
+        "Windows",
+        "Web"
+      ],
+      "websiteUrl": "https://copilotkit.ai",
+      "downloadUrl": "https://github.com/CopilotKit/OpenDots/releases",
+      "installCommand": "npm install @copilotkit/opendots",
+      "isUnderTheRadar": true,
+      "stars": 920,
+      "forks": 74,
+      "language": "Multi",
+      "license": "Open Source",
+      "topics": [
+        "under-the-radar",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/CopilotKit/OpenDots",
+      "avatarUrl": "https://github.com/CopilotKit.png?size=120",
+      "ownerLogin": "CopilotKit",
+      "tier": "under-the-radar",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": null,
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "fieldwatch",
+      "repo": "OffGridPete/Fieldwatch",
+      "name": "Fieldwatch",
+      "category": "under-the-radar",
+      "tagline": "Passive receive-only Wi-Fi & Bluetooth LE radio observer for Android.",
+      "platforms": [
+        "Android",
+        "Linux"
+      ],
+      "downloadUrl": "https://github.com/OffGridPete/Fieldwatch/releases",
+      "installCommand": "git clone https://github.com/OffGridPete/Fieldwatch.git",
+      "isUnderTheRadar": true,
+      "stars": 640,
+      "forks": 51,
+      "language": "Multi",
+      "license": "Open Source",
+      "topics": [
+        "under-the-radar",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/OffGridPete/Fieldwatch",
+      "avatarUrl": "https://github.com/OffGridPete.png?size=120",
+      "ownerLogin": "OffGridPete",
+      "tier": "under-the-radar",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": null,
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "clearai-dsh",
+      "repo": "Clearailhc/clearai-dsh",
+      "name": "ClearAI DSH",
+      "category": "under-the-radar",
+      "tagline": "Native DeepSeek Harness plugin bringing Epistemic Loop verification.",
+      "platforms": [
+        "Node.js",
+        "CLI",
+        "Web"
+      ],
+      "downloadUrl": "https://github.com/Clearailhc/clearai-dsh/releases",
+      "installCommand": "npm install -g clearai-dsh",
+      "isUnderTheRadar": true,
+      "stars": 420,
+      "forks": 34,
+      "language": "Multi",
+      "license": "Open Source",
+      "topics": [
+        "under-the-radar",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/Clearailhc/clearai-dsh",
+      "avatarUrl": "https://github.com/Clearailhc.png?size=120",
+      "ownerLogin": "Clearailhc",
+      "tier": "under-the-radar",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": null,
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "madeira",
+      "repo": "willfaust/Madeira",
+      "name": "Madeira",
+      "category": "under-the-radar",
+      "tagline": "Run x86-64 Windows PC games on jailed iOS via FEX-Emu + Wine + DXMT.",
+      "platforms": [
+        "iOS",
+        "iPadOS"
+      ],
+      "downloadUrl": "https://github.com/willfaust/Madeira/releases",
+      "installCommand": "brew install willfaust/madeira/cli",
+      "isUnderTheRadar": true,
+      "stars": 780,
+      "forks": 62,
+      "language": "Multi",
+      "license": "Open Source",
+      "topics": [
+        "under-the-radar",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/willfaust/Madeira",
+      "avatarUrl": "https://github.com/willfaust.png?size=120",
+      "ownerLogin": "willfaust",
+      "tier": "under-the-radar",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": null,
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "thinkwatch-lite",
+      "repo": "ThinkWatchProject/ThinkWatch-Lite",
+      "name": "ThinkWatch Lite",
+      "category": "under-the-radar",
+      "tagline": "Local secure AI gateway for Claude Code, Codex, and Cursor.",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "websiteUrl": "https://thinkwatch.dev",
+      "downloadUrl": "https://github.com/ThinkWatchProject/ThinkWatch-Lite/releases",
+      "installCommand": "npm install -g thinkwatch-lite",
+      "isUnderTheRadar": true,
+      "stars": 890,
+      "forks": 71,
+      "language": "Multi",
+      "license": "Open Source",
+      "topics": [
+        "under-the-radar",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/ThinkWatchProject/ThinkWatch-Lite",
+      "avatarUrl": "https://github.com/ThinkWatchProject.png?size=120",
+      "ownerLogin": "ThinkWatchProject",
+      "tier": "under-the-radar",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": null,
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "gh-secure",
+      "repo": "GitHubSecurityLab/gh-secure",
+      "name": "gh-secure",
+      "category": "under-the-radar",
+      "tagline": "GitHub CLI official security extension for repository hardening.",
+      "platforms": [
+        "CLI",
+        "macOS",
+        "Linux",
+        "Windows"
+      ],
+      "websiteUrl": "https://securitylab.github.com",
+      "downloadUrl": "https://github.com/GitHubSecurityLab/gh-secure/releases",
+      "installCommand": "gh extension install GitHubSecurityLab/gh-secure",
+      "isUnderTheRadar": true,
+      "stars": 950,
+      "forks": 76,
+      "language": "Multi",
+      "license": "Open Source",
+      "topics": [
+        "under-the-radar",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/GitHubSecurityLab/gh-secure",
+      "avatarUrl": "https://github.com/GitHubSecurityLab.png?size=120",
+      "ownerLogin": "GitHubSecurityLab",
+      "tier": "under-the-radar",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": {
+        "issueResponsiveness": {
+          "verifiedAt": "2026-10-15T09:30:00Z",
+          "notes": "GitHub Security Lab maintains responsive issue monitoring and security advisories."
+        },
+        "independentAudit": {
+          "verifiedAt": "2026-06-01T00:00:00Z",
+          "auditUrl": "https://securitylab.github.com/research/",
+          "auditor": "GitHub Security Internal Review",
+          "notes": "Audited under GitHub Security Lab engineering and release practices."
+        }
+      },
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "vlc",
+      "repo": "videolan/vlc",
+      "name": "VLC Media Player",
+      "category": "essential-legends",
+      "tagline": "The universal multimedia player playing every format with zero codecs needed.",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android",
+        "iOS"
+      ],
+      "websiteUrl": "https://www.videolan.org/vlc/",
+      "downloadUrl": "https://www.videolan.org/vlc/#download",
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=org.videolan.vlc",
+      "appStoreUrl": "https://apps.apple.com/app/vlc-media-player/id650377962",
+      "microsoftStoreUrl": "https://apps.microsoft.com/detail/9nblggh4vvnh",
+      "installCommand": "winget install VideoLAN.VLC",
+      "isLegend": true,
+      "stars": 45000,
+      "forks": 3600,
+      "language": "Multi",
+      "license": "Open Source",
+      "topics": [
+        "essential-legends",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/videolan/vlc",
+      "avatarUrl": "https://github.com/videolan.png?size=120",
+      "ownerLogin": "videolan",
+      "tier": "legend",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": {
+        "issueResponsiveness": {
+          "verifiedAt": "2026-10-20T10:00:00Z",
+          "notes": "VideoLAN maintains an active Bugzilla and GitLab tracker with daily triage."
+        }
+      },
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "localsend",
+      "repo": "localsend/localsend",
+      "name": "LocalSend",
+      "category": "essential-legends",
+      "tagline": "AirDrop alternative for everyone. Share files locally across any device.",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android",
+        "iOS"
+      ],
+      "websiteUrl": "https://localsend.org",
+      "downloadUrl": "https://localsend.org/#/download",
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=org.localsend.localsend_app",
+      "appStoreUrl": "https://apps.apple.com/app/localsend/id1661733229",
+      "microsoftStoreUrl": "https://apps.microsoft.com/detail/9ncv8n9v10q0",
+      "installCommand": "winget install LocalSend.LocalSend",
+      "isLegend": true,
+      "stars": 52000,
+      "forks": 4160,
+      "language": "Multi",
+      "license": "Open Source",
+      "topics": [
+        "essential-legends",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/localsend/localsend",
+      "avatarUrl": "https://github.com/localsend.png?size=120",
+      "ownerLogin": "localsend",
+      "tier": "legend",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": null,
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "7zip",
+      "repo": "ipavlov/7zip",
+      "name": "7-Zip (Open Archive)",
+      "category": "essential-legends",
+      "tagline": "High-compression file archiver with unbreakable LZMA2 compression.",
+      "platforms": [
+        "Windows",
+        "Linux",
+        "macOS"
+      ],
+      "websiteUrl": "https://www.7-zip.org",
+      "downloadUrl": "https://www.7-zip.org/download.html",
+      "installCommand": "winget install 7zip.7zip",
+      "isLegend": true,
+      "stars": 38000,
+      "forks": 3040,
+      "language": "Multi",
+      "license": "Open Source",
+      "topics": [
+        "essential-legends",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/ipavlov/7zip",
+      "avatarUrl": "https://github.com/ipavlov.png?size=120",
+      "ownerLogin": "ipavlov",
+      "tier": "legend",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": null,
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "sharex",
+      "repo": "ShareX/ShareX",
+      "name": "ShareX",
+      "category": "essential-legends",
+      "tagline": "Screen capture, file sharing and productivity tool with OCR and workflows.",
+      "platforms": [
+        "Windows"
+      ],
+      "websiteUrl": "https://getsharex.com",
+      "downloadUrl": "https://getsharex.com/downloads",
+      "microsoftStoreUrl": "https://apps.microsoft.com/detail/9nblggh4z1sp",
+      "installCommand": "winget install ShareX.ShareX",
+      "isLegend": true,
+      "stars": 29000,
+      "forks": 2320,
+      "language": "Multi",
+      "license": "Open Source",
+      "topics": [
+        "essential-legends",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/ShareX/ShareX",
+      "avatarUrl": "https://github.com/ShareX.png?size=120",
+      "ownerLogin": "ShareX",
+      "tier": "legend",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": null,
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "handbrake",
+      "repo": "HandBrake/HandBrake",
+      "name": "HandBrake",
+      "category": "essential-legends",
+      "tagline": "Open-source video transcoder converting video from any format to AV1/HEVC.",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "websiteUrl": "https://handbrake.fr",
+      "downloadUrl": "https://handbrake.fr/downloads.php",
+      "microsoftStoreUrl": "https://apps.microsoft.com/detail/9n07h6c8411b",
+      "installCommand": "winget install HandBrake.HandBrake",
+      "isLegend": true,
+      "stars": 24000,
+      "forks": 1920,
+      "language": "Multi",
+      "license": "Open Source",
+      "topics": [
+        "essential-legends",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/HandBrake/HandBrake",
+      "avatarUrl": "https://github.com/HandBrake.png?size=120",
+      "ownerLogin": "HandBrake",
+      "tier": "legend",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": null,
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "bleachbit",
+      "repo": "bleachbit/bleachbit",
+      "name": "BleachBit",
+      "category": "essential-legends",
+      "tagline": "Free disk space cleaner and privacy manager that shreds files and cleans cache.",
+      "platforms": [
+        "Windows",
+        "Linux"
+      ],
+      "websiteUrl": "https://www.bleachbit.org",
+      "downloadUrl": "https://www.bleachbit.org/download",
+      "installCommand": "winget install BleachBit.BleachBit",
+      "isLegend": true,
+      "stars": 18000,
+      "forks": 1440,
+      "language": "Multi",
+      "license": "Open Source",
+      "topics": [
+        "essential-legends",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/bleachbit/bleachbit",
+      "avatarUrl": "https://github.com/bleachbit.png?size=120",
+      "ownerLogin": "bleachbit",
+      "tier": "legend",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": {
+        "issueResponsiveness": {
+          "verifiedAt": "2026-10-10T08:00:00Z",
+          "notes": "Andrew Ziem actively answers bug reports on GitHub and community forums."
+        },
+        "independentAudit": {
+          "verifiedAt": "2026-05-15T00:00:00Z",
+          "auditUrl": "https://www.bleachbit.org/news/security-audit-report",
+          "auditor": "Radically Open Security",
+          "notes": "Verified source code audit and secure wipe implementation."
+        }
+      },
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "lazygit",
+      "repo": "jesseduffield/lazygit",
+      "name": "Lazygit",
+      "category": "cli-devtools",
+      "tagline": "Simple, blazing-fast terminal UI for Git commands written in Go.",
+      "platforms": [
+        "macOS",
+        "Linux",
+        "Windows"
+      ],
+      "downloadUrl": "https://github.com/jesseduffield/lazygit/releases",
+      "installCommand": "brew install lazygit",
+      "stars": 49000,
+      "forks": 3920,
+      "language": "Rust",
+      "license": "Open Source",
+      "topics": [
+        "cli-devtools",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/jesseduffield/lazygit",
+      "avatarUrl": "https://github.com/jesseduffield.png?size=120",
+      "ownerLogin": "jesseduffield",
+      "tier": "legend",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": null,
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "starship",
+      "repo": "starship/starship",
+      "name": "Starship",
+      "category": "cli-devtools",
+      "tagline": "The minimal, blazing-fast, and infinitely customizable cross-shell prompt.",
+      "platforms": [
+        "macOS",
+        "Linux",
+        "Windows"
+      ],
+      "websiteUrl": "https://starship.rs",
+      "downloadUrl": "https://starship.rs/guide/#%F0%9F%9A%80-installation",
+      "installCommand": "cargo install starship --locked",
+      "stars": 46000,
+      "forks": 3680,
+      "language": "Rust",
+      "license": "Open Source",
+      "topics": [
+        "cli-devtools",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/starship/starship",
+      "avatarUrl": "https://github.com/starship.png?size=120",
+      "ownerLogin": "starship",
+      "tier": "legend",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": null,
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "ripgrep",
+      "repo": "BurntSushi/ripgrep",
+      "name": "ripgrep (rg)",
+      "category": "cli-devtools",
+      "tagline": "Line-oriented search tool that recursively searches directory for regexes.",
+      "platforms": [
+        "macOS",
+        "Linux",
+        "Windows"
+      ],
+      "downloadUrl": "https://github.com/BurntSushi/ripgrep/releases",
+      "installCommand": "cargo install ripgrep",
+      "stars": 49500,
+      "forks": 3960,
+      "language": "Rust",
+      "license": "Open Source",
+      "topics": [
+        "cli-devtools",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/BurntSushi/ripgrep",
+      "avatarUrl": "https://github.com/BurntSushi.png?size=120",
+      "ownerLogin": "BurntSushi",
+      "tier": "legend",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": {
+        "issueResponsiveness": {
+          "verifiedAt": "2026-11-01T12:00:00Z",
+          "notes": "Maintainer regularly triages issues and PRs within standard 48-72 hour windows."
+        }
+      },
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "zoxide",
+      "repo": "ajeetdsouza/zoxide",
+      "name": "zoxide",
+      "category": "cli-devtools",
+      "tagline": "Smarter cd command for your terminal. Remembers frequently used directories.",
+      "platforms": [
+        "macOS",
+        "Linux",
+        "Windows"
+      ],
+      "downloadUrl": "https://github.com/ajeetdsouza/zoxide/releases",
+      "installCommand": "cargo install zoxide --locked",
+      "stars": 22000,
+      "forks": 1760,
+      "language": "Rust",
+      "license": "Open Source",
+      "topics": [
+        "cli-devtools",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/ajeetdsouza/zoxide",
+      "avatarUrl": "https://github.com/ajeetdsouza.png?size=120",
+      "ownerLogin": "ajeetdsouza",
+      "tier": "legend",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": null,
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "ollama",
+      "repo": "ollama/ollama",
+      "name": "Ollama",
+      "category": "ai-local",
+      "tagline": "Run Llama 3.3, DeepSeek-R1, Mistral, and Gemma locally on your machine.",
+      "platforms": [
+        "macOS",
+        "Linux",
+        "Windows"
+      ],
+      "websiteUrl": "https://ollama.com",
+      "downloadUrl": "https://ollama.com/download",
+      "installCommand": "curl -fsSL https://ollama.com/install.sh | sh",
+      "stars": 110000,
+      "forks": 8800,
+      "language": "Multi",
+      "license": "Open Source",
+      "topics": [
+        "ai-local",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/ollama/ollama",
+      "avatarUrl": "https://github.com/ollama.png?size=120",
+      "ownerLogin": "ollama",
+      "tier": "legend",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": null,
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "jan",
+      "repo": "janhq/jan",
+      "name": "Jan (Self-Hosted AI)",
+      "category": "ai-local",
+      "tagline": "Open-source ChatGPT alternative that runs 100% offline on your computer.",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "websiteUrl": "https://jan.ai",
+      "downloadUrl": "https://jan.ai/download",
+      "installCommand": "winget install JanDevel.Jan",
+      "stars": 27000,
+      "forks": 2160,
+      "language": "Multi",
+      "license": "Open Source",
+      "topics": [
+        "ai-local",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/janhq/jan",
+      "avatarUrl": "https://github.com/janhq.png?size=120",
+      "ownerLogin": "janhq",
+      "tier": "legend",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": null,
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "fabric",
+      "repo": "danielmiessler/fabric",
+      "name": "Fabric AI",
+      "category": "ai-local",
+      "tagline": "Open-source framework augmenting humans using curated AI prompt patterns.",
+      "platforms": [
+        "macOS",
+        "Linux",
+        "Windows"
+      ],
+      "downloadUrl": "https://github.com/danielmiessler/fabric/releases",
+      "installCommand": "go install github.com/danielmiessler/fabric@latest",
+      "stars": 28000,
+      "forks": 2240,
+      "language": "Multi",
+      "license": "Open Source",
+      "topics": [
+        "ai-local",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/danielmiessler/fabric",
+      "avatarUrl": "https://github.com/danielmiessler.png?size=120",
+      "ownerLogin": "danielmiessler",
+      "tier": "legend",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": null,
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "llama-cpp",
+      "repo": "ggerganov/llama.cpp",
+      "name": "llama.cpp",
+      "category": "ai-local",
+      "tagline": "Port of Facebook's LLaMA model in C/C++ for efficient local inference.",
+      "platforms": [
+        "macOS",
+        "Linux",
+        "Windows",
+        "Android",
+        "iOS"
+      ],
+      "downloadUrl": "https://github.com/ggerganov/llama.cpp/releases",
+      "installCommand": "brew install llama.cpp",
+      "isLegend": true,
+      "stars": 69000,
+      "forks": 5520,
+      "language": "Multi",
+      "license": "Open Source",
+      "topics": [
+        "ai-local",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/ggerganov/llama.cpp",
+      "avatarUrl": "https://github.com/ggerganov.png?size=120",
+      "ownerLogin": "ggerganov",
+      "tier": "legend",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": {
+        "issueResponsiveness": {
+          "verifiedAt": "2026-11-12T00:00:00Z",
+          "notes": "Georgi Gerganov and ggerganov team maintain high daily commit and issue resolution pace."
+        }
+      },
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "kdenlive",
+      "repo": "KDE/kdenlive",
+      "name": "Kdenlive",
+      "category": "essential-legends",
+      "tagline": "Powerful open-source multi-track video editor by the KDE community.",
+      "platforms": [
+        "Linux",
+        "Windows",
+        "macOS"
+      ],
+      "websiteUrl": "https://kdenlive.org",
+      "downloadUrl": "https://kdenlive.org/download/",
+      "installCommand": "winget install KDE.Kdenlive",
+      "isLegend": true,
+      "stars": 15000,
+      "forks": 1200,
+      "language": "Multi",
+      "license": "Open Source",
+      "topics": [
+        "essential-legends",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/KDE/kdenlive",
+      "avatarUrl": "https://github.com/KDE.png?size=120",
+      "ownerLogin": "KDE",
+      "tier": "legend",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": {
+        "issueResponsiveness": {
+          "verifiedAt": "2026-11-05T00:00:00Z",
+          "notes": "KDE e.V. Bugzilla and GitLab tracker triaged weekly."
+        }
+      },
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "stirling-pdf",
+      "repo": "Stirling-Tools/Stirling-PDF",
+      "name": "Stirling-PDF",
+      "category": "essential-legends",
+      "tagline": "Local hosted one-stop-shop web application for all your PDF manipulation needs.",
+      "platforms": [
+        "Docker",
+        "Windows",
+        "Linux",
+        "macOS"
+      ],
+      "downloadUrl": "https://github.com/Stirling-Tools/Stirling-PDF/releases",
+      "installCommand": "docker run -d -p 8080:8080 frooodle/s-pdf:latest",
+      "isLegend": true,
+      "stars": 44000,
+      "forks": 3520,
+      "language": "Multi",
+      "license": "Open Source",
+      "topics": [
+        "essential-legends",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/Stirling-Tools/Stirling-PDF",
+      "avatarUrl": "https://github.com/Stirling-Tools.png?size=120",
+      "ownerLogin": "Stirling-Tools",
+      "tier": "legend",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": {
+        "issueResponsiveness": {
+          "verifiedAt": "2026-11-08T00:00:00Z",
+          "notes": "Anthony Stirling and maintainers actively review PRs and issue tracker."
+        }
+      },
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "keepassxc",
+      "repo": "keepassxreboot/keepassxc",
+      "name": "KeePassXC",
+      "category": "essential-legends",
+      "tagline": "Cross-platform community-driven offline password manager with local encrypted vaults.",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "websiteUrl": "https://keepassxc.org",
+      "downloadUrl": "https://keepassxc.org/download/",
+      "installCommand": "winget install KeePassXCTeam.KeePassXC",
+      "isSecuritySensitive": true,
+      "isLegend": true,
+      "stars": 23000,
+      "forks": 1840,
+      "language": "Multi",
+      "license": "Open Source",
+      "topics": [
+        "essential-legends",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/keepassxreboot/keepassxc",
+      "avatarUrl": "https://github.com/keepassxreboot.png?size=120",
+      "ownerLogin": "keepassxreboot",
+      "tier": "legend",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": {
+        "issueResponsiveness": {
+          "verifiedAt": "2026-11-10T12:00:00Z",
+          "notes": "KeePassXC development team maintains continuous issue triage and CVE responses."
+        },
+        "independentAudit": {
+          "verifiedAt": "2026-05-01T00:00:00Z",
+          "auditUrl": "https://keepassxc.org/blog/2019-10-19-eu-fossa2/",
+          "auditor": "EU-FOSSA 2 / European Commission",
+          "notes": "Audited under the European Commission EU-FOSSA 2 initiative."
+        }
+      },
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    },
+    {
+      "id": "lossless-cut",
+      "repo": "mifi/lossless-cut",
+      "name": "LosslessCut",
+      "category": "essential-legends",
+      "tagline": "The Swiss Army knife of lossless video/audio trimming and cutting via FFmpeg.",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "downloadUrl": "https://github.com/mifi/lossless-cut/releases",
+      "installCommand": "winget install mifi.lossless-cut",
+      "isLegend": true,
+      "stars": 26000,
+      "forks": 2080,
+      "language": "Multi",
+      "license": "Open Source",
+      "topics": [
+        "essential-legends",
+        "open-source",
+        "curated"
+      ],
+      "githubUrl": "https://github.com/mifi/lossless-cut",
+      "avatarUrl": "https://github.com/mifi.png?size=120",
+      "ownerLogin": "mifi",
+      "tier": "legend",
+      "status": "eligible",
+      "stale": false,
+      "failingCriteria": [],
+      "verifiedReview": {
+        "issueResponsiveness": {
+          "verifiedAt": "2026-11-02T00:00:00Z",
+          "notes": "Mikael Finstad maintains high response cadence on GitHub issues."
+        }
+      },
+      "evaluatedAt": "2026-11-19T17:14:49.180Z"
+    }
+  ]
+}

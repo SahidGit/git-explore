@@ -5,7 +5,7 @@ import { SubFooter } from '../components/layouts/Footer';
 import BackToTop from '../components/ui/BackToTop';
 import SEO from '../components/ui/SEO';
 import { GemsNavIcon } from '../components/ui/Icons';
-import { gemsService } from '../services/gemsService';
+import { gemsService, STATUS_LABELS } from '../services/gemsService';
 import {
   Search,
   Star,
@@ -23,7 +23,10 @@ import {
   Flame,
   Download,
   Filter,
-  RefreshCw,
+  Calendar,
+  AlertTriangle,
+  Info,
+  Clock,
   Loader2,
   Globe,
   Package,
@@ -60,10 +63,14 @@ const CATEGORY_ICONS = {
 
 const Gems = () => {
   const [gems, setGems] = useState([]);
+  const [allGems, setAllGems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [isCached, setIsCached] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState(null);
+  const [evaluatedAt, setEvaluatedAt] = useState(null);
+  const [criteriaVersion, setCriteriaVersion] = useState(1);
+  const [runSummary, setRunSummary] = useState(null);
+  const [staleNotice, setStaleNotice] = useState('');
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [showBelowThreshold, setShowBelowThreshold] = useState(false);
 
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -71,20 +78,26 @@ const Gems = () => {
   const [copiedId, setCopiedId] = useState(null);
   const [selectedGem, setSelectedGem] = useState(null);
 
-  const loadGemsData = useCallback(async (force = false) => {
-    if (force) setIsRefreshing(true);
-    else setIsLoading(true);
+  const loadGemsData = useCallback(async (includeBelow = false) => {
+    setIsLoading(true);
+    setErrorMessage(null);
 
     try {
-      const result = await gemsService.getGems(force);
+      const result = await gemsService.getGems({ includeBelowThreshold: includeBelow });
       setGems(result.items || []);
-      setIsCached(result.isCached);
-      setLastUpdated(result.lastUpdated || new Date());
-    } catch {
-      // Fallback
+      setAllGems(result.allItems || []);
+      setEvaluatedAt(result.evaluatedAt);
+      setCriteriaVersion(result.criteriaVersion);
+      setRunSummary(result.runSummary);
+      setStaleNotice(result.staleNotice);
+
+      if (result.error && (!result.items || result.items.length === 0)) {
+        setErrorMessage(result.error);
+      }
+    } catch (err) {
+      setErrorMessage(err.message || 'Failed to load gems dataset');
     } finally {
       setIsLoading(false);
-      setIsRefreshing(false);
     }
   }, []);
 
@@ -94,8 +107,8 @@ const Gems = () => {
     } catch {
       // ignore
     }
-    loadGemsData(false);
-  }, [loadGemsData]);
+    loadGemsData(showBelowThreshold);
+  }, [loadGemsData, showBelowThreshold]);
 
   const handleCopyCommand = (e, gem) => {
     e.stopPropagation();
@@ -109,6 +122,10 @@ const Gems = () => {
   const dynamicCategories = useMemo(() => {
     return gemsService.getCategories(gems);
   }, [gems]);
+
+  const belowThresholdCount = useMemo(() => {
+    return allGems.filter((g) => g.status === 'below-threshold').length;
+  }, [allGems]);
 
   // Filter and sort items
   const filteredGems = useMemo(() => {
@@ -140,7 +157,7 @@ const Gems = () => {
     <div className="flex min-h-screen flex-col bg-[#0A0A0C] text-white font-sans selection:bg-white/20 selection:text-white">
       <SEO
         title="Hidden Gems & Essential Software Tools · ExploreGit"
-        description="Discover underrated open-source GitHub repositories alongside timeless legendary software tools and developer utilities."
+        description="Discover trustworthy open-source GitHub repositories and timeless developer utilities evaluated monthly against strict durability and security criteria."
         canonical="https://exploregit.vercel.app/gems"
       />
 
@@ -159,23 +176,27 @@ const Gems = () => {
                     Home
                   </Link>
                 </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="text-zinc-600">/</span>
-                  <span className="text-zinc-200 font-medium">Gems</span>
-                </li>
+                <li>/</li>
+                <li className="text-white font-medium">Gems & Essential Tools</li>
               </ol>
             </nav>
 
-            {/* Overline & Exact One-Line Heading */}
+            {/* Title & Tagline */}
             <div className="space-y-2 mb-6">
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-2.5 flex-wrap">
                 <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-[#FA6423]">
                   Curated Discovery & Staple Tools
                 </span>
-                <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold text-zinc-400">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                  Verified Metrics
+                <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold text-zinc-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded-full">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                  Criteria v{criteriaVersion} Verified
                 </span>
+                {evaluatedAt && (
+                  <span className="inline-flex items-center gap-1 text-[11px] font-mono text-zinc-400">
+                    <Calendar className="w-3 h-3 text-purple-400" />
+                    Evaluated: {evaluatedAt.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
+                  </span>
+                )}
               </div>
 
               <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight font-heading flex items-center gap-2.5 sm:gap-3 text-white">
@@ -184,8 +205,15 @@ const Gems = () => {
               </h1>
 
               <p className="text-xs sm:text-sm font-sans text-zinc-400 max-w-2xl leading-relaxed">
-                Discover under-the-radar open-source repositories with high community engagement, alongside legendary timeless utilities (VLC, 7-Zip, LocalSend, ShareX) and CLI powerhouses.
+                Discover under-the-radar open-source repositories evaluated automatically against durability, licensing, and activity criteria, alongside timeless utilities and developer powerhouses.
               </p>
+
+              {staleNotice && (
+                <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-400 pt-1">
+                  <Info className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+                  <span>{staleNotice}</span>
+                </div>
+              )}
             </div>
 
             {/* Search & Toolbar Controls */}
@@ -211,7 +239,7 @@ const Gems = () => {
                 )}
               </div>
 
-              {/* Sort & Sync Controls */}
+              {/* Sort & Transparency Controls */}
               <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                 {/* Sort selector */}
                 <select
@@ -224,21 +252,21 @@ const Gems = () => {
                   <option value="name">Sort by: Alphabetical</option>
                 </select>
 
-                {/* Live Sync / Refresh Button */}
+                {/* Transparency Toggle for Below-Threshold Entries */}
                 <button
                   type="button"
-                  onClick={() => loadGemsData(true)}
-                  disabled={isRefreshing}
-                  title="Sync live stats from GitHub API"
-                  className={`p-2 rounded-xl border text-xs font-sans flex items-center gap-1.5 transition-all duration-200 ease-out cursor-pointer active:scale-90 bg-white/[0.06] border-white/10 text-zinc-300 hover:text-white hover:bg-white/[0.12] ${
-                    isRefreshing ? 'opacity-70 cursor-not-allowed' : ''
+                  onClick={() => setShowBelowThreshold((prev) => !prev)}
+                  title="Toggle visibility of failing or below-threshold repositories"
+                  className={`px-3 py-1.5 rounded-xl border text-xs font-sans flex items-center gap-1.5 transition-all duration-200 cursor-pointer ${
+                    showBelowThreshold
+                      ? 'bg-rose-500/20 border-rose-500/40 text-rose-300 font-semibold'
+                      : 'bg-white/[0.04] border-white/10 text-zinc-400 hover:text-white hover:bg-white/[0.08]'
                   }`}
                 >
-                  <RefreshCw
-                    className={`w-3.5 h-3.5 ${
-                      isRefreshing ? 'animate-spin text-purple-400' : ''
-                    }`}
-                  />
+                  <Filter className="w-3.5 h-3.5" />
+                  <span>
+                    {showBelowThreshold ? 'Hide Failing' : `Show Failing (${belowThresholdCount})`}
+                  </span>
                 </button>
               </div>
             </div>
@@ -278,22 +306,22 @@ const Gems = () => {
         <section aria-label="Gems Catalog" className="border-b border-white/10 py-10 bg-[#0E0E11]/40">
           <div className="mx-auto w-full max-w-[1280px] min-[1280px]:border-x border-white/10 px-4 sm:px-6 md:px-8 space-y-4">
             
-            {/* Header info / count & Live Sync Status */}
+            {/* Header info / count */}
             <div className="flex items-center justify-between text-xs font-mono text-zinc-400 pb-2">
               <div className="flex items-center gap-2">
-                <span>Showing {filteredGems.length} curated tools & repos</span>
+                <span>Showing {filteredGems.length} tools & repositories</span>
                 <span className="text-zinc-600">·</span>
-                <span className="text-emerald-400 font-semibold">100% Free & Open Source</span>
+                <span className="text-emerald-400 font-semibold">Precomputed Static Dataset</span>
               </div>
               <div className="flex items-center gap-1.5 text-[11px] font-mono">
-                <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
-                <span>{isCached ? 'Cached (6h TTL)' : 'Live API Active'}</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                <span>Zero Browser API Calls</span>
               </div>
             </div>
 
             {/* Loading Skeleton */}
             {isLoading && gems.length === 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" role="status" aria-label="Loading Gems">
                 {[1, 2, 3, 4, 5, 6].map((n) => (
                   <div key={n} className="bg-[#121215] border border-white/10 rounded-2xl p-5 space-y-4 animate-pulse">
                     <div className="flex items-center gap-3">
@@ -309,8 +337,23 @@ const Gems = () => {
                   </div>
                 ))}
               </div>
+            ) : errorMessage && gems.length === 0 ? (
+              /* Error State */
+              <div className="text-center py-20 bg-[#121215] border border-rose-500/20 rounded-2xl p-8 space-y-3" role="alert">
+                <AlertTriangle className="w-12 h-12 mx-auto text-rose-400" />
+                <h3 className="text-base font-bold text-white font-heading">Could Not Load Gems Dataset</h3>
+                <p className="text-xs text-zinc-400 max-w-sm mx-auto">{errorMessage}</p>
+                <button
+                  type="button"
+                  onClick={() => loadGemsData(showBelowThreshold)}
+                  className="px-4 py-2 rounded-xl bg-purple-600 text-white font-bold text-xs hover:bg-purple-500 transition-colors cursor-pointer"
+                >
+                  Retry Loading
+                </button>
+              </div>
             ) : filteredGems.length === 0 ? (
-              <div className="text-center py-20 bg-[#121215] border border-white/10 rounded-2xl p-8 space-y-3">
+              /* Empty Search State */
+              <div className="text-center py-20 bg-[#121215] border border-white/10 rounded-2xl p-8 space-y-3" role="status">
                 <GemsNavIcon className="w-12 h-12 mx-auto text-purple-400 opacity-60" size={48} />
                 <h3 className="text-base font-bold text-white font-heading">No matching gems found</h3>
                 <p className="text-xs text-zinc-400 max-w-sm mx-auto">
@@ -329,224 +372,231 @@ const Gems = () => {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredGems.map((gem) => (
-                  <article
-                    key={gem.id}
-                    onClick={() => setSelectedGem(gem)}
-                    className="group relative flex flex-col bg-[#121215] hover:bg-[#16161a] border border-white/10 hover:border-purple-500/40 rounded-2xl p-5 transition-all duration-200 shadow-xl cursor-pointer"
-                  >
-                    {/* Top Row: Avatar + Title + Gem Badge */}
-                    <div className="flex items-start gap-3.5 mb-3">
-                      <img
-                        src={gem.avatarUrl}
-                        alt={`${gem.name} logo`}
-                        className="w-11 h-11 rounded-xl border border-white/10 object-cover bg-white/5 shrink-0"
-                        loading="lazy"
-                        onError={(e) => {
-                          e.currentTarget.src = '/favicon.png';
-                        }}
-                      />
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center justify-between gap-1.5">
-                          <h3 className="text-base font-bold text-white font-heading truncate group-hover:text-[#FFC95C] transition-colors">
-                            {gem.name}
-                          </h3>
-                          {gem.isUnderTheRadar ? (
-                            <span className="text-[11px] font-mono font-bold text-[#FA6423] shrink-0">
-                              Gem #{gem.rank}
+                {filteredGems.map((gem) => {
+                  const statusInfo = STATUS_LABELS[gem.status] || STATUS_LABELS.unknown;
+
+                  return (
+                    <article
+                      key={gem.id}
+                      onClick={() => setSelectedGem(gem)}
+                      className={`group relative flex flex-col bg-[#121215] hover:bg-[#16161a] border rounded-2xl p-5 transition-all duration-200 shadow-xl cursor-pointer ${
+                        gem.status === 'below-threshold'
+                          ? 'border-rose-500/30 opacity-80'
+                          : 'border-white/10 hover:border-purple-500/40'
+                      }`}
+                    >
+                      {/* Top Row: Avatar + Title + Status Text Badge */}
+                      <div className="flex items-start gap-3.5 mb-3">
+                        <img
+                          src={gem.avatarUrl}
+                          alt={`${gem.name} logo`}
+                          className="w-11 h-11 rounded-xl border border-white/10 object-cover bg-white/5 shrink-0"
+                          loading="lazy"
+                          onError={(e) => {
+                            e.currentTarget.src = '/favicon.png';
+                          }}
+                        />
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center justify-between gap-1.5">
+                            <h3 className="text-base font-bold text-white font-heading truncate group-hover:text-[#FFC95C] transition-colors">
+                              {gem.name}
+                            </h3>
+                            {/* Accessible Text Status Badge */}
+                            <span
+                              className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border shrink-0 ${statusInfo.colorClass}`}
+                              title={statusInfo.description}
+                            >
+                              {statusInfo.badge}
                             </span>
-                          ) : gem.isLegend ? (
-                            <span className="text-[11px] font-mono font-bold text-[#589D88] shrink-0">
-                              Essential Legend
-                            </span>
-                          ) : null}
+                          </div>
+                          <p className="text-xs font-mono text-zinc-400 truncate">
+                            {gem.repo}
+                          </p>
                         </div>
-                        <p className="text-xs font-mono text-zinc-400 truncate">
-                          {gem.repo}
-                        </p>
                       </div>
-                    </div>
 
-                    {/* Tagline */}
-                    <p className="text-xs sm:text-sm text-zinc-300 font-sans leading-relaxed line-clamp-2 mb-3">
-                      {gem.tagline}
-                    </p>
+                      {/* Tagline */}
+                      <p className="text-xs sm:text-sm text-zinc-300 font-sans leading-relaxed line-clamp-2 mb-3">
+                        {gem.tagline}
+                      </p>
 
-                    {/* Metric pills: Stars, Forks, Status, Language */}
-                    <div className="flex items-center gap-3 flex-wrap mb-4 text-xs font-mono">
-                      <span className="flex items-center gap-1 text-[#FFC95C] font-semibold" title="Total stars">
-                        <Star className="w-3.5 h-3.5 fill-[#FFC95C]" />
-                        <span>{gem.starsFormatted}</span>
-                      </span>
-
-                      {gem.forksFormatted && (
-                        <span className="flex items-center gap-1 text-zinc-400 font-medium" title="Total forks">
-                          <GitFork className="w-3.5 h-3.5 text-zinc-400" />
-                          <span>{gem.forksFormatted}</span>
-                        </span>
+                      {/* Below Threshold Failing Criteria Accordion */}
+                      {gem.status === 'below-threshold' && gem.failingCriteria && gem.failingCriteria.length > 0 && (
+                        <div className="mb-3 p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-300 font-sans">
+                          <p className="font-bold flex items-center gap-1 text-[11px] uppercase tracking-wider mb-1">
+                            <AlertTriangle className="w-3 h-3" />
+                            <span>Unmet Criteria:</span>
+                          </p>
+                          <ul className="list-disc pl-4 space-y-0.5 text-[11px] text-rose-200/90">
+                            {gem.failingCriteria.map((f, i) => (
+                              <li key={i}>{f.detail}</li>
+                            ))}
+                          </ul>
+                        </div>
                       )}
 
-                      {gem.status && (
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-semibold border ${
-                          gem.status === 'Timeless Legend'
-                            ? 'bg-amber-500/10 text-amber-300 border-amber-500/20'
-                            : 'bg-white/[0.04] text-zinc-300 border-white/10'
-                        }`}>
-                          {gem.status}
-                        </span>
+                      {/* Stale Warning Indicator */}
+                      {gem.stale && (
+                        <div className="mb-3 p-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-300 font-mono flex items-center gap-1.5">
+                          <Clock className="w-3.5 h-3.5 shrink-0" />
+                          <span className="truncate">{gem.staleReason || 'Last known metrics preserved (stale)'}</span>
+                        </div>
                       )}
 
-                      {gem.language && (
-                        <span className="flex items-center gap-1.5 text-zinc-300">
-                          <span
-                            className="w-2 h-2 rounded-full shrink-0"
-                            style={{ backgroundColor: gem.languageColor || '#71717A' }}
-                          />
-                          <span>{gem.language}</span>
+                      {/* Metric pills: Stars, Forks, Tier, Language */}
+                      <div className="flex items-center gap-3 flex-wrap mb-4 text-xs font-mono">
+                        <span className="flex items-center gap-1 text-[#FFC95C] font-semibold" title="Total stars">
+                          <Star className="w-3.5 h-3.5 fill-[#FFC95C]" />
+                          <span>{gem.starsFormatted}</span>
                         </span>
-                      )}
-                    </div>
 
-                    {/* Platforms & Topics */}
-                    <div className="flex items-center gap-2 flex-wrap mb-4">
-                      {gem.platforms?.slice(0, 3).map((plat) => (
-                        <span
-                          key={plat}
-                          className="text-[11px] font-mono text-zinc-400"
-                        >
-                          {plat}
+                        <span className="flex items-center gap-1 text-zinc-400" title="Total forks">
+                          <GitFork className="w-3.5 h-3.5" />
+                          <span>{gem.forksFormatted || gem.forks || 0}</span>
                         </span>
-                      ))}
-                      {gem.license && (
-                        <span className="text-[11px] font-mono text-zinc-500 ml-auto">
-                          {gem.license}
-                        </span>
-                      )}
-                    </div>
 
-                    {/* Bottom Action Footer */}
-                    <div className="mt-auto pt-3 border-t border-white/[0.06] flex items-center justify-between gap-2 flex-wrap">
-                      {gem.downloadUrl ? (
-                        <a
-                          href={gem.downloadUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-purple-600 hover:bg-purple-500 px-3 py-1.5 rounded-lg transition-colors shadow-xs"
-                          title="Download tool installer or app"
-                        >
-                          <Download className="w-3.5 h-3.5" />
-                          <span>Download</span>
-                        </a>
-                      ) : gem.installCommand ? (
-                        <button
-                          type="button"
-                          onClick={(e) => handleCopyCommand(e, gem)}
-                          className="flex items-center gap-1.5 text-xs font-mono text-zinc-300 hover:text-white bg-white/[0.04] hover:bg-white/10 px-2.5 py-1.5 rounded-lg border border-white/10 transition-colors"
-                          title={`Copy: ${gem.installCommand}`}
-                        >
-                          {copiedId === gem.id ? (
-                            <>
-                              <Check className="w-3 h-3 text-emerald-400" />
-                              <span className="text-emerald-400 text-[11px]">Copied!</span>
-                            </>
-                          ) : (
-                            <>
-                              <Terminal className="w-3 h-3 text-purple-400" />
-                              <span className="text-[11px] truncate max-w-[110px]">Install CLI</span>
-                            </>
+                        <span className="text-[11px] text-zinc-400 capitalize px-2 py-0.5 rounded bg-white/5 border border-white/5">
+                          {gem.tier || (gem.isLegend ? 'Legend' : 'Under the Radar')}
+                        </span>
+
+                        {gem.language && (
+                          <span className="flex items-center gap-1 text-zinc-400 ml-auto">
+                            <span
+                              className="w-2 h-2 rounded-full shrink-0"
+                              style={{ backgroundColor: gem.languageColor || '#71717A' }}
+                            />
+                            <span>{gem.language}</span>
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Platforms Pill List */}
+                      {gem.platforms && gem.platforms.length > 0 && (
+                        <div className="flex items-center gap-1.5 flex-wrap mb-4">
+                          {gem.platforms.map((p) => (
+                            <span
+                              key={p}
+                              className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/[0.04] text-zinc-400 border border-white/[0.06]"
+                            >
+                              {p}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Card Bottom Action Bar */}
+                      <div className="mt-auto pt-3 border-t border-white/5 flex items-center justify-between gap-2">
+                        {/* Terminal Install Quick-Copy Button */}
+                        {gem.installCommand ? (
+                          <button
+                            type="button"
+                            onClick={(e) => handleCopyCommand(e, gem)}
+                            title={`Copy install command: ${gem.installCommand}`}
+                            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-zinc-300 hover:text-white transition-colors cursor-pointer group/btn"
+                          >
+                            {copiedId === gem.id ? (
+                              <>
+                                <Check className="w-3 h-3 text-emerald-400" />
+                                <span className="text-emerald-400 text-[11px]">Copied!</span>
+                              </>
+                            ) : (
+                              <>
+                                <Terminal className="w-3 h-3 text-purple-400" />
+                                <span className="text-[11px] truncate max-w-[110px]">Install CLI</span>
+                              </>
+                            )}
+                          </button>
+                        ) : (
+                          <span className="text-[11px] font-mono text-zinc-500">Free & Open</span>
+                        )}
+
+                        {/* Store & Direct Action Icons */}
+                        <div className="flex items-center gap-1.5">
+                          {gem.playStoreUrl && (
+                            <a
+                              href={gem.playStoreUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="p-1.5 rounded-lg text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 transition-colors"
+                              title="Get on Google Play Store"
+                            >
+                              <PlayStoreIcon className="w-3.5 h-3.5" />
+                            </a>
                           )}
-                        </button>
-                      ) : (
-                        <span className="text-[11px] font-mono text-zinc-500">Free & Open</span>
-                      )}
 
-                      {/* Store & Direct Action Icons */}
-                      <div className="flex items-center gap-1.5">
-                        {gem.playStoreUrl && (
-                          <a
-                            href={gem.playStoreUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 rounded-lg text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 transition-colors"
-                            title="Get on Google Play Store"
-                          >
-                            <PlayStoreIcon className="w-3.5 h-3.5" />
-                          </a>
-                        )}
+                          {gem.appStoreUrl && (
+                            <a
+                              href={gem.appStoreUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="p-1.5 rounded-lg text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 transition-colors"
+                              title="Download on Apple App Store"
+                            >
+                              <AppStoreIcon className="w-3.5 h-3.5" />
+                            </a>
+                          )}
 
-                        {gem.appStoreUrl && (
-                          <a
-                            href={gem.appStoreUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 rounded-lg text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 transition-colors"
-                            title="Download on Apple App Store"
-                          >
-                            <AppStoreIcon className="w-3.5 h-3.5" />
-                          </a>
-                        )}
+                          {gem.microsoftStoreUrl && (
+                            <a
+                              href={gem.microsoftStoreUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="p-1.5 rounded-lg text-sky-400 hover:text-sky-300 hover:bg-sky-500/10 transition-colors"
+                              title="Get from Microsoft Store"
+                            >
+                              <MicrosoftStoreIcon className="w-3.5 h-3.5" />
+                            </a>
+                          )}
 
-                        {gem.microsoftStoreUrl && (
-                          <a
-                            href={gem.microsoftStoreUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 rounded-lg text-sky-400 hover:text-sky-300 hover:bg-sky-500/10 transition-colors"
-                            title="Get from Microsoft Store"
-                          >
-                            <MicrosoftStoreIcon className="w-3.5 h-3.5" />
-                          </a>
-                        )}
+                          {gem.websiteUrl && (
+                            <a
+                              href={gem.websiteUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
+                              title="Official Website"
+                            >
+                              <Globe className="w-3.5 h-3.5" />
+                            </a>
+                          )}
 
-                        {gem.websiteUrl && (
                           <a
-                            href={gem.websiteUrl}
+                            href={gem.githubUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
                             className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
-                            title="Official Website"
+                            title="Open on GitHub"
                           >
-                            <Globe className="w-3.5 h-3.5" />
+                            <ExternalLink className="w-3.5 h-3.5" />
                           </a>
-                        )}
-
-                        <a
-                          href={gem.githubUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="flex items-center gap-1 text-xs font-semibold text-purple-400 hover:text-purple-300 transition-colors pl-1"
-                        >
-                          <span>Repo</span>
-                          <ArrowUpRight className="w-3.5 h-3.5" />
-                        </a>
+                        </div>
                       </div>
-                    </div>
-                  </article>
-                ))}
+                    </article>
+                  );
+                })}
               </div>
             )}
 
           </div>
         </section>
 
-        {/* ── Gem Detail Modal with Full Store & Download Hub ── */}
+        {/* ── Detail Inspection Modal ── */}
         {selectedGem && (
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
             onClick={() => setSelectedGem(null)}
           >
             <div
-              className="relative w-full max-w-xl bg-[#121215] border border-white/15 rounded-2xl p-6 sm:p-8 space-y-5 shadow-2xl overflow-y-auto max-h-[90vh]"
+              className="relative w-full max-w-2xl bg-[#121215] border border-white/15 rounded-2xl p-6 sm:p-7 space-y-6 shadow-2xl max-h-[90vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Modal Header */}
-              <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
+              {/* Header */}
+              <div className="flex items-start justify-between gap-4 pb-4 border-b border-white/10">
                 <div className="flex items-center gap-3.5">
                   <img
                     src={selectedGem.avatarUrl}
@@ -556,11 +606,11 @@ const Gems = () => {
                   <div>
                     <h2 className="text-xl font-bold text-white font-heading flex items-center gap-2">
                       <span>{selectedGem.name}</span>
-                      {selectedGem.isUnderTheRadar && (
-                        <span className="text-xs font-mono font-bold text-[#FA6423]">
-                          Gem #{selectedGem.rank}
-                        </span>
-                      )}
+                      <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${
+                        STATUS_LABELS[selectedGem.status]?.colorClass || 'text-zinc-400'
+                      }`}>
+                        {STATUS_LABELS[selectedGem.status]?.label || selectedGem.status}
+                      </span>
                     </h2>
                     <p className="text-xs font-mono text-zinc-400">{selectedGem.repo}</p>
                   </div>
@@ -581,6 +631,54 @@ const Gems = () => {
                   {selectedGem.description}
                 </p>
 
+                {/* Criteria Evaluation Detail Box */}
+                {selectedGem.failingCriteria && selectedGem.failingCriteria.length > 0 && (
+                  <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/25 space-y-2">
+                    <p className="text-xs font-bold text-rose-300 uppercase tracking-wider flex items-center gap-1.5">
+                      <AlertTriangle className="w-3.5 h-3.5" />
+                      <span>Unmet Criteria Diagnostic</span>
+                    </p>
+                    <ul className="text-xs text-rose-200 space-y-1 list-disc pl-4">
+                      {selectedGem.failingCriteria.map((f, i) => (
+                        <li key={i}>
+                          <span className="font-mono text-rose-400 font-semibold">{f.id}</span>: {f.detail}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Editorial Review Record Details */}
+                {selectedGem.verifiedReview && (
+                  <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 space-y-2 font-mono text-xs">
+                    <span className="text-zinc-400 text-[11px] uppercase tracking-wider block font-bold flex items-center gap-1.5">
+                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Editorial Audit & Verification Record</span>
+                    </span>
+                    {selectedGem.verifiedReview.issueResponsiveness && (
+                      <p className="text-zinc-300 text-[11px]">
+                        • <strong className="text-white">Issue Triage:</strong> Verified on{' '}
+                        {new Date(selectedGem.verifiedReview.issueResponsiveness.verifiedAt).toLocaleDateString()}.{' '}
+                        <span className="text-zinc-400">"{selectedGem.verifiedReview.issueResponsiveness.notes}"</span>
+                      </p>
+                    )}
+                    {selectedGem.verifiedReview.independentAudit && (
+                      <p className="text-zinc-300 text-[11px]">
+                        • <strong className="text-white">Independent Audit:</strong>{' '}
+                        <a
+                          href={selectedGem.verifiedReview.independentAudit.auditUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-purple-400 underline hover:text-purple-300"
+                        >
+                          View Report
+                        </a>{' '}
+                        ({selectedGem.verifiedReview.independentAudit.auditor || 'Independent Auditor'}).
+                      </p>
+                    )}
+                  </div>
+                )}
+
                 {/* Metrics Grid */}
                 <div className="grid grid-cols-3 gap-3 p-3.5 rounded-xl bg-white/[0.03] border border-white/10 font-mono text-xs">
                   <div>
@@ -592,20 +690,19 @@ const Gems = () => {
                     <span className="text-zinc-300 font-bold text-sm">{selectedGem.forksFormatted || selectedGem.forks || 0}</span>
                   </div>
                   <div>
-                    <span className="text-zinc-500 text-[10px] uppercase block font-bold">Language</span>
-                    <span className="text-white font-bold text-sm">{selectedGem.language || 'Multi'}</span>
+                    <span className="text-zinc-500 text-[10px] uppercase block font-bold">Tier</span>
+                    <span className="text-white font-bold text-sm capitalize">{selectedGem.tier || 'Curated'}</span>
                   </div>
                 </div>
 
                 {/* Direct Download & App Store Hub */}
                 <div className="space-y-2 pt-1">
-                  <span className="text-xs font-mono font-bold text-[#FA6423] uppercase tracking-wider block flex items-center gap-1.5">
+                  <span className="text-xs font-mono font-bold text-[#FA6423] uppercase tracking-wider flex items-center gap-1.5">
                     <Download className="w-3.5 h-3.5" />
                     <span>Download & Official Channels</span>
                   </span>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    {/* Direct Installer / Binary */}
                     {selectedGem.downloadUrl && (
                       <a
                         href={selectedGem.downloadUrl}
@@ -624,7 +721,6 @@ const Gems = () => {
                       </a>
                     )}
 
-                    {/* Google Play Store */}
                     {selectedGem.playStoreUrl && (
                       <a
                         href={selectedGem.playStoreUrl}
@@ -636,14 +732,13 @@ const Gems = () => {
                           <PlayStoreIcon className="w-4 h-4 text-emerald-400 shrink-0" />
                           <div className="truncate text-left">
                             <p className="text-xs font-bold text-white truncate">Google Play Store</p>
-                            <p className="text-[10px] text-emerald-200/70 truncate">Android APK & App</p>
+                            <p className="text-[10px] text-emerald-200/70 truncate">Android App</p>
                           </div>
                         </div>
                         <ArrowUpRight className="w-3.5 h-3.5 text-emerald-300 shrink-0" />
                       </a>
                     )}
 
-                    {/* Apple App Store */}
                     {selectedGem.appStoreUrl && (
                       <a
                         href={selectedGem.appStoreUrl}
@@ -655,14 +750,13 @@ const Gems = () => {
                           <AppStoreIcon className="w-4 h-4 text-blue-400 shrink-0" />
                           <div className="truncate text-left">
                             <p className="text-xs font-bold text-white truncate">Apple App Store</p>
-                            <p className="text-[10px] text-blue-200/70 truncate">iOS, iPadOS & macOS</p>
+                            <p className="text-[10px] text-blue-200/70 truncate">iOS & macOS</p>
                           </div>
                         </div>
                         <ArrowUpRight className="w-3.5 h-3.5 text-blue-300 shrink-0" />
                       </a>
                     )}
 
-                    {/* Microsoft Store */}
                     {selectedGem.microsoftStoreUrl && (
                       <a
                         href={selectedGem.microsoftStoreUrl}
@@ -674,14 +768,13 @@ const Gems = () => {
                           <MicrosoftStoreIcon className="w-4 h-4 text-sky-400 shrink-0" />
                           <div className="truncate text-left">
                             <p className="text-xs font-bold text-white truncate">Microsoft Store</p>
-                            <p className="text-[10px] text-sky-200/70 truncate">Windows 10 / 11</p>
+                            <p className="text-[10px] text-sky-200/70 truncate">Windows</p>
                           </div>
                         </div>
                         <ArrowUpRight className="w-3.5 h-3.5 text-sky-300 shrink-0" />
                       </a>
                     )}
 
-                    {/* Official Website */}
                     {selectedGem.websiteUrl && (
                       <a
                         href={selectedGem.websiteUrl}
@@ -702,30 +795,11 @@ const Gems = () => {
                   </div>
                 </div>
 
-                {/* Topics */}
-                {selectedGem.topics && selectedGem.topics.length > 0 && (
-                  <div className="space-y-1.5">
-                    <span className="text-xs font-mono font-bold text-zinc-400 uppercase tracking-wider block">
-                      Topic Tags
-                    </span>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedGem.topics.map((t) => (
-                        <span
-                          key={t}
-                          className="text-xs font-mono text-zinc-300"
-                        >
-                          ◇ {t}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
                 {/* Quick Install Command */}
                 {selectedGem.installCommand && (
                   <div className="space-y-1.5">
                     <span className="text-xs font-mono font-bold text-zinc-400 uppercase tracking-wider block">
-                      Terminal / Package Manager Install
+                      Terminal Install Command
                     </span>
                     <div className="flex items-center justify-between p-3 rounded-xl bg-black border border-white/10 font-mono text-xs text-zinc-200">
                       <code className="truncate mr-2">{selectedGem.installCommand}</code>

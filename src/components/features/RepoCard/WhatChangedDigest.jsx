@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Clock,
   Tag,
@@ -13,9 +13,18 @@ import { getWhatChangedDigest } from '../../../services/githubService';
 
 const WhatChangedDigest = ({ repo }) => {
   const [days, setDays] = useState(30);
+  const [debouncedDays, setDebouncedDays] = useState(30);
   const [digest, setDigest] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const debounceRef = useRef(null);
+
+  // Debounce days changes — prevents firing a new API call for every click
+  const handleDaysChange = (val) => {
+    setDays(val);
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => setDebouncedDays(val), 350);
+  };
 
   const owner = repo.owner?.login || repo.full_name?.split('/')[0] || '';
   const repoName = repo.name || repo.full_name?.split('/')[1] || '';
@@ -26,7 +35,7 @@ const WhatChangedDigest = ({ repo }) => {
       setLoading(true);
       setError(null);
       try {
-        const data = await getWhatChangedDigest(owner, repoName, days);
+        const data = await getWhatChangedDigest(owner, repoName, debouncedDays);
         if (isMounted) setDigest(data);
       } catch (err) {
         if (isMounted) setError(err.message || 'Failed to fetch digest');
@@ -38,7 +47,7 @@ const WhatChangedDigest = ({ repo }) => {
     if (owner && repoName) {
       fetchDigest();
     }
-  }, [owner, repoName, days]);
+  }, [owner, repoName, debouncedDays]);
 
   const timeRangeOptions = [
     { label: '7 Days', value: 7 },
@@ -70,7 +79,7 @@ const WhatChangedDigest = ({ repo }) => {
             <button
               key={opt.value}
               type="button"
-              onClick={() => setDays(opt.value)}
+              onClick={() => handleDaysChange(opt.value)}
               className={`px-2.5 py-1 rounded text-[11px] font-mono transition-all ${
                 days === opt.value
                   ? 'bg-blue-600 text-white font-semibold shadow-xs'

@@ -67,7 +67,7 @@ describe('Discovery Services Data Flow & Integrity', () => {
               id: 99,
               name: 'v0.4.0',
               tag_name: 'v0.4.0',
-              published_at: '2026-10-12T00:00:00Z',
+              published_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
               html_url: 'https://github.com/release/v0.4.0',
             },
           ],

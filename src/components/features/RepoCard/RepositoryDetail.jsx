@@ -69,17 +69,17 @@ const RepositoryDetail = ({ repo, onClose, isBookmarked, onBookmarkToggle }) => 
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [onClose]);
 
+    // ── Phase 1: fetch only repo details on open (1 request vs 5 previously) ──
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const [detailsData, activityData, issueData] = await Promise.all([
-                    getRepositoryDetails(repo.owner.login, repo.name),
-                    getRepositoryActivity(repo.owner.login, repo.name),
-                    getIssueStats(repo.owner.login, repo.name),
-                ]);
+                const detailsData = await getRepositoryDetails(repo.owner.login, repo.name);
                 setDetails(detailsData);
-                setActivity(activityData);
+
+                // Pass open_issues_count from repo metadata to avoid an extra Search API call
+                const openCount = detailsData?.open_issues_count ?? repo.open_issues_count ?? null;
+                const issueData = await getIssueStats(repo.owner.login, repo.name, openCount);
                 setIssueStats(issueData);
 
                 // Load saved note
@@ -96,6 +96,14 @@ const RepositoryDetail = ({ repo, onClose, isBookmarked, onBookmarkToggle }) => 
             fetchData();
         }
     }, [repo]);
+
+    // ── Phase 2: fetch activity only when user opens the Activity tab ──
+    useEffect(() => {
+        if (activeTab !== 'activity' || activity !== null) return;
+        getRepositoryActivity(repo.owner.login, repo.name)
+            .then(data => setActivity(data))
+            .catch(() => setActivity(null));
+    }, [activeTab, activity, repo]);
 
     const handleSaveNote = () => {
         storageService.saveNote(repo.id, note);

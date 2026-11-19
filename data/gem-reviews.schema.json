@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ExploreGitGemReviews",
+  "description": "Human-verified review records for criteria requiring editorial confirmation.",
+  "type": "object",
+  "required": ["version", "reviews"],
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "reviews": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "issueResponsiveness": {
+            "type": "object",
+            "required": ["verifiedAt", "reviewer"],
+            "properties": {
+              "verifiedAt": { "type": "string", "format": "date-time" },
+              "reviewer": { "type": "string", "minLength": 1 },
+              "notes": { "type": "string" }
+            },
+            "additionalProperties": false
+          },
+          "independentAudit": {
+            "type": "object",
+            "required": ["verifiedAt", "reviewer", "auditUrl"],
+            "properties": {
+              "verifiedAt": { "type": "string", "format": "date-time" },
+              "reviewer": { "type": "string", "minLength": 1 },
+              "auditUrl": { "type": "string", "format": "uri" },
+              "auditor": { "type": "string" },
+              "notes": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

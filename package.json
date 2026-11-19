@@ -21,7 +21,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:gems": "node --test tests/gems.test.mjs"
   },
   "dependencies": {
     "@hugeicons/core-free-icons": "^4.3.5",
