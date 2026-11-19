@@ -1,0 +1,39 @@
+upgrade the quick tags "
+AI
+
+Python
+
+Rust
+
+TypeScript
+
+Go
+
+Today
+
+This Week
+
+This Month" , make sure they are responisve on s,maller devices and remains on one single line add modern tag design
+
+---
+
+try again
+
+---
+
+upgrade the quick tags "
+AI
+
+Python
+
+Rust
+
+TypeScript
+
+Go
+
+Today
+
+This Week
+
+This Month" , make sure they are responisve on s,maller devices and remains on one single line add modern tag design
